@@ -1,0 +1,91 @@
+.app {    
+	grid-template-columns: 16% auto;
+}
+
+.menubar-container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    background: #fff;
+}
+
+.app.active {
+	grid-template-columns: 10% auto;
+}
+
+.app.active .menubar-container {
+    gap: 13px;
+}
+
+.menubar-container .title {
+    font-size: 24px;
+    color: #1479FF;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.menubar-container .toggle-menubar-icon {
+    fill: #1479FF;
+    background: #fff;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: 16%;
+    padding: 7px;
+    cursor: pointer;
+    transform: rotate(180deg);
+    border-radius: 7px 0 0 7px;
+    transition: 0.3s;
+}
+
+.app.active .menubar-container .toggle-menubar-icon {
+    transform: rotate(0);
+    left: 10%;
+    border-radius: 0 7px 7px 0;
+}
+
+.menu-container {
+    display: grid;
+    grid-template-columns: 20% 50%;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 12px;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+    font-size: 20px;
+    transition: 0.3s;
+}
+
+.app.active .menu-container {
+    grid-template-columns: none;
+    grid-template-rows: auto auto;
+    justify-items: center;
+    font-size: 16px;
+    gap: 5px;
+}
+
+.menu-container .icon {
+    width: 25px;
+    height: 25px;
+    background: #f0f7ff;
+    fill: #1479FF;
+    padding: 10px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.menu-container:hover .icon, .menu-container#active .icon {
+    fill: #fff;
+    background: #1479FF;
+    box-shadow: 0px 8px 15px #147aff96;
+}
+
+.menu-container:hover, .menu-container#active {
+    color: #1479FF;
+}
