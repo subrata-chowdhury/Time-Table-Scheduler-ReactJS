@@ -1,0 +1,5 @@
+.subjects {
+    display: grid;
+    grid-template-columns: 63% 30%;
+    gap: 10px;
+}

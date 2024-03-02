@@ -6,7 +6,7 @@ function FilesPage() {
         <>
             <Menubar activeMenuIndex={5} />
             <div className='main-container'>
-                <MiniStateContainer/>
+                <MiniStateContainer />
             </div>
         </>
     )

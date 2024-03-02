@@ -1,10 +1,10 @@
 html {
-    --background: #fff;
-    --textColor: #000;
-    --containerColor: rgba(235, 235, 235, 0.8);
+	--background: #fff;
+	--textColor: #000;
+	--containerColor: rgba(235, 235, 235, 0.8);
 }
 
-.app{
+.app {
 	display: grid;
 	height: 100vh;
 	width: 100%;
@@ -12,6 +12,6 @@ html {
 	transition: 0.3s;
 }
 
-.main-container{
+.main-container {
 	padding: 20px;
 }

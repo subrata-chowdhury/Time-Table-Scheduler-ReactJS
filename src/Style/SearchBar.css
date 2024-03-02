@@ -1,0 +1,35 @@
+.search-container {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 8px;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+.search-container.active {
+    border: 1.5px solid dodgerblue;
+}
+
+.search-container.active svg:last-child,
+.search-container.active input {
+    display: grid;
+}
+
+.search-container svg:last-child,
+.search-container input {
+    display: none;
+}
+
+.search-container svg {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.search-container input {
+    border: none;
+    outline: none;
+    background: transparent;
+}

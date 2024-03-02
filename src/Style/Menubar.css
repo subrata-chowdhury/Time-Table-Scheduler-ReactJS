@@ -1,8 +1,8 @@
-.app {    
-	grid-template-columns: 16% auto;
+.app {
+    grid-template-columns: 16% auto;
 }
 
-.menubar-container{
+.menubar-container {
     width: 100%;
     height: 100vh;
     display: flex;
@@ -13,7 +13,7 @@
 }
 
 .app.active {
-	grid-template-columns: 10% auto;
+    grid-template-columns: 10% auto;
 }
 
 .app.active .menubar-container {
@@ -80,12 +80,14 @@
     transition: 0.3s;
 }
 
-.menu-container:hover .icon, .menu-container#active .icon {
+.menu-container:hover .icon,
+.menu-container#active .icon {
     fill: #fff;
     background: #1479FF;
     box-shadow: 0px 8px 15px #147aff96;
 }
 
-.menu-container:hover, .menu-container#active {
+.menu-container:hover,
+.menu-container#active {
     color: #1479FF;
 }

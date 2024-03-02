@@ -1,4 +1,4 @@
-.input-box{
+.input-box {
     background: rgba(0, 0, 0, 0.10);
     border: none;
     border-radius: 5px;
@@ -10,7 +10,37 @@
     padding: 0 10px;
 }
 
-.input-container{
+.input-container input[type=checkbox] {
+    appearance: none;
+}
+
+.input-container .box {
+    width: 50px;
+    height: 30px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.10);
+    display: grid;
+    justify-content: start;
+    align-items: center;
+    padding: 0 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.input-container .box.active {
+    justify-content: end;
+    background: rgba(30, 144, 255, 0.8);
+}
+
+.input-container .dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background: #fff;
+    transition: 0.3s;
+}
+
+.input-container {
     display: grid;
     grid-auto-flow: row;
     gap: 8px;

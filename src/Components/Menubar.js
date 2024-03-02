@@ -11,9 +11,18 @@ import React from "react"
 import { Link } from "react-router-dom"
 
 export default function Menubar({ activeMenuIndex }) {
+    function toggleMenubar() {
+        let activeApp = document.querySelector(".app.active");
+        if (activeApp != null) {
+            activeApp.classList.remove("active");
+        } else {
+            document.querySelector(".app").classList.add("active");
+        }
+    }
+
     return (
         <div className="menubar-container">
-            <Arrow />
+            <Arrow arrowIconClickHandler={toggleMenubar} />
             <div className="title">
                 <p>Time Table <br />Designer</p>
             </div>

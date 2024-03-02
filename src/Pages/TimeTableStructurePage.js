@@ -6,7 +6,7 @@ function TimeTableStructurePage() {
         <>
             <Menubar activeMenuIndex={4} />
             <div className='main-container'>
-                <MiniStateContainer/>
+                <MiniStateContainer />
             </div>
         </>
     )

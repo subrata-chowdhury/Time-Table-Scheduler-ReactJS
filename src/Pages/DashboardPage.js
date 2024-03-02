@@ -8,7 +8,7 @@ function DashboardPage() {
             <Menubar activeMenuIndex={2} />
             <div className='main-container dashboard'>
                 <div className='left-sub-container'>
-                    <MiniStateContainer/>
+                    <MiniStateContainer />
 
                 </div>
                 <div className='right-sub-container'>

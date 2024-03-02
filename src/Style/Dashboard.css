@@ -3,7 +3,3 @@
     grid-template-columns: 30% 60%;
     gap: 10px;
 }
-
-.right-sub-container{
-    border-left: 2px solid #000;
-}
