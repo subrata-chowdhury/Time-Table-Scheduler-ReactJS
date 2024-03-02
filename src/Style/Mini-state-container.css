@@ -1,0 +1,9 @@
+.mini-states-container{
+    padding-left: 35px;
+}
+
+.mini-states-container .state-selector{
+    outline: none;
+    font-size: 15px;
+    margin-left: 10px;
+}

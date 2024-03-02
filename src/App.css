@@ -1,7 +1,17 @@
+html {
+    --background: #fff;
+    --textColor: #000;
+    --containerColor: rgba(235, 235, 235, 0.8);
+}
+
 .app{
 	display: grid;
 	height: 100vh;
 	width: 100%;
 	background: #f0f7ff;
 	transition: 0.3s;
+}
+
+.main-container{
+	padding: 20px;
 }

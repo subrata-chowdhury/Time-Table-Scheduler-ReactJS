@@ -1,0 +1,73 @@
+.teachers {
+    display: grid;
+    grid-template-columns: 60% 30%;
+    gap: 10px;
+}
+
+.details-container {
+    background: var(--background);
+    border-radius: 15px;
+    padding: 25px;
+    padding-right: 10px;
+    position: relative;
+    left: 50%;
+    transform: translate(-27%, 0);
+    width: 100%;
+    display: grid;
+    grid-auto-flow: row;
+    gap: 15px;
+}
+
+.details-container .inputs-container-heading {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.time-table-container{
+    display: grid;
+    grid-auto-flow: row;
+    gap: 10px;
+}
+
+.periods-container {
+    display: grid;
+    grid-auto-flow: column;
+}
+
+.period {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    user-select: none;
+    color: rgba(0,0,0,0.4);
+    font-weight: bold;
+}
+
+.period.selected {
+    border: 2px solid dodgerblue;
+    box-shadow: 0 0 7px rgba(30, 144, 255,1);
+    color: #fff;
+    background: dodgerblue;
+}
+
+.save-btn-container{
+    display: grid;
+    justify-content: center;
+}
+
+.save-btn-container .teacher-save-btn{
+    padding: 10px 15px;
+    background: dodgerblue;
+    border: none;
+    outline: none;
+    border-radius: 7px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 18px;
+}

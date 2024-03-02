@@ -1,0 +1,17 @@
+.input-box{
+    background: rgba(0, 0, 0, 0.10);
+    border: none;
+    border-radius: 5px;
+    border-bottom: 2px solid dodgerblue;
+    outline: none;
+    width: 90%;
+    height: 40px;
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+.input-container{
+    display: grid;
+    grid-auto-flow: row;
+    gap: 8px;
+}
