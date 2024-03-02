@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getCurrentFileName } from "../Script/DataFetchers";
+import { getCurrentFileName } from "../Script/FilesDataFetchers";
 import "../Style/Mini-state-container.css";
 
 export default function MiniStateContainer() {

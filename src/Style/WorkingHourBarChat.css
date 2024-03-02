@@ -1,0 +1,40 @@
+.working-hour-barchat-container{
+    background: #fff;
+    border-radius: 15px;
+    display: grid;
+    grid-auto-flow: column;
+    width: 80%;
+}
+.bar-container{
+    margin-top: 20px;
+    display: grid;
+    grid-template-rows: 75% 10%;
+    height: 100%;
+    justify-content: center;
+    justify-items: center;
+    align-items: end;
+    gap: 5px;
+}
+
+.bar-container .bar{
+    height: 100%;
+    background: rgba(20, 121, 255, 0.1);
+    box-shadow: 0 0 15px rgba(20, 121, 255, 0.2);
+    width: 8px;
+    border-radius: 5px;
+    display: grid;
+    align-items: end;
+    border: 2px solid #fff;
+}
+
+.bar-container .bar .inner-bar{
+    background: rgba(20, 121, 255, 1);
+    width: 100%;
+    border-radius: 5px;
+}
+
+.bar-container .bar-title{
+    display: grid;
+    justify-content: center;
+    text-align: center;
+}

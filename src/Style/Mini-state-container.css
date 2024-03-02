@@ -1,5 +1,6 @@
-/* .mini-states-container{
-} */
+.mini-states-container {
+    margin-left: 35px;
+}
 
 .mini-states-container .state-selector {
     outline: none;

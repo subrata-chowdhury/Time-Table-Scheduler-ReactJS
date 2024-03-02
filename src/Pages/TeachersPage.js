@@ -5,8 +5,12 @@ import { InputBox } from '../Components/BasicComponents'
 import "../Style/Teachers.css"
 import { useState } from 'react'
 import SearchBar from '../Components/SearchBar'
+import { getTeacherList } from '../Script/TeachersDataFetcher'
 
 function TeachersPage() {
+    const [teachersList, setTeahersList] = useState([]);
+    getTeacherList(setTeahersList);
+
     return (
         <>
             <Menubar activeMenuIndex={1} />
@@ -16,7 +20,7 @@ function TeachersPage() {
                         <MiniStateContainer />
                         <SearchBar />
                     </div>
-                    <Cards />
+                    <Cards cardDetails={teachersList} />
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer />

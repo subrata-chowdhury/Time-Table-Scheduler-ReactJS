@@ -22,7 +22,7 @@ export default function Menubar({ activeMenuIndex }) {
 
     return (
         <div className="menubar-container">
-            <Arrow arrowIconClickHandler={toggleMenubar} />
+            <Arrow arrowIconClickHandler={toggleMenubar} className={"toggle-menubar-icon"} />
             <div className="title">
                 <p>Time Table <br />Designer</p>
             </div>

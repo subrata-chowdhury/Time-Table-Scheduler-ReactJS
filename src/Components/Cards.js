@@ -17,7 +17,7 @@ export default function Cards({ cardDetails = ["UI", "UI", "UI", "UI", "UI", "UI
     )
 }
 
-function Card({ details = "Sample", cardClickHandler }) {
+export function Card({ details = "Sample", cardClickHandler }) {
     return (
         <div className="card data" onClick={cardClickHandler}>
             <div>{details}</div>

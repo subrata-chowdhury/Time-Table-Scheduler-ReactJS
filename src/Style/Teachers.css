@@ -1,6 +1,6 @@
 .teachers {
     display: grid;
-    grid-template-columns: 63% 30%;
+    grid-template-columns: 63% auto;
     gap: 10px;
 }
 
@@ -9,6 +9,7 @@
     grid-auto-flow: column;
     justify-content: space-between;
     padding: 0 35px;
+    padding-left: 0;
 }
 
 .details-container {
@@ -17,12 +18,7 @@
     padding: 25px;
     padding-right: 10px;
     height: 92%;
-    width: 100%;
-    position: relative;
-    left: 5%;
-    top: 0;
-    transform: translate(0, 0%);
-    width: 100%;
+    width: 92%;
     display: grid;
     grid-auto-flow: row;
     gap: 15px;
@@ -36,7 +32,6 @@
 .time-table-container {
     display: grid;
     grid-auto-flow: row;
-    gap: 10px;
 }
 
 .periods-container {

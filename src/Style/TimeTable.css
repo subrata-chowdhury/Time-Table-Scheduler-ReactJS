@@ -1,0 +1,17 @@
+.time-table-container {
+    height: 100%;
+    display: grid;
+    grid-auto-flow: row;
+    border-radius: 12px;
+}
+
+.time-table-container div div {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+}
+
+.day-container,
+.period-times-container {
+    display: grid;
+}
