@@ -1,6 +1,7 @@
 .time-table-container {
     height: 100%;
     display: grid;
+    gap: 10px;
     grid-auto-flow: row;
     border-radius: 12px;
 }
@@ -14,4 +15,30 @@
 .day-container,
 .period-times-container {
     display: grid;
+    gap: 5px;
+    justify-content: stretch;
+}
+
+.period-details-container.class {
+    border-radius: 10px;
+    cursor: pointer;
+    background: #1479FF;
+    box-shadow: 5px 5px 10px rgba(20, 121, 255, 0.5);
+    color: #fff;
+    font-weight: bold;
+}
+
+.day-container:nth-child(3) .period-details-container.class {
+    background: #14D2FF;
+    box-shadow: 5px 5px 10px rgba(20, 210, 255, 0.5);
+}
+
+.day-container:nth-child(4) .period-details-container.class {
+    background: #14A5FF;
+    box-shadow: 5px 5px 10px rgba(20, 165, 255, 0.5);
+}
+
+.day-container:nth-child(5) .period-details-container.class {
+    background: #37DBE6;
+    box-shadow: 5px 5px 10px rgba(55, 219, 230, 0.5);
 }

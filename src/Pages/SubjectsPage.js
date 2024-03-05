@@ -5,8 +5,12 @@ import Cards from '../Components/Cards'
 import { InputBox } from '../Components/BasicComponents'
 import "../Style/Subjects.css"
 import { useState } from 'react'
+import { getSubjectList } from '../Script/SubjectsDataFetcher'
 
 function SubjectsPage() {
+    const [subjectsList, setSubjectsList] = useState(["UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI"])
+    getSubjectList(setSubjectsList)
+
     return (
         <>
             <Menubar activeMenuIndex={0} />
@@ -16,7 +20,7 @@ function SubjectsPage() {
                         <MiniStateContainer />
                         <SearchBar />
                     </div>
-                    <Cards />
+                    <Cards cardDetails={subjectsList} cardClassName={"subject-card"} />
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer />
@@ -60,7 +64,7 @@ function DetailsContainer() {
                 </div>
             </div>
             <div className='save-btn-container'>
-                <button className='teacher-save-btn'>Save</button>
+                <button className='subject-save-btn'>Save</button>
             </div>
         </div>
     )

@@ -2,8 +2,7 @@ import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
 import "../Style/Dashboard.css"
 import WorkingHourBarChat from '../Components/WorkingHourBarChat'
-import Arrow from '../Icons/Arrow'
-import { Card } from '../Components/Cards'
+import { HorizentalCardsContainer } from '../Components/Cards'
 import TimeTable from '../Components/TimeTable'
 
 function DashboardPage() {
@@ -13,31 +12,26 @@ function DashboardPage() {
             <div className='main-container dashboard'>
                 <div className='left-sub-container'>
                     <MiniStateContainer />
+                    <div className='empty-container'>Under Development</div>
                     <WorkingHourBarChat />
                 </div>
                 <div className='right-sub-container'>
-                    <div className='teachers-details-container'>
-                        <TeachersCardsContainer />
-                        <TeachersTimeTableContainer />
-                        <div className='sem-and-subject-container'>
-                            <SemesterContainer />
-                            <SubjectContainer />
-                        </div>
-                    </div>
+                    <TeacherDetailsContainer />
                 </div>
             </div>
         </>
     )
 }
 
-function TeachersCardsContainer() {
+function TeacherDetailsContainer() {
     return (
-        <div className='teachers-cards-container'>
-            <Arrow className="left-arrow-for-scroll arrow-for-scroll" />
-            <div className='sub-teachers-cards-container'>
-                <Card details='hh' />
+        <div className='teachers-details-container'>
+            <HorizentalCardsContainer cardClassName={"teacher-card"} />
+            <TeachersTimeTableContainer />
+            <div className='sem-and-subject-container'>
+                <SemesterContainer />
+                <SubjectContainer />
             </div>
-            <Arrow className="right-arrow-for-scroll arrow-for-scroll" />
         </div>
     )
 }
@@ -47,7 +41,7 @@ function TeachersTimeTableContainer() {
     return (
         <div className='time-table-wrapper'>
             <div className='heading'>Time Table for {sir}</div>
-            <TimeTable className='teacher-time-table' />
+            <TimeTable className='teacher-time-table' timeTableWidthInPercent={92} />
         </div>
     )
 }
@@ -70,7 +64,7 @@ function SemesterContainer({ semList = [1, 2, 5, 6] }) {
 function SubjectContainer({ subList = ["a", "b", "c"] }) {
     let subs = [];
     subList.forEach((e) => {
-        subs.push(<div className='subject' key={e}>{e}</div>)
+        subs.push(<div className='subject' key={e}>{e.toUpperCase()}</div>)
     })
     return (
         <div className='subject-container'>

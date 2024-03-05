@@ -7,8 +7,18 @@
 
 .dashboard .left-sub-container {
     display: grid;
-    grid-template-rows: 60% 40%;
+    grid-template-rows: 10% 50% 40%;
     justify-items: center;
+}
+
+.dashboard .left-sub-container .empty-container {
+    background: #fff;
+    width: 85%;
+    height: 90%;
+    border-radius: 15px;
+    display: grid;
+    justify-content: center;
+    align-items: center;
 }
 
 .dashboard .right-sub-container {
@@ -28,39 +38,6 @@
     border-radius: 12px;
 }
 
-.teachers-cards-container {
-    display: grid;
-    grid-template-columns: 40px auto 40px;
-    gap: 15px;
-    padding: 0 25px;
-    justify-content: stretch;
-    align-items: center;
-}
-
-.sub-teachers-cards-container {
-    padding: 15px;
-    overflow-x: scroll;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.sub-teachers-cards-container::-webkit-scrollbar {
-    display: none;
-}
-
-.arrow-for-scroll {
-    width: 25px;
-    height: 25px;
-    background: #fff;
-    border-radius: 20px;
-    padding: 8px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-}
-
-.left-arrow-for-scroll {
-    transform: rotate(180deg);
-}
-
 .time-table-wrapper {
     padding: 0 25px;
 }
@@ -73,7 +50,7 @@
 
 .teacher-time-table {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    height: 90% !important;
+    height: 85% !important;
     margin-top: 10px;
 }
 
@@ -81,6 +58,10 @@
 .teacher-time-table .day-name,
 .teacher-time-table .period-details-container {
     font-size: 12px;
+}
+
+.dashboard .time-table-container {
+    padding-bottom: 20px;
 }
 
 

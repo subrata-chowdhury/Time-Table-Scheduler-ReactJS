@@ -1,11 +1,13 @@
-.working-hour-barchat-container{
+.working-hour-barchat-container {
     background: #fff;
     border-radius: 15px;
     display: grid;
     grid-auto-flow: column;
     width: 80%;
+    padding: 0 10px;
 }
-.bar-container{
+
+.bar-container {
     margin-top: 20px;
     display: grid;
     grid-template-rows: 75% 10%;
@@ -16,24 +18,43 @@
     gap: 5px;
 }
 
-.bar-container .bar{
+.bar-container .bar {
     height: 100%;
     background: rgba(20, 121, 255, 0.1);
-    box-shadow: 0 0 15px rgba(20, 121, 255, 0.2);
-    width: 8px;
+    box-shadow: 0 0 15px rgba(20, 121, 255, 0.07);
+    width: 10px;
     border-radius: 5px;
     display: grid;
     align-items: end;
-    border: 2px solid #fff;
 }
 
-.bar-container .bar .inner-bar{
+.bar-container .bar .inner-bar {
     background: rgba(20, 121, 255, 1);
     width: 100%;
-    border-radius: 5px;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    position: relative;
+    left: -1.5px;
+    box-shadow: 0 0 15px rgba(20, 121, 255, 0.15);
 }
 
-.bar-container .bar-title{
+.bar-container:nth-child(2) .bar .inner-bar {
+    background: #14D2FF;
+    box-shadow: 0 0 15px rgba(20, 210, 255, 0.15);
+}
+
+.bar-container:nth-child(3) .bar .inner-bar {
+    background: #14A5FF;
+    box-shadow: 0 0 15px rgba(20, 165, 255, 0.15);
+}
+
+.bar-container:nth-child(4) .bar .inner-bar,
+.bar-container:nth-child(5) .bar .inner-bar {
+    background: #36DBE6;
+    box-shadow: 0 0 15px rgba(54, 219, 230, 0.15);
+}
+
+.bar-container .bar-title {
     display: grid;
     justify-content: center;
     text-align: center;

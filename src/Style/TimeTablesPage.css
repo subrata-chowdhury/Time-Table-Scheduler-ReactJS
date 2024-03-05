@@ -1,0 +1,48 @@
+.time-table.main-container {
+    display: grid;
+    grid-template-rows: 10% 10% auto;
+    padding: 0 20px;
+}
+
+.time-table .time-table-container {
+    background: #fff;
+    height: 95%;
+    padding-bottom: 20px;
+}
+
+.time-table .menubar {
+    display: grid;
+    grid-template-columns: 20% auto;
+    align-items: center;
+}
+
+.sem-cards-container .card {
+    height: 40px;
+}
+
+.buttons-container,
+.main-btn-container,
+.section-btn-container {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 15px;
+}
+
+.main-btn-container {
+    justify-content: space-between;
+}
+
+.buttons-container {
+    justify-content: start;
+}
+
+.buttons-container .card,
+.section-btn-container .card {
+    height: 40px;
+    padding: 0 18px;
+}
+
+.section-btn-container .card {
+    width: 20px;
+    min-width: 0;
+}

@@ -1,9 +1,9 @@
 let url = window.location.origin + "/";
 
-export function getTeacherList(func) {
+export function getSubjectList(func) {
     let status;
     try {
-        fetch(`${url}io/teachers`)
+        fetch(`${url}io/subjects`)
             .then((response) => {
                 status = response.status;
                 return response.text();

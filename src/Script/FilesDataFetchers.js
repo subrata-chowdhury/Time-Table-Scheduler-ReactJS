@@ -13,7 +13,7 @@ export function getCurrentFileName(func) {
                     console.log("Error in geting current state name", data)
                 }
                 func(data);
-            });        
+            });
     } catch (error) {
         console.log("Unale to Fetch Data")
     }

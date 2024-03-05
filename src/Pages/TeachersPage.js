@@ -8,7 +8,7 @@ import SearchBar from '../Components/SearchBar'
 import { getTeacherList } from '../Script/TeachersDataFetcher'
 
 function TeachersPage() {
-    const [teachersList, setTeahersList] = useState([]);
+    const [teachersList, setTeahersList] = useState(["UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI"]);
     getTeacherList(setTeahersList);
 
     return (
@@ -20,7 +20,7 @@ function TeachersPage() {
                         <MiniStateContainer />
                         <SearchBar />
                     </div>
-                    <Cards cardDetails={teachersList} />
+                    <Cards cardDetails={teachersList} cardClassName={"teacher-card"} />
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer />

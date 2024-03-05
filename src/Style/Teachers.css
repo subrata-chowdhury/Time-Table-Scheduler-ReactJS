@@ -22,6 +22,7 @@
     display: grid;
     grid-auto-flow: row;
     gap: 15px;
+    align-content: start;
 }
 
 .details-container .inputs-container-heading {
@@ -66,7 +67,7 @@
     justify-content: center;
 }
 
-.save-btn-container .teacher-save-btn {
+.save-btn-container button {
     padding: 10px 15px;
     background: dodgerblue;
     border: none;
