@@ -3,14 +3,15 @@ import Menubar from '../Components/Menubar'
 import Cards from '../Components/Cards'
 import { InputBox } from '../Components/BasicComponents'
 import "../Style/Teachers.css"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SearchBar from '../Components/SearchBar'
 import { getTeacherList } from '../Script/TeachersDataFetcher'
 
 function TeachersPage() {
-    const [teachersList, setTeahersList] = useState(["UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI"]);
-    getTeacherList(setTeahersList);
-
+    const [teachersList, setTeahersList] = useState([]);
+    useEffect(() => {
+        getTeacherList(setTeahersList);
+    }, [])
     return (
         <>
             <Menubar activeMenuIndex={1} />

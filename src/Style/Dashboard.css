@@ -99,3 +99,8 @@
     color: #fff;
     padding: 0 5px;
 }
+
+.dashboard .sub-horizental-cards-container {
+    justify-content: start;
+    gap: 20px;
+}

@@ -34,7 +34,7 @@ export default function TimeTable({
     if (details.length !== 0)
         if (dayNames.length === details.length) {
             for (let index = 0; index < dayNames.length; index++) {
-                dayRows.push(<div className="day-container" style={{ gridTemplateColumns: gridCss }} key={index}>{createASingleDayRow(dayNames[index], details[index], breakWord[index])}</div>)
+                dayRows.push(<div className="day-container" style={{ gridTemplateColumns: gridCss }} key={"day" + index}>{createASingleDayRow(dayNames[index], details[index], breakWord[index])}</div>)
             }
         } else {
             dayRows.push(<div className="invalid-text" key={"error"}>Invalid Inputs</div>)
@@ -50,7 +50,7 @@ export default function TimeTable({
         while (outerIndex <= totalNoOfPeriods) {
             if (breakTimeIndexs.indexOf(outerIndex - 1) >= 0) {
                 dayRow.push(
-                    <div className="period-details-container break" key={outerIndex}>
+                    <div className="period-details-container break" key={"class" + outerIndex}>
                         <div> </div>
                         <div> {breakWord} </div>
                         <div> </div>
@@ -63,12 +63,11 @@ export default function TimeTable({
                 for (let index = 0; index < subDetail.length; index++) {
                     if (subDetail[index].sub === listOfDetailsOfThatDay[indexForArray][1]) {
                         lab = subDetail[index].isLab;
-                        console.log(subDetail[index].sub + "===" + listOfDetailsOfThatDay[indexForArray][1] + "=" + lab)
                         break;
                     }
                 }
                 for (let index = 0; index < listOfDetailsOfThatDay[indexForArray].length; index++) {
-                    periodDetails.push(<div key={listOfDetailsOfThatDay[indexForArray][index]}>{listOfDetailsOfThatDay[indexForArray][index]}</div>)
+                    periodDetails.push(<div key={"data" + index}>{listOfDetailsOfThatDay[indexForArray][index]}</div>)
                 }
                 let spanCss = {};
                 if (lab === true) {

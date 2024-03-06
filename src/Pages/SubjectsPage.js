@@ -4,13 +4,14 @@ import SearchBar from '../Components/SearchBar'
 import Cards from '../Components/Cards'
 import { InputBox } from '../Components/BasicComponents'
 import "../Style/Subjects.css"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getSubjectList } from '../Script/SubjectsDataFetcher'
 
 function SubjectsPage() {
-    const [subjectsList, setSubjectsList] = useState(["UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI"])
-    getSubjectList(setSubjectsList)
-
+    const [subjectsList, setSubjectsList] = useState([])
+    useEffect(() => {
+        getSubjectList(setSubjectsList);
+    }, [])
     return (
         <>
             <Menubar activeMenuIndex={0} />

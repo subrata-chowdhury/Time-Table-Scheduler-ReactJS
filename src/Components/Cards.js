@@ -2,7 +2,7 @@ import Plus from "../Icons/Plus";
 import "../Style/Cards.css"
 import Arrow from '../Icons/Arrow'
 
-export default function Cards({ cardDetails = ["UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI", "UI"], cardClassName, cardClickHandler = () => { } }) {
+export default function Cards({ cardDetails = [], cardClassName, cardClickHandler = () => { } }) {
     let cards = [];
     for (let index = 0; index < cardDetails.length; index++) {
         cards.push(<Card details={cardDetails[index]} key={index} cardClickHandler={cardClickHandler} className={cardClassName}></Card>)
@@ -39,7 +39,7 @@ export function Card({ details = "Sample", className = "", cardClickHandler = ()
     )
 }
 
-export function HorizentalCardsContainer({ cardData = ["ui", "ui2"], className = "", cardClassName }) {
+export function HorizentalCardsContainer({ cardData = [], className = "", cardClassName }) {
     let cards = [];
     cardData.forEach((e) => {
         cards.push(<Card details={e} key={e} className={cardClassName} />)

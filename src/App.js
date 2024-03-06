@@ -11,6 +11,7 @@ function App() {
 	return (
 		<Router>
 			<div className='app'>
+				<TimeTablesPage />
 				<Routes>
 					<Route path="/" exact element={<DashboardPage />} />
 					<Route path="/Subjects" element={<SubjectsPage />} />
