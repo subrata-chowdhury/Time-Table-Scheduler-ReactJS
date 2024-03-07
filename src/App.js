@@ -1,5 +1,5 @@
 import './App.css'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import DashboardPage from './Pages/DashboardPage'
 import SubjectsPage from './Pages/SubjectsPage';
 import TeachersPage from './Pages/TeachersPage';
@@ -9,7 +9,7 @@ import FilesPage from './Pages/FilesPage';
 
 function App() {
 	return (
-		<Router>
+		<BrowserRouter>
 			<div className='app'>
 				<Routes>
 					<Route path="/" exact element={<DashboardPage />} />
@@ -20,7 +20,7 @@ function App() {
 					<Route path="/Files" element={<FilesPage />} />
 				</Routes>
 			</div>
-		</Router>
+		</BrowserRouter>
 	)
 }
 

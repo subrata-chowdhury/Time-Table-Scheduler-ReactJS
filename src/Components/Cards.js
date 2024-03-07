@@ -41,9 +41,9 @@ export function Card({ details = "Sample", className = "", cardClickHandler = ()
 
 export function HorizentalCardsContainer({ cardData = [], className = "", cardClassName }) {
     let cards = [];
-    cardData.forEach((e) => {
-        cards.push(<Card details={e} key={e} className={cardClassName} />)
-    })
+    for (let index = 0; index < cardData.length; index++) {
+        cards.push(<Card details={cardData[index]} key={cardData[index]} className={cardClassName} />)
+    }
     return (
         <div className={'horizental-cards-container ' + className}>
             <Arrow className="left-arrow-for-scroll arrow-for-scroll" />
