@@ -1,6 +1,6 @@
 let url = window.location.origin + "/";
 
-export function getSubjectList(callBackFunction) {
+export function getSubjectList(callBackFunction=(data)=>{}) {
     let status;
     try {
         fetch(`${url}io/subjects`)

@@ -4,7 +4,7 @@ import "../Style/Dashboard.css"
 import WorkingHourBarChat from '../Components/WorkingHourBarChat'
 import { HorizentalCardsContainer } from '../Components/Cards'
 import TimeTable from '../Components/TimeTable'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getTeacherList } from '../Script/TeachersDataFetcher'
 
 function DashboardPage() {
@@ -27,7 +27,9 @@ function DashboardPage() {
 
 function TeacherDetailsContainer() {
     const [teachersList, setTeahersList] = useState([])
-    getTeacherList(setTeahersList);
+    useEffect(()=>{
+        getTeacherList(setTeahersList);
+    },[])
     return (
         <div className='teachers-details-container'>
             <HorizentalCardsContainer cardClassName={"teacher-card"} cardData={teachersList} />
