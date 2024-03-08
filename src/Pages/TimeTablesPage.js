@@ -9,7 +9,10 @@ import { getSchedule } from '../Script/TimeTableDataFetcher'
 
 function TimeTablesPage() {
     const [sems, setSems] = useState([])
-    const [subjectDetails, setSubjectDetails] = useState([])
+    const [subjectDetails, setSubjectDetails] = useState()
+    const [timeTable, setTimeTable] = useState()
+    const [currentOpenSem, setCurrentOpenSem] = useState(0)
+    const [currentOpenSection, setCurrentOpenSection] = useState(0)
     useEffect(() => {
         let sem = []
         for (let index = 1; index <= 8; index++) {
@@ -17,26 +20,38 @@ function TimeTablesPage() {
         }
         setSems(sem);
         getSubjects(setSubjectDetails)
-        getSchedule(console.log)
     }, [])
+    useEffect(() => {
+        getSchedule((data) => {
+            try {
+                setTimeTable(data[currentOpenSem][currentOpenSection])
+            } catch {
+                console.log("Error in fetching or selecting Time Table")
+            }
+        })
+    }, [currentOpenSem, currentOpenSection])
+    function semCardClickHandler(event) {
+        let semester = parseInt(event.target.title.slice(9))
+        setCurrentOpenSem(Math.floor((semester + 1) / 2) - 1)
+    }
     return (
         <>
-
             <Menubar activeMenuIndex={3} />
             <div className='main-container time-table'>
                 <div className='menubar'>
                     <MiniStateContainer />
                     <div className='main-btn-container'>
                         <ButtonsContainer />
-                        <SectionsBtnContainer />
+                        <SectionsBtnContainer setCurrentOpenSection={setCurrentOpenSection} />
                     </div>
                 </div>
                 <HorizentalCardsContainer
                     className='sem-cards-container'
                     cardClassName={"semester-card"}
                     cardData={sems}
-                    compressText={false} />
-                <TimeTable subjectDetails={subjectDetails} />
+                    compressText={false}
+                    cardClickHandler={semCardClickHandler} />
+                {timeTable && subjectDetails && <TimeTable subjectDetails={subjectDetails} details={timeTable} />}
             </div>
         </>
     )
@@ -51,11 +66,20 @@ function ButtonsContainer() {
     )
 }
 
-function SectionsBtnContainer({ noOfSections = 3 }) {
+function SectionsBtnContainer({ noOfSections = 3, setCurrentOpenSection }) {
     let sectionBtns = [];
     for (let index = 0; index < noOfSections; index++) {
         let char = String.fromCharCode(65 + index);
-        sectionBtns.push(<Card details={char} key={index} className='section-btn' />)
+        sectionBtns.push(
+            <Card
+                details={char}
+                key={index}
+                className='section-btn'
+                cardClickHandler={sectionBtnsClickHandler} />
+        )
+    }
+    function sectionBtnsClickHandler(event) {
+        setCurrentOpenSection(event.target.title.charCodeAt(0) - 65)
     }
     return (
         <div className='section-btn-container'>

@@ -2,10 +2,21 @@ import Plus from "../Icons/Plus";
 import "../Style/Cards.css"
 import Arrow from '../Icons/Arrow'
 
-export default function Cards({ cardDetails = [], cardClassName, cardClickHandler = () => { }, addBtnClickHandler }) {
+export default function Cards({
+    cardDetails = [],
+    cardClassName,
+    cardClickHandler = () => { },
+    addBtnClickHandler
+}) {
     let cards = [];
     for (let index = 0; index < cardDetails.length; index++) {
-        cards.push(<Card details={cardDetails[index]} key={index} cardClickHandler={cardClickHandler} className={cardClassName}></Card>)
+        cards.push(
+            <Card
+                details={cardDetails[index]}
+                key={index}
+                cardClickHandler={cardClickHandler}
+                className={cardClassName}></Card>
+        )
     }
     return (
         <div className="cards-container">
@@ -18,7 +29,12 @@ export default function Cards({ cardDetails = [], cardClassName, cardClickHandle
     )
 }
 
-export function Card({ details = "Sample", className = "", cardClickHandler = () => { }, compressText = true }) {
+export function Card({
+    details = "Sample",
+    className = "",
+    cardClickHandler = () => { },
+    compressText = true
+}) {
     function defaultClickHandler(event) {
         event.stopPropagation();
         try {
@@ -39,10 +55,23 @@ export function Card({ details = "Sample", className = "", cardClickHandler = ()
     )
 }
 
-export function HorizentalCardsContainer({ cardData = [], className = "", cardClassName, cardClickHandler, compressText }) {
+export function HorizentalCardsContainer({
+    cardData = [],
+    className = "",
+    cardClassName,
+    cardClickHandler,
+    compressText
+}) {
     let cards = [];
     for (let index = 0; index < cardData.length; index++) {
-        cards.push(<Card details={cardData[index]} key={index} className={cardClassName} cardClickHandler={cardClickHandler} compressText={compressText} />)
+        cards.push(
+            <Card
+                details={cardData[index]}
+                key={index}
+                className={cardClassName}
+                cardClickHandler={cardClickHandler}
+                compressText={compressText} />
+        )
     }
     return (
         <div className={'horizental-cards-container ' + className}>

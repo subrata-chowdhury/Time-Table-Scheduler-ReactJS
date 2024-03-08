@@ -30,8 +30,8 @@ function DashboardPage() {
 function TeacherDetailsContainer({ setPerDayValue }) {
     const [teachersList, setTeahersList] = useState([])
     const [semesters, setSemesters] = useState([])
-    const [teacherTimeTableDetails, setTeacherTimeTableDetails] = useState([])
-    const [subjectDetails, setSubjectDetails] = useState([])
+    const [teacherTimeTableDetails, setTeacherTimeTableDetails] = useState()
+    const [subjectDetails, setSubjectDetails] = useState()
     useEffect(() => {
         getTeacherList(setTeahersList);
         getSubjects(setSubjectDetails)
@@ -78,12 +78,13 @@ function TeachersTimeTableContainer({ teacherTimeTableDetails, subjectDetails })
     return (
         <div className='time-table-wrapper'>
             <div className='heading'>Time Table for {sir}</div>
-            <TimeTable
-                subjectIndexAtPeriod={2}
-                className='teacher-time-table'
-                timeTableWidthInPercent={92}
-                details={teacherTimeTableDetails}
-                subjectDetails={subjectDetails} />
+            {subjectDetails && teacherTimeTableDetails &&
+                <TimeTable
+                    subjectIndexAtPeriod={2}
+                    className='teacher-time-table'
+                    timeTableWidthInPercent={92}
+                    details={teacherTimeTableDetails}
+                    subjectDetails={subjectDetails} />}
         </div>
     )
 }
