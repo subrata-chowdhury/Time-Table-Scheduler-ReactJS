@@ -1,6 +1,6 @@
 import { url } from "./fetchUrl"
 
-export function getSubjectList(callBackFunction = (data) => { }, setSubjectsList) {
+export function getSubjectList(callBackFunction = (data) => { }) {
     let status;
     try {
         fetch(`${url}io/subjects`)

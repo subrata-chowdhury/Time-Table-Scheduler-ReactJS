@@ -21,7 +21,11 @@ function SubjectsPage() {
     }, [])
 
     function subjectCardOnClickHandler(event) {
-        getSubjectDetails(event.target.title, setSubjectDetails)
+        getSubjectDetails(event.target.title, setSubjectDetailsControler)
+        function setSubjectDetailsControler(data) {
+            data.roomCodes = data.roomCodes.join(";");
+            setSubjectDetails(data)
+        }
         setSubjectName(event.target.title)
         document.querySelector('button.subject-delete-btn').style.cssText = "display: block";
     }
@@ -44,7 +48,11 @@ function SubjectsPage() {
                         <MiniStateContainer />
                         <SearchBar />
                     </div>
-                    <Cards cardDetails={subjectsList} cardClassName={"subject-card"} cardClickHandler={subjectCardOnClickHandler} addBtnClickHandler={addSubjectCardClickHandler} />
+                    <Cards
+                        cardDetails={subjectsList}
+                        cardClassName={"subject-card"}
+                        cardClickHandler={subjectCardOnClickHandler}
+                        addBtnClickHandler={addSubjectCardClickHandler} />
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer
@@ -79,11 +87,71 @@ function DetailsContainer({
     }
     function inputOnChangeHandler(event) {
         if (event.target.name === 'subjectName') setSubjectName(event.target.value)
+        else if (event.target.name === "roomCodes") setSubjectDetails(value => ({ ...value, [event.target.name]: event.target.value }))
         else setSubjectDetails(value => ({ ...value, [event.target.name]: event.target.value }))
     }
     function subjectFormSubmitHandler(event) {
         event.preventDefault();
-        saveSubject(subjectDetails, () => { alert(subjectDetails + "---------- is added") })
+        let data = { ...subjectDetails }
+        let newSubjectName = subjectName.trim().toUpperCase()
+
+        //form validating
+        if (newSubjectName.length > 9) {
+            alert("Length of the name must be less than 10");
+            return;
+        }
+        if (newSubjectName.length === 0) {
+            alert("Please Enter a vaild name");
+            return;
+        }
+        //sem validation
+        if (data.sem.length === 0) {
+            alert("Please Enter a Number in semester");
+            return;
+        }
+        if (parseInt(data.sem)) {
+            data.sem = parseInt(data.sem);
+        } else {
+            alert("Please Enter a number in semester");
+            return;
+        }
+        if (data.sem < 1 || data.sem > 8) {
+            alert("Value must be in 1 to 8 range in semester");
+            return;
+        }
+        //lecture count validation
+        if (data.lectureCount === 0 || data.lectureCount === "") {
+            data.lectureCount = 4;
+        }
+        if (parseInt(data.lectureCount)) {
+            data.lectureCount = parseInt(data.lectureCount);
+        } else {
+            alert("Please Enter a number in lecture count per week");
+            return;
+        }
+        if (data.lectureCount < 0 || data.lectureCount > 40) {
+            alert("Value must be in range 0 to 40 in lecture count per week");
+            return;
+        }
+        //room code validation
+        if (data.roomCodes.length === 0) {
+            alert("Please Enter a Classroom name");
+            return;
+        } else {
+            data.roomCodes = data.roomCodes.split(";");
+        }
+
+        try {
+            let temp_rCode = [];
+            for (let index = 0; index < data.roomCodes.length; index++) {
+                temp_rCode.push(data.roomCodes[index].trim().toUpperCase())
+            }
+            data.roomCodes = temp_rCode;
+        } catch (err) {
+            alert("Please Enter a Valid Room Code");
+            return
+        }
+        saveSubject(data, alert(JSON.stringify(data) + "---------- is added"))
     }
     function deleteSubjectBtnClickHandler(event) {
         event.preventDefault();

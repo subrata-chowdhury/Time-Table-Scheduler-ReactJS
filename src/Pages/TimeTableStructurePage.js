@@ -38,24 +38,45 @@ function TimeTableStructureInputContainer() {
             <div className='top-input-container'>
                 <div className="input-container">
                     <div className="input-box-heading">Number of Semester</div>
-                    <input type='number' className='input-box' min={0} name='semesterCount' value={timeTableStructure.semesterCount} onChange={inputOnChangeHandler} />
+                    <input
+                        type='number'
+                        className='input-box'
+                        min={0}
+                        name='semesterCount'
+                        value={timeTableStructure.semesterCount}
+                        onChange={inputOnChangeHandler} />
                 </div>
                 <div className="input-container">
                     <div className="input-box-heading">Number of Periods per Day</div>
-                    <input type='number' className='input-box' min={0} name='periodCount' value={timeTableStructure.periodCount} onChange={inputOnChangeHandler} />
+                    <input
+                        type='number'
+                        className='input-box'
+                        min={0} name='periodCount'
+                        value={timeTableStructure.periodCount}
+                        onChange={inputOnChangeHandler} />
                 </div>
             </div>
 
             <div className='mid-input-container'>
                 <div className="input-container">
                     <div className="input-box-heading">Number of Sections per Semester</div>
-                    <input type='text' className='input-box' name='sectionsPerSemester' value={timeTableStructure.sectionsPerSemester} onChange={inputOnChangeHandler} />
+                    <input
+                        type='text'
+                        className='input-box'
+                        name='sectionsPerSemester'
+                        value={timeTableStructure.sectionsPerSemester}
+                        onChange={inputOnChangeHandler} />
                 </div>
             </div>
             <div className='bottom-input-container'>
                 <div className="input-container">
                     <div className="input-box-heading">Break Times per Semester</div>
-                    <input type='text' className='input-box' name='breaksPerSemester' value={JSON.stringify(timeTableStructure.breaksPerSemester).slice(1, -1)} onChange={inputOnChangeHandler} />
+                    <input
+                        type='text'
+                        className='input-box'
+                        name='breaksPerSemester'
+                        value={JSON.stringify(timeTableStructure.breaksPerSemester).slice(1, -1)}
+                        onChange={inputOnChangeHandler} />
                 </div>
             </div>
             <div className='save-btn-container'>

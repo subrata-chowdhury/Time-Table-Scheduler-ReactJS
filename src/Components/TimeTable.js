@@ -16,7 +16,6 @@ export default function TimeTable({
     subjectDetails,
     className = "",
     timeTableWidthInPercent = 95,
-    owner = "none"
 }) {
     if (details.length <= 0) return
     let periodTimesRow = [];
@@ -37,7 +36,14 @@ export default function TimeTable({
         } else {
             dayRows.push(<div className="invalid-text" key={"error"}>Invalid Inputs</div>)
         }
-    else dayRows.push(<div className="text" style={{ display: "grid", justifyContent: "center", alignItems: "center" }} key={"error"}>No Scedule Found <br />or <br />Time Table was not Generated Yet</div>)
+    else dayRows.push(
+        <div
+            className="text"
+            style={{ display: "grid", justifyContent: "center", alignItems: "center" }}
+            key={"error"}>
+            No Scedule Found <br />or <br />Time Table was not Generated Yet
+        </div>
+    )
 
     function createDayRows(subjectDetails) {
         for (let index = 0; index < dayNames.length; index++) {
@@ -74,7 +80,11 @@ export default function TimeTable({
                     let lab = false;
                     if (subject) lab = subject.isPractical
                     for (let detailsIndex = 0; detailsIndex < listOfDetailsOfThatDay[index - 1].length; detailsIndex++) {
-                        periodDetails.push(<div key={"data" + detailsIndex}>{listOfDetailsOfThatDay[index - 1][detailsIndex]}</div>)
+                        periodDetails.push(
+                            <div key={"data" + detailsIndex}>
+                                {listOfDetailsOfThatDay[index - 1][detailsIndex]}
+                            </div>
+                        )
                     }
                     if (lab === true) {
                         spanCss = { gridColumn: 'auto / span 3' };

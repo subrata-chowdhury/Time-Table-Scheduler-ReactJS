@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import SearchBar from '../Components/SearchBar'
 import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Script/TeachersDataFetcher'
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
+import { getSubjectList } from '../Script/SubjectsDataFetcher'
 
 function TeachersPage() {
     const [teachersList, setTeahersList] = useState([]);
@@ -14,13 +15,18 @@ function TeachersPage() {
         subjects: [],
     })
     const [teacherName, setTeacherName] = useState();
+    const [availableTime, setAvailableTime] = useState([]);
 
     useEffect(() => {
         getTeacherList(setTeahersList);
     }, [])
 
     function teacherCardOnClickHandler(event) {
-        getTeacher(event.target.title, setTeacherDetails);
+        getTeacher(event.target.title, setTeacherDetailsControler);
+        function setTeacherDetailsControler(data) {
+            data.subjects = data.subjects.join(";")
+            setTeacherDetails(data)
+        }
         setTeacherName(event.target.title);
         document.querySelector('button.teacher-delete-btn').style.cssText = "display: block";
     }
@@ -41,14 +47,20 @@ function TeachersPage() {
                         <MiniStateContainer />
                         <SearchBar />
                     </div>
-                    <Cards cardDetails={teachersList} cardClassName={"teacher-card"} cardClickHandler={teacherCardOnClickHandler} addBtnClickHandler={addTeacherCardClickHandler} />
+                    <Cards
+                        cardDetails={teachersList}
+                        cardClassName={"teacher-card"}
+                        cardClickHandler={teacherCardOnClickHandler}
+                        addBtnClickHandler={addTeacherCardClickHandler} />
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer
                         teacherName={teacherName}
                         teacherDetails={teacherDetails}
                         setTeacherDetails={setTeacherDetails}
-                        setTeacherName={setTeacherName} />
+                        setTeacherName={setTeacherName}
+                        availableTime={availableTime}
+                        setAvailableTime={setAvailableTime} />
                 </div>
             </div>
         </>
@@ -59,10 +71,10 @@ function DetailsContainer({
     teacherName = "",
     teacherDetails,
     setTeacherDetails,
-    setTeacherName
+    setTeacherName,
+    availableTime,
+    setAvailableTime
 }) {
-    const [availableTime, setAvailableTime] = useState([]);
-
     function modifyTheValueOfInputBox(time, isSelected) {
         let newArr = [...availableTime];
         if (isSelected) {
@@ -91,10 +103,62 @@ function DetailsContainer({
     function teacherFormSubmitHandler(event) {
         event.preventDefault();
         let teacherData = { ...teacherDetails };
-        teacherData.subjects = teacherData.subjects.split(",")
-        let data = new Map();
-        data[teacherName] = teacherData;
-        saveTeacher(data, () => { alert(data + "---------- is added") })
+        let newTeacherName = teacherName.trim().toUpperCase();
+        getSubjectList(verifyInputs)
+        //verification of inputs
+        function verifyInputs(subjectList) {
+            if (newTeacherName.length === 0) {
+                alert("Please Enter Teacher Name");
+                return;
+            }
+            if (newTeacherName.length > 9) {
+                alert("Length of the name must be less than 10");
+                return;
+            }
+            if (teacherData.subjects.length <= 0) {
+                alert("Please Enter a Subject")
+                return;
+            } else {
+                teacherData.subjects = teacherData.subjects.trim().toUpperCase().split(";");
+            }
+            for (let subjectStr of teacherData.subjects) {
+                if (subjectList !== "unavailable" && subjectList.indexOf(subjectStr) === -1) {
+                    alert("Couldn't find subject - " + subjectStr);
+                    return;
+                }
+            }
+            if (teacherData.freeTime.length > 0) {
+                teacherData.freeTime = `[${teacherData.freeTime.trim()}]`
+                try {
+                    let jsonInput;
+                    try {
+                        jsonInput = JSON.parse(teacherData.freeTime);
+                    } catch (err) {
+                        alert("please enter a vaild time");
+                        return;
+                    }
+                    if (!jsonInput instanceof Array) {
+                        alert("Please enter a vaild time");
+                        return;
+                    }
+                    for (let slot of jsonInput) {
+                        if (!slot instanceof Array && !slot.length === 2) {
+                            alert("Value must contain integers and length must be 2");
+                            return;
+                        }
+                        if (isNaN(slot[0]) || isNaN(slot[1])) {
+                            alert("Value can't be non-numeric or empty");
+                            return;
+                        }
+                    }
+                } catch (err) {
+                    console.log("Error in verifying time")
+                }
+            }
+            let data = new Map();
+            data[teacherName] = teacherData;
+            saveTeacher(data, alert(JSON.stringify(data) + "---------- is added"))
+        }
     }
     return (
         <form className='details-container' onSubmit={teacherFormSubmitHandler}>
@@ -149,7 +213,14 @@ function TimeSelector({ modifyTheValueOfInputBox }) {
     let noOfDays = 5;
     let timeTable = [];
     for (let day = 0; day < noOfDays; day++) {
-        timeTable.push(<Periods noOfPeriods={periodCount} day={day} modifyTheValueOfInputBox={modifyTheValueOfInputBox} key={day}></Periods>)
+        timeTable.push(
+            <Periods
+                noOfPeriods={periodCount}
+                day={day}
+                modifyTheValueOfInputBox={modifyTheValueOfInputBox}
+                key={day}
+            ></Periods>
+        )
     }
     return (
         <div className='time-selector'>
@@ -163,7 +234,11 @@ function TimeSelector({ modifyTheValueOfInputBox }) {
 function Periods({ noOfPeriods, day, modifyTheValueOfInputBox }) {
     let periods = []
     for (let period = 0; period < noOfPeriods; period++) {
-        periods.push(<div key={period} className='period' onClick={event => periodClickHandler(event, period)}>{period + 1}</div>)
+        periods.push(
+            <div key={period} className='period' onClick={event => periodClickHandler(event, period)}>
+                {period + 1}
+            </div>
+        )
     }
 
     function periodClickHandler(event, period) {

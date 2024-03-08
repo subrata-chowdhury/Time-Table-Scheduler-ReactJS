@@ -5,6 +5,7 @@ import "../Style/TimeTablesPage.css"
 import { Card, HorizentalCardsContainer } from '../Components/Cards'
 import { useEffect, useState } from 'react'
 import { getSubjects } from '../Script/SubjectsDataFetcher'
+import { getSchedule } from '../Script/TimeTableDataFetcher'
 
 function TimeTablesPage() {
     const [sems, setSems] = useState([])
@@ -16,6 +17,7 @@ function TimeTablesPage() {
         }
         setSems(sem);
         getSubjects(setSubjectDetails)
+        getSchedule(console.log)
     }, [])
     return (
         <>
@@ -29,7 +31,11 @@ function TimeTablesPage() {
                         <SectionsBtnContainer />
                     </div>
                 </div>
-                <HorizentalCardsContainer className='sem-cards-container' cardClassName={"semester-card"} cardData={sems} compressText={false} />
+                <HorizentalCardsContainer
+                    className='sem-cards-container'
+                    cardClassName={"semester-card"}
+                    cardData={sems}
+                    compressText={false} />
                 <TimeTable subjectDetails={subjectDetails} />
             </div>
         </>

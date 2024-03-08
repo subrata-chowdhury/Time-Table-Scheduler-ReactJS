@@ -32,7 +32,6 @@ function TeacherDetailsContainer({ setPerDayValue }) {
     const [semesters, setSemesters] = useState([])
     const [teacherTimeTableDetails, setTeacherTimeTableDetails] = useState([])
     const [subjectDetails, setSubjectDetails] = useState([])
-    const [timeTableOwner, setTimeTableOwner] = useState("")
     useEffect(() => {
         getTeacherList(setTeahersList);
         getSubjects(setSubjectDetails)
@@ -55,13 +54,17 @@ function TeacherDetailsContainer({ setPerDayValue }) {
                 setSemesters(semesters)
             }
             getTeacherSchedule(event.target.title, setTeacherTimeTableDetails)
-            setTimeTableOwner(event.target.title)
         }
     }
     return (
         <div className='teachers-details-container'>
-            <HorizentalCardsContainer cardClassName={"teacher-card"} cardData={teachersList} cardClickHandler={teacherCardClickHandler} />
-            <TeachersTimeTableContainer teacherTimeTableDetails={teacherTimeTableDetails} subjectDetails={subjectDetails} owner={timeTableOwner} />
+            <HorizentalCardsContainer
+                cardClassName={"teacher-card"}
+                cardData={teachersList}
+                cardClickHandler={teacherCardClickHandler} />
+            <TeachersTimeTableContainer
+                teacherTimeTableDetails={teacherTimeTableDetails}
+                subjectDetails={subjectDetails} />
             <div className='sem-and-subject-container'>
                 <SemesterContainer semList={semesters} />
                 <SubjectContainer subList={teacherDetails.subjects} />
@@ -70,12 +73,17 @@ function TeacherDetailsContainer({ setPerDayValue }) {
     )
 }
 
-function TeachersTimeTableContainer({ teacherTimeTableDetails, subjectDetails, owner }) {
+function TeachersTimeTableContainer({ teacherTimeTableDetails, subjectDetails }) {
     let sir = "Sir";
     return (
         <div className='time-table-wrapper'>
             <div className='heading'>Time Table for {sir}</div>
-            <TimeTable subjectIndexAtPeriod={2} className='teacher-time-table' timeTableWidthInPercent={92} details={teacherTimeTableDetails} subjectDetails={subjectDetails} owner={owner} />
+            <TimeTable
+                subjectIndexAtPeriod={2}
+                className='teacher-time-table'
+                timeTableWidthInPercent={92}
+                details={teacherTimeTableDetails}
+                subjectDetails={subjectDetails} />
         </div>
     )
 }
@@ -98,7 +106,11 @@ function SemesterContainer({ semList = [1, 2, 5, 6] }) {
 function SubjectContainer({ subList = ["a", "b", "c"] }) {
     let subs = [];
     for (let index = 0; index < subList.length; index++) {
-        subs.push(<div className='subject' key={subList[index]}>{subList[index].toUpperCase()}</div>)
+        subs.push(
+            <div className='subject' key={subList[index]}>
+                {subList[index].toUpperCase()}
+            </div>
+        )
     }
     return (
         <div className='subject-container'>

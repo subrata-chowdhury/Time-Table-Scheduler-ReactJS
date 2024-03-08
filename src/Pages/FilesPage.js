@@ -26,7 +26,10 @@ function FilesPage() {
             <div className='main-container files'>
                 <div className='left-sub-container'>
                     <MiniStateContainer />
-                    <Cards cardDetails={files} cardClickHandler={fileCardClickHandler} addBtnClickHandler={addFileBtnClickHandler} />
+                    <Cards
+                        cardDetails={files}
+                        cardClickHandler={fileCardClickHandler}
+                        addBtnClickHandler={addFileBtnClickHandler} />
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer fileName={fileName} setFileName={setFileName} />
