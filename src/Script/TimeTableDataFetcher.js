@@ -1,5 +1,5 @@
-let url = "http://localhost:57679/"
-
+// let url = "http://localhost:57679/"
+import { url } from "./fetchUrl"
 export function getSchedule(callBackFunction) {
     let status;
     try {

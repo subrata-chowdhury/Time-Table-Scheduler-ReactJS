@@ -1,5 +1,5 @@
-let url = window.location.origin + "/";
-url = "http://localhost:57679/"
+import { url } from "./fetchUrl"
+
 
 export function getTeacherList(callBackFunction) {
     let status;

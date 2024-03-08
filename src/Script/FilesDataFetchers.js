@@ -1,6 +1,4 @@
-let url = window.location.origin + "/";
-url = "http://localhost:57679/"
-
+import { url } from "./fetchUrl"
 export function getCurrentFileName(callBackFunction) {
     try {
         let status;
