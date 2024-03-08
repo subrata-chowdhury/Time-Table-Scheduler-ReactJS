@@ -1,3 +1,5 @@
+let url = "http://localhost:57679/"
+
 export function getSchedule(callBackFunction) {
     let status;
     try {
@@ -37,7 +39,7 @@ export function getTimeTableStructure(callBackFunction) {
                 }
                 let schedule;
                 try {
-                    schedule = JSON.parse(data)
+                    schedule = JSON.parse(data);
                 } catch (error) {
                     console.log("invaild data")
                 }

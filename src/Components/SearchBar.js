@@ -27,6 +27,7 @@ export default function SearchBar() {
 
     function searchIconClickHandler() {
         document.querySelector(".search-container").classList.add("active");
+        document.querySelector(".search-input").focus()
     }
 
     function crossIconClickHandler() {

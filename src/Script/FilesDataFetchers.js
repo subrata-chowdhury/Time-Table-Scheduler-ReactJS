@@ -1,4 +1,5 @@
 let url = window.location.origin + "/";
+url = "http://localhost:57679/"
 
 export function getCurrentFileName(callBackFunction) {
     try {
@@ -40,7 +41,7 @@ export function saveCurrentStateInNewFile(name, callBackFunction = () => { }) {
     }
 }
 
-export function getSaveFileList(callBackFunction) {
+export function getSaveFileList(callBackFunction = (data) => { }) {
     let status;
     try {
         fetch(`${url}io/saves/list`)
@@ -52,7 +53,7 @@ export function getSaveFileList(callBackFunction) {
                 if (status !== 200) {
                     console.log("Error in geting save sates list", data)
                 }
-                let files;
+                let files = [];
                 try {
                     files = JSON.parse(data)
                 } catch (error) {
@@ -65,7 +66,7 @@ export function getSaveFileList(callBackFunction) {
     }
 }
 
-export function loadSaveFile(name, callBackFunction = () => { }) {
+export function loadSaveFile(name, callBackFunction = (data) => { }) {
     let status;
     try {
         fetch(`${url}io/saves/load?name=${name}`)

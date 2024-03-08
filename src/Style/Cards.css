@@ -1,6 +1,6 @@
 .cards-container {
     width: 97%;
-    height: 85vh;
+    height: 83vh;
     display: grid;
     grid-template-columns: repeat(6, auto);
     overflow-y: scroll;

@@ -6,6 +6,7 @@ import TeachersPage from './Pages/TeachersPage';
 import TimeTablesPage from './Pages/TimeTablesPage';
 import TimeTableStructurePage from './Pages/TimeTableStructurePage';
 import FilesPage from './Pages/FilesPage';
+import "./Style/BasicComponents.css"
 
 function App() {
 	return (

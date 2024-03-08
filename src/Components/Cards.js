@@ -2,14 +2,14 @@ import Plus from "../Icons/Plus";
 import "../Style/Cards.css"
 import Arrow from '../Icons/Arrow'
 
-export default function Cards({ cardDetails = [], cardClassName, cardClickHandler = () => { } }) {
+export default function Cards({ cardDetails = [], cardClassName, cardClickHandler = () => { }, addBtnClickHandler }) {
     let cards = [];
     for (let index = 0; index < cardDetails.length; index++) {
         cards.push(<Card details={cardDetails[index]} key={index} cardClickHandler={cardClickHandler} className={cardClassName}></Card>)
     }
     return (
         <div className="cards-container">
-            <div className="card add">
+            <div className="card add" onClick={addBtnClickHandler}>
                 <Plus />
             </div>
 
@@ -33,16 +33,16 @@ export function Card({ details = "Sample", className = "", cardClickHandler = ()
         <div className={"card data " + className} onClick={event => {
             cardClickHandler(event);
             defaultClickHandler(event);
-        }}>
-            {details}
+        }} title={details}>
+            {details.length > 6 ? details.slice(0, 5) + ".." : details}
         </div>
     )
 }
 
-export function HorizentalCardsContainer({ cardData = [], className = "", cardClassName }) {
+export function HorizentalCardsContainer({ cardData = [], className = "", cardClassName, cardClickHandler }) {
     let cards = [];
     for (let index = 0; index < cardData.length; index++) {
-        cards.push(<Card details={cardData[index]} key={cardData[index]} className={cardClassName} />)
+        cards.push(<Card details={cardData[index]} key={index} className={cardClassName} cardClickHandler={cardClickHandler} />)
     }
     return (
         <div className={'horizental-cards-container ' + className}>

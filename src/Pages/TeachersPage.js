@@ -1,17 +1,37 @@
 import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
 import Cards from '../Components/Cards'
-import { InputBox } from '../Components/BasicComponents'
 import "../Style/Teachers.css"
 import { useEffect, useState } from 'react'
 import SearchBar from '../Components/SearchBar'
-import { getTeacherList } from '../Script/TeachersDataFetcher'
+import { deleteTeacher, getTeacher, getTeacherList } from '../Script/TeachersDataFetcher'
+import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 
 function TeachersPage() {
     const [teachersList, setTeahersList] = useState([]);
+    const [teacherDetails, setTeacherDetails] = useState({
+        freeTime: [],
+        subjects: [],
+    })
+    const [teacherName, setTeacherName] = useState();
+
     useEffect(() => {
         getTeacherList(setTeahersList);
     }, [])
+
+    function teacherCardOnClickHandler(event) {
+        getTeacher(event.target.title, setTeacherDetails);
+        setTeacherName(event.target.title);
+        document.querySelector('button.teacher-delete-btn').style.cssText = "display: block";
+    }
+    function addTeacherCardClickHandler() {
+        setTeacherDetails({
+            freeTime: [],
+            subjects: [],
+        })
+        setTeacherName("")
+        document.querySelector("form button.teacher-delete-btn").style.cssText = "display: none;";
+    }
     return (
         <>
             <Menubar activeMenuIndex={1} />
@@ -21,17 +41,26 @@ function TeachersPage() {
                         <MiniStateContainer />
                         <SearchBar />
                     </div>
-                    <Cards cardDetails={teachersList} cardClassName={"teacher-card"} />
+                    <Cards cardDetails={teachersList} cardClassName={"teacher-card"} cardClickHandler={teacherCardOnClickHandler} addBtnClickHandler={addTeacherCardClickHandler} />
                 </div>
                 <div className='right-sub-container'>
-                    <DetailsContainer />
+                    <DetailsContainer
+                        teacherName={teacherName}
+                        teacherDetails={teacherDetails}
+                        setTeacherDetails={setTeacherDetails}
+                        setTeacherName={setTeacherName} />
                 </div>
             </div>
         </>
     )
 }
 
-function DetailsContainer() {
+function DetailsContainer({
+    teacherName = "",
+    teacherDetails,
+    setTeacherDetails,
+    setTeacherName
+}) {
     const [availableTime, setAvailableTime] = useState([]);
 
     function modifyTheValueOfInputBox(time, isSelected) {
@@ -40,12 +69,54 @@ function DetailsContainer() {
             newArr.splice(newArr.indexOf(time), 1);
         } else newArr.push(time)
         setAvailableTime(newArr)
+        setTeacherDetails(value => ({ ...value, "freeTime": newArr }))
+    }
+    function inputOnChangeHandler(event) {
+        if (event.target.name === 'teacherName') setTeacherName(event.target.value)
+        else setTeacherDetails(value => ({ ...value, [event.target.name]: event.target.value }))
+    }
+    function deleteTeacherBtnClickHandler() {
+        if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) {
+            deleteTeacher(teacherName, clearInputs);
+            function clearInputs() {
+                setTeacherDetails({
+                    freeTime: [],
+                    subjects: [],
+                })
+                setTeacherName("")
+            }
+        }
+    }
+    function teacherFormSubmitHandler(event) {
+        event.preventDefault();
     }
     return (
-        <div className='details-container'>
+        <form className='details-container' onSubmit={teacherFormSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>
-            <InputBox inputHeading='Teacher Name' placeholder='Ex.: ABC' />
-            <InputBox inputHeading='Subject Names' placeholder="Ex. PCC-CS501, PCC-CS502, .." />
+            <div className="input-container">
+                <div className="input-box-heading">Teacher Name</div>
+                <input
+                    type="text"
+                    className="input-box"
+                    name='teacherName'
+                    value={teacherName}
+                    placeholder='Ex. ABC'
+                    onChange={event => {
+                        inputOnChangeHandler(event)
+                    }}></input>
+            </div>
+            <div className="input-container">
+                <div className="input-box-heading">Subject Names</div>
+                <input
+                    type="text"
+                    className="input-box"
+                    name='subjects'
+                    value={teacherDetails.subjects}
+                    placeholder='Ex. PCC-CS501, PCC-CS502, ..'
+                    onChange={event => {
+                        inputOnChangeHandler(event)
+                    }}></input>
+            </div>
             <div className='input-container'>
                 <div>Available Times</div>
                 <TimeSelector modifyTheValueOfInputBox={modifyTheValueOfInputBox} />
@@ -55,20 +126,25 @@ function DetailsContainer() {
                 <input type="text" className="input-box" readOnly={true} value={availableTime}></input>
             </div>
             <div className='save-btn-container'>
-                <button className='teacher-save-btn'>Save</button>
+                <button className='teacher-save-btn' type='submit'>Save</button>
+                <button className='teacher-delete-btn' onClick={deleteTeacherBtnClickHandler}>Delete</button>
             </div>
-        </div>
+        </form>
     )
 }
 
 function TimeSelector({ modifyTheValueOfInputBox }) {
-    let noOfDays = 5;
-    let noOfPeriodsPerDay = 8;
-    let timeTable = [];
-    for (let day = 0; day < noOfDays; day++) {
-        timeTable.push(<Periods noOfPeriods={noOfPeriodsPerDay} day={day} modifyTheValueOfInputBox={modifyTheValueOfInputBox} key={day}></Periods>)
+    const [periodCount, setPeriodCount] = useState(8)
+    getTimeTableStructure(createTimeTable)
+    function createTimeTable(timeTableStructure) {
+        setPeriodCount(timeTableStructure.periodCount);
     }
 
+    let noOfDays = 5;
+    let timeTable = [];
+    for (let day = 0; day < noOfDays; day++) {
+        timeTable.push(<Periods noOfPeriods={periodCount} day={day} modifyTheValueOfInputBox={modifyTheValueOfInputBox} key={day}></Periods>)
+    }
     return (
         <div className='time-selector'>
             <div className='time-table-container'>

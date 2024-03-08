@@ -4,15 +4,18 @@ import TimeTable from '../Components/TimeTable'
 import "../Style/TimeTablesPage.css"
 import { Card, HorizentalCardsContainer } from '../Components/Cards'
 import { useEffect, useState } from 'react'
+import { getSubjects } from '../Script/SubjectsDataFetcher'
 
 function TimeTablesPage() {
     const [sems, setSems] = useState([])
+    const [subjectDetails, setSubjectDetails] = useState([])
     useEffect(() => {
         let sem = []
         for (let index = 1; index <= 8; index++) {
             sem.push("Semester " + index);
         }
         setSems(sem);
+        getSubjects(setSubjectDetails)
     }, [])
     return (
         <>
@@ -26,7 +29,7 @@ function TimeTablesPage() {
                     </div>
                 </div>
                 <HorizentalCardsContainer className='sem-cards-container' cardClassName={"semester-card"} cardData={sems} />
-                <TimeTable />
+                <TimeTable subjectDetails={subjectDetails} />
             </div>
         </>
     )

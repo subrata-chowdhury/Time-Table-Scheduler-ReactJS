@@ -1,4 +1,5 @@
 let url = window.location.origin + "/";
+url = "http://localhost:57679/"
 
 export function getTeacherList(callBackFunction) {
     let status;
@@ -15,6 +16,7 @@ export function getTeacherList(callBackFunction) {
                 let listArray;
                 try {
                     listArray = JSON.parse(data);
+                    listArray = Object.keys(listArray)
                 } catch (error) {
                     console.log("data is invaild")
                 }

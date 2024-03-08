@@ -1,87 +1,95 @@
 import "../Style/TimeTable.css"
-let subDetail = [{
-    sub: "Subject",
-    isLab: false
-}, { sub: "Lab", isLab: true }]
 export default function TimeTable({
     noOfDays = 5,
-    noOfPeriods = 8,
+    noOfPeriods = 9,
     breakTimeIndexs = [4],
     dayNames = ["Tue", "Wed", "Thu", "Fri", "Sat"],
     periodTimes = ["9:30AM", "10:20AM", "11:10AM", "12:00PM", "12:50PM", "01:40PM", "02:30PM", "03:20PM", "04:10PM"],
     details = [
-        [["FirstSir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
-        [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
-        [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
-        [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
-        [["Sir", "Lab", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sirlast", "Subject", "roomCode"]]
+        [["FirstSir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
+        [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
+        [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
+        [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
+        [["Sir", "Lab", "roomCode"], ["Sir", "Lab", "roomCode"], ["Sir", "Lab", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sirlast", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]]
     ],
+    subjectIndexAtPeriod = 1,
+    subjectDetails,
     className = "",
     timeTableWidthInPercent = 95,
+    owner = "none"
 }) {
+    if (details.length <= 0) return
     let periodTimesRow = [];
-    periodTimes.forEach((e) => {
-        periodTimesRow.push(<div className="time" key={e}>{e}</div>);
-    })
+    for (let index = 0; index < periodTimes.length; index++) {
+        periodTimesRow.push(<div className="time" key={periodTimes[index]}>{periodTimes[index]}</div>);
+    }
 
     let breakWord = "BREAK";
     let dayRows = [];
     let gridCss = "";
-    let gridWidth = timeTableWidthInPercent / (noOfPeriods + breakTimeIndexs.length + 1)
-    for (let i = 0; i < (noOfPeriods + breakTimeIndexs.length) + 1; i++) {
+    let gridWidth = timeTableWidthInPercent / (noOfPeriods + 1)
+    for (let i = 0; i < (noOfPeriods) + 1; i++) {
         gridCss += gridWidth + "%";
     }
     if (details.length !== 0)
         if (dayNames.length === details.length) {
-            for (let index = 0; index < dayNames.length; index++) {
-                dayRows.push(<div className="day-container" style={{ gridTemplateColumns: gridCss }} key={"day" + index}>{createASingleDayRow(dayNames[index], details[index], breakWord[index])}</div>)
-            }
+            createDayRows(subjectDetails)
         } else {
             dayRows.push(<div className="invalid-text" key={"error"}>Invalid Inputs</div>)
         }
-    else dayRows.push(<div className="text" key={"error"}>No Scedule Found <br />or <br />Time Table was not Generated Yet</div>)
+    else dayRows.push(<div className="text" style={{ display: "grid", justifyContent: "center", alignItems: "center" }} key={"error"}>No Scedule Found <br />or <br />Time Table was not Generated Yet</div>)
 
-    function createASingleDayRow(dayName = "", listOfDetailsOfThatDay = [], breakWord) {
+    function createDayRows(subjectDetails) {
+        for (let index = 0; index < dayNames.length; index++) {
+            dayRows.push(
+                <div className="day-container" style={{ gridTemplateColumns: gridCss }} key={"day" + index}>
+                    {createASingleDayRow(dayNames[index], details[index], breakWord[index], subjectDetails)}
+                </div>
+            )
+        }
+    }
+    function createASingleDayRow(dayName = "", listOfDetailsOfThatDay = "", breakWord, subjectDetails) {
+        if (listOfDetailsOfThatDay === "") return
         let dayRow = [];
         dayRow.push(<div className="day-name" key={0}>{dayName}</div>)
-        let totalNoOfPeriods = noOfPeriods + breakTimeIndexs.length;
-        let indexForArray = 0;
-        let outerIndex = 1;
-        while (outerIndex <= totalNoOfPeriods) {
-            if (breakTimeIndexs.indexOf(outerIndex - 1) >= 0) {
+        let totalNoOfPeriods = noOfPeriods;
+        let index = 1
+        while (index <= totalNoOfPeriods) {
+            if (breakTimeIndexs.indexOf(index - 1) >= 0) {
                 dayRow.push(
-                    <div className="period-details-container break" key={"class" + outerIndex}>
+                    <div className="period-details-container break" key={"class" + index}>
                         <div> </div>
                         <div> {breakWord} </div>
                         <div> </div>
                     </div>
                 )
-                outerIndex++;
+                index++
             } else {
                 let periodDetails = [];
-                let lab;
-                for (let index = 0; index < subDetail.length; index++) {
-                    if (subDetail[index].sub === listOfDetailsOfThatDay[indexForArray][1]) {
-                        lab = subDetail[index].isLab;
-                        break;
+                let spanCss = {};
+                if (listOfDetailsOfThatDay[index - 1] === null) {
+                    index++;
+                } else {
+                    let subject = subjectDetails[listOfDetailsOfThatDay[index - 1][subjectIndexAtPeriod]]
+                    let lab = false;
+                    if (subject) lab = subject.isPractical
+                    for (let detailsIndex = 0; detailsIndex < listOfDetailsOfThatDay[index - 1].length; detailsIndex++) {
+                        periodDetails.push(<div key={"data" + detailsIndex}>{listOfDetailsOfThatDay[index - 1][detailsIndex]}</div>)
+                    }
+                    if (lab === true) {
+                        spanCss = { gridColumn: 'auto / span 3' };
+                        index += 3
+                    } else {
+                        index++
                     }
                 }
-                for (let index = 0; index < listOfDetailsOfThatDay[indexForArray].length; index++) {
-                    periodDetails.push(<div key={"data" + index}>{listOfDetailsOfThatDay[indexForArray][index]}</div>)
-                }
-                let spanCss = {};
-                if (lab === true) {
-                    spanCss = { gridColumn: 'auto / span 3' };
-                    outerIndex += 3
-                } else {
-                    outerIndex++
-                }
+                let classNameDetails = "period-details-container ";
+                periodDetails.length !== 0 ? classNameDetails += "class" : classNameDetails += ""
                 dayRow.push(
-                    <div className="period-details-container class" key={outerIndex} style={spanCss}>
+                    <div className={classNameDetails} key={dayName + index} style={spanCss}>
                         {periodDetails}
                     </div>
                 )
-                indexForArray++;
             }
         }
         return dayRow;
