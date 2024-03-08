@@ -137,12 +137,12 @@ function DetailsContainer({
                         alert("please enter a vaild time");
                         return;
                     }
-                    if (!jsonInput instanceof Array) {
+                    if (!(jsonInput instanceof Array)) {
                         alert("Please enter a vaild time");
                         return;
                     }
                     for (let slot of jsonInput) {
-                        if (!slot instanceof Array && !slot.length === 2) {
+                        if (!(slot instanceof Array) && !slot.length === 2) {
                             alert("Value must contain integers and length must be 2");
                             return;
                         }
