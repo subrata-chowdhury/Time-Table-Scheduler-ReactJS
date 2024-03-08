@@ -19,6 +19,17 @@ export default function Menubar({ activeMenuIndex }) {
             document.querySelector(".app").classList.add("active");
         }
     }
+    function autoToggleInResize() {
+        let app = document.querySelector(".app")
+        if (window.innerWidth <= 1250) {
+            app.classList.add("active");
+        } else {
+            app.classList.remove("active");
+        }
+    }
+    window.onresize = () => {
+        autoToggleInResize()
+    }
 
     return (
         <div className="menubar-container">

@@ -55,6 +55,13 @@
     transition: 0.3s;
 }
 
+@media (max-width: 1150px) {
+    .period{
+        width: 20px;
+        height: 20px;
+    }
+}
+
 .period.selected {
     border: 2px solid dodgerblue;
     box-shadow: 0 0 7px rgba(30, 144, 255, 1);

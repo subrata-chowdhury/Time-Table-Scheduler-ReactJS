@@ -18,7 +18,7 @@ export default function Cards({ cardDetails = [], cardClassName, cardClickHandle
     )
 }
 
-export function Card({ details = "Sample", className = "", cardClickHandler = () => { } }) {
+export function Card({ details = "Sample", className = "", cardClickHandler = () => { }, compressText = true }) {
     function defaultClickHandler(event) {
         event.stopPropagation();
         try {
@@ -34,15 +34,15 @@ export function Card({ details = "Sample", className = "", cardClickHandler = ()
             cardClickHandler(event);
             defaultClickHandler(event);
         }} title={details}>
-            {details.length > 6 ? details.slice(0, 5) + ".." : details}
+            {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
         </div>
     )
 }
 
-export function HorizentalCardsContainer({ cardData = [], className = "", cardClassName, cardClickHandler }) {
+export function HorizentalCardsContainer({ cardData = [], className = "", cardClassName, cardClickHandler, compressText }) {
     let cards = [];
     for (let index = 0; index < cardData.length; index++) {
-        cards.push(<Card details={cardData[index]} key={index} className={cardClassName} cardClickHandler={cardClickHandler} />)
+        cards.push(<Card details={cardData[index]} key={index} className={cardClassName} cardClickHandler={cardClickHandler} compressText={compressText} />)
     }
     return (
         <div className={'horizental-cards-container ' + className}>

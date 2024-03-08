@@ -4,7 +4,7 @@ import Cards from '../Components/Cards'
 import "../Style/Teachers.css"
 import { useEffect, useState } from 'react'
 import SearchBar from '../Components/SearchBar'
-import { deleteTeacher, getTeacher, getTeacherList } from '../Script/TeachersDataFetcher'
+import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Script/TeachersDataFetcher'
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 
 function TeachersPage() {
@@ -89,6 +89,11 @@ function DetailsContainer({
     }
     function teacherFormSubmitHandler(event) {
         event.preventDefault();
+        let teacherData = { ...teacherDetails };
+        teacherData.subjects = teacherData.subjects.split(",")
+        let data = new Map();
+        data[teacherName] = teacherData;
+        saveTeacher(data, () => { alert(data + "---------- is added") })
     }
     return (
         <form className='details-container' onSubmit={teacherFormSubmitHandler}>

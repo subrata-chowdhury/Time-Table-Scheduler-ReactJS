@@ -4,7 +4,7 @@ import SearchBar from '../Components/SearchBar'
 import Cards from '../Components/Cards'
 import "../Style/Subjects.css"
 import { useEffect, useState } from 'react'
-import { deleteSubject, getSubjectDetails, getSubjectList } from '../Script/SubjectsDataFetcher'
+import { deleteSubject, getSubjectDetails, getSubjectList, saveSubject } from '../Script/SubjectsDataFetcher'
 
 function SubjectsPage() {
     const [subjectsList, setSubjectsList] = useState([])
@@ -83,7 +83,7 @@ function DetailsContainer({
     }
     function subjectFormSubmitHandler(event) {
         event.preventDefault();
-        alert(JSON.stringify(subjectDetails))
+        saveSubject(subjectDetails, () => { alert(subjectDetails + "---------- is added") })
     }
     function deleteSubjectBtnClickHandler() {
         if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?"))

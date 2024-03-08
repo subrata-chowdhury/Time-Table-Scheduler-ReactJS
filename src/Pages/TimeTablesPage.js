@@ -19,6 +19,7 @@ function TimeTablesPage() {
     }, [])
     return (
         <>
+
             <Menubar activeMenuIndex={3} />
             <div className='main-container time-table'>
                 <div className='menubar'>
@@ -28,7 +29,7 @@ function TimeTablesPage() {
                         <SectionsBtnContainer />
                     </div>
                 </div>
-                <HorizentalCardsContainer className='sem-cards-container' cardClassName={"semester-card"} cardData={sems} />
+                <HorizentalCardsContainer className='sem-cards-container' cardClassName={"semester-card"} cardData={sems} compressText={false} />
                 <TimeTable subjectDetails={subjectDetails} />
             </div>
         </>
@@ -38,8 +39,8 @@ function TimeTablesPage() {
 function ButtonsContainer() {
     return (
         <div className='buttons-container'>
-            <Card details='Auto Fill Using AI' className='btn' ></Card>
-            <Card details='Fill Manually' className='btn' ></Card>
+            <Card details='Auto Fill Using AI' className='btn' compressText={false} ></Card>
+            <Card details='Fill Manually' className='btn' compressText={false} ></Card>
         </div>
     )
 }
@@ -56,5 +57,14 @@ function SectionsBtnContainer({ noOfSections = 3 }) {
         </div>
     )
 }
+
+// function Loader() {
+//     return (
+//         <div className='loader'>
+//             <div className='outer-circle'></div>
+//             <div className='inner-circle'></div>
+//         </div>
+//     )
+// }
 
 export default TimeTablesPage

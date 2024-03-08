@@ -32,7 +32,7 @@
 
 .teachers-details-container {
     display: grid;
-    grid-template-rows: 20% 62% 12%;
+    grid-template-rows: 19% 60% 11%;
     background: #fff;
     align-content: space-evenly;
     border-radius: 12px;

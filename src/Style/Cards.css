@@ -12,6 +12,24 @@
     padding: 15px 10px;
 }
 
+@media (max-width: 1495px) {
+    .cards-container {
+        grid-template-columns: repeat(5, auto);
+    }
+}
+
+@media (max-width: 1225px) {
+    .cards-container {
+        grid-template-columns: repeat(4, auto);
+    }
+}
+
+@media (max-width: 1070px) {
+    .cards-container {
+        grid-template-columns: repeat(3, auto);
+    }
+}
+
 .cards::-webkit-scrollbar {
     display: none;
 }
