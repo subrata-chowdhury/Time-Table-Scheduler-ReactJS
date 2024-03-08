@@ -44,7 +44,8 @@ function DetailsContainer({ fileName, setFileName }) {
         event.preventDefault();
         saveCurrentStateInNewFile(fileName)
     }
-    function deleteFileBtnClickHandler() {
+    function deleteFileBtnClickHandler(event) {
+        event.preventDefault();
         if (window.confirm("Are You Sure? Want to delete " + fileName + "?")) {
             deleteFile(fileName, clearInputs)
             function clearInputs() {

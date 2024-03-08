@@ -69,13 +69,14 @@ function DetailsContainer({
             newArr.splice(newArr.indexOf(time), 1);
         } else newArr.push(time)
         setAvailableTime(newArr)
-        setTeacherDetails(value => ({ ...value, "freeTime": newArr }))
+        setTeacherDetails(value => ({ ...value, "freeTime": `${newArr}` }))
     }
     function inputOnChangeHandler(event) {
         if (event.target.name === 'teacherName') setTeacherName(event.target.value)
         else setTeacherDetails(value => ({ ...value, [event.target.name]: event.target.value }))
     }
-    function deleteTeacherBtnClickHandler() {
+    function deleteTeacherBtnClickHandler(event) {
+        event.preventDefault();
         if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) {
             deleteTeacher(teacherName, clearInputs);
             function clearInputs() {

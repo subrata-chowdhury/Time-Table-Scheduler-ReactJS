@@ -85,7 +85,8 @@ function DetailsContainer({
         event.preventDefault();
         saveSubject(subjectDetails, () => { alert(subjectDetails + "---------- is added") })
     }
-    function deleteSubjectBtnClickHandler() {
+    function deleteSubjectBtnClickHandler(event) {
+        event.preventDefault();
         if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?"))
             deleteSubject(subjectName, clearInputs)
         function clearInputs() {

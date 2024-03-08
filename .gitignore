@@ -4,7 +4,6 @@
 /node_modules
 /.pnp
 .pnp.js
-/src/Script/fetchUrl.js
 
 # testing
 /coverage
