@@ -5,14 +5,17 @@ import "../Style/TimeTablesPage.css"
 import { Card, HorizentalCardsContainer } from '../Components/Cards'
 import { useEffect, useState } from 'react'
 import { getSubjects } from '../Script/SubjectsDataFetcher'
-import { getSchedule } from '../Script/TimeTableDataFetcher'
+import { generateTimeTable, getSchedule } from '../Script/TimeTableDataFetcher'
 
 function TimeTablesPage() {
     const [sems, setSems] = useState([])
     const [subjectDetails, setSubjectDetails] = useState()
+    const [allTimeTables, setAllTimeTables] = useState()
     const [timeTable, setTimeTable] = useState()
     const [currentOpenSem, setCurrentOpenSem] = useState(0)
     const [currentOpenSection, setCurrentOpenSection] = useState(0)
+    const [displayLoader, setDisplayLoader] = useState(false)
+
     useEffect(() => {
         let sem = []
         for (let index = 1; index <= 8; index++) {
@@ -22,26 +25,27 @@ function TimeTablesPage() {
         getSubjects(setSubjectDetails)
     }, [])
     useEffect(() => {
-        getSchedule((data) => {
-            try {
+        try {
+            getSchedule((data) => {
                 setTimeTable(data[currentOpenSem][currentOpenSection])
-            } catch {
-                console.log("Error in fetching or selecting Time Table")
-            }
-        })
-    }, [currentOpenSem, currentOpenSection])
+            })
+        } catch {
+            alert("Error in selecting time table")
+        }
+    }, [currentOpenSem, currentOpenSection, allTimeTables])
     function semCardClickHandler(event) {
         let semester = parseInt(event.target.title.slice(9))
         setCurrentOpenSem(Math.floor((semester + 1) / 2) - 1)
     }
     return (
         <>
+            <Loader display={displayLoader} />
             <Menubar activeMenuIndex={3} />
             <div className='main-container time-table'>
                 <div className='menubar'>
                     <MiniStateContainer />
                     <div className='main-btn-container'>
-                        <ButtonsContainer />
+                        <ButtonsContainer setAllTimeTables={setAllTimeTables} setDisplayLoader={setDisplayLoader} />
                         <SectionsBtnContainer setCurrentOpenSection={setCurrentOpenSection} />
                     </div>
                 </div>
@@ -52,16 +56,30 @@ function TimeTablesPage() {
                     compressText={false}
                     cardClickHandler={semCardClickHandler} />
                 {timeTable && subjectDetails && <TimeTable subjectDetails={subjectDetails} details={timeTable} />}
+                {!timeTable &&
+                    (<div style={{ display: 'grid', justifyContent: 'center', alignItems: 'center' }}>
+                        No Time Table Found for Year {currentOpenSem+1} Sec {String.fromCharCode(65 + currentOpenSection)}
+                    </div>)}
             </div>
         </>
     )
 }
 
-function ButtonsContainer() {
+function ButtonsContainer({ setAllTimeTables, setDisplayLoader }) {
+    function autoFillBtnClickHandler() {
+        setDisplayLoader(true)
+        generateTimeTable((data) => {
+            setAllTimeTables(data)
+            setDisplayLoader(false)
+        })
+    }
+    function fillManuallyBtnClickHandler() {
+
+    }
     return (
         <div className='buttons-container'>
-            <Card details='Auto Fill Using AI' className='btn' compressText={false} ></Card>
-            <Card details='Fill Manually' className='btn' compressText={false} ></Card>
+            <Card details='Auto Fill Using AI' className='btn' compressText={false} cardClickHandler={autoFillBtnClickHandler} ></Card>
+            <Card details='Fill Manually' className='btn' compressText={false} cardClickHandler={fillManuallyBtnClickHandler} ></Card>
         </div>
     )
 }
@@ -88,13 +106,16 @@ function SectionsBtnContainer({ noOfSections = 3, setCurrentOpenSection }) {
     )
 }
 
-// function Loader() {
-//     return (
-//         <div className='loader'>
-//             <div className='outer-circle'></div>
-//             <div className='inner-circle'></div>
-//         </div>
-//     )
-// }
+function Loader({ display = false }) {
+    let loaderDisplayStyle = {
+        display: (display ? "block" : "none")
+    }
+    return (
+        <div className='loader' style={loaderDisplayStyle}>
+            <div className='outer-circle'></div>
+            <div className='inner-circle'></div>
+        </div>
+    )
+}
 
 export default TimeTablesPage

@@ -24,7 +24,7 @@ export default function MiniStateContainer() {
     return (
         <div className="mini-states-container">
             <label>Current File: {currentFileName}</label><br></br>
-            <label>Change File: </label>
+            <label>Change File:</label>
             <select className="state-selector" onChange={event => { onChangeStateHandler(event) }}>
                 {options}
             </select>

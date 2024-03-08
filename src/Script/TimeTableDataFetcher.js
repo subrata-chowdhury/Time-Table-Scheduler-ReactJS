@@ -1,5 +1,21 @@
-// let url = "http://localhost:57679/"
 import { url } from "./fetchUrl"
+
+export function generateTimeTable(callBackFunction) {
+    let status;
+    fetch(`${url}io/schedule?generateNew=True`)
+        .then(Response => {
+            status = Response.status;
+            return Response.text();
+        })
+        .then(data => {
+            if (status !== 200) {
+                alert("Failed to generate beacause:<br>" + data);
+                return
+            }
+            callBackFunction(data)
+        })
+}
+
 export function getSchedule(callBackFunction) {
     let status;
     try {
