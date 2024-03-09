@@ -10,6 +10,7 @@ html {
 	width: 100%;
 	background: #f0f7ff;
 	transition: 0.3s;
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .main-container {

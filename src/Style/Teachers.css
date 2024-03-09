@@ -35,6 +35,10 @@
     grid-auto-flow: row;
 }
 
+.time-selector {
+    width: 98%;
+}
+
 .periods-container {
     display: grid;
     grid-auto-flow: column;
@@ -47,7 +51,7 @@
     width: 30px;
     height: 30px;
     border-radius: 5px;
-    border: 2px solid rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.2);
     cursor: pointer;
     user-select: none;
     color: rgba(0, 0, 0, 0.4);
@@ -56,14 +60,13 @@
 }
 
 @media (max-width: 1150px) {
-    .period{
+    .period {
         width: 20px;
         height: 20px;
     }
 }
 
 .period.selected {
-    border: 2px solid dodgerblue;
     box-shadow: 0 0 7px rgba(30, 144, 255, 1);
     color: #fff;
     background: dodgerblue;

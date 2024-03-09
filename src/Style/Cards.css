@@ -10,6 +10,7 @@
     justify-content: stretch;
     align-content: start;
     padding: 15px 10px;
+    scroll-behavior: smooth;
 }
 
 @media (max-width: 1495px) {
@@ -30,7 +31,7 @@
     }
 }
 
-.cards::-webkit-scrollbar {
+.cards-container::-webkit-scrollbar {
     display: none;
 }
 
@@ -73,6 +74,7 @@
     overflow-x: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    scroll-behavior: smooth;
 }
 
 .sub-horizental-cards-container::-webkit-scrollbar {

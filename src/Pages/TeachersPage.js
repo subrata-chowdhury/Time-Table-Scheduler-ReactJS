@@ -15,6 +15,7 @@ function TeachersPage() {
         subjects: [],
     })
     const [teacherName, setTeacherName] = useState();
+    const [periodCount, setPeriodCount] = useState();
 
     useEffect(() => {
         startUpFunction()
@@ -26,6 +27,7 @@ function TeachersPage() {
             subjects: [],
         })
         setTeacherName()
+        getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) })
     }
     function teacherCardOnClickHandler(event) {
         getTeacher(event.target.title, setTeacherDetailsControler);
@@ -64,7 +66,8 @@ function TeachersPage() {
                         teacherName={teacherName}
                         teacherDetails={teacherDetails}
                         setTeacherDetails={setTeacherDetails}
-                        setTeacherName={setTeacherName} />
+                        setTeacherName={setTeacherName}
+                        periodCount={periodCount} />
                 </div>
             </div>
         </>
@@ -76,6 +79,7 @@ function DetailsContainer({
     teacherDetails,
     setTeacherDetails,
     setTeacherName,
+    periodCount
 }) {
     function modifyTheValueOfInputBox(time, isSelected) {
         let newDetails = { ...teacherDetails };
@@ -190,11 +194,21 @@ function DetailsContainer({
             </div>
             <div className='input-container'>
                 <div>Available Times</div>
-                <TimeSelector modifyTheValueOfInputBox={modifyTheValueOfInputBox} teacherDetails={teacherDetails} />
+                {periodCount &&
+                    <TimeSelector
+                        modifyTheValueOfInputBox={modifyTheValueOfInputBox}
+                        teacherDetails={teacherDetails}
+                        periodCount={periodCount} />}
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Available Times</div>
-                <input type="text" className="input-box" readOnly={true} value={teacherDetails.freeTime}></input>
+                <input
+                    type="text"
+                    className="input-box"
+                    value={teacherDetails.freeTime}
+                    onChange={event => {
+                        inputOnChangeHandler(event)
+                    }}></input>
             </div>
             <div className='save-btn-container'>
                 <button className='teacher-save-btn' type='submit'>Save</button>
@@ -204,13 +218,7 @@ function DetailsContainer({
     )
 }
 
-function TimeSelector({ modifyTheValueOfInputBox, teacherDetails }) {
-    const [periodCount, setPeriodCount] = useState(8)
-    getTimeTableStructure(createTimeTable)
-    function createTimeTable(timeTableStructure) {
-        setPeriodCount(timeTableStructure.periodCount);
-    }
-
+function TimeSelector({ modifyTheValueOfInputBox, teacherDetails, periodCount = 8 }) {
     let noOfDays = 5;
     let timeTable = [];
     for (let day = 0; day < noOfDays; day++) {
