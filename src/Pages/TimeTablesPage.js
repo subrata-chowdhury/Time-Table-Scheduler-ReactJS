@@ -25,6 +25,9 @@ function TimeTablesPage() {
         getSubjects(setSubjectDetails)
     }, [])
     useEffect(() => {
+        startUpFunction()
+    }, [currentOpenSem, currentOpenSection, allTimeTables])
+    function startUpFunction() {
         try {
             getSchedule((data) => {
                 setTimeTable(data[currentOpenSem][currentOpenSection])
@@ -32,7 +35,7 @@ function TimeTablesPage() {
         } catch {
             alert("Error in selecting time table")
         }
-    }, [currentOpenSem, currentOpenSection, allTimeTables])
+    }
     function semCardClickHandler(event) {
         let semester = parseInt(event.target.title.slice(9))
         setCurrentOpenSem(Math.floor((semester + 1) / 2) - 1)
@@ -43,7 +46,7 @@ function TimeTablesPage() {
             <Menubar activeMenuIndex={3} />
             <div className='main-container time-table'>
                 <div className='menubar'>
-                    <MiniStateContainer />
+                    <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
                     <div className='main-btn-container'>
                         <ButtonsContainer setAllTimeTables={setAllTimeTables} setDisplayLoader={setDisplayLoader} />
                         <SectionsBtnContainer setCurrentOpenSection={setCurrentOpenSection} />
@@ -55,10 +58,10 @@ function TimeTablesPage() {
                     cardData={sems}
                     compressText={false}
                     cardClickHandler={semCardClickHandler} />
-                {timeTable && subjectDetails && <TimeTable subjectDetails={subjectDetails} details={timeTable} />}
+                {subjectDetails && <TimeTable subjectDetails={subjectDetails} details={timeTable} />}
                 {!timeTable &&
                     (<div style={{ display: 'grid', justifyContent: 'center', alignItems: 'center' }}>
-                        No Time Table Found for Year {currentOpenSem+1} Sec {String.fromCharCode(65 + currentOpenSection)}
+                        No Time Table Found for Year {currentOpenSem + 1} Sec {String.fromCharCode(65 + currentOpenSection)}
                     </div>)}
             </div>
         </>

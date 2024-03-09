@@ -17,9 +17,17 @@ function SubjectsPage() {
     const [subjectName, setSubjectName] = useState()
 
     useEffect(() => {
-        getSubjectList(setSubjectsList)
+        startUpFunction()
     }, [])
-
+    function startUpFunction() {
+        getSubjectList(setSubjectsList)
+        setSubjectDetails({
+            isPractical: false,
+            lectureCount: 0,
+            roomCodes: [],
+            sem: ""
+        })
+    }
     function subjectCardOnClickHandler(event) {
         getSubjectDetails(event.target.title, setSubjectDetailsControler)
         function setSubjectDetailsControler(data) {
@@ -45,7 +53,7 @@ function SubjectsPage() {
             <div className='main-container subjects'>
                 <div className='left-sub-container'>
                     <div className='tools-container'>
-                        <MiniStateContainer />
+                        <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
                         <SearchBar />
                     </div>
                     <Cards

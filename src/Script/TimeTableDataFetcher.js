@@ -66,7 +66,7 @@ export function getTimeTableStructure(callBackFunction) {
     }
 }
 
-export function saveTimeTableStructure(data) {
+export function saveTimeTableStructure(data, callBackFunction = () => { }) {
     console.log(JSON.stringify(data))
     let status;
     fetch(`${url}io/schedule/structure`, {
@@ -84,6 +84,6 @@ export function saveTimeTableStructure(data) {
             if (status !== 200) {
                 return;
             }
-            // terrorbox(data)
+            callBackFunction()
         });
 }

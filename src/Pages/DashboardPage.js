@@ -10,32 +10,41 @@ import { getSubjectDetails, getSubjects } from '../Script/SubjectsDataFetcher'
 
 function DashboardPage() {
     const [perDayValue, setPerDayValue] = useState([0, 0, 0, 0, 0])
+    const [fileChange, setFileChange] = useState(false)
+
     return (
         <>
             <Menubar activeMenuIndex={2} />
             <div className='main-container dashboard'>
                 <div className='left-sub-container'>
-                    <MiniStateContainer />
+                    <MiniStateContainer callBackAfterStateUpdate={() => { setFileChange(true) }} />
                     <div className='empty-container'>Under Development</div>
                     <WorkingHourBarChat perDayValue={perDayValue} />
                 </div>
                 <div className='right-sub-container'>
-                    <TeacherDetailsContainer setPerDayValue={setPerDayValue} />
+                    <TeacherDetailsContainer setPerDayValue={setPerDayValue} fileChange={fileChange} setFileChange={setFileChange} />
                 </div>
             </div>
         </>
     )
 }
 
-function TeacherDetailsContainer({ setPerDayValue }) {
+function TeacherDetailsContainer({ setPerDayValue, fileChange, setFileChange }) {
     const [teachersList, setTeahersList] = useState([])
     const [semesters, setSemesters] = useState([])
     const [teacherTimeTableDetails, setTeacherTimeTableDetails] = useState()
     const [subjectDetails, setSubjectDetails] = useState()
     useEffect(() => {
         getTeacherList(setTeahersList);
-        getSubjects(setSubjectDetails)
-    }, [])
+        getSubjects(setSubjectDetails);
+        setTeacherTimeTableDetails()
+        setTeacherDetails({
+            freeTime: [],
+            subjects: [],
+        })
+        setSemesters()
+        setFileChange(false)
+    }, [fileChange, setFileChange])
 
     const [teacherDetails, setTeacherDetails] = useState({
         freeTime: [],
@@ -89,7 +98,7 @@ function TeachersTimeTableContainer({ teacherTimeTableDetails, subjectDetails })
     )
 }
 
-function SemesterContainer({ semList = [1, 2, 5, 6] }) {
+function SemesterContainer({ semList = [] }) {
     let sems = [];
     for (let index = 0; index < semList.length; index++) {
         sems.push(<div className='sem' key={semList[index]}>{semList[index]}</div>)

@@ -2,21 +2,23 @@ import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
 import "../Style/TimeTableStructure.css"
 import { useEffect, useState } from 'react'
-import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
+import { getTimeTableStructure, saveTimeTableStructure } from '../Script/TimeTableDataFetcher'
 
 function TimeTableStructurePage() {
+    const [fileChange, setFileChange] = useState(false)
+
     return (
         <>
             <Menubar activeMenuIndex={4} />
             <div className='main-container time-table-structure'>
-                <MiniStateContainer />
-                <TimeTableStructureInputContainer />
+                <MiniStateContainer callBackAfterStateUpdate={() => { setFileChange(true) }} />
+                <TimeTableStructureInputContainer fileChange={fileChange} setFileChange={setFileChange} />
             </div>
         </>
     )
 }
 
-function TimeTableStructureInputContainer() {
+function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
     const [timeTableStructure, setTimeTableStructure] = useState({
         breaksPerSemester: [],
         periodCount: 0,
@@ -25,13 +27,14 @@ function TimeTableStructureInputContainer() {
     })
     useEffect(() => {
         getTimeTableStructure(setTimeTableStructure)
-    }, [])
+        setFileChange(false)
+    }, [fileChange, setFileChange])
     function inputOnChangeHandler(event) {
         setTimeTableStructure(value => ({ ...value, [event.target.name]: event.target.value }))
     }
     function timeTableStructureOnSubmitHandler(event) {
         event.preventDefault();
-        alert(JSON.stringify(timeTableStructure))
+        saveTimeTableStructure(alert(JSON.stringify(timeTableStructure) + "----------- is saved"))
     }
     return (
         <form className='time-table-structure-inputs-container' onSubmit={timeTableStructureOnSubmitHandler}>

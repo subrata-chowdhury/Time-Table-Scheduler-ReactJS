@@ -1,6 +1,6 @@
 .time-table.main-container {
     display: grid;
-    grid-template-rows: 10% 10% auto;
+    grid-template-rows: 10% 10% auto 10%;
     padding: 0 20px;
 }
 

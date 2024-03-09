@@ -15,12 +15,18 @@ function TeachersPage() {
         subjects: [],
     })
     const [teacherName, setTeacherName] = useState();
-    const [availableTime, setAvailableTime] = useState([]);
 
     useEffect(() => {
-        getTeacherList(setTeahersList);
+        startUpFunction()
     }, [])
-
+    function startUpFunction() {
+        getTeacherList(setTeahersList);
+        setTeacherDetails({
+            freeTime: [],
+            subjects: [],
+        })
+        setTeacherName()
+    }
     function teacherCardOnClickHandler(event) {
         getTeacher(event.target.title, setTeacherDetailsControler);
         function setTeacherDetailsControler(data) {
@@ -44,7 +50,7 @@ function TeachersPage() {
             <div className='main-container teachers'>
                 <div className='left-sub-container'>
                     <div className='tools-container'>
-                        <MiniStateContainer />
+                        <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
                         <SearchBar />
                     </div>
                     <Cards
@@ -58,9 +64,7 @@ function TeachersPage() {
                         teacherName={teacherName}
                         teacherDetails={teacherDetails}
                         setTeacherDetails={setTeacherDetails}
-                        setTeacherName={setTeacherName}
-                        availableTime={availableTime}
-                        setAvailableTime={setAvailableTime} />
+                        setTeacherName={setTeacherName} />
                 </div>
             </div>
         </>
@@ -72,16 +76,13 @@ function DetailsContainer({
     teacherDetails,
     setTeacherDetails,
     setTeacherName,
-    availableTime,
-    setAvailableTime
 }) {
     function modifyTheValueOfInputBox(time, isSelected) {
-        let newArr = [...availableTime];
+        let newDetails = { ...teacherDetails };
         if (isSelected) {
-            newArr.splice(newArr.indexOf(time), 1);
-        } else newArr.push(time)
-        setAvailableTime(newArr)
-        setTeacherDetails(value => ({ ...value, "freeTime": `${newArr}` }))
+            newDetails.freeTime.splice(newDetails.freeTime.indexOf(time), 1);
+        } else newDetails.freeTime.push(time)
+        setTeacherDetails(newDetails)
     }
     function inputOnChangeHandler(event) {
         if (event.target.name === 'teacherName') setTeacherName(event.target.value)
@@ -128,7 +129,7 @@ function DetailsContainer({
                 }
             }
             if (teacherData.freeTime.length > 0) {
-                teacherData.freeTime = `[${teacherData.freeTime.trim()}]`
+                teacherData.freeTime = `[${teacherData.freeTime}]`
                 try {
                     let jsonInput;
                     try {
@@ -189,11 +190,11 @@ function DetailsContainer({
             </div>
             <div className='input-container'>
                 <div>Available Times</div>
-                <TimeSelector modifyTheValueOfInputBox={modifyTheValueOfInputBox} />
+                <TimeSelector modifyTheValueOfInputBox={modifyTheValueOfInputBox} teacherDetails={teacherDetails} />
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Available Times</div>
-                <input type="text" className="input-box" readOnly={true} value={availableTime}></input>
+                <input type="text" className="input-box" readOnly={true} value={teacherDetails.freeTime}></input>
             </div>
             <div className='save-btn-container'>
                 <button className='teacher-save-btn' type='submit'>Save</button>
@@ -203,7 +204,7 @@ function DetailsContainer({
     )
 }
 
-function TimeSelector({ modifyTheValueOfInputBox }) {
+function TimeSelector({ modifyTheValueOfInputBox, teacherDetails }) {
     const [periodCount, setPeriodCount] = useState(8)
     getTimeTableStructure(createTimeTable)
     function createTimeTable(timeTableStructure) {
@@ -219,6 +220,7 @@ function TimeSelector({ modifyTheValueOfInputBox }) {
                 day={day}
                 modifyTheValueOfInputBox={modifyTheValueOfInputBox}
                 key={day}
+                teacherDetails={teacherDetails}
             ></Periods>
         )
     }
@@ -231,11 +233,11 @@ function TimeSelector({ modifyTheValueOfInputBox }) {
     )
 }
 
-function Periods({ noOfPeriods, day, modifyTheValueOfInputBox }) {
+function Periods({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetails }) {
     let periods = []
     for (let period = 0; period < noOfPeriods; period++) {
         periods.push(
-            <div key={period} className='period' onClick={event => periodClickHandler(event, period)}>
+            <div key={period} className='period' data-time={`[${day + 1},${[period + 1]}]`} onClick={event => periodClickHandler(event, period)}>
                 {period + 1}
             </div>
         )
@@ -250,9 +252,8 @@ function Periods({ noOfPeriods, day, modifyTheValueOfInputBox }) {
         if (isSelected) target.classList.remove("selected");
         else target.classList.add("selected")
     }
-
     return (
-        <div className='periods-container'>
+        <div className='periods-container' >
             {periods}
         </div>
     )
