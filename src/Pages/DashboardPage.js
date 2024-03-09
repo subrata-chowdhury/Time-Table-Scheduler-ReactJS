@@ -6,7 +6,7 @@ import { HorizentalCardsContainer } from '../Components/Cards'
 import TimeTable from '../Components/TimeTable'
 import { useEffect, useState } from 'react'
 import { getTeacher, getTeacherList, getTeacherSchedule } from '../Script/TeachersDataFetcher'
-import { getSubjectDetails, getSubjects } from '../Script/SubjectsDataFetcher'
+import { getSubjects } from '../Script/SubjectsDataFetcher'
 
 function DashboardPage() {
     const [perDayValue, setPerDayValue] = useState([0, 0, 0, 0, 0])
@@ -33,10 +33,12 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange, setFileChange }) 
     const [teachersList, setTeahersList] = useState([])
     const [semesters, setSemesters] = useState([])
     const [teacherTimeTableDetails, setTeacherTimeTableDetails] = useState()
-    const [subjectDetails, setSubjectDetails] = useState()
+    const [subjectsDetails, setSubjectsDetails] = useState()
     useEffect(() => {
         getTeacherList(setTeahersList);
-        getSubjects(setSubjectDetails);
+        getSubjects(data => {
+            setSubjectsDetails(data);
+        });
         setTeacherTimeTableDetails()
         setTeacherDetails({
             freeTime: [],
@@ -56,14 +58,36 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange, setFileChange }) 
             setTeacherDetails(data)
             let semesters = [];
             for (let index = 0; index < data.subjects.length; index++) {
-                getSubjectDetails(data.subjects[index], findAndPushSem)
+                findAndPushSem(subjectsDetails[data.subjects[index]])
             }
             function findAndPushSem(subjectData) {
                 if (semesters.indexOf(subjectData.sem) === -1) semesters.push(subjectData.sem)
                 setSemesters(semesters)
             }
-            getTeacherSchedule(event.target.title, setTeacherTimeTableDetails)
+            getTeacherSchedule(event.target.title, data => {
+                setTeacherTimeTableDetails(data)
+                calculatePerDayValue(data, subjectsDetails)
+            })
         }
+    }
+    let calculatePerDayValue = (teacherTimeTableDetails, subjectsDetails) => {
+        if (teacherTimeTableDetails === null || !teacherTimeTableDetails) return
+        console.log(teacherTimeTableDetails)
+        let newPerDayValue = []
+        for (let index = 0; index < teacherTimeTableDetails.length; index++) {
+            let valueForThatDay = 0;
+            for (let innerIndex = 0; innerIndex < teacherTimeTableDetails[index].length; innerIndex++) {
+                if (teacherTimeTableDetails[index][innerIndex] || teacherTimeTableDetails[index][innerIndex] !== null) {
+                    if (subjectsDetails[teacherTimeTableDetails[index][innerIndex][2]].isPractical === true) {
+                        valueForThatDay += 3;
+                        innerIndex += 3
+                    }
+                    else valueForThatDay++;
+                }
+            }
+            newPerDayValue.push(valueForThatDay)
+        }
+        setPerDayValue(newPerDayValue);
     }
     return (
         <div className='teachers-details-container'>
@@ -73,7 +97,7 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange, setFileChange }) 
                 cardClickHandler={teacherCardClickHandler} />
             <TeachersTimeTableContainer
                 teacherTimeTableDetails={teacherTimeTableDetails}
-                subjectDetails={subjectDetails} />
+                subjectsDetails={subjectsDetails} />
             <div className='sem-and-subject-container'>
                 <SemesterContainer semList={semesters} />
                 <SubjectContainer subList={teacherDetails.subjects} />
@@ -82,18 +106,18 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange, setFileChange }) 
     )
 }
 
-function TeachersTimeTableContainer({ teacherTimeTableDetails, subjectDetails }) {
+function TeachersTimeTableContainer({ teacherTimeTableDetails, subjectsDetails = null }) {
     let sir = "Sir";
     return (
         <div className='time-table-wrapper'>
             <div className='heading'>Time Table for {sir}</div>
-            {subjectDetails && teacherTimeTableDetails &&
+            {subjectsDetails && teacherTimeTableDetails &&
                 <TimeTable
                     subjectIndexAtPeriod={2}
                     className='teacher-time-table'
                     timeTableWidthInPercent={92}
                     details={teacherTimeTableDetails}
-                    subjectDetails={subjectDetails} />}
+                    subjectsDetails={subjectsDetails} />}
         </div>
     )
 }

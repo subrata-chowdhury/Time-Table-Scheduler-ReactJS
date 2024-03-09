@@ -3,13 +3,13 @@ import Menubar from '../Components/Menubar'
 import TimeTable from '../Components/TimeTable'
 import "../Style/TimeTablesPage.css"
 import { Card, HorizentalCardsContainer } from '../Components/Cards'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getSubjects } from '../Script/SubjectsDataFetcher'
 import { generateTimeTable, getSchedule } from '../Script/TimeTableDataFetcher'
 
 function TimeTablesPage() {
     const [sems, setSems] = useState([])
-    const [subjectDetails, setSubjectDetails] = useState()
+    const [subjectsDetails, setSubjectsDetails] = useState()
     const [allTimeTables, setAllTimeTables] = useState()
     const [timeTable, setTimeTable] = useState()
     const [currentOpenSem, setCurrentOpenSem] = useState(0)
@@ -22,20 +22,22 @@ function TimeTablesPage() {
             sem.push("Semester " + index);
         }
         setSems(sem);
-        getSubjects(setSubjectDetails)
+        getSubjects(setSubjectsDetails)
     }, [])
-    useEffect(() => {
-        startUpFunction()
-    }, [currentOpenSem, currentOpenSection, allTimeTables])
-    function startUpFunction() {
+    let startUpFunction = useCallback(() => {
         try {
             getSchedule((data) => {
                 setTimeTable(data[currentOpenSem][currentOpenSection])
+                console.log("call")
             })
         } catch {
             alert("Error in selecting time table")
         }
-    }
+    }, [currentOpenSem, currentOpenSection])
+    useEffect(() => {
+        startUpFunction()
+    }, [currentOpenSem, currentOpenSection, allTimeTables, startUpFunction])
+
     function semCardClickHandler(event) {
         let semester = parseInt(event.target.title.slice(9))
         setCurrentOpenSem(Math.floor((semester + 1) / 2) - 1)
@@ -58,7 +60,7 @@ function TimeTablesPage() {
                     cardData={sems}
                     compressText={false}
                     cardClickHandler={semCardClickHandler} />
-                {subjectDetails && <TimeTable subjectDetails={subjectDetails} details={timeTable} />}
+                {subjectsDetails && <TimeTable subjectsDetails={subjectsDetails} details={timeTable} />}
                 {!timeTable &&
                     (<div style={{ display: 'grid', justifyContent: 'center', alignItems: 'center' }}>
                         No Time Table Found for Year {currentOpenSem + 1} Sec {String.fromCharCode(65 + currentOpenSection)}

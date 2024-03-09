@@ -13,7 +13,7 @@ export default function TimeTable({
         [["Sir", "Lab", "roomCode"], ["Sir", "Lab", "roomCode"], ["Sir", "Lab", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sirlast", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]]
     ],
     subjectIndexAtPeriod = 1,
-    subjectDetails,
+    subjectsDetails,
     className = "",
     timeTableWidthInPercent = 95,
 }) {
@@ -32,7 +32,7 @@ export default function TimeTable({
     }
     if (details.length !== 0)
         if (dayNames.length === details.length) {
-            createDayRows(subjectDetails)
+            createDayRows(subjectsDetails)
         } else {
             dayRows.push(<div className="invalid-text" key={"error"}>Invalid Inputs</div>)
         }
@@ -45,16 +45,16 @@ export default function TimeTable({
         </div>
     )
 
-    function createDayRows(subjectDetails) {
+    function createDayRows(subjectsDetails) {
         for (let index = 0; index < dayNames.length; index++) {
             dayRows.push(
                 <div className="day-container" style={{ gridTemplateColumns: gridCss }} key={"day" + index}>
-                    {createASingleDayRow(dayNames[index], details[index], breakWord[index], subjectDetails)}
+                    {createASingleDayRow(dayNames[index], details[index], breakWord[index], subjectsDetails)}
                 </div>
             )
         }
     }
-    function createASingleDayRow(dayName = "", listOfDetailsOfThatDay = "", breakWord, subjectDetails) {
+    function createASingleDayRow(dayName = "", listOfDetailsOfThatDay = "", breakWord, subjectsDetails) {
         if (listOfDetailsOfThatDay === "") return
         let dayRow = [];
         dayRow.push(<div className="day-name" key={0}>{dayName}</div>)
@@ -76,7 +76,7 @@ export default function TimeTable({
                 if (listOfDetailsOfThatDay[index - 1] === null) {
                     index++;
                 } else {
-                    let subject = subjectDetails[listOfDetailsOfThatDay[index - 1][subjectIndexAtPeriod]]
+                    let subject = subjectsDetails[listOfDetailsOfThatDay[index - 1][subjectIndexAtPeriod]]
                     let lab = false;
                     if (subject) lab = subject.isPractical
                     for (let detailsIndex = 0; detailsIndex < listOfDetailsOfThatDay[index - 1].length; detailsIndex++) {
