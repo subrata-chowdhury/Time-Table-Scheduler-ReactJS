@@ -72,7 +72,6 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange, setFileChange }) 
     }
     let calculatePerDayValue = (teacherTimeTableDetails, subjectsDetails) => {
         if (teacherTimeTableDetails === null || !teacherTimeTableDetails) return
-        console.log(teacherTimeTableDetails)
         let newPerDayValue = []
         for (let index = 0; index < teacherTimeTableDetails.length; index++) {
             let valueForThatDay = 0;

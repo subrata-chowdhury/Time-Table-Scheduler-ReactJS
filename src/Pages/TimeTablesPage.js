@@ -25,14 +25,13 @@ function TimeTablesPage() {
         getSubjects(setSubjectsDetails)
     }, [])
     let startUpFunction = useCallback(() => {
-        try {
-            getSchedule((data) => {
+        getSchedule((data) => {
+            try {
                 setTimeTable(data[currentOpenSem][currentOpenSection])
-                console.log("call")
-            })
-        } catch {
-            alert("Error in selecting time table")
-        }
+            } catch (error) {
+                alert("Error in selecting time table")
+            }
+        })
     }, [currentOpenSem, currentOpenSection])
     useEffect(() => {
         startUpFunction()

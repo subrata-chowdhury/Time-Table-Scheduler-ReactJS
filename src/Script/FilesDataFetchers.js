@@ -10,6 +10,7 @@ export function getCurrentFileName(callBackFunction) {
             .then((data) => {
                 if (status !== 200) {
                     console.log("Error in geting current state name", data)
+                    data = ""
                 }
                 callBackFunction(data);
             });
