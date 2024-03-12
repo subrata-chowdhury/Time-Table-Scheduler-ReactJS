@@ -1,3 +1,13 @@
+This repository contains frontend codes of the web application.
+
+This UI created using ReactJS and it use some API requests to communicate with backend.
+
+First version of this project is created using HTML, CSS & JS which is available [here](https://github.com/Super7000/Time_Table_Designer)
+
+Backend Code is created using Java. It use genetic algorithm to create a time table.
+
+Backend codes is available [here](https://github.com/srideep-banerjee/TimeTableScheduler-Backend)
+
 # How to use this UI?
 
 First you have to add all the subjects on **Subjects tab**.
