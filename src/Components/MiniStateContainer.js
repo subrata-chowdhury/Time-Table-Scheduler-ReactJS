@@ -1,16 +1,28 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { getCurrentFileName, getSaveFileList, loadSaveFile } from "../Script/FilesDataFetchers";
 import "../Style/Mini-state-container.css";
 
 export default function MiniStateContainer({ callBackAfterStateUpdate = () => { } }) {
     const [currentFileName, setCurrentFileName] = useState("");
     const [states, setStates] = useState([])
+    const fileSelector = useRef()
     useEffect(() => {
         getSaveFileList(setStates);
     }, [])
     useEffect(() => {
-        getCurrentFileName(setCurrentFileName);
+        getCurrentFileName((data) => {
+            setCurrentFileName(data)
+        });
     }, [])
+    useEffect(() => {
+        let options = fileSelector.current.querySelectorAll("option");
+        for (let index = 0; index < options.length; index++) {
+            if (options[index].value === currentFileName.toLowerCase()) {
+                options[index].selected = 'selected';
+                break;
+            }
+        }
+    }, [currentFileName, states])
 
     function onChangeStateHandler(event) {
         setCurrentFileName(event.target.value)
@@ -23,9 +35,8 @@ export default function MiniStateContainer({ callBackAfterStateUpdate = () => { 
     }
     return (
         <div className="mini-states-container">
-            <label>Current File: {currentFileName.toUpperCase()}</label><br></br>
-            <label>Change File:</label>
-            <select className="state-selector" onChange={event => { onChangeStateHandler(event) }} value={currentFileName}>
+            <label>Current File:</label>
+            <select className="state-selector" onChange={event => { onChangeStateHandler(event) }} ref={fileSelector}>
                 {options}
             </select>
         </div>
