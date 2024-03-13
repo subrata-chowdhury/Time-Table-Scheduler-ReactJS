@@ -68,6 +68,7 @@ function SubjectsPage() {
                         subjectDetails={subjectDetails}
                         setSubjectDetails={setSubjectDetails}
                         setSubjectName={setSubjectName}
+                        setSubjectsList={setSubjectsList}
                     />
                 </div>
             </div>
@@ -79,7 +80,8 @@ function DetailsContainer({
     subjectName = "",
     subjectDetails,
     setSubjectDetails,
-    setSubjectName
+    setSubjectName,
+    setSubjectsList
 }) {
     function subjectTypeClickHandler(event) {
         let checkbox = event.target;
@@ -159,12 +161,20 @@ function DetailsContainer({
             alert("Please Enter a Valid Room Code");
             return
         }
-        saveSubject(data, alert(JSON.stringify(data) + "---------- is added"))
+        let newData = new Map();
+        newData[subjectName] = data;
+        saveSubject(newData, () => {
+            alert(JSON.stringify(newData) + "---------- is added");
+            getSubjectList(setSubjectsList)
+        })
     }
     function deleteSubjectBtnClickHandler(event) {
         event.preventDefault();
         if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?"))
-            deleteSubject(subjectName, clearInputs)
+            deleteSubject(subjectName, () => {
+                clearInputs();
+                getSubjectList(getSubjectList);
+            })
         function clearInputs() {
             setSubjectDetails({
                 isPractical: false,

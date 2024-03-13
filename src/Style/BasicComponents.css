@@ -10,6 +10,11 @@
     padding: 0 10px;
 }
 
+.input-box[type=range] {
+    padding: 0;
+    width: 94%;
+}
+
 .input-container input[type=checkbox] {
     appearance: none;
 }

@@ -67,7 +67,9 @@ function TeachersPage() {
                         teacherDetails={teacherDetails}
                         setTeacherDetails={setTeacherDetails}
                         setTeacherName={setTeacherName}
-                        periodCount={periodCount} />
+                        periodCount={periodCount}
+                        setTeahersList={setTeahersList}
+                    />
                 </div>
             </div>
         </>
@@ -79,7 +81,8 @@ function DetailsContainer({
     teacherDetails,
     setTeacherDetails,
     setTeacherName,
-    periodCount
+    periodCount,
+    setTeahersList
 }) {
     function modifyTheValueOfInputBox(time, isSelected) {
         let newDetails = { ...teacherDetails };
@@ -95,7 +98,10 @@ function DetailsContainer({
     function deleteTeacherBtnClickHandler(event) {
         event.preventDefault();
         if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) {
-            deleteTeacher(teacherName, clearInputs);
+            deleteTeacher(teacherName, ()=>{
+                clearInputs();
+                getTeacherList(setTeahersList);
+            });
             function clearInputs() {
                 setTeacherDetails({
                     freeTime: [],
@@ -162,7 +168,10 @@ function DetailsContainer({
             }
             let data = new Map();
             data[teacherName] = teacherData;
-            saveTeacher(data, alert(JSON.stringify(data) + "---------- is added"))
+            saveTeacher(data, () => {
+                getTeacherList(setTeahersList)
+                alert(JSON.stringify(data) + "---------- is added")
+            })
         }
     }
     return (
