@@ -3,7 +3,7 @@ import Menubar from '../Components/Menubar'
 import "../Style/Files.css"
 import Cards from '../Components/Cards'
 import { useEffect, useState } from 'react'
-import { deleteFile, getSaveFileList, saveCurrentState, saveCurrentStateInNewFile } from '../Script/FilesDataFetchers'
+import { deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers'
 import { match } from '../Components/SearchBar'
 
 function FilesPage() {
@@ -56,10 +56,10 @@ function DetailsContainer({ fileName, setFileName, files, startUp }) {
     function fileFormOnSubmitHandler(event) {
         event.preventDefault();
         if (match(files, fileName).length > 0) {
-            saveCurrentState();
+            saveCurrentState(fileName, startUp);
         } else {
             if (window.confirm("Are you want to save the current state into " + fileName + "?"))
-                saveCurrentStateInNewFile(fileName, startUp);
+                saveCurrentState(fileName, startUp);
         }
     }
     function deleteFileBtnClickHandler(event) {
