@@ -7,7 +7,7 @@ import TimeTables from "../Icons/TimeTables"
 import TimeTableStructure from "../Icons/TimeTableStructure"
 import Arrow from "../Icons/Arrow"
 
-import React from "react"
+import React, { useEffect } from "react"
 import { Link } from "react-router-dom"
 
 export default function Menubar({ activeMenuIndex }) {
@@ -27,7 +27,9 @@ export default function Menubar({ activeMenuIndex }) {
             app.classList.remove("active");
         }
     }
-    autoToggleInResize()
+    useEffect(() => {
+        autoToggleInResize();
+    }, [])
     window.onresize = () => {
         autoToggleInResize()
     }
