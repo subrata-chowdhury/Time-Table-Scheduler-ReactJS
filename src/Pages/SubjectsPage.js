@@ -27,6 +27,7 @@ function SubjectsPage() {
             roomCodes: [],
             sem: ""
         })
+        setSubjectName("")
     }
     function subjectCardOnClickHandler(event) {
         getSubjectDetails(event.target.title, setSubjectDetailsControler)
@@ -68,7 +69,7 @@ function SubjectsPage() {
                         subjectDetails={subjectDetails}
                         setSubjectDetails={setSubjectDetails}
                         setSubjectName={setSubjectName}
-                        setSubjectsList={setSubjectsList}
+                        onSubmitCallBack={startUpFunction}
                     />
                 </div>
             </div>
@@ -81,7 +82,7 @@ function DetailsContainer({
     subjectDetails,
     setSubjectDetails,
     setSubjectName,
-    setSubjectsList
+    onSubmitCallBack
 }) {
     function subjectTypeClickHandler(event) {
         let checkbox = event.target;
@@ -175,7 +176,7 @@ function DetailsContainer({
             newData[subjectName] = data;
             saveSubject(newData, () => {
                 alert(JSON.stringify(newData) + "---------- is added");
-                getSubjectList(setSubjectsList)
+                onSubmitCallBack();
             })
         }
     }
@@ -183,18 +184,8 @@ function DetailsContainer({
         event.preventDefault();
         if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?"))
             deleteSubject(subjectName, () => {
-                clearInputs();
-                getSubjectList(setSubjectsList);
+                onSubmitCallBack();
             })
-        function clearInputs() {
-            setSubjectDetails({
-                isPractical: false,
-                lectureCount: 4,
-                roomCodes: [],
-                sem: ""
-            })
-            setSubjectName("")
-        }
     }
     return (
         <form className='details-container' onSubmit={subjectFormSubmitHandler}>

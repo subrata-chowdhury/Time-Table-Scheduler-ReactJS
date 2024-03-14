@@ -9,8 +9,13 @@ function FilesPage() {
     const [files, setFiles] = useState([]);
     const [fileName, setFileName] = useState("")
     useEffect(() => {
-        getSaveFileList(setFiles);
+        startUp();
     }, [])
+
+    function startUp() {
+        getSaveFileList(setFiles);
+        setFileName("");
+    }
 
     function fileCardClickHandler(event) {
         setFileName(event.target.title)
@@ -32,28 +37,28 @@ function FilesPage() {
                         addBtnClickHandler={addFileBtnClickHandler} />
                 </div>
                 <div className='right-sub-container'>
-                    <DetailsContainer fileName={fileName} setFileName={setFileName} />
+                    <DetailsContainer fileName={fileName} setFileName={setFileName} startUp={startUp} />
                 </div>
             </div>
         </>
     )
 }
 
-function DetailsContainer({ fileName, setFileName }) {
+function DetailsContainer({ fileName, setFileName, startUp }) {
     function inputOnChangeHandler(event) {
         setFileName(event.target.value)
     }
     function fileFormOnSubmitHandler(event) {
         event.preventDefault();
         saveCurrentStateInNewFile(fileName)
+        startUp();
     }
     function deleteFileBtnClickHandler(event) {
         event.preventDefault();
         if (window.confirm("Are You Sure? Want to delete " + fileName + "?")) {
-            deleteFile(fileName, clearInputs)
-            function clearInputs() {
-                setFileName("")
-            }
+            deleteFile(fileName, () => {
+                startUp();
+            })
         }
     }
     return (

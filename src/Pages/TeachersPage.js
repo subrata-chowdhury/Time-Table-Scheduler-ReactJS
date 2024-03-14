@@ -26,7 +26,7 @@ function TeachersPage() {
             freeTime: [],
             subjects: [],
         })
-        setTeacherName()
+        setTeacherName("")
         getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) })
     }
     function teacherCardOnClickHandler(event) {
@@ -68,7 +68,7 @@ function TeachersPage() {
                         setTeacherDetails={setTeacherDetails}
                         setTeacherName={setTeacherName}
                         periodCount={periodCount}
-                        setTeahersList={setTeahersList}
+                        onSubmitCallBack={startUpFunction}
                     />
                 </div>
             </div>
@@ -82,7 +82,7 @@ function DetailsContainer({
     setTeacherDetails,
     setTeacherName,
     periodCount,
-    setTeahersList
+    onSubmitCallBack
 }) {
     function modifyTheValueOfInputBox(time, isSelected) {
         let newDetails = { ...teacherDetails };
@@ -99,16 +99,8 @@ function DetailsContainer({
         event.preventDefault();
         if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) {
             deleteTeacher(teacherName, () => {
-                clearInputs();
-                getTeacherList(setTeahersList);
+                onSubmitCallBack();
             });
-            function clearInputs() {
-                setTeacherDetails({
-                    freeTime: [],
-                    subjects: [],
-                })
-                setTeacherName("")
-            }
         }
     }
     function teacherFormSubmitHandler(event) {
@@ -179,8 +171,8 @@ function DetailsContainer({
                 let data = new Map();
                 data[teacherName] = teacherData;
                 saveTeacher(data, () => {
-                    getTeacherList(setTeahersList)
                     alert(JSON.stringify(data) + "---------- is added")
+                    onSubmitCallBack();
                 })
             }
         }
