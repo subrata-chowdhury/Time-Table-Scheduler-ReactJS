@@ -49,7 +49,7 @@ function FilesPage() {
     )
 }
 
-function DetailsContainer({ fileName, setFileName, startUp }) {
+function DetailsContainer({ fileName, setFileName, files, startUp }) {
     function inputOnChangeHandler(event) {
         setFileName(event.target.value)
     }
