@@ -22,7 +22,9 @@ export function getCurrentFileName(callBackFunction) {
 export function saveCurrentState(callBackFunction = () => { }) {
     let status;
     try {
-        fetch(`${url}io/saves/save`)
+        fetch(`${url}io/saves/save`, {
+            method: "POST"
+        })
             .then((Response) => {
                 status = Response.status;
                 return Response.text();
