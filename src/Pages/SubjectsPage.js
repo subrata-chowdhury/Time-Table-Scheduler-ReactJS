@@ -1,6 +1,6 @@
 import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
-import SearchBar from '../Components/SearchBar'
+import SearchBar, { match } from '../Components/SearchBar'
 import Cards from '../Components/Cards'
 import "../Style/Subjects.css"
 import { useEffect, useState } from 'react'
@@ -106,8 +106,8 @@ function DetailsContainer({
         let newSubjectName = subjectName.trim().toUpperCase()
 
         //form validating
-        if (newSubjectName.length > 9) {
-            alert("Length of the name must be less than 10");
+        if (newSubjectName.length > 100) {
+            alert("Length of the name must be less than 100");
             return;
         }
         if (newSubjectName.length === 0) {
@@ -161,19 +161,30 @@ function DetailsContainer({
             alert("Please Enter a Valid Room Code");
             return
         }
-        let newData = new Map();
-        newData[subjectName] = data;
-        saveSubject(newData, () => {
-            alert(JSON.stringify(newData) + "---------- is added");
-            getSubjectList(setSubjectsList)
-        })
+
+        let list = [];
+        let dataCards = document.querySelectorAll(".card.data");
+        for (let index = 0; index < dataCards.length; index++) {
+            list.push(dataCards[index].title);
+        }
+        if (match(list, subjectName).length > 0) {
+            if (window.confirm("Are you want to overwrite " + subjectName)) saveData();
+        } else saveData();
+        function saveData() {
+            let newData = new Map();
+            newData[subjectName] = data;
+            saveSubject(newData, () => {
+                alert(JSON.stringify(newData) + "---------- is added");
+                getSubjectList(setSubjectsList)
+            })
+        }
     }
     function deleteSubjectBtnClickHandler(event) {
         event.preventDefault();
         if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?"))
             deleteSubject(subjectName, () => {
                 clearInputs();
-                getSubjectList(getSubjectList);
+                getSubjectList(setSubjectsList);
             })
         function clearInputs() {
             setSubjectDetails({

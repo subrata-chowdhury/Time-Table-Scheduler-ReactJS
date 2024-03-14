@@ -3,7 +3,7 @@ import Menubar from '../Components/Menubar'
 import Cards from '../Components/Cards'
 import "../Style/Teachers.css"
 import { useEffect, useState } from 'react'
-import SearchBar from '../Components/SearchBar'
+import SearchBar, { match } from '../Components/SearchBar'
 import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Script/TeachersDataFetcher'
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import { getSubjectList } from '../Script/SubjectsDataFetcher'
@@ -98,7 +98,7 @@ function DetailsContainer({
     function deleteTeacherBtnClickHandler(event) {
         event.preventDefault();
         if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) {
-            deleteTeacher(teacherName, ()=>{
+            deleteTeacher(teacherName, () => {
                 clearInputs();
                 getTeacherList(setTeahersList);
             });
@@ -122,8 +122,8 @@ function DetailsContainer({
                 alert("Please Enter Teacher Name");
                 return;
             }
-            if (newTeacherName.length > 9) {
-                alert("Length of the name must be less than 10");
+            if (newTeacherName.length > 100) {
+                alert("Length of the name must be less than 100");
                 return;
             }
             if (teacherData.subjects.length <= 0) {
@@ -166,12 +166,23 @@ function DetailsContainer({
                     console.log("Error in verifying time")
                 }
             }
-            let data = new Map();
-            data[teacherName] = teacherData;
-            saveTeacher(data, () => {
-                getTeacherList(setTeahersList)
-                alert(JSON.stringify(data) + "---------- is added")
-            })
+
+            let list = [];
+            let dataCards = document.querySelectorAll(".card.data");
+            for (let index = 0; index < dataCards.length; index++) {
+                list.push(dataCards[index].title);
+            }
+            if (match(list, teacherName).length > 0) {
+                if (window.confirm("Are you want to overwrite " + teacherName)) saveData();
+            } else saveData();
+            function saveData() {
+                let data = new Map();
+                data[teacherName] = teacherData;
+                saveTeacher(data, () => {
+                    getTeacherList(setTeahersList)
+                    alert(JSON.stringify(data) + "---------- is added")
+                })
+            }
         }
     }
     return (

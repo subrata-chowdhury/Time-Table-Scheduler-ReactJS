@@ -1,17 +1,20 @@
+import { useRef } from "react";
 import Cross from "../Icons/Cross";
 import Search from "../Icons/Search";
 import "../Style/SearchBar.css"
 
-export default function SearchBar() {
-    function match(list, key) {
-        let res = []
-        for (let i = 0; i < list.length; i++) {
-            if (list[i].toLowerCase().indexOf(key.toLowerCase()) !== -1) {
-                res.push(i)
-            }
+export function match(list, key) {
+    let res = []
+    for (let i = 0; i < list.length; i++) {
+        if (list[i].toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+            res.push(i)
         }
-        return res
     }
+    return res
+}
+
+export default function SearchBar() {
+    const searchInputBox = useRef();
     function searchInputHandler() {
         let list = [];
         let dataCards = document.querySelectorAll(".card.data");
@@ -31,13 +34,14 @@ export default function SearchBar() {
     }
 
     function crossIconClickHandler() {
+        searchInputBox.current.value = "";
         document.querySelector(".search-container").classList.remove("active");
     }
 
     return (
         <div className="search-container">
             <Search searchIconClickHandler={searchIconClickHandler} />
-            <input className="search-input" placeholder="Search Name" onInput={searchInputHandler}></input>
+            <input className="search-input" placeholder="Search Name" onInput={searchInputHandler} ref={searchInputBox}></input>
             <Cross crossIconClickHandler={crossIconClickHandler} />
         </div>
     )
