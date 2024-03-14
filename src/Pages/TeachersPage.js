@@ -65,6 +65,7 @@ function TeachersPage() {
                     <DetailsContainer
                         teacherName={teacherName}
                         teacherDetails={teacherDetails}
+                        teachersList={teachersList}
                         setTeacherDetails={setTeacherDetails}
                         setTeacherName={setTeacherName}
                         periodCount={periodCount}
@@ -79,6 +80,7 @@ function TeachersPage() {
 function DetailsContainer({
     teacherName = "",
     teacherDetails,
+    teachersList,
     setTeacherDetails,
     setTeacherName,
     periodCount,
@@ -159,12 +161,7 @@ function DetailsContainer({
                 }
             }
 
-            let list = [];
-            let dataCards = document.querySelectorAll(".card.data");
-            for (let index = 0; index < dataCards.length; index++) {
-                list.push(dataCards[index].title);
-            }
-            if (match(list, teacherName).length > 0) {
+            if (match(teachersList, teacherName).length > 0) {
                 if (window.confirm("Are you want to overwrite " + teacherName)) saveData();
             } else saveData();
             function saveData() {

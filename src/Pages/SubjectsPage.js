@@ -67,6 +67,7 @@ function SubjectsPage() {
                     <DetailsContainer
                         subjectName={subjectName}
                         subjectDetails={subjectDetails}
+                        subjectsList={subjectsList}
                         setSubjectDetails={setSubjectDetails}
                         setSubjectName={setSubjectName}
                         onSubmitCallBack={startUpFunction}
@@ -80,6 +81,7 @@ function SubjectsPage() {
 function DetailsContainer({
     subjectName = "",
     subjectDetails,
+    subjectsList,
     setSubjectDetails,
     setSubjectName,
     onSubmitCallBack
@@ -163,12 +165,7 @@ function DetailsContainer({
             return
         }
 
-        let list = [];
-        let dataCards = document.querySelectorAll(".card.data");
-        for (let index = 0; index < dataCards.length; index++) {
-            list.push(dataCards[index].title);
-        }
-        if (match(list, subjectName).length > 0) {
+        if (match(subjectsList, subjectName).length > 0) {
             if (window.confirm("Are you want to overwrite " + subjectName)) saveData();
         } else saveData();
         function saveData() {

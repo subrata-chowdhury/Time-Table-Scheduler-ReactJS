@@ -3,7 +3,8 @@ import Menubar from '../Components/Menubar'
 import "../Style/Files.css"
 import Cards from '../Components/Cards'
 import { useEffect, useState } from 'react'
-import { deleteFile, getSaveFileList, saveCurrentStateInNewFile } from '../Script/FilesDataFetchers'
+import { deleteFile, getSaveFileList, saveCurrentState, saveCurrentStateInNewFile } from '../Script/FilesDataFetchers'
+import { match } from '../Components/SearchBar'
 
 function FilesPage() {
     const [files, setFiles] = useState([]);
@@ -37,7 +38,11 @@ function FilesPage() {
                         addBtnClickHandler={addFileBtnClickHandler} />
                 </div>
                 <div className='right-sub-container'>
-                    <DetailsContainer fileName={fileName} setFileName={setFileName} startUp={startUp} />
+                    <DetailsContainer
+                        fileName={fileName}
+                        setFileName={setFileName}
+                        files={files}
+                        startUp={startUp} />
                 </div>
             </div>
         </>
@@ -50,8 +55,12 @@ function DetailsContainer({ fileName, setFileName, startUp }) {
     }
     function fileFormOnSubmitHandler(event) {
         event.preventDefault();
-        saveCurrentStateInNewFile(fileName)
-        startUp();
+        if (match(files, fileName).length > 0) {
+            saveCurrentState();
+        } else {
+            if (window.confirm("Are you want to save the current state into " + fileName + "?"))
+                saveCurrentStateInNewFile(fileName, startUp);
+        }
     }
     function deleteFileBtnClickHandler(event) {
         event.preventDefault();
