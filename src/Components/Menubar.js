@@ -27,6 +27,7 @@ export default function Menubar({ activeMenuIndex }) {
             app.classList.remove("active");
         }
     }
+    autoToggleInResize()
     window.onresize = () => {
         autoToggleInResize()
     }
