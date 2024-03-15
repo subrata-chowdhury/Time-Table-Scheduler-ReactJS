@@ -36,7 +36,7 @@ function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
         event.preventDefault();
         let newTimeTableStructure = { ...timeTableStructure };
         try {
-            newTimeTableStructure["breaksPerSemester"] = JSON.parse(`${JSON.stringify(timeTableStructure["breaksPerSemester"])}`);
+            newTimeTableStructure["breaksPerSemester"] = JSON.parse(`[${timeTableStructure["breaksPerSemester"]}]`);
             newTimeTableStructure["sectionsPerSemester"] = JSON.parse(`[${timeTableStructure["sectionsPerSemester"]}]`);
         } catch (err) {
             alert("Please Enter the values correctly")
