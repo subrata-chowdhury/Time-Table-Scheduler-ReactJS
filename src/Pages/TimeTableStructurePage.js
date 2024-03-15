@@ -35,9 +35,20 @@ function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
     function timeTableStructureOnSubmitHandler(event) {
         event.preventDefault();
         let newTimeTableStructure = { ...timeTableStructure };
+        let sectionsPerSemester = JSON.parse(`[${timeTableStructure["sectionsPerSemester"]}]`);
+        let breaksPerSemester = JSON.parse(`[${JSON.stringify(timeTableStructure["breaksPerSemester"]).slice(1, -1)}]`);
+
+        if (newTimeTableStructure.semesterCount !== sectionsPerSemester.length) {
+            alert("Please enter sections for all semesters");
+            return;
+        }
+        if (newTimeTableStructure.semesterCount !== breaksPerSemester.length) {
+            alert("Please enter breaks for all semesters");
+            return;
+        }
         try {
-            newTimeTableStructure["breaksPerSemester"] = JSON.parse(`[${JSON.stringify(timeTableStructure["breaksPerSemester"]).slice(1,-1)}]`);
-            newTimeTableStructure["sectionsPerSemester"] = JSON.parse(`[${timeTableStructure["sectionsPerSemester"]}]`);
+            newTimeTableStructure["breaksPerSemester"] = breaksPerSemester;
+            newTimeTableStructure["sectionsPerSemester"] = sectionsPerSemester;
         } catch (err) {
             alert("Please Enter the values correctly")
         }
