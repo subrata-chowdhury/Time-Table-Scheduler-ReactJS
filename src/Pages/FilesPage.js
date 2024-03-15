@@ -3,7 +3,7 @@ import Menubar from '../Components/Menubar'
 import "../Style/Files.css"
 import Cards from '../Components/Cards'
 import { useEffect, useState } from 'react'
-import { deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers'
+import { createNewFile, deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers'
 import { match } from '../Components/SearchBar'
 
 function FilesPage() {
@@ -21,9 +21,11 @@ function FilesPage() {
     function fileCardClickHandler(event) {
         setFileName(event.target.title)
         document.querySelector("form button.file-delete-btn").style.cssText = "display: block;";
+        document.querySelector("form button.file-create-btn").style.cssText = "display: none;";
     }
     function addFileBtnClickHandler() {
         document.querySelector("form button.file-delete-btn").style.cssText = "display: none;";
+        document.querySelector("form button.file-create-btn").style.cssText = "display: block;";
         setFileName("")
     }
     return (
@@ -55,11 +57,28 @@ function DetailsContainer({ fileName, setFileName, files, startUp }) {
     }
     function fileFormOnSubmitHandler(event) {
         event.preventDefault();
+        if (fileName.trim() === "") {
+            alert("File Name can't be Empty");
+            return;
+        }
         if (match(files, fileName).length > 0) {
             saveCurrentState(fileName, startUp);
         } else {
             if (window.confirm("Are you want to save the current state into " + fileName + "?"))
                 saveCurrentState(fileName, startUp);
+        }
+    }
+    function createNewBtnClickHandler(event) {
+        event.preventDefault();
+        if (fileName.trim() === "") {
+            alert("File Name can't be Empty");
+            return;
+        }
+        if (match(files, fileName).length > 0) {
+            alert("File already exist with same name")
+            return
+        } else {
+            createNewFile(fileName, startUp);
         }
     }
     function deleteFileBtnClickHandler(event) {
@@ -86,8 +105,9 @@ function DetailsContainer({ fileName, setFileName, files, startUp }) {
                     }}></input>
             </div>
             <div className='save-btn-container'>
-                <button className='file-save-btn' type='submit'>Save</button>
+                <button className='file-save-btn' type='submit'>Copy Current State</button>
                 <button className='file-delete-btn' onClick={deleteFileBtnClickHandler}>Delete</button>
+                <button className='file-create-btn' onClick={createNewBtnClickHandler}>Create New</button>
             </div>
         </form>
     )

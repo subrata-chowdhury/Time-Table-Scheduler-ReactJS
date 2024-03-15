@@ -34,7 +34,16 @@ function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
     }
     function timeTableStructureOnSubmitHandler(event) {
         event.preventDefault();
-        saveTimeTableStructure(alert(JSON.stringify(timeTableStructure) + "----------- is saved"))
+        let newTimeTableStructure = { ...timeTableStructure };
+        try {
+            newTimeTableStructure["breaksPerSemester"] = JSON.parse(`${JSON.stringify(timeTableStructure["breaksPerSemester"])}`);
+            newTimeTableStructure["sectionsPerSemester"] = JSON.parse(`[${timeTableStructure["sectionsPerSemester"]}]`);
+        } catch (err) {
+            alert("Please Enter the values correctly")
+        }
+        saveTimeTableStructure(newTimeTableStructure, () => {
+            alert(JSON.stringify(newTimeTableStructure) + "----------- is saved")
+        })
     }
     return (
         <form className='time-table-structure-inputs-container' onSubmit={timeTableStructureOnSubmitHandler}>

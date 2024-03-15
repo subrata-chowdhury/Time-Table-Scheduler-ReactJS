@@ -39,6 +39,26 @@ export function saveCurrentState(name, callBackFunction = () => { }) {
     }
 }
 
+export function createNewFile(name, callBackFunction = () => { }) {
+    let status;
+    try {
+        fetch(`${url}io/Saves/newEmpty?name=${name}`)
+            .then((Response) => {
+                status = Response.status;
+                return Response.text();
+            })
+            .then((data) => {
+                if (status !== 200) {
+                    console.log("Error in creating a new file", data)
+                }
+                alert(`Created a new file called ${name.toUpperCase()}`);
+                callBackFunction();
+            })
+    } catch (error) {
+        console.log("Unale to Fetch Data")
+    }
+}
+
 export function getSaveFileList(callBackFunction = (data) => { }) {
     let status;
     try {

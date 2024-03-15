@@ -50,3 +50,34 @@
     grid-auto-flow: row;
     gap: 8px;
 }
+
+.save-btn-container {
+    display: grid;
+    justify-content: center;
+    grid-auto-flow: column;
+    gap: 15px;
+    width: 96%;
+}
+
+.save-btn-container button,
+.save-btn-container .file-save-btn {
+    padding: 10px 15px;
+    border: none;
+    outline: none;
+    border-radius: 7px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.save-btn-container button:nth-child(1),
+.save-btn-container button,
+.save-btn-container .file-save-btn {
+    background: dodgerblue;
+}
+
+.save-btn-container button:nth-child(2) {
+    background: orange;
+    display: none;
+}
