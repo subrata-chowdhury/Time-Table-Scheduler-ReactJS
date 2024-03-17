@@ -1,21 +1,25 @@
 import "../Style/TimeTable.css"
+
+export let emptyTimeTableDetails = [
+    [["FirstSir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
+    [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
+    [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
+    [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
+    [["Sir", "Lab", "roomCode"], ["Sir", "Lab", "roomCode"], ["Sir", "Lab", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sirlast", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]]
+]
+
 export default function TimeTable({
     noOfDays = 5,
     noOfPeriods = 9,
     breakTimeIndexs = [4],
     dayNames = ["Tue", "Wed", "Thu", "Fri", "Sat"],
     periodTimes = ["9:30AM", "10:20AM", "11:10AM", "12:00PM", "12:50PM", "01:40PM", "02:30PM", "03:20PM", "04:10PM"],
-    details = [
-        [["FirstSir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
-        [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
-        [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
-        [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
-        [["Sir", "Lab", "roomCode"], ["Sir", "Lab", "roomCode"], ["Sir", "Lab", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sirlast", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]]
-    ],
+    details = emptyTimeTableDetails,
     subjectIndexAtPeriod = 1,
     subjectsDetails,
     className = "",
     timeTableWidthInPercent = 95,
+    periodClickHandler = () => { }
 }) {
     if (details.length <= 0) return
     let periodTimesRow = [];
@@ -49,21 +53,26 @@ export default function TimeTable({
         for (let index = 0; index < dayNames.length; index++) {
             dayRows.push(
                 <div className="day-container" style={{ gridTemplateColumns: gridCss }} key={"day" + index}>
-                    {createASingleDayRow(dayNames[index], details[index], breakWord[index], subjectsDetails)}
+                    {createASingleDayRow(index, details[index], breakWord[index], subjectsDetails)}
                 </div>
             )
         }
     }
-    function createASingleDayRow(dayName = "", listOfDetailsOfThatDay = "", breakWord, subjectsDetails) {
+    function createASingleDayRow(dayNameIndex = "", listOfDetailsOfThatDay = "", breakWord, subjectsDetails) {
         if (listOfDetailsOfThatDay === "") return
         let dayRow = [];
-        dayRow.push(<div className="day-name" key={0}>{dayName}</div>)
+        dayRow.push(<div className="day-name" key={0}>{dayNames[dayNameIndex]}</div>)
         let totalNoOfPeriods = noOfPeriods;
         let index = 1
         while (index <= totalNoOfPeriods) {
-            if (breakTimeIndexs.indexOf(index - 1) >= 0) {
+            if (breakTimeIndexs.indexOf(index) !== -1) {
                 dayRow.push(
-                    <div className="period-details-container break" key={"class" + index}>
+                    <div
+                        className="period-details-container break"
+                        key={"class" + index}
+                        data-day={dayNameIndex}
+                        data-period={index - 1}
+                        onClick={periodClickHandler}>
                         <div> </div>
                         <div> {breakWord} </div>
                         <div> </div>
@@ -73,11 +82,11 @@ export default function TimeTable({
             } else {
                 let periodDetails = [];
                 let spanCss = {};
+                let lab = false;
                 if (listOfDetailsOfThatDay[index - 1] === null) {
                     index++;
                 } else {
                     let subject = subjectsDetails[listOfDetailsOfThatDay[index - 1][subjectIndexAtPeriod]]
-                    let lab = false;
                     if (subject) lab = subject.isPractical
                     for (let detailsIndex = 0; detailsIndex < listOfDetailsOfThatDay[index - 1].length; detailsIndex++) {
                         periodDetails.push(
@@ -96,7 +105,13 @@ export default function TimeTable({
                 let classNameDetails = "period-details-container ";
                 periodDetails.length !== 0 ? classNameDetails += "class" : classNameDetails += ""
                 dayRow.push(
-                    <div className={classNameDetails} key={dayName + index} style={spanCss}>
+                    <div
+                        className={classNameDetails}
+                        key={dayNameIndex + index}
+                        data-day={dayNameIndex}
+                        data-period={lab ? index - 4 : index - 2}
+                        style={spanCss}
+                        onClick={periodClickHandler}>
                         {periodDetails}
                     </div>
                 )

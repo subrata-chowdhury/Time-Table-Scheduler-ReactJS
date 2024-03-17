@@ -19,7 +19,7 @@ function TimeTableStructurePage() {
 }
 
 function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
-    
+
     const [timeTableStructureFieldValues, setTimeTableStructureFieldValues] = useState({
         breaksPerSemester: "",
         periodCount: "0",
@@ -56,21 +56,21 @@ function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
 
         let timeTableStructure = Object()
 
-        //Validating semester count
+        //Validating year count
         try {
             let semesterCount = Number.parseInt(timeTableStructureFieldValues.semesterCount)
             if (!isPositiveWholeNumber(semesterCount)) {
-                alert("Please enter a valid semester count")
+                alert("Please enter a valid year count")
                 return
             }
             timeTableStructure.semesterCount = semesterCount
         } catch (err) {
-            alert("Please enter a valid semester count")
+            alert("Please enter a valid year count")
             return
         }
-        
+
         //Validating period count
-        try{
+        try {
             let periodCount = Number.parseInt(timeTableStructureFieldValues.periodCount)
             if (!isPositiveWholeNumber(periodCount)) {
                 alert("Please enter a valid period count")
@@ -81,27 +81,27 @@ function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
             alert("Please enter a valid period count")
             return
         }
-        
-        //Validating sections per semester
-        try{
+
+        //Validating sections per year
+        try {
             let sectionsPerSemester = JSON.parse(`[${timeTableStructureFieldValues.sectionsPerSemester}]`)
             if (!((sectionsPerSemester instanceof Array) && sectionsPerSemester.every(
                 (value) => isPositiveWholeNumber(value)
             ))) {
-                alert("Please enter sections per semester in correct format")
+                alert("Please enter sections per year in correct format")
                 return
             }
             if (sectionsPerSemester.length !== timeTableStructure.semesterCount) {
-                alert("Number of semesters in sections per semester must be equal to semester count")
+                alert("Number of year in sections per year must be equal to year count")
                 return
             }
             timeTableStructure.sectionsPerSemester = sectionsPerSemester
         } catch (err) {
-            alert("Please enter sections per semester in correct format")
+            alert("Please enter sections per year in correct format")
             return
         }
 
-        //Validating breaks per semester
+        //Validating breaks per year
         try {
             let breaksPerSemester = JSON.parse(`[${timeTableStructureFieldValues.breaksPerSemester}]`)
             if (!((breaksPerSemester instanceof Array) && breaksPerSemester.every(
@@ -111,11 +111,11 @@ function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
                         (value) => isPositiveWholeNumber(value)
                     )
             ))) {
-                alert("Please enter break locations per semester in correct format")
+                alert("Please enter break locations per year in correct format")
                 return
             }
             if (breaksPerSemester.length !== timeTableStructure.semesterCount) {
-                alert("Number of semesters in break locations per semester must be equal to semester count")
+                alert("Number of semesters in break locations per year must be equal to year count")
                 return
             }
             if (
@@ -133,12 +133,12 @@ function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
             timeTableStructure.breaksPerSemester = breaksPerSemester
 
         } catch (err) {
-            alert("Please enter break locations per semester in correct format")
+            alert("Please enter break locations per year in correct format")
             return
         }
-        
+
         console.log(timeTableStructure)
-        
+
         saveTimeTableStructure(timeTableStructure, () => {
             alert(JSON.stringify(timeTableStructure) + "----------- is saved")
         })
@@ -147,7 +147,7 @@ function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
         <form className='time-table-structure-inputs-container' onSubmit={timeTableStructureOnSubmitHandler}>
             <div className='top-input-container'>
                 <div className="input-container">
-                    <div className="input-box-heading">Number of Semester</div>
+                    <div className="input-box-heading">Number of Year</div>
                     <input
                         type='number'
                         className='input-box'
@@ -169,7 +169,7 @@ function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
 
             <div className='mid-input-container'>
                 <div className="input-container">
-                    <div className="input-box-heading">Number of Sections per Semester</div>
+                    <div className="input-box-heading">Number of Sections per Year</div>
                     <input
                         type='text'
                         className='input-box'
@@ -180,7 +180,7 @@ function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
             </div>
             <div className='bottom-input-container'>
                 <div className="input-container">
-                    <div className="input-box-heading">Break Times per Semester</div>
+                    <div className="input-box-heading">Break Times per Year</div>
                     <input
                         type='text'
                         className='input-box'

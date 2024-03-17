@@ -7,7 +7,8 @@ export default function Cards({
     cardDetails = [],
     cardClassName,
     cardClickHandler = () => { },
-    addBtnClickHandler
+    addBtnClickHandler = () => { },
+    canStayActiveMultipleCards = false
 }) {
     let cards = [];
     for (let index = 0; index < cardDetails.length; index++) {
@@ -16,7 +17,8 @@ export default function Cards({
                 details={cardDetails[index]}
                 key={index}
                 cardClickHandler={cardClickHandler}
-                className={cardClassName}></Card>
+                className={cardClassName}
+                canStayActiveMultipleCards={canStayActiveMultipleCards}></Card>
         )
     }
     return (
@@ -34,17 +36,32 @@ export function Card({
     details = "Sample",
     className = "",
     cardClickHandler = () => { },
-    compressText = true
+    compressText = true,
+    canStayActiveMultipleCards = false
 }) {
     function defaultClickHandler(event) {
         event.stopPropagation();
         try {
-            if (className === "")
-                document.querySelector(".card.data.active").classList.remove("active");
-            else
-                document.querySelector(".card.data.active." + className).classList.remove("active");
+            if (!canStayActiveMultipleCards)
+                if (className === "")
+                    document.querySelector(".card.data.active").classList.remove("active");
+                else
+                    document.querySelector(".card.data.active." + className).classList.remove("active");
         } catch (error) { }
-        event.currentTarget.classList.add("active")
+        if (canStayActiveMultipleCards) {
+            let currentTargetClasses = event.currentTarget.classList;
+            let found = false
+            for (let index = 0; index < currentTargetClasses.length; index++) {
+                if (currentTargetClasses[index] === "active") {
+                    found = true
+                    event.currentTarget.classList.remove("active")
+                    break
+                }
+            }
+            if (!found) {
+                event.currentTarget.classList.add("active")
+            }
+        } else event.currentTarget.classList.add("active")
     }
     return (
         <div className={"card data " + className} onClick={event => {
