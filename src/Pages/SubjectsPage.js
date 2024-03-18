@@ -6,6 +6,7 @@ import "../Style/Subjects.css"
 import { useEffect, useState } from 'react'
 import { deleteSubject, getSubjectDetails, getSubjectList, saveSubject } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
+import { hasElement } from '../Script/util'
 
 function SubjectsPage() {
     const [subjectsList, setSubjectsList] = useState([])
@@ -250,13 +251,6 @@ function DetailsContainer({
             </div>
         </form>
     )
-}
-
-function hasElement(array, find) {
-    for (let index = 0; index < array.length; index++) {
-        if (array[index] === find) return true
-    }
-    return false
 }
 
 export default SubjectsPage

@@ -8,6 +8,7 @@ import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Scrip
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import { getSubjectList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
+import { hasElement } from '../Script/util'
 
 function TeachersPage() {
     const [teachersList, setTeahersList] = useState([]);
@@ -275,13 +276,6 @@ function Periods({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetails })
             {periods}
         </div>
     )
-}
-
-function hasElement(array, find) {
-    for (let index = 0; index < array.length; index++) {
-        if (array[index] === find) return true
-    }
-    return false
 }
 
 export default TeachersPage

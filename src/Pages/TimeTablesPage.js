@@ -9,6 +9,7 @@ import { generateTimeTable, getSchedule, getTimeTableStructure } from '../Script
 import { getTeacherList } from '../Script/TeachersDataFetcher'
 import { emptyTimeTableDetails } from '../Components/TimeTable'
 import "../Script/commonJS"
+import { hasElement } from '../Script/util'
 
 function TimeTablesPage() {
     const [sems, setSems] = useState([])
@@ -25,7 +26,12 @@ function TimeTablesPage() {
         roomCode: ""
     })
     const [periodDetailsIndex, setPeriodDetailsIndex] = useState()
-    const [timeTableStructure, setTimeTableStructure] = useState()
+    const [timeTableStructure, setTimeTableStructure] = useState({
+        breaksPerSemester: [4],
+        periodCount: 9,
+        sectionsPerSemester: [0,0,3,0],
+        semesterCount: 4
+    })
     const [fillManually, setFillManually] = useState(false)
     useEffect(() => {
         getSubjects(setSubjectsDetails)
@@ -162,15 +168,9 @@ function ButtonsContainer({ setAllTimeTables, setDisplayLoader, setFillManually 
     }
     function fillManuallyBtnClickHandler(event) {
         let currentTargetClasses = event.currentTarget.classList;
-        let found = false
-        for (let index = 0; index < currentTargetClasses.length; index++) {
-            if (currentTargetClasses[index] === "active") {
-                found = true
-                setDisplayLoader(false)
-                break
-            }
-        }
-        if (!found) setFillManually(true)
+        let found = hasElement(currentTargetClasses,"active")
+        if(found) setFillManually(false)
+        else setFillManually(true)
     }
     return (
         <div className='buttons-container'>

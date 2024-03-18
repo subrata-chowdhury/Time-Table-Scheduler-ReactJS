@@ -1,3 +1,4 @@
+import { hasElement } from "../Script/util";
 import "../Style/TimeTable.css"
 
 export let emptyTimeTableDetails = [
@@ -65,7 +66,7 @@ export default function TimeTable({
         let totalNoOfPeriods = noOfPeriods;
         let index = 1
         while (index <= totalNoOfPeriods) {
-            if (breakTimeIndexs.indexOf(index) !== -1) {
+            if (hasElement(breakTimeIndexs,index)) {
                 dayRow.push(
                     <div
                         className="period-details-container break"
