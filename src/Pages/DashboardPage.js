@@ -7,6 +7,7 @@ import TimeTable from '../Components/TimeTable'
 import { useEffect, useState } from 'react'
 import { getTeacher, getTeacherList, getTeacherSchedule } from '../Script/TeachersDataFetcher'
 import { getSubjects } from '../Script/SubjectsDataFetcher'
+import "../Script/commonJS"
 
 function DashboardPage() {
     const [perDayValue, setPerDayValue] = useState([0, 0, 0, 0, 0])
@@ -154,5 +155,4 @@ function SubjectContainer({ subList = ["a", "b", "c"] }) {
         </div>
     )
 }
-
 export default DashboardPage

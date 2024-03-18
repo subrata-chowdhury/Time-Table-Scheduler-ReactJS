@@ -5,6 +5,7 @@ import Cards from '../Components/Cards'
 import "../Style/Subjects.css"
 import { useEffect, useState } from 'react'
 import { deleteSubject, getSubjectDetails, getSubjectList, saveSubject } from '../Script/SubjectsDataFetcher'
+import "../Script/commonJS"
 
 function SubjectsPage() {
     const [subjectsList, setSubjectsList] = useState([])

@@ -19,6 +19,25 @@ export function getCurrentFileName(callBackFunction) {
     }
 }
 
+export function getCurrentFileIsSaved(callBackFunction = () => { }) {
+    let status;
+    try {
+        fetch(`${url}io/saves/isSaved`)
+            .then((Response) => {
+                status = Response.status;
+                return Response.text();
+            })
+            .then((data) => {
+                if (status !== 200) {
+                    console.log("Error in geting current state is saved or not", data)
+                }
+                callBackFunction(data);
+            })
+    } catch (error) {
+        console.log("Unale to Fetch Data")
+    }
+}
+
 export function saveCurrentState(name, callBackFunction = () => { }) {
     let status;
     try {

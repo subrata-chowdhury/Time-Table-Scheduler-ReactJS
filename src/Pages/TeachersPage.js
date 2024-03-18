@@ -7,6 +7,7 @@ import SearchBar, { match } from '../Components/SearchBar'
 import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Script/TeachersDataFetcher'
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import { getSubjectList } from '../Script/SubjectsDataFetcher'
+import "../Script/commonJS"
 
 function TeachersPage() {
     const [teachersList, setTeahersList] = useState([]);

@@ -8,6 +8,7 @@ import { getSubjects } from '../Script/SubjectsDataFetcher'
 import { generateTimeTable, getSchedule, getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import { getTeacherList } from '../Script/TeachersDataFetcher'
 import { emptyTimeTableDetails } from '../Components/TimeTable'
+import "../Script/commonJS"
 
 function TimeTablesPage() {
     const [sems, setSems] = useState([])

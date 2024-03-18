@@ -3,6 +3,7 @@ import Menubar from '../Components/Menubar'
 import "../Style/TimeTableStructure.css"
 import { useEffect, useState } from 'react'
 import { getTimeTableStructure, saveTimeTableStructure } from '../Script/TimeTableDataFetcher'
+import "../Script/commonJS"
 
 function TimeTableStructurePage() {
     const [fileChange, setFileChange] = useState(false)

@@ -5,6 +5,7 @@ import Cards from '../Components/Cards'
 import { useEffect, useState } from 'react'
 import { createNewFile, deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers'
 import { match } from '../Components/SearchBar'
+import "../Script/commonJS"
 
 function FilesPage() {
     const [files, setFiles] = useState([]);
