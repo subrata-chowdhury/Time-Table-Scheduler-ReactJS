@@ -6,12 +6,9 @@ function checkCurrentStateIsSavedBeforeClose(){
             if (!isSaved)
                 if (window.confirm("You did't save the current state, Want to Save it now?")) {
                     getCurrentFileName((fileName) => {
-                        saveCurrentState(fileName, () => {
-                            alert("Your current state is saved in " + fileName.toUpperCase())
-                        })
+                        saveCurrentState(fileName)
                     })
-                }
-                else closeTheWindow();
+                } else closeTheWindow();
             else closeTheWindow();
             function closeTheWindow() {
                 window.close();

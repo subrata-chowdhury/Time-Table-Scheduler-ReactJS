@@ -37,12 +37,14 @@ function TimeTablesPage() {
         getSubjects(setSubjectsDetails)
         getTeacherList(setTeacherList)
         getTimeTableStructure((data) => {
-            setTimeTableStructure(data)
-            let sem = []
-            for (let index = 1; index <= data.semesterCount; index++) {
-                sem.push("Year " + index);
+            if(data){
+                setTimeTableStructure(data)
+                let sem = []
+                for (let index = 1; index <= data.semesterCount; index++) {
+                    sem.push("Year " + index);
+                }
+                setSems(sem);                
             }
-            setSems(sem);
         })
     }, [])
     let startUpFunction = useCallback(() => {

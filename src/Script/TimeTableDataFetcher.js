@@ -53,12 +53,13 @@ export function getTimeTableStructure(callBackFunction) {
                 if (status !== 200) {
                     return;
                 }
-                let schedule = {
-                    breaksPerSemester: [],
-                    periodCount: 0,
-                    sectionsPerSemester: [],
-                    semesterCount: 0,
-                };
+                let schedule = "";
+                // {
+                //     breaksPerSemester: [],
+                //     periodCount: 0,
+                //     sectionsPerSemester: [],
+                //     semesterCount: 0,
+                // };
                 try {
                     schedule = JSON.parse(data);
                 } catch (error) {
