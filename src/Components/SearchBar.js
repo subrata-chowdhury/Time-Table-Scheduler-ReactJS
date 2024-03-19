@@ -19,7 +19,7 @@ export default function SearchBar() {
         let list = [];
         let dataCards = document.querySelectorAll(".card.data");
         dataCards.forEach((e) => {
-            list.push(e.innerHTML);
+            list.push(e.title);
             e.style.cssText = "display: none;";
         })
         let result = match(list, document.querySelector(".search-input").value.trim());
