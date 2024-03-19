@@ -31,6 +31,7 @@ export function getCurrentFileIsSaved(callBackFunction = () => { }) {
                 if (status !== 200) {
                     console.log("Error in geting current state is saved or not", data)
                 }
+                data = JSON.parse(data)
                 callBackFunction(data);
             })
     } catch (error) {
