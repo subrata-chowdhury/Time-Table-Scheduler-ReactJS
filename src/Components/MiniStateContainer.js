@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { getCurrentFileName, getSaveFileList, loadSaveFile } from "../Script/FilesDataFetchers";
+import { getCurrentFileIsSaved, getCurrentFileName, getSaveFileList, loadSaveFile, saveCurrentState } from "../Script/FilesDataFetchers";
 import "../Style/Mini-state-container.css";
 
 export default function MiniStateContainer({ callBackAfterStateUpdate = () => { } }) {
@@ -25,9 +25,19 @@ export default function MiniStateContainer({ callBackAfterStateUpdate = () => { 
     }, [currentFileName, states])
 
     function onChangeStateHandler(event) {
-        setCurrentFileName(event.target.value)
-        loadSaveFile(event.target.value);
-        callBackAfterStateUpdate();
+        getCurrentFileIsSaved((isSaved) => {
+            if (!isSaved)
+                if (window.confirm("You did't save the current state, Want to Save it now?")) {
+                    getCurrentFileName((fileName) => {
+                        saveCurrentState(fileName, changeTheState)
+                    })
+                } else changeTheState();
+            else changeTheState();
+        })
+        function changeTheState() {
+            setCurrentFileName(event.target.value)
+            loadSaveFile(event.target.value, callBackAfterStateUpdate);
+        }
     }
     let options = [];
     for (let index = 0; index < states.length; index++) {

@@ -211,7 +211,9 @@ function DetailsContainer({
                     placeholder='Ex. 8'
                     onChange={event => {
                         inputOnChangeHandler(event)
-                    }}></input>
+                    }}
+                    min={1}
+                    max={8}></input>
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Lecture Count per Week (Value: {subjectDetails.lectureCount})</div>
