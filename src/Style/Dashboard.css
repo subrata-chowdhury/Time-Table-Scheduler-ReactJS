@@ -76,8 +76,7 @@
 
 .sem-container,
 .subject-container {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    background: #fff;
+    background: rgba(240, 247, 255, 1);
     padding: 10px 20px;
     border-radius: 12px;
 }

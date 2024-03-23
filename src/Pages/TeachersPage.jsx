@@ -9,6 +9,7 @@ import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import { getSubjectList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
 import { hasElement } from '../Script/util'
+import { TagInput } from '../Components/TagInput'
 
 function TeachersPage() {
     const [teachersList, setTeahersList] = useState([]);
@@ -27,14 +28,13 @@ function TeachersPage() {
         setTeacherDetails({
             freeTime: [],
             subjects: [],
-        })
-        setTeacherName("")
-        getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) })
+        });
+        setTeacherName("");
+        getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) });
     }
     function teacherCardOnClickHandler(event) {
         getTeacher(event.target.title, setTeacherDetailsControler);
         function setTeacherDetailsControler(data) {
-            data.subjects = data.subjects.join(";")
             setTeacherDetails(data)
         }
         setTeacherName(event.target.title);
@@ -88,6 +88,10 @@ function DetailsContainer({
     periodCount,
     onSubmitCallBack
 }) {
+    const [subjectList, setSubjectList] = useState([]);
+    useEffect(() => {
+        getSubjectList(setSubjectList)
+    }, [])
     function modifyTheValueOfInputBox(time, isSelected) {
         let newDetails = { ...teacherDetails };
         if (isSelected) {
@@ -109,11 +113,11 @@ function DetailsContainer({
     }
     function teacherFormSubmitHandler(event) {
         event.preventDefault();
-        let teacherData = { ...teacherDetails };
-        let newTeacherName = teacherName.trim().toUpperCase();
-        getSubjectList(verifyInputs)
+        verifyInputs()
         //verification of inputs
-        function verifyInputs(subjectList) {
+        function verifyInputs() {
+            let teacherData = { ...teacherDetails };
+            let newTeacherName = teacherName.trim().toUpperCase();
             if (newTeacherName.length === 0) {
                 alert("Please Enter Teacher Name");
                 return;
@@ -125,8 +129,6 @@ function DetailsContainer({
             if (teacherData.subjects.length <= 0) {
                 alert("Please Enter a Subject")
                 return;
-            } else {
-                teacherData.subjects = teacherData.subjects.trim().toUpperCase().split(";");
             }
             for (let subjectStr of teacherData.subjects) {
                 if (subjectList !== "unavailable" && subjectList.indexOf(subjectStr) === -1) {
@@ -193,15 +195,16 @@ function DetailsContainer({
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Subject Names</div>
-                <input
-                    type="text"
-                    className="input-box"
-                    name='subjects'
-                    value={teacherDetails.subjects}
-                    placeholder='Ex. PCC-CS501, PCC-CS502, ..'
-                    onChange={event => {
-                        inputOnChangeHandler(event)
-                    }}></input>
+                <TagInput
+                    tagList={subjectList}
+                    inputName={'subjects'}
+                    teacherDetails={teacherDetails}
+                    updateWithNewValues={(data) => {
+                        let newTeacherDetails = { ...teacherDetails }
+                        newTeacherDetails.subjects = data;
+                        setTeacherDetails(newTeacherDetails)
+                    }}
+                />
             </div>
             <div className='input-container'>
                 <div>Available Times</div>

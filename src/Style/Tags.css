@@ -1,0 +1,57 @@
+.tag-input-container {
+    display: inline-block;
+    position: relative;
+    border-radius: 5px;
+    padding: 5px;
+    width: 92%;
+    overflow-y: scroll;
+    max-height: 80px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    border-bottom: 2px solid dodgerblue;
+    background: rgba(0, 0, 0, 0.10);
+}
+
+.tag-input-container::-webkit-scrollbar {
+    display: none;
+}
+
+.tag-input-container .tags-container {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tag-input-container .tag {
+    display: inline-flex;
+    background-color: #fff;
+    color: #333;
+    border-radius: 20px;
+    padding: 5px 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.tag-input-container input[type="text"] {
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-size: 14px;
+    background: transparent;
+}
+
+.tag-input-container input[type="text"]:focus {
+    outline: none;
+}
+
+.tag-input-container .delete-tag-btn {
+    background-color: transparent;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    margin-left: 5px;
+    transform: rotate(45deg);
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
+}

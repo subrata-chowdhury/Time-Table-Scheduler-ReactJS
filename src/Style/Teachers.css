@@ -51,7 +51,7 @@
     width: 30px;
     height: 30px;
     border-radius: 5px;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.1);
     cursor: pointer;
     user-select: none;
     color: rgba(0, 0, 0, 0.4);
