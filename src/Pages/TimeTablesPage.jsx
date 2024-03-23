@@ -29,7 +29,7 @@ function TimeTablesPage() {
     const [timeTableStructure, setTimeTableStructure] = useState({
         breaksPerSemester: [4],
         periodCount: 9,
-        sectionsPerSemester: [0,0,3,0],
+        sectionsPerSemester: [0, 0, 3, 0],
         semesterCount: 4
     })
     const [fillManually, setFillManually] = useState(false)
@@ -37,13 +37,13 @@ function TimeTablesPage() {
         getSubjects(setSubjectsDetails)
         getTeacherList(setTeacherList)
         getTimeTableStructure((data) => {
-            if(data){
+            if (data) {
                 setTimeTableStructure(data)
                 let sem = []
                 for (let index = 1; index <= data.semesterCount; index++) {
                     sem.push("Year " + index);
                 }
-                setSems(sem);                
+                setSems(sem);
             }
         })
     }, [])
@@ -164,14 +164,14 @@ function ButtonsContainer({ setAllTimeTables, setDisplayLoader, setFillManually 
     function autoFillBtnClickHandler() {
         setDisplayLoader(true)
         generateTimeTable((data) => {
-            setAllTimeTables(data)
+            setAllTimeTables(data);
             setDisplayLoader(false)
-        })
+        }, () => { setDisplayLoader(false) })
     }
     function fillManuallyBtnClickHandler(event) {
         let currentTargetClasses = event.currentTarget.classList;
-        let found = hasElement(currentTargetClasses,"active")
-        if(found) setFillManually(false)
+        let found = hasElement(currentTargetClasses, "active")
+        if (found) setFillManually(false)
         else setFillManually(true)
     }
     return (

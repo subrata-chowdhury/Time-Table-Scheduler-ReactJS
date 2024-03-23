@@ -1,6 +1,6 @@
 import { url } from "./fetchUrl"
 
-export function generateTimeTable(callBackFunction) {
+export function generateTimeTable(callBackFunction,callBackIfFailed) {
     let status;
     fetch(`${url}io/schedule?generateNew=True`)
         .then(Response => {
@@ -9,7 +9,8 @@ export function generateTimeTable(callBackFunction) {
         })
         .then(data => {
             if (status !== 200) {
-                alert("Failed to generate beacause:<br>" + data);
+                alert("Failed to generate beacause: " + data);
+                callBackIfFailed()
                 return
             }
             callBackFunction(data)

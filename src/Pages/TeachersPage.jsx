@@ -8,7 +8,7 @@ import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Scrip
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import { getSubjectList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
-import { hasElement } from '../Script/util'
+import findElement, { hasElement } from '../Script/util'
 import { TagInput } from '../Components/TagInput'
 
 function TeachersPage() {
@@ -35,6 +35,7 @@ function TeachersPage() {
     function teacherCardOnClickHandler(event) {
         getTeacher(event.target.title, setTeacherDetailsControler);
         function setTeacherDetailsControler(data) {
+            data.freeTime = JSON.stringify(data.freeTime).slice(1, -1)
             setTeacherDetails(data)
         }
         setTeacherName(event.target.title);
@@ -94,9 +95,21 @@ function DetailsContainer({
     }, [])
     function modifyTheValueOfInputBox(time, isSelected) {
         let newDetails = { ...teacherDetails };
+        newDetails.freeTime = JSON.parse(`[${newDetails.freeTime}]`)
+        time = JSON.parse(time)
         if (isSelected) {
-            newDetails.freeTime.splice(newDetails.freeTime.indexOf(time), 1);
-        } else newDetails.freeTime.push(time)
+            let found = -1;
+            for (let index = 0; index < newDetails.freeTime.length; index++) {
+                if (newDetails.freeTime[index][0] === time[0] && newDetails.freeTime[index][1] === time[1]) {
+                    found = index;
+                    break
+                }
+            }
+            newDetails.freeTime.splice(found, 1);
+        } else {
+            newDetails.freeTime.push(time)
+        }
+        newDetails.freeTime = JSON.stringify(newDetails.freeTime).slice(1, -1)
         setTeacherDetails(newDetails)
     }
     function inputOnChangeHandler(event) {
@@ -160,9 +173,12 @@ function DetailsContainer({
                             return;
                         }
                     }
+                    teacherData.freeTime = jsonInput;
                 } catch (err) {
                     console.log("Error in verifying time")
                 }
+            } else {
+                teacherData.freeTime = [];
             }
 
             if (match(teachersList, teacherName).length > 0) {
@@ -171,6 +187,7 @@ function DetailsContainer({
             function saveData() {
                 let data = new Map();
                 data[teacherName] = teacherData;
+                console.log(data)
                 saveTeacher(data, () => {
                     alert(JSON.stringify(data) + "---------- is added")
                     onSubmitCallBack();
@@ -235,14 +252,20 @@ function DetailsContainer({
 function TimeSelector({ modifyTheValueOfInputBox, teacherDetails, periodCount = 8 }) {
     let noOfDays = 5;
     let timeTable = [];
+    let newTeacherDetailsFreeTime = JSON.parse(`[${teacherDetails.freeTime}]`);
     for (let day = 0; day < noOfDays; day++) {
+        let teacherDetailsFreeTimeOfThatDay = [];
+        for (let index = 0; index < newTeacherDetailsFreeTime.length; index++) {
+            if (newTeacherDetailsFreeTime[index][0] === (day + 1))
+                teacherDetailsFreeTimeOfThatDay.push(newTeacherDetailsFreeTime[index][1])
+        }
         timeTable.push(
             <Periods
                 noOfPeriods={periodCount}
                 day={day}
                 modifyTheValueOfInputBox={modifyTheValueOfInputBox}
                 key={day}
-                teacherDetails={teacherDetails}
+                teacherDetailsFreeTimeOfThatDay={teacherDetailsFreeTimeOfThatDay}
             ></Periods>
         )
     }
@@ -255,11 +278,18 @@ function TimeSelector({ modifyTheValueOfInputBox, teacherDetails, periodCount = 
     )
 }
 
-function Periods({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetails }) {
+function Periods({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetailsFreeTimeOfThatDay }) {
     let periods = []
     for (let period = 0; period < noOfPeriods; period++) {
+        let selectClass = "";
+        if (hasElement(teacherDetailsFreeTimeOfThatDay, (period + 1))) {
+            selectClass = "selected";
+        }
         periods.push(
-            <div key={period} className='period' data-time={`[${day + 1},${[period + 1]}]`} onClick={event => periodClickHandler(event, period)}>
+            <div
+                key={period}
+                className={'period ' + selectClass}
+                onClick={event => periodClickHandler(event, period)}>
                 {period + 1}
             </div>
         )

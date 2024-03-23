@@ -67,7 +67,6 @@
 }
 
 .period.selected {
-    box-shadow: 0 0 7px rgba(30, 144, 255, 1);
     color: #fff;
     background: dodgerblue;
 }
