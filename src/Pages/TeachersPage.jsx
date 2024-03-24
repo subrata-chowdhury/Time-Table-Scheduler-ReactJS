@@ -8,7 +8,7 @@ import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Scrip
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import { getSubjectList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
-import findElement, { hasElement } from '../Script/util'
+import { hasElement } from '../Script/util'
 import { TagInput } from '../Components/TagInput'
 
 function TeachersPage() {
@@ -187,7 +187,6 @@ function DetailsContainer({
             function saveData() {
                 let data = new Map();
                 data[teacherName] = teacherData;
-                console.log(data)
                 saveTeacher(data, () => {
                     alert(JSON.stringify(data) + "---------- is added")
                     onSubmitCallBack();
@@ -215,7 +214,7 @@ function DetailsContainer({
                 <TagInput
                     tagList={subjectList}
                     inputName={'subjects'}
-                    teacherDetails={teacherDetails}
+                    details={teacherDetails}
                     updateWithNewValues={(data) => {
                         let newTeacherDetails = { ...teacherDetails }
                         newTeacherDetails.subjects = data;

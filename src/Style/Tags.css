@@ -47,11 +47,20 @@
 .tag-input-container .delete-tag-btn {
     background-color: transparent;
     border: none;
-    color: #999;
     cursor: pointer;
-    margin-left: 5px;
+    color: rgba(0, 0, 0, 0.50);
+    background: rgba(0, 0, 0, 0.05);
     transform: rotate(45deg);
-    width: 15px;
-    height: 15px;
-    font-size: 15px;
+    margin-left: 5px;
+    width: 18px;
+    height: 18px;
+    font-size: 20px;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    border-radius: 10px;
+}
+
+.tag-input-container .delete-tag-btn:hover {
+    background: rgba(0, 0, 0, 0.10);
 }

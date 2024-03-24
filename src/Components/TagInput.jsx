@@ -3,15 +3,15 @@ import { hasElement } from "../Script/util";
 import "../Style/Tags.css"
 
 export function TagInput({
-    tagList = ["A", "B"],
+    tagList = [],
     inputName = "",
-    teacherDetails,
+    details,
     updateWithNewValues = () => { }
 }) {
     const [tags, setTags] = useState([]);
     useEffect(() => {
-        setTags(teacherDetails[inputName])
-    }, [teacherDetails])
+        setTags(details[inputName])
+    }, [details])
 
     let tagElements = [];
     for (let index = 0; index < tags.length; index++) {
@@ -23,19 +23,24 @@ export function TagInput({
     function inputBoxInputHandler(event) {
         if (event.key === 'Enter') {
             event.preventDefault();
-            let tagValue = event.target.value.trim().toUpperCase()
-            if (hasElement(tagList, tagValue)) {
-                if (hasElement(teacherDetails[inputName], tagValue)) {
-                    alert("Already Present");
-                    return;
+            let tagValue = event.target.value.trim().toUpperCase();
+            if (tagList.length > 0)
+                if (hasElement(tagList, tagValue)) {
+                    if (hasElement(details[inputName], tagValue)) {
+                        alert("Already Present");
+                        return;
+                    }
+                    updateTags()
+                } else {
+                    alert("Value does not exist")
                 }
+            else updateTags()
+            function updateTags() {
                 let newTags = [...tags];
                 newTags.push(tagValue);
                 setTags(newTags)
                 updateWithNewValues(newTags)
                 event.target.value = ""
-            } else {
-                alert("Value does not exist")
             }
         }
     }

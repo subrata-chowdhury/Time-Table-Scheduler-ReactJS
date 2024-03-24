@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { deleteSubject, getSubjectDetails, getSubjectList, saveSubject } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
 import { hasElement } from '../Script/util'
+import { TagInput } from '../Components/TagInput'
 
 function SubjectsPage() {
     const [subjectsList, setSubjectsList] = useState([])
@@ -34,7 +35,6 @@ function SubjectsPage() {
     function subjectCardOnClickHandler(event) {
         getSubjectDetails(event.target.title, setSubjectDetailsControler)
         function setSubjectDetailsControler(data) {
-            data.roomCodes = data.roomCodes.join(";");
             setSubjectDetails(data)
         }
         setSubjectName(event.target.title)
@@ -152,8 +152,6 @@ function DetailsContainer({
         if (data.roomCodes.length === 0) {
             alert("Please Enter a Classroom name");
             return;
-        } else {
-            data.roomCodes = data.roomCodes.split(";");
         }
 
         try {
@@ -231,15 +229,15 @@ function DetailsContainer({
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Classroom</div>
-                <input
-                    type="text"
-                    className="input-box"
-                    name='roomCodes'
-                    value={subjectDetails.roomCodes}
-                    placeholder='Ex. ABC'
-                    onChange={event => {
-                        inputOnChangeHandler(event)
-                    }}></input>
+                <TagInput
+                    inputName={'roomCodes'}
+                    details={subjectDetails}
+                    updateWithNewValues={(data) => {
+                        let newSubjectDetails = { ...subjectDetails }
+                        newSubjectDetails.roomCodes = data;
+                        setSubjectDetails(newSubjectDetails)
+                    }}
+                />
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Subject Type (On if Sub. is Practical)</div>
