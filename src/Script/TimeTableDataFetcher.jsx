@@ -1,20 +1,25 @@
 import { url } from "./fetchUrl"
 
-export function generateTimeTable(callBackFunction,callBackIfFailed) {
-    let status;
-    fetch(`${url}io/schedule?generateNew=True`)
-        .then(Response => {
-            status = Response.status;
-            return Response.text();
-        })
-        .then(data => {
-            if (status !== 200) {
-                alert("Failed to generate beacause: " + data);
-                callBackIfFailed()
-                return
-            }
-            callBackFunction(data)
-        })
+export function generateTimeTable(callBackFunction, callBackIfFailed) {
+    try {
+        let status;
+        fetch(`${url}io/schedule?generateNew=True`)
+            .then(Response => {
+                status = Response.status;
+                return Response.text();
+            })
+            .then(data => {
+                if (status !== 200) {
+                    alert("Failed to generate beacause: " + data);
+                    console.log("%cError in generating Time Table", "color: orange;", data)
+                    callBackIfFailed()
+                    return
+                }
+                callBackFunction(data)
+            })
+    } catch (error) {
+        console.log("Unable to call Fetch of Generate Time Table")
+    }
 }
 
 export function getSchedule(callBackFunction) {
@@ -27,18 +32,48 @@ export function getSchedule(callBackFunction) {
             })
             .then((data) => {
                 if (status !== 200) {
+                    console.log("%cError in getting schedule data", "color: orange;", data)
                     return;
                 }
                 let schedule;
                 try {
                     schedule = JSON.parse(data)
                 } catch (error) {
-                    console.log("invaild data")
+                    console.log("%cInvaild schedule data", "color: red;", data)
                 }
                 callBackFunction(schedule);
             });
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Fetch Schedule Data")
+    }
+}
+
+export function saveSchedule(data, callBackFunction, callBackIfFailed = () => { }) {
+    let status;
+    try {
+        data = JSON.stringify(data);
+        fetch(`${url}io/schedule`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: data,
+        })
+            .then((response) => {
+                status = response.status;
+                return response.text();
+            })
+            .then((data) => {
+                if (status !== 200) {
+                    alert("Something went wrong")
+                    console.log("%cError in saving schedule data", "color: orange;", data)
+                    callBackIfFailed();
+                    return;
+                }
+                callBackFunction(schedule);
+            });
+    } catch (error) {
+        console.log("Unable to call Fetch of Save Schedule Data")
     }
 }
 
@@ -52,6 +87,7 @@ export function getTimeTableStructure(callBackFunction) {
             })
             .then((data) => {
                 if (status !== 200) {
+                    console.log("%cError in fetching time table structure", "color: red;", data)
                     return;
                 }
                 let schedule = "";
@@ -64,33 +100,39 @@ export function getTimeTableStructure(callBackFunction) {
                 try {
                     schedule = JSON.parse(data);
                 } catch (error) {
-                    console.log("invaild data")
+                    console.log("%cInvaild data of time table structure", "color: red;", data)
                 }
                 callBackFunction(schedule);
             });
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Fetch Data of Time table structure")
     }
 }
 
 export function saveTimeTableStructure(data, callBackFunction = () => { }) {
-    console.log(JSON.stringify(data))
     let status;
-    fetch(`${url}io/schedule/structure`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-        .then((response) => {
-            status = response.status;
-            return response.text();
+    try {
+        data = JSON.stringify(data)
+        fetch(`${url}io/schedule/structure`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: data,
         })
-        .then((data) => {
-            if (status !== 200) {
-                return;
-            }
-            callBackFunction()
-        });
+            .then((response) => {
+                status = response.status;
+                return response.text();
+            })
+            .then((data) => {
+                if (status !== 200) {
+                    alert("Something went wrong")
+                    console.log("%cError in saving time table structure data", "color: orange;", data)
+                    return;
+                }
+                callBackFunction()
+            });
+    } catch (error) {
+        console.log("%cTime table structure data is invaild or %cUnable to call Fetch", "color: red;", "color: orange;", data)
+    }
 }

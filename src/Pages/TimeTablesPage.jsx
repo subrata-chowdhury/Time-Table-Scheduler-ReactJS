@@ -5,7 +5,7 @@ import "../Style/TimeTablesPage.css"
 import Cards, { Card, HorizentalCardsContainer } from '../Components/Cards'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { getSubjects } from '../Script/SubjectsDataFetcher'
-import { generateTimeTable, getSchedule, getTimeTableStructure } from '../Script/TimeTableDataFetcher'
+import { generateTimeTable, getSchedule, getTimeTableStructure, saveSchedule } from '../Script/TimeTableDataFetcher'
 import { getTeacherList } from '../Script/TeachersDataFetcher'
 import { emptyTimeTableDetails } from '../Components/TimeTable'
 import "../Script/commonJS"
@@ -110,6 +110,11 @@ function TimeTablesPage() {
                 newTT[dayIndex][periodIndex] = [periodDetails.teacherName, periodDetails.subjectName, periodDetails.roomCode]
         }
         setTimeTable(newTT)
+        // getSchedule((data)=>{
+        //     data[currentOpenSem][currentOpenSection] = newTT;
+        //     console.log(data)
+        //     saveSchedule(data);
+        // })
         document.querySelector(".teacher-subject-selector-container button:nth-child(2)").click()
     }
     return (

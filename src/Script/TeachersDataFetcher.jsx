@@ -11,6 +11,7 @@ export function getTeacherList(callBackFunction) {
             })
             .then((data) => {
                 if (status !== 200) {
+                    console.log("%cError in getting teacher list", "color: orange", data)
                     return;
                 }
                 let listArray;
@@ -18,12 +19,12 @@ export function getTeacherList(callBackFunction) {
                     listArray = JSON.parse(data);
                     listArray = Object.keys(listArray)
                 } catch (error) {
-                    console.log("data is invaild")
+                    console.log("%cTeacher list data is invaild", "color: orange;", data)
                 }
                 callBackFunction(listArray);
             });
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Fetch Data of Teachers List")
     }
 }
 
@@ -37,18 +38,19 @@ export function getTeacher(sirName, callBackFunction) {
             })
             .then((data) => {
                 if (status !== 200) {
+                    console.log(`Request URL: %c${url}io/teachers/${sirName} \n%cError in getting teacher details`, "color: blue;", "color: orange;", data)
                     return;
                 }
                 let teacherData;
                 try {
                     teacherData = JSON.parse(data);
                 } catch (error) {
-                    console.log("data is invaild")
+                    console.log("%cTeacher details data is invaild", "color: red;", data)
                 }
                 callBackFunction(teacherData);
             });
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Fetch Data of Teacher Details")
     }
 }
 
@@ -62,18 +64,19 @@ export function getTeacherSchedule(sirName, callBackFunction) {
             })
             .then((data) => {
                 if (status !== 200) {
+                    console.log(`Request URL: %c${url}io/schedule/teacher/${sirName} \n%cError in getting teacher schedule`, "color: blue;", "color: orange;", data)
                     return;
                 }
                 let schedule;
                 try {
                     schedule = JSON.parse(data);
                 } catch (error) {
-                    console.log("data is invaild")
+                    console.log("%cTeacher schedule data is invaild", "color: orange;", data)
                 }
                 callBackFunction(schedule);
             });
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Fetch Data of Teacher Schedule")
     }
 }
 
@@ -94,12 +97,13 @@ export function saveTeacher(data, callBackFunction = () => { }) {
             .then(data => {
                 if (statusValue !== 200) {
                     alert("Something went wrong");
+                    console.log("%cError in Saving teacher details", "color: orange;", data)
                     return;
                 }
                 callBackFunction();
             })
     } catch (error) {
-        console.log("data is invaild")
+        console.log("%cTeacher details data is invaild or %cUnable to call Fetch", "color: red;", "color: orange;", data)
     }
 }
 
@@ -118,11 +122,12 @@ export function deleteTeacher(teacherName, callBackFunction = () => { }) {
             .then(data => {
                 if (statusValue !== 200) {
                     alert("Something went wrong");
+                    console.log(`Request URL: %c${url}io/teachers/${teacherName} %cUnable to delete teacher`, "color: blue;", "color: orange;", data)
                     return;
                 }
                 callBackFunction();
             })
     } catch (error) {
-        console.log("unable to send request")
+        console.log("unable to send request of teacher deletion")
     }
 }

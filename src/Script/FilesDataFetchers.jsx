@@ -9,13 +9,13 @@ export function getCurrentFileName(callBackFunction) {
             })
             .then((data) => {
                 if (status !== 200) {
-                    console.log("Error in geting current state name", data)
+                    console.log("%cError in getting current state name:", "color: red;", data)
                     data = ""
                 }
                 callBackFunction(data);
             });
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Fetch Data of Current File Name")
     }
 }
 
@@ -29,13 +29,14 @@ export function getCurrentFileIsSaved(callBackFunction = () => { }) {
             })
             .then((data) => {
                 if (status !== 200) {
-                    console.log("Error in geting current state is saved or not", data)
+                    console.log("%cError in getting current state is saved or not:", "color: red;", data)
+                    return
                 }
                 data = JSON.parse(data)
                 callBackFunction(data);
             })
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Fetch Data of Current File Save State")
     }
 }
 
@@ -49,13 +50,15 @@ export function saveCurrentState(name, callBackFunction = () => { }) {
             })
             .then((data) => {
                 if (status !== 200) {
-                    console.log("Error in saving current state in new file", data)
+                    alert("Someting went wrong")
+                    console.log("%cError in saving current state in new file:", "color: orange;", data)
+                    return
                 }
                 alert(`Current State is Saved in ${name.toUpperCase()}`);
                 callBackFunction();
             })
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Call Fetch of Save Current State")
     }
 }
 
@@ -69,13 +72,14 @@ export function createNewFile(name, callBackFunction = () => { }) {
             })
             .then((data) => {
                 if (status !== 200) {
-                    console.log("Error in creating a new file", data)
+                    console.log(`Request URL: %c${url}io/Saves/newEmpty?name=${name} \n%cError in creating a new file: `, "color: blue;", "color: orange;", data)
+                    return
                 }
                 alert(`Created a new file called ${name.toUpperCase()}`);
                 callBackFunction();
             })
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Call Fetch of Create New File")
     }
 }
 
@@ -89,18 +93,18 @@ export function getSaveFileList(callBackFunction = (data) => { }) {
             })
             .then((data) => {
                 if (status !== 200) {
-                    console.log("Error in geting save sates list", data)
+                    console.log("%cError in getting save states list:", "color: red;", data)
                 }
                 let files = [];
                 try {
                     files = JSON.parse(data)
                 } catch (error) {
-                    console.log("invalid data")
+                    console.log("%cInvalid state list data", "color: orange;", data)
                 }
                 callBackFunction(files);
             });
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Fetch Data of Save File List")
     }
 }
 
@@ -114,20 +118,21 @@ export function loadSaveFile(name, callBackFunction = (data) => { }) {
             })
             .then((data) => {
                 if (status !== 200) {
-                    console.log("Error in loading " + name + "state", data)
+                    console.log(`Request URL: %c${url}io/saves/load?name=${name} \n%cError in loading state`, "color: blue;", "color: red;", data)
+                    return
                 }
                 alert("Opend Sucessfully")
                 callBackFunction(data);
             });
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Call Fetch of Load Saved File")
     }
 }
 
-export function deleteFile(stateName, callBackFunction = () => { }) {
+export function deleteFile(name, callBackFunction = () => { }) {
     let statusValue;
     try {
-        fetch(url + "io/saves/delete?name=" + stateName, {
+        fetch(url + "io/saves/delete?name=" + name, {
             method: "DELETE"
         })
             .then(Response => {
@@ -137,11 +142,12 @@ export function deleteFile(stateName, callBackFunction = () => { }) {
             .then(data => {
                 if (statusValue !== 200) {
                     alert("Something went wrong");
+                    console.log(`Request URL: %c${url}io/saves/delete?name=${name} %cError in Deleteing file`, "color: blue;", "color: yelow;", data)
                     return;
                 }
                 callBackFunction();
             })
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Call Fetch of Delete File")
     }
 }

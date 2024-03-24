@@ -10,6 +10,7 @@ export function getSubjectList(callBackFunction = (data) => { }) {
             })
             .then((data) => {
                 if (status !== 200) {
+                    console.log("%cError in getting subject list", "color: orange;", data)
                     return;
                 }
                 let listArray = [];
@@ -17,12 +18,12 @@ export function getSubjectList(callBackFunction = (data) => { }) {
                     listArray = JSON.parse(data);
                     listArray = Object.keys(listArray)
                 } catch (error) {
-                    console.log("data is invaild")
+                    console.log("%cSubject List Data is invaild", "color: orange;", data)
                 }
                 callBackFunction(listArray);
             });
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Fetch Data of Subject List")
     }
 }
 
@@ -36,29 +37,44 @@ export function getSubjects(callBackFunction = (data) => { }, setSubjectsList) {
             })
             .then((data) => {
                 if (status !== 200) {
+                    console.log("%cError in getting subjects details", "color: orange;", data)
                     return;
                 }
                 let listArray = [];
                 try {
                     listArray = JSON.parse(data);
                 } catch (error) {
-                    console.log("data is invaild")
+                    console.log("%cSubjects Data is invaild", "color: orange;", data)
                 }
                 callBackFunction(listArray);
             });
     } catch (error) {
-        console.log("Unale to Fetch Data")
+        console.log("Unable to Fetch Data of subjects")
     }
 }
 
 export async function getSubjectDetails(subjectName, callBackFunction = (data) => { }) {
-    let response, data;
+    let status;
     try {
-        response = await fetch(`${url}io/subjects/${subjectName}`)
-        data = await response.json();
-        callBackFunction(data)
+        fetch(`${url}io/subjects/${subjectName}`)
+            .then((response) => {
+                status = response.status;
+                return response.text();
+            })
+            .then((data) => {
+                if (status !== 200) {
+                    console.log(`Request URL: %c${url}io/subjects/${subjectName} \n%cError in getting subject details data`, "color: blue;", "color: orange;", data)
+                    return;
+                }
+                try {
+                    data = JSON.parse(data);
+                } catch (error) {
+                    console.log("%cSubject Details Data is invaild", "color: red;", data)
+                }
+                callBackFunction(data);
+            });
     } catch {
-        console.log("Something went wrong")
+        console.log("Unable to Fetch Data of subject")
     }
     return data
 }
@@ -79,12 +95,13 @@ export function saveSubject(data, callBackFunction = () => { }) {
             .then(data => {
                 if (statusValue !== 200) {
                     alert("Something went wrong");
+                    console.log("%cError in Saveing Subject Details", "color: orange;", data)
                     return;
                 }
                 callBackFunction();
             })
     } catch (error) {
-        console.log("data is invaild")
+        console.log("%cData is invaild of the Subject details or %cUnable to use Fetch call", "color: red;", "color: orange;", data)
     }
 }
 
@@ -101,11 +118,12 @@ export function deleteSubject(subjectName, callBackFunction = () => { }) {
             .then(data => {
                 if (statusValue !== 200) {
                     alert("Something went wrong");
+                    console.log("%cError in Deleteing Subject", "color: red;", subjectName, data)
                     return;
                 }
                 callBackFunction();
             })
     } catch (error) {
-        console.log("unable to send request")
+        console.log("unable to send request of delete subject")
     }
 }
