@@ -296,12 +296,7 @@ function Periods({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetailsFre
 
     function periodClickHandler(event, period) {
         let isSelected = hasElement(event.target.classList, "selected");
-        selectDeselectPeriod(isSelected, event.target);
         modifyTheValueOfInputBox(`[${day + 1},${[period + 1]}]`, isSelected);
-    }
-    function selectDeselectPeriod(isSelected, target) {
-        if (isSelected) target.classList.remove("selected");
-        else target.classList.add("selected")
     }
     return (
         <div className='periods-container' >

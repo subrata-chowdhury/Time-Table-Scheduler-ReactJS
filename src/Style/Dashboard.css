@@ -49,9 +49,11 @@
 }
 
 .teacher-time-table {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    background: #f0f7ff;
     height: 85% !important;
     margin-top: 10px;
+    padding: 10px 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .teacher-time-table .period-times-container,

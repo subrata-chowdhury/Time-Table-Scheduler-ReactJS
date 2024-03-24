@@ -13,7 +13,7 @@ function SubjectsPage() {
     const [subjectsList, setSubjectsList] = useState([])
     const [subjectDetails, setSubjectDetails] = useState({
         isPractical: false,
-        lectureCount: 0,
+        lectureCount: 4,
         roomCodes: [],
         sem: ""
     })
@@ -26,7 +26,7 @@ function SubjectsPage() {
         getSubjectList(setSubjectsList)
         setSubjectDetails({
             isPractical: false,
-            lectureCount: 0,
+            lectureCount: 4,
             roomCodes: [],
             sem: ""
         })
@@ -43,7 +43,7 @@ function SubjectsPage() {
     function addSubjectCardClickHandler() {
         setSubjectDetails({
             isPractical: false,
-            lectureCount: 0,
+            lectureCount: 4,
             roomCodes: [],
             sem: ""
         })
