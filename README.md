@@ -25,7 +25,7 @@ After adding all the subject next you have to add Teachers on **Teachers tab**.
 To add a teacher you need to enter all the required values:
 1. **Teacher Name** - teacher name which is have to be a unique
 2. **Subjects** - type all the subject names pressing enter key after typing each subject (subject must need to be present in subjects tab)
-3. **Available Time** - teacher when is available to take classes (you can add it using time selector ui)
+3. **Available Time** - teacher when is available to take classes (if you leave it blank means you did't select any time then it will be consider as teacher is available all the time)
 
 ![Screenshot 2024-03-24 111118](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/d2e23cd4-47d4-4bcb-8810-754ccdc8ee9b)
 

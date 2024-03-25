@@ -35,7 +35,6 @@ function TeachersPage() {
     function teacherCardOnClickHandler(event) {
         getTeacher(event.target.title, setTeacherDetailsControler);
         function setTeacherDetailsControler(data) {
-            data.freeTime = JSON.stringify(data.freeTime).slice(1, -1)
             setTeacherDetails(data)
         }
         setTeacherName(event.target.title);
@@ -95,7 +94,6 @@ function DetailsContainer({
     }, [])
     function modifyTheValueOfInputBox(time, isSelected) {
         let newDetails = { ...teacherDetails };
-        newDetails.freeTime = JSON.parse(`[${newDetails.freeTime}]`)
         time = JSON.parse(time)
         if (isSelected) {
             let found = -1;
@@ -109,7 +107,6 @@ function DetailsContainer({
         } else {
             newDetails.freeTime.push(time)
         }
-        newDetails.freeTime = JSON.stringify(newDetails.freeTime).slice(1, -1)
         setTeacherDetails(newDetails)
     }
     function inputOnChangeHandler(event) {
@@ -150,11 +147,10 @@ function DetailsContainer({
                 }
             }
             if (teacherData.freeTime.length > 0) {
-                teacherData.freeTime = `[${teacherData.freeTime}]`
                 try {
                     let jsonInput;
                     try {
-                        jsonInput = JSON.parse(teacherData.freeTime);
+                        jsonInput = (teacherData.freeTime);
                     } catch (err) {
                         alert("please enter a vaild time");
                         return;
@@ -230,16 +226,6 @@ function DetailsContainer({
                         teacherDetails={teacherDetails}
                         periodCount={periodCount} />}
             </div>
-            <div className="input-container">
-                <div className="input-box-heading">Available Times</div>
-                <input
-                    type="text"
-                    className="input-box"
-                    value={teacherDetails.freeTime}
-                    onChange={event => {
-                        inputOnChangeHandler(event)
-                    }}></input>
-            </div>
             <div className='save-btn-container'>
                 <button className='teacher-save-btn' type='submit'>Save</button>
                 <button className='teacher-delete-btn' onClick={deleteTeacherBtnClickHandler}>Delete</button>
@@ -251,7 +237,7 @@ function DetailsContainer({
 function TimeSelector({ modifyTheValueOfInputBox, teacherDetails, periodCount = 8 }) {
     let noOfDays = 5;
     let timeTable = [];
-    let newTeacherDetailsFreeTime = JSON.parse(`[${teacherDetails.freeTime}]`);
+    let newTeacherDetailsFreeTime = teacherDetails.freeTime
     for (let day = 0; day < noOfDays; day++) {
         let teacherDetailsFreeTimeOfThatDay = [];
         for (let index = 0; index < newTeacherDetailsFreeTime.length; index++) {
