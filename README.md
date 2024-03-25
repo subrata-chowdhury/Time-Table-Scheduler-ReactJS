@@ -25,9 +25,9 @@ After adding all the subject next you have to add Teachers on **Teachers tab**.
 To add a teacher you need to enter all the required values:
 1. **Teacher Name** - teacher name which is have to be a unique
 2. **Subjects** - type all the subject names pressing enter key after typing each subject (subject must need to be present in subjects tab)
-3. **Available Time** - teacher when is available to take classes (if you leave it blank means you did't select any time then it will be consider as teacher is available all the time)
+3. **Available Time** - when teacher is available to take classes (if you leave it blank means you did't select any time then it will be consider as teacher is available all the time)
 
-![Screenshot 2024-03-24 111118](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/d2e23cd4-47d4-4bcb-8810-754ccdc8ee9b)
+![image](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/6f26fb32-e45e-4bd6-b7ee-d025f0a29c89)
 
 After adding all the subjects and teachers you can generate the time table from Time Tables tab.
 **To generate the time table** click on `Auto fill using AI` button. Also you can manually fill the time table to fill manually first you have to click on Fill Manually button then click on periods after that a popup will appear and from there you can select the subject and teacher for that period (you can select multiple teachers but only one subject can be selected), you can also do this after using the Auto fill using AI method.
