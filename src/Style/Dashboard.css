@@ -1,8 +1,6 @@
-.dashboard {
+.dashboard .top-sub-container {
     display: grid;
     grid-template-columns: 32% auto;
-    gap: 10px;
-    justify-content: stretch;
 }
 
 .dashboard .left-sub-container {

@@ -10,6 +10,7 @@ import { getTeacherList } from '../Script/TeachersDataFetcher'
 import { emptyTimeTableDetails } from '../Components/TimeTable'
 import "../Script/commonJS"
 import { hasElement } from '../Script/util'
+import OwnerFooter from '../Components/OwnerFooter'
 
 function TimeTablesPage() {
     const [sems, setSems] = useState([])
@@ -122,39 +123,42 @@ function TimeTablesPage() {
             <Loader display={displayLoader} />
             <Menubar activeMenuIndex={3} />
             <div className='main-container time-table'>
-                <div className='menubar'>
-                    <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                    <div className='main-btn-container'>
-                        <ButtonsContainer setAllTimeTables={setAllTimeTables} setDisplayLoader={setDisplayLoader} setFillManually={setFillManually} />
-                        {timeTableStructure && <SectionsBtnContainer
-                            setCurrentOpenSection={setCurrentOpenSection}
-                            noOfSections={timeTableStructure.sectionsPerSemester[currentOpenSem]} />}
+                <div className='top-sub-container'>
+                    <div className='menubar'>
+                        <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
+                        <div className='main-btn-container'>
+                            <ButtonsContainer setAllTimeTables={setAllTimeTables} setDisplayLoader={setDisplayLoader} setFillManually={setFillManually} />
+                            {timeTableStructure && <SectionsBtnContainer
+                                setCurrentOpenSection={setCurrentOpenSection}
+                                noOfSections={timeTableStructure.sectionsPerSemester[currentOpenSem]} />}
+                        </div>
                     </div>
-                </div>
-                <HorizentalCardsContainer
-                    className='sem-cards-container'
-                    cardClassName={"semester-card"}
-                    cardData={sems}
-                    compressText={false}
-                    cardClickHandler={semCardClickHandler} />
+                    <HorizentalCardsContainer
+                        className='sem-cards-container'
+                        cardClassName={"semester-card"}
+                        cardData={sems}
+                        compressText={false}
+                        cardClickHandler={semCardClickHandler} />
 
-                {subjectsDetails && timeTableStructure && <TimeTable
-                    subjectsDetails={subjectsDetails}
-                    details={timeTable}
-                    periodClickHandler={(event) => {
-                        if (!fillManually) return
-                        setPeriodDetailsIndex([event.currentTarget.dataset.day, event.currentTarget.dataset.period]);
-                        try {
-                            document.querySelector(".teacher-subject-selector-container").classList.add("active");
-                            document.querySelector(".teacher-subject-selector-container-bg").classList.add("active");
-                        } catch (err) { }
-                    }}
-                    breakTimeIndexs={timeTableStructure.breaksPerSemester[currentOpenSem]}
-                    noOfPeriods={timeTableStructure.periodCount} />}
-                {!timeTable &&
-                    (<div style={{ display: 'grid', justifyContent: 'center', alignItems: 'center' }}>
-                        No Time Table Found for Year {currentOpenSem + 1} Sec {String.fromCharCode(65 + currentOpenSection)}
-                    </div>)}
+                    {subjectsDetails && timeTableStructure && <TimeTable
+                        subjectsDetails={subjectsDetails}
+                        details={timeTable}
+                        periodClickHandler={(event) => {
+                            if (!fillManually) return
+                            setPeriodDetailsIndex([event.currentTarget.dataset.day, event.currentTarget.dataset.period]);
+                            try {
+                                document.querySelector(".teacher-subject-selector-container").classList.add("active");
+                                document.querySelector(".teacher-subject-selector-container-bg").classList.add("active");
+                            } catch (err) { }
+                        }}
+                        breakTimeIndexs={timeTableStructure.breaksPerSemester[currentOpenSem]}
+                        noOfPeriods={timeTableStructure.periodCount} />}
+                    {!timeTable &&
+                        (<div style={{ display: 'grid', justifyContent: 'center', alignItems: 'center' }}>
+                            No Time Table Found for Year {currentOpenSem + 1} Sec {String.fromCharCode(65 + currentOpenSection)}
+                        </div>)}
+                </div>
+                <OwnerFooter />
             </div>
             {subjectsDetails && teacherList && <TeacherAndSubjectSelector
                 teacherCardDetails={teacherList}

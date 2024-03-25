@@ -8,6 +8,7 @@ import { deleteSubject, getSubjectDetails, getSubjectList, saveSubject } from '.
 import "../Script/commonJS"
 import { hasElement } from '../Script/util'
 import { TagInput } from '../Components/TagInput'
+import OwnerFooter from '../Components/OwnerFooter'
 
 function SubjectsPage() {
     const [subjectsList, setSubjectsList] = useState([])
@@ -54,27 +55,30 @@ function SubjectsPage() {
         <>
             <Menubar activeMenuIndex={0} />
             <div className='main-container subjects'>
-                <div className='left-sub-container'>
-                    <div className='tools-container'>
-                        <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                        <SearchBar />
+                <div className='top-sub-container'>
+                    <div className='left-sub-container'>
+                        <div className='tools-container'>
+                            <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
+                            <SearchBar />
+                        </div>
+                        <Cards
+                            cardDetails={subjectsList}
+                            cardClassName={"subject-card"}
+                            cardClickHandler={subjectCardOnClickHandler}
+                            addBtnClickHandler={addSubjectCardClickHandler} />
                     </div>
-                    <Cards
-                        cardDetails={subjectsList}
-                        cardClassName={"subject-card"}
-                        cardClickHandler={subjectCardOnClickHandler}
-                        addBtnClickHandler={addSubjectCardClickHandler} />
+                    <div className='right-sub-container'>
+                        <DetailsContainer
+                            subjectName={subjectName}
+                            subjectDetails={subjectDetails}
+                            subjectsList={subjectsList}
+                            setSubjectDetails={setSubjectDetails}
+                            setSubjectName={setSubjectName}
+                            onSubmitCallBack={startUpFunction}
+                        />
+                    </div>
                 </div>
-                <div className='right-sub-container'>
-                    <DetailsContainer
-                        subjectName={subjectName}
-                        subjectDetails={subjectDetails}
-                        subjectsList={subjectsList}
-                        setSubjectDetails={setSubjectDetails}
-                        setSubjectName={setSubjectName}
-                        onSubmitCallBack={startUpFunction}
-                    />
-                </div>
+                <OwnerFooter />
             </div>
         </>
     )

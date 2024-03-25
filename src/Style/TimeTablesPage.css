@@ -1,7 +1,11 @@
-.time-table.main-container {
+.time-table .top-sub-container {
     display: grid;
     grid-template-rows: 10% 50px auto;
     padding: 0 20px;
+}
+
+.time-table.main-container {
+    padding-top: 10px;
 }
 
 .time-table .time-table-container {

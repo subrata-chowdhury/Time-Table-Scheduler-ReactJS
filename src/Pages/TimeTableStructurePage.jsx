@@ -4,6 +4,7 @@ import "../Style/TimeTableStructure.css"
 import { useEffect, useState } from 'react'
 import { getTimeTableStructure, saveTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import "../Script/commonJS"
+import OwnerFooter from '../Components/OwnerFooter'
 
 function TimeTableStructurePage() {
     const [fileChange, setFileChange] = useState(false)
@@ -12,8 +13,11 @@ function TimeTableStructurePage() {
         <>
             <Menubar activeMenuIndex={4} />
             <div className='main-container time-table-structure'>
-                <MiniStateContainer callBackAfterStateUpdate={() => { setFileChange(true) }} />
-                <TimeTableStructureInputContainer fileChange={fileChange} setFileChange={setFileChange} />
+                <div className='top-sub-container'>
+                    <MiniStateContainer callBackAfterStateUpdate={() => { setFileChange(true) }} />
+                    <TimeTableStructureInputContainer fileChange={fileChange} setFileChange={setFileChange} />
+                </div>
+                <OwnerFooter />
             </div>
         </>
     )

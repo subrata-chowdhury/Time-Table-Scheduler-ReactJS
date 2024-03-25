@@ -10,6 +10,7 @@ import { getSubjectList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
 import { hasElement } from '../Script/util'
 import { TagInput } from '../Components/TagInput'
+import OwnerFooter from '../Components/OwnerFooter'
 
 function TeachersPage() {
     const [teachersList, setTeahersList] = useState([]);
@@ -52,28 +53,31 @@ function TeachersPage() {
         <>
             <Menubar activeMenuIndex={1} />
             <div className='main-container teachers'>
-                <div className='left-sub-container'>
-                    <div className='tools-container'>
-                        <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                        <SearchBar />
+                <div className='top-sub-container'>
+                    <div className='left-sub-container'>
+                        <div className='tools-container'>
+                            <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
+                            <SearchBar />
+                        </div>
+                        <Cards
+                            cardDetails={teachersList}
+                            cardClassName={"teacher-card"}
+                            cardClickHandler={teacherCardOnClickHandler}
+                            addBtnClickHandler={addTeacherCardClickHandler} />
                     </div>
-                    <Cards
-                        cardDetails={teachersList}
-                        cardClassName={"teacher-card"}
-                        cardClickHandler={teacherCardOnClickHandler}
-                        addBtnClickHandler={addTeacherCardClickHandler} />
+                    <div className='right-sub-container'>
+                        <DetailsContainer
+                            teacherName={teacherName}
+                            teacherDetails={teacherDetails}
+                            teachersList={teachersList}
+                            setTeacherDetails={setTeacherDetails}
+                            setTeacherName={setTeacherName}
+                            periodCount={periodCount}
+                            onSubmitCallBack={startUpFunction}
+                        />
+                    </div>
                 </div>
-                <div className='right-sub-container'>
-                    <DetailsContainer
-                        teacherName={teacherName}
-                        teacherDetails={teacherDetails}
-                        teachersList={teachersList}
-                        setTeacherDetails={setTeacherDetails}
-                        setTeacherName={setTeacherName}
-                        periodCount={periodCount}
-                        onSubmitCallBack={startUpFunction}
-                    />
-                </div>
+                <OwnerFooter />
             </div>
         </>
     )

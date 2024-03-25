@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { createNewFile, deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers'
 import { match } from '../Components/SearchBar'
 import "../Script/commonJS"
+import OwnerFooter from '../Components/OwnerFooter'
 
 function FilesPage() {
     const [files, setFiles] = useState([]);
@@ -33,20 +34,23 @@ function FilesPage() {
         <>
             <Menubar activeMenuIndex={5} />
             <div className='main-container files'>
-                <div className='left-sub-container'>
-                    <MiniStateContainer />
-                    <Cards
-                        cardDetails={files}
-                        cardClickHandler={fileCardClickHandler}
-                        addBtnClickHandler={addFileBtnClickHandler} />
+                <div className='top-sub-container'>
+                    <div className='left-sub-container'>
+                        <MiniStateContainer />
+                        <Cards
+                            cardDetails={files}
+                            cardClickHandler={fileCardClickHandler}
+                            addBtnClickHandler={addFileBtnClickHandler} />
+                    </div>
+                    <div className='right-sub-container'>
+                        <DetailsContainer
+                            fileName={fileName}
+                            setFileName={setFileName}
+                            files={files}
+                            startUp={startUp} />
+                    </div>
                 </div>
-                <div className='right-sub-container'>
-                    <DetailsContainer
-                        fileName={fileName}
-                        setFileName={setFileName}
-                        files={files}
-                        startUp={startUp} />
-                </div>
+                <OwnerFooter />
             </div>
         </>
     )

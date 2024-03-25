@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { getTeacher, getTeacherList, getTeacherSchedule } from '../Script/TeachersDataFetcher'
 import { getSubjects } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
+import OwnerFooter from '../Components/OwnerFooter'
 
 function DashboardPage() {
     const [perDayValue, setPerDayValue] = useState([0, 0, 0, 0, 0])
@@ -17,14 +18,17 @@ function DashboardPage() {
         <>
             <Menubar activeMenuIndex={2} />
             <div className='main-container dashboard'>
-                <div className='left-sub-container'>
-                    <MiniStateContainer callBackAfterStateUpdate={() => { setFileChange(true) }} />
-                    <div className='empty-container'>Under Development</div>
-                    <WorkingHourBarChat perDayValue={perDayValue} />
+                <div className='top-sub-container'>
+                    <div className='left-sub-container'>
+                        <MiniStateContainer callBackAfterStateUpdate={() => { setFileChange(true) }} />
+                        <div className='empty-container'>Under Development</div>
+                        <WorkingHourBarChat perDayValue={perDayValue} />
+                    </div>
+                    <div className='right-sub-container'>
+                        <TeacherDetailsContainer setPerDayValue={setPerDayValue} fileChange={fileChange} setFileChange={setFileChange} />
+                    </div>
                 </div>
-                <div className='right-sub-container'>
-                    <TeacherDetailsContainer setPerDayValue={setPerDayValue} fileChange={fileChange} setFileChange={setFileChange} />
-                </div>
+                <OwnerFooter />
             </div>
         </>
     )
