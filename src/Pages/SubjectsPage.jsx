@@ -3,7 +3,7 @@ import Menubar from '../Components/Menubar'
 import SearchBar, { match } from '../Components/SearchBar'
 import Cards from '../Components/Cards'
 import "../Style/Subjects.css"
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { deleteSubject, getSubjectDetails, getSubjectList, saveSubject } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
 import { hasElement } from '../Script/util'
@@ -19,6 +19,9 @@ function SubjectsPage() {
         sem: ""
     })
     const [subjectName, setSubjectName] = useState()
+
+    const subjectDeleteBtn = useRef()
+    const cardsContainer = useRef()
 
     useEffect(() => {
         startUpFunction()
@@ -39,7 +42,7 @@ function SubjectsPage() {
             setSubjectDetails(data)
         }
         setSubjectName(event.target.title)
-        document.querySelector('button.subject-delete-btn').style.cssText = "display: block";
+        subjectDeleteBtn.current.style.cssText = "display: block";
     }
     function addSubjectCardClickHandler() {
         setSubjectDetails({
@@ -49,7 +52,7 @@ function SubjectsPage() {
             sem: ""
         })
         setSubjectName("")
-        document.querySelector("form button.subject-delete-btn").style.cssText = "display: none;";
+        subjectDeleteBtn.current.style.cssText = "display: none;";
     }
     return (
         <>
@@ -59,13 +62,15 @@ function SubjectsPage() {
                     <div className='left-sub-container'>
                         <div className='tools-container'>
                             <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                            <SearchBar />
+                            <SearchBar cardsContainerCurrent={cardsContainer.current} />
                         </div>
                         <Cards
                             cardDetails={subjectsList}
                             cardClassName={"subject-card"}
                             cardClickHandler={subjectCardOnClickHandler}
-                            addBtnClickHandler={addSubjectCardClickHandler} />
+                            addBtnClickHandler={addSubjectCardClickHandler}
+
+                            cardsContainerRef={cardsContainer} />
                     </div>
                     <div className='right-sub-container'>
                         <DetailsContainer
@@ -75,6 +80,8 @@ function SubjectsPage() {
                             setSubjectDetails={setSubjectDetails}
                             setSubjectName={setSubjectName}
                             onSubmitCallBack={startUpFunction}
+
+                            subjectDeleteBtnRef={subjectDeleteBtn}
                         />
                     </div>
                 </div>
@@ -90,7 +97,9 @@ function DetailsContainer({
     subjectsList,
     setSubjectDetails,
     setSubjectName,
-    onSubmitCallBack
+    onSubmitCallBack,
+
+    subjectDeleteBtnRef
 }) {
     function subjectTypeClickHandler(event) {
         let checkbox = event.target;
@@ -251,7 +260,7 @@ function DetailsContainer({
             </div>
             <div className='save-btn-container'>
                 <button className='subject-save-btn' type='submit'>Save</button>
-                <button className='subject-delete-btn' onClick={deleteSubjectBtnClickHandler}>Delete</button>
+                <button className='subject-delete-btn' onClick={deleteSubjectBtnClickHandler} ref={subjectDeleteBtnRef}>Delete</button>
             </div>
         </form>
     )

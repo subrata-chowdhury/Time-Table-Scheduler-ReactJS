@@ -2,7 +2,7 @@ import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
 import "../Style/Files.css"
 import Cards from '../Components/Cards'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createNewFile, deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers'
 import { match } from '../Components/SearchBar'
 import "../Script/commonJS"
@@ -11,6 +11,10 @@ import OwnerFooter from '../Components/OwnerFooter'
 function FilesPage() {
     const [files, setFiles] = useState([]);
     const [fileName, setFileName] = useState("")
+
+    const fileDeleteBtn = useRef()
+    const fileCreateBtn = useRef()
+
     useEffect(() => {
         startUp();
     }, [])
@@ -22,12 +26,12 @@ function FilesPage() {
 
     function fileCardClickHandler(event) {
         setFileName(event.target.title)
-        document.querySelector("form button.file-delete-btn").style.cssText = "display: block;";
-        document.querySelector("form button.file-create-btn").style.cssText = "display: none;";
+        fileDeleteBtn.current.style.cssText = "display: block;";
+        fileCreateBtn.current.style.cssText = "display: none;";
     }
     function addFileBtnClickHandler() {
-        document.querySelector("form button.file-delete-btn").style.cssText = "display: none;";
-        document.querySelector("form button.file-create-btn").style.cssText = "display: block;";
+        fileDeleteBtn.current.style.cssText = "display: none;";
+        fileCreateBtn.current.style.cssText = "display: block;";
         setFileName("")
     }
     return (
@@ -47,7 +51,10 @@ function FilesPage() {
                             fileName={fileName}
                             setFileName={setFileName}
                             files={files}
-                            startUp={startUp} />
+                            startUp={startUp}
+                            fileCreateBtnRef={fileCreateBtn}
+                            fileDeleteBtnRef={fileDeleteBtn}
+                        />
                     </div>
                 </div>
                 <OwnerFooter />
@@ -56,7 +63,7 @@ function FilesPage() {
     )
 }
 
-function DetailsContainer({ fileName, setFileName, files, startUp }) {
+function DetailsContainer({ fileName, setFileName, files, startUp, fileCreateBtnRef, fileDeleteBtnRef }) {
     function inputOnChangeHandler(event) {
         setFileName(event.target.value)
     }
@@ -111,8 +118,8 @@ function DetailsContainer({ fileName, setFileName, files, startUp }) {
             </div>
             <div className='save-btn-container'>
                 <button className='file-save-btn' type='submit'>Copy Current State</button>
-                <button className='file-delete-btn' onClick={deleteFileBtnClickHandler}>Delete</button>
-                <button className='file-create-btn' onClick={createNewBtnClickHandler}>Create New</button>
+                <button className='file-delete-btn' onClick={deleteFileBtnClickHandler} ref={fileDeleteBtnRef}>Delete</button>
+                <button className='file-create-btn' onClick={createNewBtnClickHandler} ref={fileCreateBtnRef}>Create New</button>
             </div>
         </form>
     )

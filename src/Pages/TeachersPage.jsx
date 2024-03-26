@@ -2,7 +2,7 @@ import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
 import Cards from '../Components/Cards'
 import "../Style/Teachers.css"
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import SearchBar, { match } from '../Components/SearchBar'
 import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Script/TeachersDataFetcher'
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
@@ -20,6 +20,9 @@ function TeachersPage() {
     })
     const [teacherName, setTeacherName] = useState();
     const [periodCount, setPeriodCount] = useState();
+
+    const teacherDeleteBtn = useRef()
+    const cardsContainer = useRef()
 
     useEffect(() => {
         startUpFunction()
@@ -39,7 +42,7 @@ function TeachersPage() {
             setTeacherDetails(data)
         }
         setTeacherName(event.target.title);
-        document.querySelector('button.teacher-delete-btn').style.cssText = "display: block";
+        teacherDeleteBtn.current.style.cssText = "display: block";
     }
     function addTeacherCardClickHandler() {
         setTeacherDetails({
@@ -47,7 +50,7 @@ function TeachersPage() {
             subjects: [],
         })
         setTeacherName("")
-        document.querySelector("form button.teacher-delete-btn").style.cssText = "display: none;";
+        teacherDeleteBtn.current.style.cssText = "display: none;";
     }
     return (
         <>
@@ -57,13 +60,14 @@ function TeachersPage() {
                     <div className='left-sub-container'>
                         <div className='tools-container'>
                             <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                            <SearchBar />
+                            <SearchBar cardsContainerCurrent={cardsContainer.current} />
                         </div>
                         <Cards
                             cardDetails={teachersList}
                             cardClassName={"teacher-card"}
                             cardClickHandler={teacherCardOnClickHandler}
-                            addBtnClickHandler={addTeacherCardClickHandler} />
+                            addBtnClickHandler={addTeacherCardClickHandler}
+                            cardsContainerRef={cardsContainer} />
                     </div>
                     <div className='right-sub-container'>
                         <DetailsContainer
@@ -74,6 +78,8 @@ function TeachersPage() {
                             setTeacherName={setTeacherName}
                             periodCount={periodCount}
                             onSubmitCallBack={startUpFunction}
+
+                            teacherDeleteBtnRef={teacherDeleteBtn}
                         />
                     </div>
                 </div>
@@ -90,7 +96,9 @@ function DetailsContainer({
     setTeacherDetails,
     setTeacherName,
     periodCount,
-    onSubmitCallBack
+    onSubmitCallBack,
+
+    teacherDeleteBtnRef
 }) {
     const [subjectList, setSubjectList] = useState([]);
     useEffect(() => {
@@ -232,7 +240,7 @@ function DetailsContainer({
             </div>
             <div className='save-btn-container'>
                 <button className='teacher-save-btn' type='submit'>Save</button>
-                <button className='teacher-delete-btn' onClick={deleteTeacherBtnClickHandler}>Delete</button>
+                <button className='teacher-delete-btn' onClick={deleteTeacherBtnClickHandler} ref={teacherDeleteBtnRef}>Delete</button>
             </div>
         </form>
     )

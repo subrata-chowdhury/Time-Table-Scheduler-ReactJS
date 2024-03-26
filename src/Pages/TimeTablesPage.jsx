@@ -34,6 +34,10 @@ function TimeTablesPage() {
         semesterCount: 4
     })
     const [fillManually, setFillManually] = useState(false)
+
+    const teacherSubjectPopUp = useRef();
+    const teacherSubjectPopUpBg = useRef();
+
     useEffect(() => {
         getSubjects(setSubjectsDetails)
         getTeacherList(setTeacherList)
@@ -67,14 +71,14 @@ function TimeTablesPage() {
         let year = parseInt(event.target.title.slice(5))
         setCurrentOpenSem(year - 1)
     }
-    function setBtnClickListener() {
-        let teacherCard = document.querySelectorAll(".select-teacher-card.active");
-        let subjectCard = document.querySelector(".select-subject-card.active");
+    function setBtnClickListener(teacherCardsContainer, subjectCardsContainer, closeTeacherAndSubjectPopUp) {
+        let teacherCards = teacherCardsContainer.querySelectorAll(".select-teacher-card.active");
+        let subjectCard = subjectCardsContainer.querySelector(".select-subject-card.active");
         let periodDetails = { ...period }
-        if (teacherCard) {
+        if (teacherCards) {
             periodDetails.teacherName = [];
-            for (let index = 0; index < teacherCard.length; index++) {
-                periodDetails.teacherName.push(teacherCard[index].title);
+            for (let index = 0; index < teacherCards.length; index++) {
+                periodDetails.teacherName.push(teacherCards[index].title);
             }
             periodDetails.teacherName = periodDetails.teacherName.join("+")
         } else {
@@ -116,7 +120,7 @@ function TimeTablesPage() {
         //     console.log(data)
         //     saveSchedule(data);
         // })
-        document.querySelector(".teacher-subject-selector-container button:nth-child(2)").click()
+        closeTeacherAndSubjectPopUp();
     }
     return (
         <>
@@ -129,6 +133,7 @@ function TimeTablesPage() {
                         <div className='main-btn-container'>
                             <ButtonsContainer setAllTimeTables={setAllTimeTables} setDisplayLoader={setDisplayLoader} setFillManually={setFillManually} />
                             {timeTableStructure && <SectionsBtnContainer
+                                currentOpenSection={currentOpenSection}
                                 setCurrentOpenSection={setCurrentOpenSection}
                                 noOfSections={timeTableStructure.sectionsPerSemester[currentOpenSem]} />}
                         </div>
@@ -147,8 +152,8 @@ function TimeTablesPage() {
                             if (!fillManually) return
                             setPeriodDetailsIndex([event.currentTarget.dataset.day, event.currentTarget.dataset.period]);
                             try {
-                                document.querySelector(".teacher-subject-selector-container").classList.add("active");
-                                document.querySelector(".teacher-subject-selector-container-bg").classList.add("active");
+                                teacherSubjectPopUp.current.classList.add("active");
+                                teacherSubjectPopUpBg.current.classList.add("active");
                             } catch (err) { }
                         }}
                         breakTimeIndexs={timeTableStructure.breaksPerSemester[currentOpenSem]}
@@ -164,6 +169,8 @@ function TimeTablesPage() {
                 teacherCardDetails={teacherList}
                 subjectCardDetails={subjectsDetails}
                 setBtnClickListener={setBtnClickListener}
+                teacherSubjectPopUpRef={teacherSubjectPopUp}
+                teacherSubjectPopUpBgRef={teacherSubjectPopUpBg}
             />}
         </>
     )
@@ -183,23 +190,27 @@ function ButtonsContainer({ setAllTimeTables, setDisplayLoader, setFillManually 
         if (found) setFillManually(false)
         else setFillManually(true)
     }
+    const btnContainer = useRef()
     return (
-        <div className='buttons-container'>
-            <Card details='Auto Fill Using AI' className='btn' compressText={false} cardClickHandler={autoFillBtnClickHandler} ></Card>
-            <Card details='Fill Manually' className='btn' compressText={false} cardClickHandler={fillManuallyBtnClickHandler} ></Card>
+        <div className='buttons-container' ref={btnContainer}>
+            <Card details='Auto Fill Using AI' className='btn' compressText={false} cardClickHandler={autoFillBtnClickHandler} cardsContainerRefCurrent={btnContainer.current} ></Card>
+            <Card details='Fill Manually' className='btn' compressText={false} cardClickHandler={fillManuallyBtnClickHandler} cardsContainerRefCurrent={btnContainer.current} ></Card>
         </div>
     )
 }
 
-function SectionsBtnContainer({ noOfSections = 3, setCurrentOpenSection }) {
+function SectionsBtnContainer({ noOfSections = 3, currentOpenSection, setCurrentOpenSection }) {
     let sectionBtns = [];
     for (let index = 0; index < noOfSections; index++) {
+        let selectedClass = "";
+        if (index === currentOpenSection)
+            selectedClass = 'active';
         let char = String.fromCharCode(65 + index);
         sectionBtns.push(
             <Card
                 details={char}
                 key={index}
-                className='section-btn'
+                className={'section-btn ' + selectedClass}
                 cardClickHandler={sectionBtnsClickHandler} />
         )
     }
@@ -216,45 +227,49 @@ function SectionsBtnContainer({ noOfSections = 3, setCurrentOpenSection }) {
 function TeacherAndSubjectSelector({
     teacherCardDetails = [],
     subjectCardDetails = [],
-    setBtnClickListener = () => { }
+    setBtnClickListener = () => { },
+    teacherSubjectPopUpRef,
+    teacherSubjectPopUpBgRef
 }) {
-    const teacherSubjectPopUp = useRef();
-    const teacherSubjectPopUpBg = useRef();
+    const teacherCardsContainer = useRef();
+    const subjectCardsContainer = useRef();
     function closeTeacherAndSubjectPopUp() {
-        teacherSubjectPopUp.current.classList.remove("active")
-        teacherSubjectPopUpBg.current.classList.remove("active")
+        teacherSubjectPopUpRef.current.classList.remove("active")
+        teacherSubjectPopUpBgRef.current.classList.remove("active")
     }
     return (
         <>
-            <div className='teacher-subject-selector-container' ref={teacherSubjectPopUp}>
+            <div className='teacher-subject-selector-container' ref={teacherSubjectPopUpRef}>
                 <div className='teacher-subject-card-container'>
-                    <TeacherCardsContainer cardDetails={teacherCardDetails} />
-                    <SubjectCardsContainer cardDetails={Object.keys(subjectCardDetails)} />
+                    <TeacherCardsContainer cardDetails={teacherCardDetails} teacherCardsContainerRef={teacherCardsContainer} />
+                    <SubjectCardsContainer cardDetails={Object.keys(subjectCardDetails)} subjectCardsContainerRef={subjectCardsContainer} />
                 </div>
                 <div className='teacher-subject-selector-btns-container'>
-                    <button onClick={setBtnClickListener}>Set</button>
+                    <button onClick={() => {
+                        setBtnClickListener(teacherCardsContainer.current, subjectCardsContainer.current, closeTeacherAndSubjectPopUp)
+                    }}>Set</button>
                     <button onClick={closeTeacherAndSubjectPopUp}>Cancel</button>
                 </div>
             </div>
-            <div className='teacher-subject-selector-container-bg' ref={teacherSubjectPopUpBg}></div>
+            <div className='teacher-subject-selector-container-bg' ref={teacherSubjectPopUpBgRef}></div>
         </>
     )
 }
 
-function TeacherCardsContainer({ cardDetails = [] }) {
+function TeacherCardsContainer({ cardDetails = [], teacherCardsContainerRef = "" }) {
     return (
-        <div className='teacher-cards-container'>
+        <div className='teacher-cards-container' ref={teacherCardsContainerRef}>
             <Cards cardClassName={"select-teacher-card"} cardDetails={cardDetails} addBtnClickHandler={() => {
-                window.location.href = window.location.origin + "/Teachers";
+                // window.location.href = window.location.origin + "/Teachers";
             }} canStayActiveMultipleCards={true} />
         </div>
     )
 }
-function SubjectCardsContainer({ cardDetails = [] }) {
+function SubjectCardsContainer({ cardDetails = [], subjectCardsContainerRef = "" }) {
     return (
-        <div className='subject-cards-container'>
+        <div className='subject-cards-container' ref={subjectCardsContainerRef}>
             <Cards cardClassName={"select-subject-card"} cardDetails={cardDetails} addBtnClickHandler={() => {
-                window.location.href = window.location.origin + "/Subjects";
+                // window.location.href = window.location.origin + "/Subjects";
             }} />
         </div>
     )

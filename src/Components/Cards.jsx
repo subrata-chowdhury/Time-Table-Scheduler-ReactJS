@@ -8,7 +8,8 @@ export default function Cards({
     cardClassName,
     cardClickHandler = () => { },
     addBtnClickHandler = () => { },
-    canStayActiveMultipleCards = false
+    canStayActiveMultipleCards = false,
+    cardsContainerRef = useRef()
 }) {
     let cards = [];
     for (let index = 0; index < cardDetails.length; index++) {
@@ -18,11 +19,13 @@ export default function Cards({
                 key={index}
                 cardClickHandler={cardClickHandler}
                 className={cardClassName}
-                canStayActiveMultipleCards={canStayActiveMultipleCards}></Card>
+                canStayActiveMultipleCards={canStayActiveMultipleCards}
+                cardsContainerRefCurrent={cardsContainerRef.current}
+            ></Card>
         )
     }
     return (
-        <div className="cards-container">
+        <div className="cards-container" ref={cardsContainerRef}>
             <div className="card add" onClick={addBtnClickHandler}>
                 <Plus />
             </div>
@@ -37,16 +40,17 @@ export function Card({
     className = "",
     cardClickHandler = () => { },
     compressText = true,
-    canStayActiveMultipleCards = false
+    canStayActiveMultipleCards = false,
+    cardsContainerRefCurrent
 }) {
     function defaultClickHandler(event) {
         event.stopPropagation();
         try {
             if (!canStayActiveMultipleCards)
                 if (className === "")
-                    document.querySelector(".card.data.active").classList.remove("active");
+                    cardsContainerRefCurrent.querySelector(".card.data.active").classList.remove("active");
                 else
-                    document.querySelector(".card.data.active." + className).classList.remove("active");
+                    cardsContainerRefCurrent.querySelector(".card.data.active." + className).classList.remove("active");
         } catch (error) { }
         if (canStayActiveMultipleCards) {
             let currentTargetClasses = event.currentTarget.classList;
@@ -78,7 +82,8 @@ export function HorizentalCardsContainer({
     className = "",
     cardClassName,
     cardClickHandler,
-    compressText
+    compressText,
+    cardsContainerRef = useRef()
 }) {
     let cards = [];
     for (let index = 0; index < cardData.length; index++) {
@@ -88,20 +93,21 @@ export function HorizentalCardsContainer({
                 key={index}
                 className={cardClassName}
                 cardClickHandler={cardClickHandler}
-                compressText={compressText} />
+                compressText={compressText}
+                cardsContainerRefCurrent={cardsContainerRef.current}
+            />
         )
     }
-    let cardsContainer = useRef()
     function horizentalCardsOnWheelHandler(event) {
-        cardsContainer.current.scrollLeft += (event.deltaY);
+        cardsContainerRef.current.scrollLeft += (event.deltaY);
     }
     function arrowClickHandler(value) {
-        cardsContainer.current.scrollLeft += value;
+        cardsContainerRef.current.scrollLeft += value;
         showLeftArrow()
     }
     const [showArrow, setShowArrow] = useState(false)
     function showLeftArrow() {
-        if (cardsContainer.current.scrollLeft >= 120) {
+        if (cardsContainerRef.current.scrollLeft >= 120) {
             setShowArrow(true)
         } else {
             setShowArrow(false)
@@ -110,7 +116,7 @@ export function HorizentalCardsContainer({
     return (
         <div className={'horizental-cards-container ' + className} onWheel={horizentalCardsOnWheelHandler}>
             <Arrow className="left-arrow-for-scroll arrow-for-scroll" arrowStyle={{ zIndex: showArrow ? "1" : "-10" }} arrowIconClickHandler={() => { arrowClickHandler(-125) }} />
-            <div className='sub-horizental-cards-container' ref={cardsContainer}>
+            <div className='sub-horizental-cards-container' ref={cardsContainerRef}>
                 {cards}
             </div>
             <Arrow className="right-arrow-for-scroll arrow-for-scroll" arrowIconClickHandler={() => { arrowClickHandler(125) }} />

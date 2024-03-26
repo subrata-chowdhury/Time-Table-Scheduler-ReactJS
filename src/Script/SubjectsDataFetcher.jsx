@@ -76,7 +76,6 @@ export async function getSubjectDetails(subjectName, callBackFunction = (data) =
     } catch {
         console.log("Unable to Fetch Data of subject")
     }
-    return data
 }
 
 export function saveSubject(data, callBackFunction = () => { }) {
