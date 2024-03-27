@@ -260,7 +260,7 @@ function TeacherCardsContainer({ cardDetails = [], teacherCardsContainerRef = ""
     return (
         <div className='teacher-cards-container' ref={teacherCardsContainerRef}>
             <Cards cardClassName={"select-teacher-card"} cardDetails={cardDetails} addBtnClickHandler={() => {
-                // window.location.href = window.location.origin + "/Teachers";
+                window.location.href = window.location.origin + "/Teachers";
             }} canStayActiveMultipleCards={true} />
         </div>
     )
@@ -269,7 +269,7 @@ function SubjectCardsContainer({ cardDetails = [], subjectCardsContainerRef = ""
     return (
         <div className='subject-cards-container' ref={subjectCardsContainerRef}>
             <Cards cardClassName={"select-subject-card"} cardDetails={cardDetails} addBtnClickHandler={() => {
-                // window.location.href = window.location.origin + "/Subjects";
+                window.location.href = window.location.origin + "/Subjects";
             }} />
         </div>
     )
