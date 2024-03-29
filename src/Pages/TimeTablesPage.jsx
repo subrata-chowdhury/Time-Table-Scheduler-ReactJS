@@ -3,7 +3,7 @@ import Menubar from '../Components/Menubar'
 import TimeTable from '../Components/TimeTable'
 import "../Style/TimeTablesPage.css"
 import Cards, { Card, HorizentalCardsContainer } from '../Components/Cards'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getSubjects } from '../Script/SubjectsDataFetcher'
 import { generateTimeTable, getSchedule, getTimeTableStructure, saveSchedule } from '../Script/TimeTableDataFetcher'
 import { getTeacherList } from '../Script/TeachersDataFetcher'
