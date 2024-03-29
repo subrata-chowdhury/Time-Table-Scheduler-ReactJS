@@ -1,1 +1,1 @@
-export let url = "http://localhost:9000/"//window.location.origin + "/";
+export let url = window.location.origin + "/";
