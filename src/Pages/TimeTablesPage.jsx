@@ -11,6 +11,7 @@ import { emptyTimeTableDetails } from '../Components/TimeTable'
 import "../Script/commonJS"
 import { hasElement } from '../Script/util'
 import OwnerFooter from '../Components/OwnerFooter'
+import Loader from '../Components/Loader'
 
 function TimeTablesPage() {
     const [sems, setSems] = useState([])
@@ -256,7 +257,7 @@ function TeacherAndSubjectSelector({
     )
 }
 
-function TeacherCardsContainer({ cardDetails = [], teacherCardsContainerRef = "" }) {
+const TeacherCardsContainer = memo(({ cardDetails = [], teacherCardsContainerRef = useRef() }) => {
     return (
         <div className='teacher-cards-container' ref={teacherCardsContainerRef}>
             <Cards cardClassName={"select-teacher-card"} cardDetails={cardDetails} addBtnClickHandler={() => {
@@ -264,8 +265,8 @@ function TeacherCardsContainer({ cardDetails = [], teacherCardsContainerRef = ""
             }} canStayActiveMultipleCards={true} />
         </div>
     )
-}
-function SubjectCardsContainer({ cardDetails = [], subjectCardsContainerRef = "" }) {
+})
+const SubjectCardsContainer = memo(({ cardDetails = [], subjectCardsContainerRef = useRef() }) => {
     return (
         <div className='subject-cards-container' ref={subjectCardsContainerRef}>
             <Cards cardClassName={"select-subject-card"} cardDetails={cardDetails} addBtnClickHandler={() => {
@@ -273,18 +274,6 @@ function SubjectCardsContainer({ cardDetails = [], subjectCardsContainerRef = ""
             }} />
         </div>
     )
-}
-
-function Loader({ display = false }) {
-    let loaderDisplayStyle = {
-        display: (display ? "block" : "none")
-    }
-    return (
-        <div className='loader' style={loaderDisplayStyle}>
-            <div className='outer-circle'></div>
-            <div className='inner-circle'></div>
-        </div>
-    )
-}
+})
 
 export default TimeTablesPage

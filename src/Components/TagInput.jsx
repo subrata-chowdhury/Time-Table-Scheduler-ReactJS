@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { hasElement } from "../Script/util";
 import "../Style/Tags.css"
 
-export function TagInput({
+function TagInput({
     tagList = [],
     inputName = "",
     details,
@@ -74,3 +74,5 @@ export function TagInput({
         </div>
     )
 }
+
+export default memo(TagInput)

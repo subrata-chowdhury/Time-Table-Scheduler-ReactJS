@@ -1,6 +1,7 @@
+import { memo } from "react";
 import "../Style/WorkingHourBarChat.css"
 
-export default function WorkingHourBarChat({ dayNames = ["Tue", "Wed", "Thu", "Fri", "Sat"], perDayValue = [5, 0, 8, 1, 2], maxValue = 8 }) {
+function WorkingHourBarChat({ dayNames = ["Tue", "Wed", "Thu", "Fri", "Sat"], perDayValue = [5, 0, 8, 1, 2], maxValue = 8 }) {
     let bars = [];
     if (dayNames.length !== perDayValue.length) bars.push(<div className="invaild-text">Invaild Input</div>)
     else {
@@ -34,3 +35,5 @@ function Bar({ value = 0, maxValue = 8 }) {
         </div>
     )
 }
+
+export default memo(WorkingHourBarChat)

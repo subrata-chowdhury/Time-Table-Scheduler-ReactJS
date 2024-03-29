@@ -1,4 +1,6 @@
-export default function OwnerFooter() {
+import { memo } from "react"
+
+function OwnerFooter() {
     return (
         <div className='owner-text bottom-sub-container' style={{
             paddingLeft: '20px',
@@ -8,3 +10,5 @@ export default function OwnerFooter() {
         </div>
     )
 }
+
+export default memo(OwnerFooter)

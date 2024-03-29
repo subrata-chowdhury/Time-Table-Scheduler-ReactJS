@@ -1,9 +1,9 @@
 import Plus from "../Icons/Plus";
 import "../Style/Cards.css"
 import Arrow from '../Icons/Arrow'
-import { useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 
-export default function Cards({
+function Cards({
     cardDetails = [],
     cardClassName,
     cardClickHandler = () => { },
@@ -35,14 +35,16 @@ export default function Cards({
     )
 }
 
-export function Card({
+export default memo(Cards)
+
+export const Card = memo(({
     details = "Sample",
     className = "",
     cardClickHandler = () => { },
     compressText = true,
     canStayActiveMultipleCards = false,
     cardsContainerRefCurrent
-}) {
+}) => {
     function defaultClickHandler(event) {
         event.stopPropagation();
         try {
@@ -75,7 +77,7 @@ export function Card({
             {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
         </div>
     )
-}
+})
 
 export function HorizentalCardsContainer({
     cardData = [],

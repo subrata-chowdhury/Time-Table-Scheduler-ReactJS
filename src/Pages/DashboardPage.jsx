@@ -4,7 +4,7 @@ import "../Style/Dashboard.css"
 import WorkingHourBarChat from '../Components/WorkingHourBarChat'
 import { HorizentalCardsContainer } from '../Components/Cards'
 import TimeTable from '../Components/TimeTable'
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { getTeacher, getTeacherList, getTeacherSchedule } from '../Script/TeachersDataFetcher'
 import { getSubjects } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
@@ -110,7 +110,7 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange, setFileChange }) 
     )
 }
 
-function TeachersTimeTableContainer({ teacherTimeTableDetails, subjectsDetails = null }) {
+const TeachersTimeTableContainer = memo(({ teacherTimeTableDetails, subjectsDetails = null }) => {
     let sir = "Sir";
     return (
         <div className='time-table-wrapper'>
@@ -124,9 +124,9 @@ function TeachersTimeTableContainer({ teacherTimeTableDetails, subjectsDetails =
                     subjectsDetails={subjectsDetails} />}
         </div>
     )
-}
+})
 
-function SemesterContainer({ semList = [] }) {
+const SemesterContainer = memo(({ semList = [] }) => {
     let sems = [];
     for (let index = 0; index < semList.length; index++) {
         sems.push(<div className='sem' key={semList[index]}>{semList[index]}</div>)
@@ -139,9 +139,9 @@ function SemesterContainer({ semList = [] }) {
             </div>
         </div>
     )
-}
+})
 
-function SubjectContainer({ subList = ["a", "b", "c"] }) {
+const SubjectContainer = memo(({ subList = [] }) => {
     let subs = [];
     for (let index = 0; index < subList.length; index++) {
         subs.push(
@@ -158,5 +158,5 @@ function SubjectContainer({ subList = ["a", "b", "c"] }) {
             </div>
         </div>
     )
-}
+})
 export default DashboardPage

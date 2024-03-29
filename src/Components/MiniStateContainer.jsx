@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import { getCurrentFileIsSaved, getCurrentFileName, getSaveFileList, loadSaveFile, saveCurrentState } from "../Script/FilesDataFetchers";
 import "../Style/Mini-state-container.css";
 
-export default function MiniStateContainer({ callBackAfterStateUpdate = () => { } }) {
+function MiniStateContainer({ callBackAfterStateUpdate = () => { } }) {
     const [currentFileName, setCurrentFileName] = useState("");
     const [states, setStates] = useState([])
     const fileSelector = useRef()
@@ -58,3 +58,5 @@ function Option({ value }) {
         <option value={value.toLowerCase()}>{value}</option>
     )
 }
+
+export default memo(MiniStateContainer)

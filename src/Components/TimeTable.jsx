@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { hasElement } from "../Script/util";
 import "../Style/TimeTable.css"
 
@@ -9,7 +10,7 @@ export let emptyTimeTableDetails = [
     [["Sir", "Lab", "roomCode"], ["Sir", "Lab", "roomCode"], ["Sir", "Lab", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sirlast", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]]
 ]
 
-export default function TimeTable({
+function TimeTable({
     noOfDays = 5,
     noOfPeriods = 9,
     breakTimeIndexs = [4],
@@ -66,7 +67,7 @@ export default function TimeTable({
         let totalNoOfPeriods = noOfPeriods;
         let index = 1
         while (index <= totalNoOfPeriods) {
-            if (hasElement(breakTimeIndexs,index)) {
+            if (hasElement(breakTimeIndexs, index)) {
                 dayRow.push(
                     <div
                         className="period-details-container break"
@@ -134,3 +135,5 @@ export default function TimeTable({
         </div>
     )
 }
+
+export default memo(TimeTable)

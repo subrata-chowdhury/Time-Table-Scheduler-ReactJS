@@ -2,14 +2,14 @@ import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
 import Cards from '../Components/Cards'
 import "../Style/Teachers.css"
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import SearchBar, { match } from '../Components/SearchBar'
 import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Script/TeachersDataFetcher'
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import { getSubjectList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
 import { hasElement } from '../Script/util'
-import { TagInput } from '../Components/TagInput'
+import TagInput from '../Components/TagInput'
 import OwnerFooter from '../Components/OwnerFooter'
 
 function TeachersPage() {
@@ -246,7 +246,7 @@ function DetailsContainer({
     )
 }
 
-function TimeSelector({ modifyTheValueOfInputBox, teacherDetails, periodCount = 8 }) {
+const TimeSelector = memo(({ modifyTheValueOfInputBox, teacherDetails, periodCount = 8 }) => {
     let noOfDays = 5;
     let timeTable = [];
     let newTeacherDetailsFreeTime = teacherDetails.freeTime
@@ -273,7 +273,7 @@ function TimeSelector({ modifyTheValueOfInputBox, teacherDetails, periodCount = 
             </div>
         </div>
     )
-}
+})
 
 function Periods({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetailsFreeTimeOfThatDay }) {
     let periods = []

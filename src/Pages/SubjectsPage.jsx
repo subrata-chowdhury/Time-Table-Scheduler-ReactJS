@@ -7,7 +7,7 @@ import { useEffect, useState, useRef } from 'react'
 import { deleteSubject, getSubjectDetails, getSubjectList, saveSubject } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
 import { hasElement } from '../Script/util'
-import { TagInput } from '../Components/TagInput'
+import TagInput from '../Components/TagInput'
 import OwnerFooter from '../Components/OwnerFooter'
 
 function SubjectsPage() {

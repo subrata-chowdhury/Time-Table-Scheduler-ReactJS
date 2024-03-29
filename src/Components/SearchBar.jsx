@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import Cross from "../Icons/Cross";
 import Search from "../Icons/Search";
 import "../Style/SearchBar.css"
@@ -13,7 +13,7 @@ export function match(list, key) {
     return res
 }
 
-export default function SearchBar({ cardsContainerCurrent }) {
+function SearchBar({ cardsContainerCurrent }) {
     const searchInputBox = useRef();
     const searchInputContainer = useRef();
 
@@ -49,3 +49,5 @@ export default function SearchBar({ cardsContainerCurrent }) {
         </div>
     )
 }
+
+export default memo(SearchBar)
