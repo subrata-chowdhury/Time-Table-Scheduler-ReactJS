@@ -11,8 +11,21 @@ import "../Script/commonJS"
 import { hasElement } from '../Script/util'
 import TagInput from '../Components/TagInput'
 import OwnerFooter from '../Components/OwnerFooter'
+import Loader from '../Components/Loader'
 
 function TeachersPage() {
+    return (
+        <>
+            <Menubar activeMenuIndex={1} />
+            <div className='main-container teachers'>
+                <MainComponents />
+                <OwnerFooter />
+            </div>
+        </>
+    )
+}
+
+function MainComponents() {
     const [teachersList, setTeahersList] = useState([]);
     const [teacherDetails, setTeacherDetails] = useState({
         freeTime: [],
@@ -20,6 +33,7 @@ function TeachersPage() {
     })
     const [teacherName, setTeacherName] = useState();
     const [periodCount, setPeriodCount] = useState();
+    const [displayLoader, setDisplayLoader] = useState(false);
 
     const teacherDeleteBtn = useRef()
     const cardsContainer = useRef()
@@ -35,6 +49,7 @@ function TeachersPage() {
         });
         setTeacherName("");
         getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) });
+        setDisplayLoader(false)
     }
     function teacherCardOnClickHandler(event) {
         getTeacher(event.target.title, setTeacherDetailsControler);
@@ -54,36 +69,34 @@ function TeachersPage() {
     }
     return (
         <>
-            <Menubar activeMenuIndex={1} />
-            <div className='main-container teachers'>
-                <div className='top-sub-container'>
-                    <div className='left-sub-container'>
-                        <div className='tools-container'>
-                            <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                            <SearchBar cardsContainerCurrent={cardsContainer.current} />
-                        </div>
-                        <Cards
-                            cardDetails={teachersList}
-                            cardClassName={"teacher-card"}
-                            cardClickHandler={teacherCardOnClickHandler}
-                            addBtnClickHandler={addTeacherCardClickHandler}
-                            cardsContainerRef={cardsContainer} />
+            <Loader display={displayLoader} />
+            <div className='top-sub-container'>
+                <div className='left-sub-container'>
+                    <div className='tools-container'>
+                        <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
+                        <SearchBar cardsContainerCurrent={cardsContainer.current} />
                     </div>
-                    <div className='right-sub-container'>
-                        <DetailsContainer
-                            teacherName={teacherName}
-                            teacherDetails={teacherDetails}
-                            teachersList={teachersList}
-                            setTeacherDetails={setTeacherDetails}
-                            setTeacherName={setTeacherName}
-                            periodCount={periodCount}
-                            onSubmitCallBack={startUpFunction}
-
-                            teacherDeleteBtnRef={teacherDeleteBtn}
-                        />
-                    </div>
+                    <Cards
+                        cardDetails={teachersList}
+                        cardClassName={"teacher-card"}
+                        cardClickHandler={teacherCardOnClickHandler}
+                        addBtnClickHandler={addTeacherCardClickHandler}
+                        cardsContainerRef={cardsContainer} />
                 </div>
-                <OwnerFooter />
+                <div className='right-sub-container'>
+                    <DetailsContainer
+                        teacherName={teacherName}
+                        teacherDetails={teacherDetails}
+                        teachersList={teachersList}
+                        setTeacherDetails={setTeacherDetails}
+                        setTeacherName={setTeacherName}
+                        periodCount={periodCount}
+                        onSubmitCallBack={startUpFunction}
+
+                        teacherDeleteBtnRef={teacherDeleteBtn}
+                        setDisplayLoader={setDisplayLoader}
+                    />
+                </div>
             </div>
         </>
     )
@@ -98,7 +111,8 @@ function DetailsContainer({
     periodCount,
     onSubmitCallBack,
 
-    teacherDeleteBtnRef
+    teacherDeleteBtnRef,
+    setDisplayLoader
 }) {
     const [subjectList, setSubjectList] = useState([]);
     useEffect(() => {
@@ -130,11 +144,14 @@ function DetailsContainer({
         if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) {
             deleteTeacher(teacherName, () => {
                 onSubmitCallBack();
+            }, () => {
+                setDisplayLoader(false)
             });
         }
     }
     function teacherFormSubmitHandler(event) {
         event.preventDefault();
+        setDisplayLoader(true)
         verifyInputs()
         //verification of inputs
         function verifyInputs() {
@@ -198,6 +215,8 @@ function DetailsContainer({
                 saveTeacher(data, () => {
                     alert(JSON.stringify(data) + "---------- is added")
                     onSubmitCallBack();
+                }, () => {
+                    setDisplayLoader(false)
                 })
             }
         }
@@ -303,4 +322,4 @@ function Periods({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetailsFre
     )
 }
 
-export default TeachersPage
+export default memo(TeachersPage)

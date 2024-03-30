@@ -3,14 +3,27 @@ import Menubar from '../Components/Menubar'
 import SearchBar, { match } from '../Components/SearchBar'
 import Cards from '../Components/Cards'
 import "../Style/Subjects.css"
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, memo } from 'react'
 import { deleteSubject, getSubjectDetails, getSubjectList, saveSubject } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
 import { hasElement } from '../Script/util'
 import TagInput from '../Components/TagInput'
 import OwnerFooter from '../Components/OwnerFooter'
+import Loader from '../Components/Loader'
 
 function SubjectsPage() {
+    return (
+        <>
+            <Menubar activeMenuIndex={0} />
+            <div className='main-container subjects'>
+                <MainComponents />
+                <OwnerFooter />
+            </div>
+        </>
+    )
+}
+
+function MainComponents() {
     const [subjectsList, setSubjectsList] = useState([])
     const [subjectDetails, setSubjectDetails] = useState({
         isPractical: false,
@@ -19,6 +32,7 @@ function SubjectsPage() {
         sem: ""
     })
     const [subjectName, setSubjectName] = useState()
+    const [displayLoader, setDisplayLoader] = useState(false);
 
     const subjectDeleteBtn = useRef()
     const cardsContainer = useRef()
@@ -35,6 +49,7 @@ function SubjectsPage() {
             sem: ""
         })
         setSubjectName("")
+        setDisplayLoader(false)
     }
     function subjectCardOnClickHandler(event) {
         getSubjectDetails(event.target.title, setSubjectDetailsControler)
@@ -56,36 +71,34 @@ function SubjectsPage() {
     }
     return (
         <>
-            <Menubar activeMenuIndex={0} />
-            <div className='main-container subjects'>
-                <div className='top-sub-container'>
-                    <div className='left-sub-container'>
-                        <div className='tools-container'>
-                            <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                            <SearchBar cardsContainerCurrent={cardsContainer.current} />
-                        </div>
-                        <Cards
-                            cardDetails={subjectsList}
-                            cardClassName={"subject-card"}
-                            cardClickHandler={subjectCardOnClickHandler}
-                            addBtnClickHandler={addSubjectCardClickHandler}
-
-                            cardsContainerRef={cardsContainer} />
+            <Loader display={displayLoader} />
+            <div className='top-sub-container'>
+                <div className='left-sub-container'>
+                    <div className='tools-container'>
+                        <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
+                        <SearchBar cardsContainerCurrent={cardsContainer.current} />
                     </div>
-                    <div className='right-sub-container'>
-                        <DetailsContainer
-                            subjectName={subjectName}
-                            subjectDetails={subjectDetails}
-                            subjectsList={subjectsList}
-                            setSubjectDetails={setSubjectDetails}
-                            setSubjectName={setSubjectName}
-                            onSubmitCallBack={startUpFunction}
+                    <Cards
+                        cardDetails={subjectsList}
+                        cardClassName={"subject-card"}
+                        cardClickHandler={subjectCardOnClickHandler}
+                        addBtnClickHandler={addSubjectCardClickHandler}
 
-                            subjectDeleteBtnRef={subjectDeleteBtn}
-                        />
-                    </div>
+                        cardsContainerRef={cardsContainer} />
                 </div>
-                <OwnerFooter />
+                <div className='right-sub-container'>
+                    <DetailsContainer
+                        subjectName={subjectName}
+                        subjectDetails={subjectDetails}
+                        subjectsList={subjectsList}
+                        setSubjectDetails={setSubjectDetails}
+                        setSubjectName={setSubjectName}
+                        onSubmitCallBack={startUpFunction}
+
+                        subjectDeleteBtnRef={subjectDeleteBtn}
+                        setDisplayLoader={setDisplayLoader}
+                    />
+                </div>
             </div>
         </>
     )
@@ -99,7 +112,8 @@ function DetailsContainer({
     setSubjectName,
     onSubmitCallBack,
 
-    subjectDeleteBtnRef
+    subjectDeleteBtnRef,
+    setDisplayLoader
 }) {
     function subjectTypeClickHandler(event) {
         let checkbox = event.target;
@@ -120,6 +134,7 @@ function DetailsContainer({
     }
     function subjectFormSubmitHandler(event) {
         event.preventDefault();
+        setDisplayLoader(true)
         let data = { ...subjectDetails }
         let newSubjectName = subjectName.trim().toUpperCase()
 
@@ -187,6 +202,8 @@ function DetailsContainer({
             saveSubject(newData, () => {
                 alert(JSON.stringify(newData) + "---------- is added");
                 onSubmitCallBack();
+            }, () => {
+                setDisplayLoader(false)
             })
         }
     }
@@ -195,6 +212,8 @@ function DetailsContainer({
         if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?"))
             deleteSubject(subjectName, () => {
                 onSubmitCallBack();
+            }, () => {
+                setDisplayLoader(false)
             })
     }
     return (
@@ -266,4 +285,4 @@ function DetailsContainer({
     )
 }
 
-export default SubjectsPage
+export default memo(SubjectsPage)

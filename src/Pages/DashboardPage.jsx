@@ -11,30 +11,36 @@ import "../Script/commonJS"
 import OwnerFooter from '../Components/OwnerFooter'
 
 function DashboardPage() {
-    const [perDayValue, setPerDayValue] = useState([0, 0, 0, 0, 0])
-    const [fileChange, setFileChange] = useState(false)
-
     return (
         <>
             <Menubar activeMenuIndex={2} />
             <div className='main-container dashboard'>
-                <div className='top-sub-container'>
-                    <div className='left-sub-container'>
-                        <MiniStateContainer callBackAfterStateUpdate={() => { setFileChange(true) }} />
-                        <div className='empty-container'>Under Development</div>
-                        <WorkingHourBarChat perDayValue={perDayValue} />
-                    </div>
-                    <div className='right-sub-container'>
-                        <TeacherDetailsContainer setPerDayValue={setPerDayValue} fileChange={fileChange} setFileChange={setFileChange} />
-                    </div>
-                </div>
+                <MainComponents />
                 <OwnerFooter />
             </div>
         </>
     )
 }
 
-function TeacherDetailsContainer({ setPerDayValue, fileChange, setFileChange }) {
+function MainComponents() {
+    const [perDayValue, setPerDayValue] = useState([0, 0, 0, 0, 0])
+    const [fileChange, setFileChange] = useState(false)
+
+    return (
+        <div className='top-sub-container'>
+            <div className='left-sub-container'>
+                <MiniStateContainer callBackAfterStateUpdate={() => { setFileChange(val => !val) }} />
+                <div className='empty-container'>Under Development</div>
+                <WorkingHourBarChat perDayValue={perDayValue} />
+            </div>
+            <div className='right-sub-container'>
+                <TeacherDetailsContainer setPerDayValue={setPerDayValue} fileChange={fileChange} />
+            </div>
+        </div>
+    )
+}
+
+function TeacherDetailsContainer({ setPerDayValue, fileChange }) {
     const [teachersList, setTeahersList] = useState([])
     const [semesters, setSemesters] = useState([])
     const [teacherTimeTableDetails, setTeacherTimeTableDetails] = useState()
@@ -50,8 +56,7 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange, setFileChange }) 
             subjects: [],
         })
         setSemesters()
-        setFileChange(false)
-    }, [fileChange, setFileChange])
+    }, [fileChange])
 
     const [teacherDetails, setTeacherDetails] = useState({
         freeTime: [],
@@ -159,4 +164,4 @@ const SubjectContainer = memo(({ subList = [] }) => {
         </div>
     )
 })
-export default DashboardPage
+export default memo(DashboardPage)

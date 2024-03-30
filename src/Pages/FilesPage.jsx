@@ -2,13 +2,25 @@ import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
 import "../Style/Files.css"
 import Cards from '../Components/Cards'
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import { createNewFile, deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers'
 import { match } from '../Components/SearchBar'
 import "../Script/commonJS"
 import OwnerFooter from '../Components/OwnerFooter'
 
 function FilesPage() {
+    return (
+        <>
+            <Menubar activeMenuIndex={5} />
+            <div className='main-container files'>
+                <MainComponents />
+                <OwnerFooter />
+            </div>
+        </>
+    )
+}
+
+function MainComponents() {
     const [files, setFiles] = useState([]);
     const [fileName, setFileName] = useState("")
 
@@ -35,31 +47,25 @@ function FilesPage() {
         setFileName("")
     }
     return (
-        <>
-            <Menubar activeMenuIndex={5} />
-            <div className='main-container files'>
-                <div className='top-sub-container'>
-                    <div className='left-sub-container'>
-                        <MiniStateContainer />
-                        <Cards
-                            cardDetails={files}
-                            cardClickHandler={fileCardClickHandler}
-                            addBtnClickHandler={addFileBtnClickHandler} />
-                    </div>
-                    <div className='right-sub-container'>
-                        <DetailsContainer
-                            fileName={fileName}
-                            setFileName={setFileName}
-                            files={files}
-                            startUp={startUp}
-                            fileCreateBtnRef={fileCreateBtn}
-                            fileDeleteBtnRef={fileDeleteBtn}
-                        />
-                    </div>
-                </div>
-                <OwnerFooter />
+        <div className='top-sub-container'>
+            <div className='left-sub-container'>
+                <MiniStateContainer />
+                <Cards
+                    cardDetails={files}
+                    cardClickHandler={fileCardClickHandler}
+                    addBtnClickHandler={addFileBtnClickHandler} />
             </div>
-        </>
+            <div className='right-sub-container'>
+                <DetailsContainer
+                    fileName={fileName}
+                    setFileName={setFileName}
+                    files={files}
+                    startUp={startUp}
+                    fileCreateBtnRef={fileCreateBtn}
+                    fileDeleteBtnRef={fileDeleteBtn}
+                />
+            </div>
+        </div>
     )
 }
 
@@ -125,4 +131,4 @@ function DetailsContainer({ fileName, setFileName, files, startUp, fileCreateBtn
     )
 }
 
-export default FilesPage
+export default memo(FilesPage)

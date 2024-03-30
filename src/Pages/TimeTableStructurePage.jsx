@@ -1,29 +1,34 @@
 import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
 import "../Style/TimeTableStructure.css"
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { getTimeTableStructure, saveTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import "../Script/commonJS"
 import OwnerFooter from '../Components/OwnerFooter'
 
 function TimeTableStructurePage() {
-    const [fileChange, setFileChange] = useState(false)
-
     return (
         <>
             <Menubar activeMenuIndex={4} />
             <div className='main-container time-table-structure'>
-                <div className='top-sub-container'>
-                    <MiniStateContainer callBackAfterStateUpdate={() => { setFileChange(true) }} />
-                    <TimeTableStructureInputContainer fileChange={fileChange} setFileChange={setFileChange} />
-                </div>
+                <MainComponents />
                 <OwnerFooter />
             </div>
         </>
     )
 }
 
-function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
+function MainComponents() {
+    const [fileChange, setFileChange] = useState(false)
+    return (
+        <div className='top-sub-container'>
+            <MiniStateContainer callBackAfterStateUpdate={() => { setFileChange(val => !val) }} />
+            <TimeTableStructureInputContainer fileChange={fileChange} />
+        </div>
+    )
+}
+
+function TimeTableStructureInputContainer({ fileChange }) {
 
     const [timeTableStructureFieldValues, setTimeTableStructureFieldValues] = useState({
         breaksPerSemester: "",
@@ -44,8 +49,7 @@ function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
 
     useEffect(() => {
         getTimeTableStructure(updateFieldsFromObject)
-        setFileChange(false)
-    }, [fileChange, setFileChange])
+    }, [fileChange])
 
     function inputOnChangeHandler(event) {
         setTimeTableStructureFieldValues(value => ({ ...value, [event.target.name]: event.target.value }))
@@ -200,4 +204,4 @@ function TimeTableStructureInputContainer({ fileChange, setFileChange }) {
         </form>
     )
 }
-export default TimeTableStructurePage
+export default memo(TimeTableStructurePage)

@@ -1,4 +1,5 @@
 import { memo } from "react";
+import "../Style/Loader.css"
 
 function Loader({ display = false }) {
     let loaderDisplayStyle = {

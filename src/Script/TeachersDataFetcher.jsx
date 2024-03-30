@@ -81,7 +81,7 @@ export function getTeacherSchedule(sirName, callBackFunction) {
 }
 
 
-export function saveTeacher(data, callBackFunction = () => { }) {
+export function saveTeacher(data, callBackFunction = () => { }, callBackIfFailed = () => { }) {
     let statusValue;
     try {
         let body = JSON.stringify(data)
@@ -98,6 +98,7 @@ export function saveTeacher(data, callBackFunction = () => { }) {
                 if (statusValue !== 200) {
                     alert("Something went wrong");
                     console.log("%cError in Saving teacher details", "color: orange;", data)
+                    callBackIfFailed()
                     return;
                 }
                 callBackFunction();
@@ -109,7 +110,7 @@ export function saveTeacher(data, callBackFunction = () => { }) {
 
 
 
-export function deleteTeacher(teacherName, callBackFunction = () => { }) {
+export function deleteTeacher(teacherName, callBackFunction = () => { }, callBackIfFailed = () => { }) {
     let statusValue;
     try {
         fetch(url + "io/teachers/" + teacherName, {
@@ -123,6 +124,7 @@ export function deleteTeacher(teacherName, callBackFunction = () => { }) {
                 if (statusValue !== 200) {
                     alert("Something went wrong");
                     console.log(`Request URL: %c${url}io/teachers/${teacherName} %cUnable to delete teacher`, "color: blue;", "color: orange;", data)
+                    callBackIfFailed()
                     return;
                 }
                 callBackFunction();

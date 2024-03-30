@@ -78,7 +78,7 @@ export async function getSubjectDetails(subjectName, callBackFunction = (data) =
     }
 }
 
-export function saveSubject(data, callBackFunction = () => { }) {
+export function saveSubject(data, callBackFunction = () => { }, callBackIfFailed = () => { }) {
     let statusValue;
     try {
         let subjectData = JSON.stringify(data)
@@ -95,6 +95,7 @@ export function saveSubject(data, callBackFunction = () => { }) {
                 if (statusValue !== 200) {
                     alert("Something went wrong");
                     console.log("%cError in Saveing Subject Details", "color: orange;", data)
+                    callBackIfFailed()
                     return;
                 }
                 callBackFunction();
@@ -104,7 +105,7 @@ export function saveSubject(data, callBackFunction = () => { }) {
     }
 }
 
-export function deleteSubject(subjectName, callBackFunction = () => { }) {
+export function deleteSubject(subjectName, callBackFunction = () => { }, callBackIfFailed = () => { }) {
     let statusValue; console.log(url + "/io/teachers/" + subjectName)
     try {
         fetch(url + "io/subjects/" + subjectName, {
@@ -118,6 +119,7 @@ export function deleteSubject(subjectName, callBackFunction = () => { }) {
                 if (statusValue !== 200) {
                     alert("Something went wrong");
                     console.log("%cError in Deleteing Subject", "color: red;", subjectName, data)
+                    callBackIfFailed()
                     return;
                 }
                 callBackFunction();
