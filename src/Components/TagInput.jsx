@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { hasElement } from "../Script/util";
 import "../Style/Tags.css"
 
@@ -13,14 +13,22 @@ function TagInput({
         setTags(details[inputName])
     }, [details])
 
+    const deleteTag = useCallback((event, tagIndex) => {
+        event.preventDefault();
+        let newTags = [...tags]
+        newTags.splice(tagIndex, 1);
+        setTags(newTags)
+        updateWithNewValues(newTags)
+    }, [tags])
+
     let tagElements = [];
     for (let index = 0; index < tags.length; index++) {
         tagElements.push(
-            <Tag value={tags[index]} tagIndex={index} key={index}></Tag>
+            <Tag value={tags[index]} tagIndex={index} onClickHandler={deleteTag} key={index}></Tag>
         )
     }
 
-    function inputBoxInputHandler(event) {
+    const inputBoxInputHandler = useCallback((event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
             let tagValue = event.target.value.trim().toUpperCase();
@@ -30,37 +38,21 @@ function TagInput({
                         alert("Already Present");
                         return;
                     }
-                    updateTags()
+                    updateTags(event, tagValue)
                 } else {
                     alert("Value does not exist")
                 }
-            else updateTags()
-            function updateTags() {
-                let newTags = [...tags];
-                newTags.push(tagValue);
-                setTags(newTags)
-                updateWithNewValues(newTags)
-                event.target.value = ""
-            }
+            else updateTags(event, tagValue)
         }
-    }
-
-    function deleteTag(event, tagIndex) {
-        event.preventDefault();
-        let newTags = [...tags]
-        newTags.splice(tagIndex, 1);
+    }, [tags, details])
+    const updateTags = useCallback((event, tagValue) => {
+        let newTags = [...tags];
+        newTags.push(tagValue);
         setTags(newTags)
         updateWithNewValues(newTags)
-    }
+        event.target.value = ""
+    }, [tags])
 
-    function Tag({ value, tagIndex }) {
-        return (
-            <div className="tag">
-                <div>{value}</div>
-                <button className="delete-tag-btn" onClick={event => deleteTag(event, tagIndex)}>+</button>
-            </div>
-        )
-    }
     return (
         <div className='tag-input-container'>
             <div className='tags-container'>{tagElements}</div>
@@ -71,6 +63,15 @@ function TagInput({
                     inputBoxInputHandler(event)
                 }}
             ></input>
+        </div>
+    )
+}
+
+function Tag({ value, tagIndex, onClickHandler = () => { } }) {
+    return (
+        <div className="tag">
+            <div>{value}</div>
+            <button className="delete-tag-btn" onClick={event => onClickHandler(event, tagIndex)}>+</button>
         </div>
     )
 }

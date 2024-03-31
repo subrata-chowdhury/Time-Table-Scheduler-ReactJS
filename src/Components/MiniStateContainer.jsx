@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react"
 import { getCurrentFileIsSaved, getCurrentFileName, getSaveFileList, loadSaveFile, saveCurrentState } from "../Script/FilesDataFetchers";
 import "../Style/Mini-state-container.css";
 
@@ -24,7 +24,7 @@ function MiniStateContainer({ callBackAfterStateUpdate = () => { } }) {
         }
     }, [currentFileName, states])
 
-    function onChangeStateHandler(event) {
+    const onChangeStateHandler = useCallback((event) => {
         getCurrentFileIsSaved((isSaved) => {
             if (!isSaved)
                 if (window.confirm("You did't save the current state, Want to Save it now?")) {
@@ -38,7 +38,7 @@ function MiniStateContainer({ callBackAfterStateUpdate = () => { } }) {
             setCurrentFileName(event.target.value)
             loadSaveFile(event.target.value, callBackAfterStateUpdate);
         }
-    }
+    }, [])
     let options = [];
     for (let index = 0; index < states.length; index++) {
         options.push(<Option value={states[index]} key={index}></Option>)

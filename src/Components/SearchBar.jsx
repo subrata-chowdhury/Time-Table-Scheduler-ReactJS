@@ -1,4 +1,4 @@
-import { memo, useRef } from "react";
+import { memo, useCallback, useRef } from "react";
 import Cross from "../Icons/Cross";
 import Search from "../Icons/Search";
 import "../Style/SearchBar.css"
@@ -17,7 +17,7 @@ function SearchBar({ cardsContainerCurrent }) {
     const searchInputBox = useRef();
     const searchInputContainer = useRef();
 
-    function searchInputHandler() {
+    const searchInputHandler = useCallback(() => {
         let list = [];
         let dataCards = cardsContainerCurrent.querySelectorAll(".card.data");
         dataCards.forEach((e) => {
@@ -28,18 +28,18 @@ function SearchBar({ cardsContainerCurrent }) {
         result.forEach((e) => {
             dataCards[e].style.cssText = "display: grid;";
         })
-    }
+    }, [])
 
-    function searchIconClickHandler() {
+    const searchIconClickHandler = useCallback(() => {
         searchInputContainer.current.classList.add("active");
         searchInputBox.current.focus()
-    }
+    }, [])
 
-    function crossIconClickHandler() {
+    const crossIconClickHandler = useCallback(() => {
         searchInputBox.current.value = "";
         searchInputContainer.current.classList.remove("active");
         searchInputHandler()
-    }
+    }, [])
 
     return (
         <div className="search-container" ref={searchInputContainer}>

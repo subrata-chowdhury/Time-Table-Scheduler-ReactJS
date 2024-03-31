@@ -4,7 +4,7 @@ import "../Style/Dashboard.css"
 import WorkingHourBarChat from '../Components/WorkingHourBarChat'
 import { HorizentalCardsContainer } from '../Components/Cards'
 import TimeTable from '../Components/TimeTable'
-import { memo, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { getTeacher, getTeacherList, getTeacherSchedule } from '../Script/TeachersDataFetcher'
 import { getSubjects } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
@@ -62,7 +62,7 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange }) {
         freeTime: [],
         subjects: [],
     })
-    function teacherCardClickHandler(event) {
+    const teacherCardClickHandler = useCallback((event) => {
         getTeacher(event.target.title, updateValues)
         function updateValues(data) {
             setTeacherDetails(data)
@@ -75,19 +75,29 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange }) {
                 setSemesters(semesters)
             }
             getTeacherSchedule(event.target.title, data => {
+                for (let index = 0; index < data.length; index++) {
+                    for (let innerIndex = 0; innerIndex < data[index].length; innerIndex++) {
+                        if (!data[index][innerIndex]) continue
+                        data[index][innerIndex] = [
+                            `Sem ${data[index][innerIndex][0]} - ${String.fromCharCode(65 + parseInt(data[index][innerIndex][1]))}`,
+                            data[index][innerIndex][2],
+                            data[index][innerIndex][3]
+                        ]
+                    }
+                }
                 setTeacherTimeTableDetails(data)
                 calculatePerDayValue(data, subjectsDetails)
             })
         }
-    }
-    let calculatePerDayValue = (teacherTimeTableDetails, subjectsDetails) => {
+    }, [subjectsDetails])
+    const calculatePerDayValue = useCallback((teacherTimeTableDetails, subjectsDetails) => {
         if (teacherTimeTableDetails === null || !teacherTimeTableDetails) return
         let newPerDayValue = []
         for (let index = 0; index < teacherTimeTableDetails.length; index++) {
             let valueForThatDay = 0;
             for (let innerIndex = 0; innerIndex < teacherTimeTableDetails[index].length; innerIndex++) {
                 if (teacherTimeTableDetails[index][innerIndex] || teacherTimeTableDetails[index][innerIndex] !== null) {
-                    if (subjectsDetails[teacherTimeTableDetails[index][innerIndex][2]].isPractical === true) {
+                    if (subjectsDetails[teacherTimeTableDetails[index][innerIndex][1]].isPractical === true) {
                         valueForThatDay += 3;
                         innerIndex += 3
                     }
@@ -97,7 +107,7 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange }) {
             newPerDayValue.push(valueForThatDay)
         }
         setPerDayValue(newPerDayValue);
-    }
+    }, [])
     return (
         <div className='teachers-details-container'>
             <HorizentalCardsContainer
@@ -122,7 +132,6 @@ const TeachersTimeTableContainer = memo(({ teacherTimeTableDetails, subjectsDeta
             <div className='heading'>Time Table for {sir}</div>
             {subjectsDetails && teacherTimeTableDetails &&
                 <TimeTable
-                    subjectIndexAtPeriod={2}
                     className='teacher-time-table'
                     timeTableWidthInPercent={92}
                     details={teacherTimeTableDetails}

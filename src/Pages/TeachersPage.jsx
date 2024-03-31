@@ -2,7 +2,7 @@ import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
 import Cards from '../Components/Cards'
 import "../Style/Teachers.css"
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import SearchBar, { match } from '../Components/SearchBar'
 import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Script/TeachersDataFetcher'
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
@@ -41,7 +41,7 @@ function MainComponents() {
     useEffect(() => {
         startUpFunction()
     }, [])
-    function startUpFunction() {
+    const startUpFunction = useCallback(() => {
         getTeacherList(setTeahersList);
         setTeacherDetails({
             freeTime: [],
@@ -50,23 +50,20 @@ function MainComponents() {
         setTeacherName("");
         getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) });
         setDisplayLoader(false)
-    }
-    function teacherCardOnClickHandler(event) {
-        getTeacher(event.target.title, setTeacherDetailsControler);
-        function setTeacherDetailsControler(data) {
-            setTeacherDetails(data)
-        }
+    }, [])
+    const teacherCardOnClickHandler = useCallback((event) => {
+        getTeacher(event.target.title, setTeacherDetails);
         setTeacherName(event.target.title);
         teacherDeleteBtn.current.style.cssText = "display: block";
-    }
-    function addTeacherCardClickHandler() {
+    }, [])
+    const addTeacherCardClickHandler = useCallback(() => {
         setTeacherDetails({
             freeTime: [],
             subjects: [],
         })
         setTeacherName("")
         teacherDeleteBtn.current.style.cssText = "display: none;";
-    }
+    }, [])
     return (
         <>
             <Loader display={displayLoader} />
@@ -118,7 +115,7 @@ function DetailsContainer({
     useEffect(() => {
         getSubjectList(setSubjectList)
     }, [])
-    function modifyTheValueOfInputBox(time, isSelected) {
+    const modifyTheValueOfInputBox = useCallback((time, isSelected) => {
         let newDetails = { ...teacherDetails };
         time = JSON.parse(time)
         if (isSelected) {
@@ -134,12 +131,12 @@ function DetailsContainer({
             newDetails.freeTime.push(time)
         }
         setTeacherDetails(newDetails)
-    }
-    function inputOnChangeHandler(event) {
+    }, [teacherDetails])
+    const inputOnChangeHandler = useCallback((event) => {
         if (event.target.name === 'teacherName') setTeacherName(event.target.value)
         else setTeacherDetails(value => ({ ...value, [event.target.name]: event.target.value }))
-    }
-    function deleteTeacherBtnClickHandler(event) {
+    }, [])
+    const deleteTeacherBtnClickHandler = useCallback((event) => {
         event.preventDefault();
         if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) {
             deleteTeacher(teacherName, () => {
@@ -148,79 +145,77 @@ function DetailsContainer({
                 setDisplayLoader(false)
             });
         }
-    }
-    function teacherFormSubmitHandler(event) {
+    }, [])
+    const teacherFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
-        setDisplayLoader(true)
-        verifyInputs()
         //verification of inputs
-        function verifyInputs() {
-            let teacherData = { ...teacherDetails };
-            let newTeacherName = teacherName.trim().toUpperCase();
-            if (newTeacherName.length === 0) {
-                alert("Please Enter Teacher Name");
+        let teacherData = { ...teacherDetails };
+        let newTeacherName = teacherName.trim().toUpperCase();
+        if (newTeacherName.length === 0) {
+            alert("Please Enter Teacher Name");
+            return;
+        }
+        if (newTeacherName.length > 100) {
+            alert("Length of the name must be less than 100");
+            return;
+        }
+        if (teacherData.subjects.length <= 0) {
+            alert("Please Enter a Subject")
+            return;
+        }
+        for (let subjectStr of teacherData.subjects) {
+            if (subjectList !== "unavailable" && subjectList.indexOf(subjectStr) === -1) {
+                alert("Couldn't find subject - " + subjectStr);
                 return;
-            }
-            if (newTeacherName.length > 100) {
-                alert("Length of the name must be less than 100");
-                return;
-            }
-            if (teacherData.subjects.length <= 0) {
-                alert("Please Enter a Subject")
-                return;
-            }
-            for (let subjectStr of teacherData.subjects) {
-                if (subjectList !== "unavailable" && subjectList.indexOf(subjectStr) === -1) {
-                    alert("Couldn't find subject - " + subjectStr);
-                    return;
-                }
-            }
-            if (teacherData.freeTime.length > 0) {
-                try {
-                    let jsonInput;
-                    try {
-                        jsonInput = (teacherData.freeTime);
-                    } catch (err) {
-                        alert("please enter a vaild time");
-                        return;
-                    }
-                    if (!(jsonInput instanceof Array)) {
-                        alert("Please enter a vaild time");
-                        return;
-                    }
-                    for (let slot of jsonInput) {
-                        if (!(slot instanceof Array) && !slot.length === 2) {
-                            alert("Value must contain integers and length must be 2");
-                            return;
-                        }
-                        if (isNaN(slot[0]) || isNaN(slot[1])) {
-                            alert("Value can't be non-numeric or empty");
-                            return;
-                        }
-                    }
-                    teacherData.freeTime = jsonInput;
-                } catch (err) {
-                    console.log("Error in verifying time")
-                }
-            } else {
-                teacherData.freeTime = [];
-            }
-
-            if (match(teachersList, teacherName).length > 0) {
-                if (window.confirm("Are you want to overwrite " + teacherName)) saveData();
-            } else saveData();
-            function saveData() {
-                let data = new Map();
-                data[teacherName] = teacherData;
-                saveTeacher(data, () => {
-                    alert(JSON.stringify(data) + "---------- is added")
-                    onSubmitCallBack();
-                }, () => {
-                    setDisplayLoader(false)
-                })
             }
         }
-    }
+        if (teacherData.freeTime.length > 0) {
+            try {
+                let jsonInput;
+                try {
+                    jsonInput = (teacherData.freeTime);
+                } catch (err) {
+                    alert("please enter a vaild time");
+                    return;
+                }
+                if (!(jsonInput instanceof Array)) {
+                    alert("Please enter a vaild time");
+                    return;
+                }
+                for (let slot of jsonInput) {
+                    if (!(slot instanceof Array) && !slot.length === 2) {
+                        alert("Value must contain integers and length must be 2");
+                        return;
+                    }
+                    if (isNaN(slot[0]) || isNaN(slot[1])) {
+                        alert("Value can't be non-numeric or empty");
+                        return;
+                    }
+                }
+                teacherData.freeTime = jsonInput;
+            } catch (err) {
+                console.log("Error in verifying time")
+            }
+        } else {
+            teacherData.freeTime = [];
+        }
+
+        if (match(teachersList, newTeacherName).length > 0) {
+            if (window.confirm("Are you want to overwrite " + teacherName))
+                saveData(newTeacherName, teacherData);
+        } else saveData(newTeacherName, teacherData);
+    }, [teacherName, teacherDetails, teachersList])
+    const saveData = useCallback((teacherName, teacherData) => {
+        setDisplayLoader(true)
+        let data = new Map();
+        data[teacherName] = teacherData;
+        saveTeacher(data, () => {
+            alert(JSON.stringify(data) + "---------- is added")
+            onSubmitCallBack();
+        }, () => {
+            setDisplayLoader(false)
+        })
+    }, [])
     return (
         <form className='details-container' onSubmit={teacherFormSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>
@@ -294,7 +289,7 @@ const TimeSelector = memo(({ modifyTheValueOfInputBox, teacherDetails, periodCou
     )
 })
 
-function Periods({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetailsFreeTimeOfThatDay }) {
+const Periods = memo(({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetailsFreeTimeOfThatDay }) => {
     let periods = []
     for (let period = 0; period < noOfPeriods; period++) {
         let selectClass = "";
@@ -310,16 +305,16 @@ function Periods({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetailsFre
             </div>
         )
     }
-
-    function periodClickHandler(event, period) {
+    const periodClickHandler = useCallback((event, period) => {
         let isSelected = hasElement(event.target.classList, "selected");
         modifyTheValueOfInputBox(`[${day + 1},${[period + 1]}]`, isSelected);
-    }
+    }, [modifyTheValueOfInputBox])
+
     return (
         <div className='periods-container' >
             {periods}
         </div>
     )
-}
+})
 
 export default memo(TeachersPage)

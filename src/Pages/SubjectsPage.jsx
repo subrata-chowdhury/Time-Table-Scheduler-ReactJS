@@ -3,7 +3,7 @@ import Menubar from '../Components/Menubar'
 import SearchBar, { match } from '../Components/SearchBar'
 import Cards from '../Components/Cards'
 import "../Style/Subjects.css"
-import { useEffect, useState, useRef, memo } from 'react'
+import { useEffect, useState, useRef, memo, useCallback } from 'react'
 import { deleteSubject, getSubjectDetails, getSubjectList, saveSubject } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
 import { hasElement } from '../Script/util'
@@ -40,7 +40,7 @@ function MainComponents() {
     useEffect(() => {
         startUpFunction()
     }, [])
-    function startUpFunction() {
+    const startUpFunction = useCallback(() => {
         getSubjectList(setSubjectsList)
         setSubjectDetails({
             isPractical: false,
@@ -50,16 +50,13 @@ function MainComponents() {
         })
         setSubjectName("")
         setDisplayLoader(false)
-    }
-    function subjectCardOnClickHandler(event) {
-        getSubjectDetails(event.target.title, setSubjectDetailsControler)
-        function setSubjectDetailsControler(data) {
-            setSubjectDetails(data)
-        }
+    }, [])
+    const subjectCardOnClickHandler = useCallback((event) => {
+        getSubjectDetails(event.target.title, setSubjectDetails)
         setSubjectName(event.target.title)
         subjectDeleteBtn.current.style.cssText = "display: block";
-    }
-    function addSubjectCardClickHandler() {
+    }, [])
+    const addSubjectCardClickHandler = useCallback(() => {
         setSubjectDetails({
             isPractical: false,
             lectureCount: 4,
@@ -68,7 +65,7 @@ function MainComponents() {
         })
         setSubjectName("")
         subjectDeleteBtn.current.style.cssText = "display: none;";
-    }
+    }, [])
     return (
         <>
             <Loader display={displayLoader} />
@@ -115,7 +112,7 @@ function DetailsContainer({
     subjectDeleteBtnRef,
     setDisplayLoader
 }) {
-    function subjectTypeClickHandler(event) {
+    const subjectTypeClickHandler = useCallback((event) => {
         let checkbox = event.target;
         let isLab = false;
         if (hasElement(event.target.classList, "active")) {
@@ -126,41 +123,40 @@ function DetailsContainer({
             isLab = true;
         }
         setSubjectDetails(value => ({ ...value, isPractical: isLab }))
-    }
-    function inputOnChangeHandler(event) {
+    }, [])
+    const inputOnChangeHandler = useCallback((event) => {
         if (event.target.name === 'subjectName') setSubjectName(event.target.value)
         else if (event.target.name === "roomCodes") setSubjectDetails(value => ({ ...value, [event.target.name]: event.target.value }))
         else setSubjectDetails(value => ({ ...value, [event.target.name]: event.target.value }))
-    }
-    function subjectFormSubmitHandler(event) {
+    }, [])
+    const subjectFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
-        setDisplayLoader(true)
         let data = { ...subjectDetails }
         let newSubjectName = subjectName.trim().toUpperCase()
 
         //form validating
         if (newSubjectName.length > 100) {
             alert("Length of the name must be less than 100");
-            return;
+            return false;
         }
         if (newSubjectName.length === 0) {
             alert("Please Enter a vaild name");
-            return;
+            return false;
         }
         //sem validation
         if (data.sem.length === 0) {
             alert("Please Enter a Number in semester");
-            return;
+            return false;
         }
         if (parseInt(data.sem)) {
             data.sem = parseInt(data.sem);
         } else {
             alert("Please Enter a number in semester");
-            return;
+            return false;
         }
         if (data.sem < 1 || data.sem > 8) {
             alert("Value must be in 1 to 8 range in semester");
-            return;
+            return false;
         }
         //lecture count validation
         if (data.lectureCount === 0 || data.lectureCount === "") {
@@ -170,16 +166,16 @@ function DetailsContainer({
             data.lectureCount = parseInt(data.lectureCount);
         } else {
             alert("Please Enter a number in lecture count per week");
-            return;
+            return false;
         }
         if (data.lectureCount < 0 || data.lectureCount > 40) {
             alert("Value must be in range 0 to 40 in lecture count per week");
-            return;
+            return false;
         }
         //room code validation
         if (data.roomCodes.length === 0) {
             alert("Please Enter a Classroom name");
-            return;
+            return false;
         }
 
         try {
@@ -190,24 +186,25 @@ function DetailsContainer({
             data.roomCodes = temp_rCode;
         } catch (err) {
             alert("Please Enter a Valid Room Code");
-            return
+            return false
         }
-
-        if (match(subjectsList, subjectName).length > 0) {
-            if (window.confirm("Are you want to overwrite " + subjectName)) saveData();
-        } else saveData();
-        function saveData() {
-            let newData = new Map();
-            newData[subjectName] = data;
-            saveSubject(newData, () => {
-                alert(JSON.stringify(newData) + "---------- is added");
-                onSubmitCallBack();
-            }, () => {
-                setDisplayLoader(false)
-            })
-        }
-    }
-    function deleteSubjectBtnClickHandler(event) {
+        if (match(subjectsList, newSubjectName).length > 0) {
+            if (window.confirm("Are you want to overwrite " + newSubjectName))
+                saveData(newSubjectName, data);
+        } else saveData(newSubjectName, data);
+    }, [subjectName, subjectDetails, subjectsList])
+    const saveData = useCallback((subjectName, subjectData) => {
+        setDisplayLoader(true)
+        let newData = new Map();
+        newData[subjectName] = subjectData;
+        saveSubject(newData, () => {
+            alert(JSON.stringify(newData) + "---------- is added");
+            onSubmitCallBack();
+        }, () => {
+            setDisplayLoader(false)
+        })
+    }, [])
+    const deleteSubjectBtnClickHandler = useCallback((event) => {
         event.preventDefault();
         if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?"))
             deleteSubject(subjectName, () => {
@@ -215,7 +212,7 @@ function DetailsContainer({
             }, () => {
                 setDisplayLoader(false)
             })
-    }
+    }, [])
     return (
         <form className='details-container' onSubmit={subjectFormSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>

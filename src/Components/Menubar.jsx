@@ -29,10 +29,10 @@ function Menubar({ activeMenuIndex }) {
     }
     useEffect(() => {
         autoToggleInResize();
+        window.onresize = () => {
+            autoToggleInResize()
+        }
     }, [])
-    window.onresize = () => {
-        autoToggleInResize()
-    }
 
     return (
         <div className="menubar-container">

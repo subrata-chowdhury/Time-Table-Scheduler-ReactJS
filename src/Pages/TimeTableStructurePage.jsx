@@ -1,7 +1,7 @@
 import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
 import "../Style/TimeTableStructure.css"
-import { memo, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { getTimeTableStructure, saveTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import "../Script/commonJS"
 import OwnerFooter from '../Components/OwnerFooter'
@@ -37,7 +37,7 @@ function TimeTableStructureInputContainer({ fileChange }) {
         semesterCount: "0"
     })
 
-    function updateFieldsFromObject(obj) {
+    const updateFieldsFromObject = useCallback((obj) => {
         let fieldValues = {
             breaksPerSemester: JSON.stringify(obj.breaksPerSemester).slice(1, -1),
             periodCount: JSON.stringify(obj.periodCount),
@@ -45,22 +45,22 @@ function TimeTableStructureInputContainer({ fileChange }) {
             semesterCount: JSON.stringify(obj.semesterCount)
         }
         setTimeTableStructureFieldValues(fieldValues)
-    }
+    }, [])
 
     useEffect(() => {
         getTimeTableStructure(updateFieldsFromObject)
     }, [fileChange])
 
-    function inputOnChangeHandler(event) {
+    const inputOnChangeHandler = useCallback((event) => {
         setTimeTableStructureFieldValues(value => ({ ...value, [event.target.name]: event.target.value }))
-    }
+    }, [])
 
-    function isPositiveWholeNumber(num) {
+    const isPositiveWholeNumber = useCallback((num) => {
         if (!Number.isInteger(num) || num < 0 || Number.isNaN(num)) return false
         else return true
-    }
+    }, [])
 
-    function timeTableStructureOnSubmitHandler(event) {
+    const timeTableStructureOnSubmitHandler = useCallback((event) => {
         event.preventDefault();
 
         let timeTableStructure = Object()
@@ -151,7 +151,7 @@ function TimeTableStructureInputContainer({ fileChange }) {
         saveTimeTableStructure(timeTableStructure, () => {
             alert(JSON.stringify(timeTableStructure) + "----------- is saved")
         })
-    }
+    }, [timeTableStructureFieldValues])
     return (
         <form className='time-table-structure-inputs-container' onSubmit={timeTableStructureOnSubmitHandler}>
             <div className='top-input-container'>

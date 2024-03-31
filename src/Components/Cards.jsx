@@ -1,7 +1,7 @@
 import Plus from "../Icons/Plus";
 import "../Style/Cards.css"
 import Arrow from '../Icons/Arrow'
-import { memo, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 
 function Cards({
     cardDetails = [],
@@ -45,7 +45,7 @@ export const Card = memo(({
     canStayActiveMultipleCards = false,
     cardsContainerRefCurrent
 }) => {
-    function defaultClickHandler(event) {
+    const defaultClickHandler = useCallback((event) => {
         event.stopPropagation();
         try {
             if (!canStayActiveMultipleCards)
@@ -68,7 +68,7 @@ export const Card = memo(({
                 event.currentTarget.classList.add("active")
             }
         } else event.currentTarget.classList.add("active")
-    }
+    }, [canStayActiveMultipleCards])
     return (
         <div className={"card data " + className} onClick={event => {
             cardClickHandler(event);
@@ -100,21 +100,21 @@ export function HorizentalCardsContainer({
             />
         )
     }
-    function horizentalCardsOnWheelHandler(event) {
+    const horizentalCardsOnWheelHandler = useCallback((event) => {
         cardsContainerRef.current.scrollLeft += (event.deltaY);
-    }
-    function arrowClickHandler(value) {
+    }, [])
+    const arrowClickHandler = useCallback((value) => {
         cardsContainerRef.current.scrollLeft += value;
         showLeftArrow()
-    }
+    }, [])
     const [showArrow, setShowArrow] = useState(false)
-    function showLeftArrow() {
+    const showLeftArrow = useCallback(() => {
         if (cardsContainerRef.current.scrollLeft >= 120) {
             setShowArrow(true)
         } else {
             setShowArrow(false)
         }
-    }
+    }, [])
     return (
         <div className={'horizental-cards-container ' + className} onWheel={horizentalCardsOnWheelHandler}>
             <Arrow className="left-arrow-for-scroll arrow-for-scroll" arrowStyle={{ zIndex: showArrow ? "1" : "-10" }} arrowIconClickHandler={() => { arrowClickHandler(-125) }} />

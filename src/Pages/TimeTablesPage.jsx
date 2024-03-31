@@ -34,11 +34,6 @@ function MainComponents() {
     const [currentOpenSection, setCurrentOpenSection] = useState(0)
     const [displayLoader, setDisplayLoader] = useState(false)
     const [teacherList, setTeacherList] = useState()
-    const [period, setPeriod] = useState({
-        teacherName: "",
-        subjectName: "",
-        roomCode: ""
-    })
     const [periodDetailsIndex, setPeriodDetailsIndex] = useState()
     const [timeTableStructure, setTimeTableStructure] = useState({
         breaksPerSemester: [4],
@@ -65,29 +60,34 @@ function MainComponents() {
             }
         })
     }, [])
-    let startUpFunction = useCallback(() => {
-        getSchedule((data) => {
-            try {
-                if (data[currentOpenSem][currentOpenSection])
-                    setTimeTable(data[currentOpenSem][currentOpenSection])
-                else setTimeTable(emptyTimeTableDetails);
-            } catch (error) {
-                alert("Error in selecting time table")
-            }
-        })
-    }, [currentOpenSem, currentOpenSection])
+    const startUpFunction = useCallback(() => {
+        try {
+            if (allTimeTables[currentOpenSem][currentOpenSection])
+                setTimeTable(allTimeTables[currentOpenSem][currentOpenSection])
+            else setTimeTable(emptyTimeTableDetails);
+        } catch (error) {
+            console.log("%cError in selecting time table", "color: green")
+        }
+    }, [currentOpenSem, currentOpenSection, allTimeTables])
     useEffect(() => {
         startUpFunction()
     }, [currentOpenSem, currentOpenSection, allTimeTables, startUpFunction])
+    useEffect(() => {
+        getSchedule(data => {
+            setAllTimeTables(data)
+        })
+    }, [])
 
-    function semCardClickHandler(event) {
+    const semCardClickHandler = useCallback((event) => {
         let year = parseInt(event.target.title.slice(5))
         setCurrentOpenSem(year - 1)
-    }
-    function setBtnClickListener(teacherCardsContainer, subjectCardsContainer, closeTeacherAndSubjectPopUp) {
+    }, [])
+    const setBtnClickListener = useCallback((teacherCardsContainer, subjectCardsContainer, closeTeacherAndSubjectPopUp) => {
         let teacherCards = teacherCardsContainer.querySelectorAll(".select-teacher-card.active");
         let subjectCard = subjectCardsContainer.querySelector(".select-subject-card.active");
-        let periodDetails = { ...period }
+        let dayIndex = periodDetailsIndex[0]
+        let periodIndex = periodDetailsIndex[1]
+        let periodDetails = { ...timeTable[dayIndex][periodIndex] }
         if (teacherCards) {
             periodDetails.teacherName = [];
             for (let index = 0; index < teacherCards.length; index++) {
@@ -107,10 +107,7 @@ function MainComponents() {
         } else {
             periodDetails.roomCode = ""
         }
-        setPeriod(periodDetails)
         let newTT = [...timeTable]
-        let dayIndex = periodDetailsIndex[0]
-        let periodIndex = periodDetailsIndex[1]
         let subjectTypeBeforeUpdate = false;
         try {
             subjectTypeBeforeUpdate = subjectsDetails[timeTable[dayIndex][periodIndex][1]].isPractical;
@@ -134,7 +131,7 @@ function MainComponents() {
         //     saveSchedule(data);
         // })
         closeTeacherAndSubjectPopUp();
-    }
+    }, [subjectsDetails, periodDetailsIndex, timeTable])
     return (
         <>
             <Loader display={displayLoader} />
@@ -185,20 +182,20 @@ function MainComponents() {
     )
 }
 
-function ButtonsContainer({ setAllTimeTables, setDisplayLoader, setFillManually }) {
-    function autoFillBtnClickHandler() {
+const ButtonsContainer = memo(({ setAllTimeTables, setDisplayLoader, setFillManually }) => {
+    const autoFillBtnClickHandler = useCallback(() => {
         setDisplayLoader(true)
         generateTimeTable((data) => {
             setAllTimeTables(data);
             setDisplayLoader(false)
         }, () => { setDisplayLoader(false) })
-    }
-    function fillManuallyBtnClickHandler(event) {
+    }, [])
+    const fillManuallyBtnClickHandler = useCallback((event) => {
         let currentTargetClasses = event.currentTarget.classList;
         let found = hasElement(currentTargetClasses, "active")
         if (found) setFillManually(false)
         else setFillManually(true)
-    }
+    }, [])
     const btnContainer = useRef()
     return (
         <div className='buttons-container' ref={btnContainer}>
@@ -206,9 +203,13 @@ function ButtonsContainer({ setAllTimeTables, setDisplayLoader, setFillManually 
             <Card details='Fill Manually' className='btn' compressText={false} cardClickHandler={fillManuallyBtnClickHandler} cardsContainerRefCurrent={btnContainer.current} ></Card>
         </div>
     )
-}
+})
 
-function SectionsBtnContainer({ noOfSections = 3, currentOpenSection, setCurrentOpenSection }) {
+const SectionsBtnContainer = memo(({ noOfSections = 3, currentOpenSection, setCurrentOpenSection }) => {
+    const sectionBtnsClickHandler = useCallback((event) => {
+        setCurrentOpenSection(event.target.title.charCodeAt(0) - 65)
+    }, [])
+
     let sectionBtns = [];
     for (let index = 0; index < noOfSections; index++) {
         let selectedClass = "";
@@ -223,29 +224,26 @@ function SectionsBtnContainer({ noOfSections = 3, currentOpenSection, setCurrent
                 cardClickHandler={sectionBtnsClickHandler} />
         )
     }
-    function sectionBtnsClickHandler(event) {
-        setCurrentOpenSection(event.target.title.charCodeAt(0) - 65)
-    }
     return (
         <div className='section-btn-container'>
             {sectionBtns}
         </div>
     )
-}
+})
 
-function TeacherAndSubjectSelector({
+const TeacherAndSubjectSelector = memo(({
     teacherCardDetails = [],
     subjectCardDetails = [],
     setBtnClickListener = () => { },
     teacherSubjectPopUpRef,
     teacherSubjectPopUpBgRef
-}) {
+}) => {
     const teacherCardsContainer = useRef();
     const subjectCardsContainer = useRef();
-    function closeTeacherAndSubjectPopUp() {
+    const closeTeacherAndSubjectPopUp = useCallback(() => {
         teacherSubjectPopUpRef.current.classList.remove("active")
         teacherSubjectPopUpBgRef.current.classList.remove("active")
-    }
+    }, [])
     return (
         <>
             <div className='teacher-subject-selector-container' ref={teacherSubjectPopUpRef}>
@@ -263,7 +261,7 @@ function TeacherAndSubjectSelector({
             <div className='teacher-subject-selector-container-bg' ref={teacherSubjectPopUpBgRef}></div>
         </>
     )
-}
+})
 
 const TeacherCardsContainer = memo(({ cardDetails = [], teacherCardsContainerRef = useRef() }) => {
     return (

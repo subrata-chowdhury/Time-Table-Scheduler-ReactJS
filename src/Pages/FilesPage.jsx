@@ -2,7 +2,7 @@ import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
 import "../Style/Files.css"
 import Cards from '../Components/Cards'
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { createNewFile, deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers'
 import { match } from '../Components/SearchBar'
 import "../Script/commonJS"
@@ -31,21 +31,21 @@ function MainComponents() {
         startUp();
     }, [])
 
-    function startUp() {
+    const startUp = useCallback(() => {
         getSaveFileList(setFiles);
         setFileName("");
-    }
+    }, [])
 
-    function fileCardClickHandler(event) {
+    const fileCardClickHandler = useCallback((event) => {
         setFileName(event.target.title)
         fileDeleteBtn.current.style.cssText = "display: block;";
         fileCreateBtn.current.style.cssText = "display: none;";
-    }
-    function addFileBtnClickHandler() {
+    }, [])
+    const addFileBtnClickHandler = useCallback(() => {
         fileDeleteBtn.current.style.cssText = "display: none;";
         fileCreateBtn.current.style.cssText = "display: block;";
         setFileName("")
-    }
+    }, [])
     return (
         <div className='top-sub-container'>
             <div className='left-sub-container'>
@@ -70,10 +70,10 @@ function MainComponents() {
 }
 
 function DetailsContainer({ fileName, setFileName, files, startUp, fileCreateBtnRef, fileDeleteBtnRef }) {
-    function inputOnChangeHandler(event) {
+    const inputOnChangeHandler = useCallback((event) => {
         setFileName(event.target.value)
-    }
-    function fileFormOnSubmitHandler(event) {
+    }, [])
+    const fileFormOnSubmitHandler = useCallback((event) => {
         event.preventDefault();
         if (fileName.trim() === "") {
             alert("File Name can't be Empty");
@@ -85,8 +85,8 @@ function DetailsContainer({ fileName, setFileName, files, startUp, fileCreateBtn
             if (window.confirm("Are you want to save the current state into " + fileName + "?"))
                 saveCurrentState(fileName, startUp);
         }
-    }
-    function createNewBtnClickHandler(event) {
+    }, [fileName, files])
+    const createNewBtnClickHandler = useCallback((event) => {
         event.preventDefault();
         if (fileName.trim() === "") {
             alert("File Name can't be Empty");
@@ -98,15 +98,15 @@ function DetailsContainer({ fileName, setFileName, files, startUp, fileCreateBtn
         } else {
             createNewFile(fileName, startUp);
         }
-    }
-    function deleteFileBtnClickHandler(event) {
+    }, [fileName, files])
+    const deleteFileBtnClickHandler = useCallback((event) => {
         event.preventDefault();
         if (window.confirm("Are You Sure? Want to delete " + fileName + "?")) {
             deleteFile(fileName, () => {
                 startUp();
             })
         }
-    }
+    }, [fileName])
     return (
         <form className='details-container' onSubmit={fileFormOnSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>
