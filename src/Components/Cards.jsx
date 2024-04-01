@@ -9,7 +9,6 @@ function Cards({
     cardClickHandler = () => { },
     addBtnClickHandler = () => { },
     canStayActiveMultipleCards = false,
-    cardsContainerRef = useRef()
 }) {
     let cards = [];
     for (let index = 0; index < cardDetails.length; index++) {
@@ -20,12 +19,11 @@ function Cards({
                 cardClickHandler={cardClickHandler}
                 className={cardClassName}
                 canStayActiveMultipleCards={canStayActiveMultipleCards}
-                cardsContainerRefCurrent={cardsContainerRef.current}
             ></Card>
         )
     }
     return (
-        <div className="cards-container" ref={cardsContainerRef}>
+        <div className="cards-container">
             <div className="card add" onClick={addBtnClickHandler}>
                 <Plus />
             </div>
@@ -43,16 +41,20 @@ export const Card = memo(({
     cardClickHandler = () => { },
     compressText = true,
     canStayActiveMultipleCards = false,
-    cardsContainerRefCurrent
 }) => {
+    const cardsContainer = useRef()
     const defaultClickHandler = useCallback((event) => {
         event.stopPropagation();
         try {
-            if (!canStayActiveMultipleCards)
+            if (!canStayActiveMultipleCards) {
+                if (!cardsContainer.current)
+                    cardsContainer.current = document.querySelector(".cards-container")
+
                 if (className === "")
-                    cardsContainerRefCurrent.querySelector(".card.data.active").classList.remove("active");
+                    cardsContainer.current.querySelector(".card.data.active").classList.remove("active");
                 else
-                    cardsContainerRefCurrent.querySelector(".card.data.active." + className).classList.remove("active");
+                    cardsContainer.current.querySelector(".card.data.active." + className).classList.remove("active");
+            }
         } catch (error) { }
         if (canStayActiveMultipleCards) {
             let currentTargetClasses = event.currentTarget.classList;

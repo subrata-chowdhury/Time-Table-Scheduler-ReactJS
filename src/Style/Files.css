@@ -7,3 +7,9 @@
 .files .details-container {
     height: 80%;
 }
+
+@media (max-width: 680px) {
+    .files .top-sub-container {
+        grid-template-rows: 65% auto;
+    }
+}

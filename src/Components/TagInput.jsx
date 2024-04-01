@@ -8,27 +8,22 @@ function TagInput({
     details,
     updateWithNewValues = () => { }
 }) {
-    const [tags, setTags] = useState([]);
-    useEffect(() => {
-        setTags(details[inputName])
-    }, [details])
-
     const deleteTag = useCallback((event, tagIndex) => {
         event.preventDefault();
-        let newTags = [...tags]
+        let newTags = [...details[inputName]]
         newTags.splice(tagIndex, 1);
-        setTags(newTags)
         updateWithNewValues(newTags)
-    }, [tags])
+    }, [details])
 
     let tagElements = [];
-    for (let index = 0; index < tags.length; index++) {
+    for (let index = 0; index < details[inputName].length; index++) {
         tagElements.push(
-            <Tag value={tags[index]} tagIndex={index} onClickHandler={deleteTag} key={index}></Tag>
+            <Tag value={details[inputName][index]} tagIndex={index} onClickHandler={deleteTag} key={index}></Tag>
         )
     }
 
     const inputBoxInputHandler = useCallback((event) => {
+        event.stopPropagation()
         if (event.key === 'Enter') {
             event.preventDefault();
             let tagValue = event.target.value.trim().toUpperCase();
@@ -44,14 +39,13 @@ function TagInput({
                 }
             else updateTags(event, tagValue)
         }
-    }, [tags, details])
+    }, [details[inputName], details])
     const updateTags = useCallback((event, tagValue) => {
-        let newTags = [...tags];
+        let newTags = [...details[inputName]];
         newTags.push(tagValue);
-        setTags(newTags)
         updateWithNewValues(newTags)
         event.target.value = ""
-    }, [tags])
+    }, [details])
 
     return (
         <div className='tag-input-container'>

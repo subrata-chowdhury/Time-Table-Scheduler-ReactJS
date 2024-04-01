@@ -35,7 +35,6 @@ function MainComponents() {
     const [displayLoader, setDisplayLoader] = useState(false);
 
     const subjectDeleteBtn = useRef()
-    const cardsContainer = useRef()
 
     useEffect(() => {
         startUpFunction()
@@ -73,15 +72,13 @@ function MainComponents() {
                 <div className='left-sub-container'>
                     <div className='tools-container'>
                         <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                        <SearchBar cardsContainerCurrent={cardsContainer.current} />
+                        <SearchBar />
                     </div>
                     <Cards
                         cardDetails={subjectsList}
                         cardClassName={"subject-card"}
                         cardClickHandler={subjectCardOnClickHandler}
-                        addBtnClickHandler={addSubjectCardClickHandler}
-
-                        cardsContainerRef={cardsContainer} />
+                        addBtnClickHandler={addSubjectCardClickHandler} />
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer
@@ -125,10 +122,13 @@ function DetailsContainer({
         setSubjectDetails(value => ({ ...value, isPractical: isLab }))
     }, [])
     const inputOnChangeHandler = useCallback((event) => {
-        if (event.target.name === 'subjectName') setSubjectName(event.target.value)
-        else if (event.target.name === "roomCodes") setSubjectDetails(value => ({ ...value, [event.target.name]: event.target.value }))
-        else setSubjectDetails(value => ({ ...value, [event.target.name]: event.target.value }))
-    }, [])
+        if (event.target.name === 'subjectName') setSubjectName(event.target.value.trim().toUpperCase())
+        else {
+            let newData = { ...subjectDetails }
+            newData[event.target.name] = event.target.value
+            setSubjectDetails(newData)
+        }
+    }, [subjectDetails])
     const subjectFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
         let data = { ...subjectDetails }
@@ -212,7 +212,7 @@ function DetailsContainer({
             }, () => {
                 setDisplayLoader(false)
             })
-    }, [])
+    }, [subjectName])
     return (
         <form className='details-container' onSubmit={subjectFormSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>

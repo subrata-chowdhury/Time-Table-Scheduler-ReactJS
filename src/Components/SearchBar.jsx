@@ -13,20 +13,21 @@ export function match(list, key) {
     return res
 }
 
-function SearchBar({ cardsContainerCurrent }) {
+function SearchBar() {
     const searchInputBox = useRef();
     const searchInputContainer = useRef();
-
+    const dataCards = useRef();
     const searchInputHandler = useCallback(() => {
         let list = [];
-        let dataCards = cardsContainerCurrent.querySelectorAll(".card.data");
-        dataCards.forEach((e) => {
+        if (!dataCards.current)
+            dataCards.current = document.querySelector(".cards-container").querySelectorAll(".card.data");
+        dataCards.current.forEach((e) => {
             list.push(e.title);
             e.style.cssText = "display: none;";
         })
         let result = match(list, searchInputBox.current.value.trim());
         result.forEach((e) => {
-            dataCards[e].style.cssText = "display: grid;";
+            dataCards.current[e].style.cssText = "display: grid;";
         })
     }, [])
 

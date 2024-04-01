@@ -4,7 +4,7 @@ import "../Style/Files.css"
 import Cards from '../Components/Cards'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { createNewFile, deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers'
-import { match } from '../Components/SearchBar'
+import SearchBar, { match } from '../Components/SearchBar'
 import "../Script/commonJS"
 import OwnerFooter from '../Components/OwnerFooter'
 
@@ -49,11 +49,16 @@ function MainComponents() {
     return (
         <div className='top-sub-container'>
             <div className='left-sub-container'>
-                <MiniStateContainer />
+                <div className='tools-container'>
+                    <MiniStateContainer />
+                    <SearchBar />
+                </div>
                 <Cards
                     cardDetails={files}
+                    cardClassName={"file-card"}
                     cardClickHandler={fileCardClickHandler}
-                    addBtnClickHandler={addFileBtnClickHandler} />
+                    addBtnClickHandler={addFileBtnClickHandler}
+                />
             </div>
             <div className='right-sub-container'>
                 <DetailsContainer
@@ -71,7 +76,7 @@ function MainComponents() {
 
 function DetailsContainer({ fileName, setFileName, files, startUp, fileCreateBtnRef, fileDeleteBtnRef }) {
     const inputOnChangeHandler = useCallback((event) => {
-        setFileName(event.target.value)
+        setFileName(event.target.value.trim().toUpperCase())
     }, [])
     const fileFormOnSubmitHandler = useCallback((event) => {
         event.preventDefault();

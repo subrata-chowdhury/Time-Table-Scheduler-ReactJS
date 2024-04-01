@@ -3,3 +3,14 @@
     grid-template-columns: 63% auto;
     gap: 10px;
 }
+
+@media (max-width: 680px) {
+    .subjects .top-sub-container {
+        grid-template-rows: 34% auto;
+        gap: 15px !important;
+    }
+
+    .subjects .right-sub-container {
+        height: 95%;
+    }
+}

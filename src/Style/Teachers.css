@@ -94,11 +94,18 @@
     .subjects .top-sub-container,
     .files .top-sub-container {
         grid-template-columns: none !important;
-        grid-template-rows: 50% 50%;
+        gap: 10px;
     }
 
-    .teachers .left-sub-container,
-    .subjects .left-sub-container {
-        gap: 15px;
+    .teachers .top-sub-container {
+        grid-template-rows: 40% auto;
+    }
+
+    .left-sub-container {
+        grid-template-rows: 15% auto;
+    }
+
+    .teachers .right-sub-container {
+        height: 94%;
     }
 }

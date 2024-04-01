@@ -16,7 +16,7 @@ html {
 
 .main-container {
 	display: grid;
-	grid-template-rows: 98% auto;
+	grid-template-rows: 96.5% auto;
 	max-height: 94vh;
 	padding: 20px;
 	gap: 10px;

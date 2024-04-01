@@ -36,7 +36,6 @@ function MainComponents() {
     const [displayLoader, setDisplayLoader] = useState(false);
 
     const teacherDeleteBtn = useRef()
-    const cardsContainer = useRef()
 
     useEffect(() => {
         startUpFunction()
@@ -71,14 +70,14 @@ function MainComponents() {
                 <div className='left-sub-container'>
                     <div className='tools-container'>
                         <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                        <SearchBar cardsContainerCurrent={cardsContainer.current} />
+                        <SearchBar />
                     </div>
                     <Cards
                         cardDetails={teachersList}
                         cardClassName={"teacher-card"}
                         cardClickHandler={teacherCardOnClickHandler}
                         addBtnClickHandler={addTeacherCardClickHandler}
-                        cardsContainerRef={cardsContainer} />
+                    />
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer
@@ -133,7 +132,7 @@ function DetailsContainer({
         setTeacherDetails(newDetails)
     }, [teacherDetails])
     const inputOnChangeHandler = useCallback((event) => {
-        if (event.target.name === 'teacherName') setTeacherName(event.target.value)
+        if (event.target.name === 'teacherName') setTeacherName(event.target.value.trim().toUpperCase())
         else setTeacherDetails(value => ({ ...value, [event.target.name]: event.target.value }))
     }, [])
     const deleteTeacherBtnClickHandler = useCallback((event) => {
@@ -145,7 +144,7 @@ function DetailsContainer({
                 setDisplayLoader(false)
             });
         }
-    }, [])
+    }, [teacherName])
     const teacherFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
         //verification of inputs
