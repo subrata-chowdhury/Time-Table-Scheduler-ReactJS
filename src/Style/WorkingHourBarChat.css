@@ -59,3 +59,9 @@
     justify-content: center;
     text-align: center;
 }
+
+@media (max-width: 480) {
+    .working-hour-barchat-container {
+        width: 94%;
+    }
+}

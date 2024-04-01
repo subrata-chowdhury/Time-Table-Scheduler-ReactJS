@@ -22,3 +22,13 @@ html {
 	gap: 10px;
 	justify-content: stretch;
 }
+
+@media (max-width: 800px) {
+	.app {
+		grid-template-columns: 0px auto;
+	}
+
+	.main-container {
+		width: 93vw;
+	}
+}

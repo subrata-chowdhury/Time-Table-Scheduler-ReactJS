@@ -87,3 +87,41 @@
 .menu-container#active {
     color: #1479FF;
 }
+
+@media (max-width: 800px) {
+    .menubar-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 90%;
+        transition: 0.3s;
+        z-index: 10;
+    }
+
+    .app.active {
+        grid-template-columns: 0px auto;
+    }
+
+    .app.active .menubar-container {
+        transform: translate(-100%, 0);
+    }
+
+    .menubar-container .toggle-menubar-icon {
+        position: fixed;
+        top: 0;
+        left: 90%;
+    }
+
+    .app.active .menubar-container .toggle-menubar-icon {
+        left: 100%;
+    }
+
+    .menu-container svg {
+        display: grid;
+        justify-self: right;
+    }
+
+    .menu-container div {
+        margin-left: 25px;
+    }
+}

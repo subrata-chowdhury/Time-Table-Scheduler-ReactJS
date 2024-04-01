@@ -37,7 +37,6 @@
 
 .card {
     background: var(--background);
-    min-width: 100px;
     height: 130px;
     border-radius: 10px;
     box-shadow:
@@ -70,10 +69,16 @@
     grid-auto-flow: column;
     gap: 10px;
     padding: 15px;
+    height: 90%;
     overflow-x: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
     scroll-behavior: smooth;
+}
+
+.sub-horizental-cards-container .card {
+    height: 100%;
+    min-width: 100px;
 }
 
 .sub-horizental-cards-container::-webkit-scrollbar {
@@ -92,4 +97,16 @@
 
 .left-arrow-for-scroll {
     transform: rotate(180deg);
+}
+
+@media (max-width: 680px) {
+    .cards-container {
+        grid-template-columns: repeat(4, auto);
+        height: 90%;
+        gap: 15px;
+    }
+
+    .card {
+        height: 90px;
+    }
 }

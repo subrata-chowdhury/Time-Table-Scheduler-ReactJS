@@ -3,3 +3,7 @@
     grid-template-columns: 63% auto;
     gap: 10px;
 }
+
+.files .details-container {
+    height: 80%;
+}

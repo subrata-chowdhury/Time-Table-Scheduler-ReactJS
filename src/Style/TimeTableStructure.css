@@ -19,3 +19,22 @@
 .time-table-structure-inputs-container .bottom-input-container .input-box {
     width: 95%;
 }
+
+@media (max-width: 550px) {
+    .main-container {
+        gap: 5px;
+    }
+
+    .time-table-structure-inputs-container {
+        height: 84%;
+    }
+
+    .top-input-container {
+        grid-auto-flow: initial;
+        gap: 15px;
+    }
+
+    .top-input-container .input-box {
+        width: 95%;
+    }
+}

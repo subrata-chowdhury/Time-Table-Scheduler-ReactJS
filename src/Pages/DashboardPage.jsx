@@ -4,7 +4,7 @@ import "../Style/Dashboard.css"
 import WorkingHourBarChat from '../Components/WorkingHourBarChat'
 import { HorizentalCardsContainer } from '../Components/Cards'
 import TimeTable from '../Components/TimeTable'
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getTeacher, getTeacherList, getTeacherSchedule } from '../Script/TeachersDataFetcher'
 import { getSubjects } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
@@ -42,37 +42,37 @@ function MainComponents() {
 
 function TeacherDetailsContainer({ setPerDayValue, fileChange }) {
     const [teachersList, setTeahersList] = useState([])
-    const [semesters, setSemesters] = useState([])
-    const [teacherTimeTableDetails, setTeacherTimeTableDetails] = useState()
-    const [subjectsDetails, setSubjectsDetails] = useState()
     useEffect(() => {
         getTeacherList(setTeahersList);
         getSubjects(data => {
-            setSubjectsDetails(data);
+            subjectsDetails.current = data;
         });
-        setTeacherTimeTableDetails()
-        setTeacherDetails({
+        teacherTimeTableDetails.current = []
+        teacherDetails.current = {
             freeTime: [],
             subjects: [],
-        })
-        setSemesters()
+        }
+        semestersRef.current = []
     }, [fileChange])
 
-    const [teacherDetails, setTeacherDetails] = useState({
+    const teacherTimeTableDetails = useRef()
+    const subjectsDetails = useRef()
+    const semestersRef = useRef([])
+    const teacherDetails = useRef({
         freeTime: [],
         subjects: [],
     })
     const teacherCardClickHandler = useCallback((event) => {
         getTeacher(event.target.title, updateValues)
         function updateValues(data) {
-            setTeacherDetails(data)
+            teacherDetails.current = data
             let semesters = [];
             for (let index = 0; index < data.subjects.length; index++) {
-                findAndPushSem(subjectsDetails[data.subjects[index]])
+                findAndPushSem(subjectsDetails.current[data.subjects[index]])
             }
             function findAndPushSem(subjectData) {
                 if (semesters.indexOf(subjectData.sem) === -1) semesters.push(subjectData.sem)
-                setSemesters(semesters)
+                semestersRef.current = semesters
             }
             getTeacherSchedule(event.target.title, data => {
                 for (let index = 0; index < data.length; index++) {
@@ -85,11 +85,11 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange }) {
                         ]
                     }
                 }
-                setTeacherTimeTableDetails(data)
-                calculatePerDayValue(data, subjectsDetails)
+                teacherTimeTableDetails.current = data
+                calculatePerDayValue(data, subjectsDetails.current)
             })
         }
-    }, [subjectsDetails])
+    }, [])
     const calculatePerDayValue = useCallback((teacherTimeTableDetails, subjectsDetails) => {
         if (teacherTimeTableDetails === null || !teacherTimeTableDetails) return
         let newPerDayValue = []
@@ -115,11 +115,11 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange }) {
                 cardData={teachersList}
                 cardClickHandler={teacherCardClickHandler} />
             <TeachersTimeTableContainer
-                teacherTimeTableDetails={teacherTimeTableDetails}
-                subjectsDetails={subjectsDetails} />
+                teacherTimeTableDetails={teacherTimeTableDetails.current}
+                subjectsDetails={subjectsDetails.current} />
             <div className='sem-and-subject-container'>
-                <SemesterContainer semList={semesters} />
-                <SubjectContainer subList={teacherDetails.subjects} />
+                <SemesterContainer semList={semestersRef.current} />
+                <SubjectContainer subList={teacherDetails.current.subjects} />
             </div>
         </div>
     )

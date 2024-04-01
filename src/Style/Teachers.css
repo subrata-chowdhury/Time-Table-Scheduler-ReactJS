@@ -4,6 +4,11 @@
     gap: 10px;
 }
 
+.left-sub-container {
+    display: grid;
+    grid-auto-flow: row;
+}
+
 .tools-container {
     display: grid;
     grid-auto-flow: column;
@@ -69,4 +74,31 @@
 .period.selected {
     color: #fff;
     background: dodgerblue;
+}
+
+@media (max-width: 680px) {
+
+    .main-container.teachers,
+    .main-container.subjects,
+    .main-container.time-table-structure,
+    .main-container.files {
+        padding: 0;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        height: 100vh;
+    }
+
+    .teachers .top-sub-container,
+    .subjects .top-sub-container,
+    .files .top-sub-container {
+        grid-template-columns: none !important;
+        grid-template-rows: 50% 50%;
+    }
+
+    .teachers .left-sub-container,
+    .subjects .left-sub-container {
+        gap: 15px;
+    }
 }

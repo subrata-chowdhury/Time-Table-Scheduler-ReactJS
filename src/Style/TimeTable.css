@@ -42,3 +42,9 @@
     background: #37DBE6;
     box-shadow: 5px 5px 10px rgba(55, 219, 230, 0.5);
 }
+
+@media (max-width: 680px) {
+    .time-table-container {
+        gap: 3px;
+    }
+}

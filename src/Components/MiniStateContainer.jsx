@@ -8,8 +8,6 @@ function MiniStateContainer({ callBackAfterStateUpdate = () => { } }) {
     const fileSelector = useRef()
     useEffect(() => {
         getSaveFileList(setStates);
-    }, [])
-    useEffect(() => {
         getCurrentFileName((data) => {
             setCurrentFileName(data)
         });

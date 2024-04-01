@@ -111,9 +111,9 @@ function DetailsContainer({
     teacherDeleteBtnRef,
     setDisplayLoader
 }) {
-    const [subjectList, setSubjectList] = useState([]);
+    const subjectList = useRef([]);
     useEffect(() => {
-        getSubjectList(setSubjectList)
+        getSubjectList(data => subjectList.current = data)
     }, [])
     const modifyTheValueOfInputBox = useCallback((time, isSelected) => {
         let newDetails = { ...teacherDetails };
@@ -164,7 +164,7 @@ function DetailsContainer({
             return;
         }
         for (let subjectStr of teacherData.subjects) {
-            if (subjectList !== "unavailable" && subjectList.indexOf(subjectStr) === -1) {
+            if (subjectList.current !== "unavailable" && subjectList.current.indexOf(subjectStr) === -1) {
                 alert("Couldn't find subject - " + subjectStr);
                 return;
             }
@@ -234,7 +234,7 @@ function DetailsContainer({
             <div className="input-container">
                 <div className="input-box-heading">Subject Names</div>
                 <TagInput
-                    tagList={subjectList}
+                    tagList={subjectList.current}
                     inputName={'subjects'}
                     details={teacherDetails}
                     updateWithNewValues={(data) => {

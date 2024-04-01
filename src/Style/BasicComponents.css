@@ -5,9 +5,8 @@
     border-bottom: 2px solid dodgerblue;
     outline: none;
     width: 90%;
-    height: 40px;
     font-size: 16px;
-    padding: 0 10px;
+    padding: 10px;
 }
 
 .input-box[type=range] {
@@ -80,4 +79,8 @@
 .save-btn-container button:nth-child(2) {
     background: orange;
     display: none;
+}
+
+.input-box {
+    padding: 5px;
 }
