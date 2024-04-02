@@ -27,12 +27,7 @@ function TeachersPage() {
 
 function MainComponents() {
     const [teachersList, setTeahersList] = useState([]);
-    const [teacherDetails, setTeacherDetails] = useState({
-        freeTime: [],
-        subjects: [],
-    })
     const [teacherName, setTeacherName] = useState();
-    const [periodCount, setPeriodCount] = useState();
     const [displayLoader, setDisplayLoader] = useState(false);
 
     const teacherDeleteBtn = useRef()
@@ -42,24 +37,14 @@ function MainComponents() {
     }, [])
     const startUpFunction = useCallback(() => {
         getTeacherList(setTeahersList);
-        setTeacherDetails({
-            freeTime: [],
-            subjects: [],
-        });
         setTeacherName("");
-        getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) });
         setDisplayLoader(false)
     }, [])
     const teacherCardOnClickHandler = useCallback((event) => {
-        getTeacher(event.target.title, setTeacherDetails);
         setTeacherName(event.target.title);
         teacherDeleteBtn.current.style.cssText = "display: block";
     }, [])
     const addTeacherCardClickHandler = useCallback(() => {
-        setTeacherDetails({
-            freeTime: [],
-            subjects: [],
-        })
         setTeacherName("")
         teacherDeleteBtn.current.style.cssText = "display: none;";
     }, [])
@@ -81,12 +66,8 @@ function MainComponents() {
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer
-                        teacherName={teacherName}
-                        teacherDetails={teacherDetails}
+                        outerTeacherName={teacherName}
                         teachersList={teachersList}
-                        setTeacherDetails={setTeacherDetails}
-                        setTeacherName={setTeacherName}
-                        periodCount={periodCount}
                         onSubmitCallBack={startUpFunction}
 
                         teacherDeleteBtnRef={teacherDeleteBtn}
@@ -99,21 +80,34 @@ function MainComponents() {
 }
 
 function DetailsContainer({
-    teacherName = "",
-    teacherDetails,
+    outerTeacherName = "",
     teachersList,
-    setTeacherDetails,
-    setTeacherName,
-    periodCount,
     onSubmitCallBack,
 
     teacherDeleteBtnRef,
     setDisplayLoader
 }) {
+    const [teacherName, setTeacherName] = useState("");
+    const [teacherDetails, setTeacherDetails] = useState({
+        freeTime: [],
+        subjects: [],
+    })
     const subjectList = useRef([]);
     useEffect(() => {
         getSubjectList(data => subjectList.current = data)
     }, [])
+    useEffect(() => {
+        if (!outerTeacherName) {
+            setTeacherName("")
+            setTeacherDetails({
+                freeTime: [],
+                subjects: [],
+            })
+        } else {
+            setTeacherName(outerTeacherName)
+            getTeacher(outerTeacherName, setTeacherDetails);
+        }
+    }, [outerTeacherName])
     const modifyTheValueOfInputBox = useCallback((time, isSelected) => {
         let newDetails = { ...teacherDetails };
         time = JSON.parse(time)
@@ -245,11 +239,9 @@ function DetailsContainer({
             </div>
             <div className='input-container'>
                 <div>Available Times</div>
-                {periodCount &&
-                    <TimeSelector
-                        modifyTheValueOfInputBox={modifyTheValueOfInputBox}
-                        teacherDetails={teacherDetails}
-                        periodCount={periodCount} />}
+                <TimeSelector
+                    modifyTheValueOfInputBox={modifyTheValueOfInputBox}
+                    teacherDetails={teacherDetails} />
             </div>
             <div className='save-btn-container'>
                 <button className='teacher-save-btn' type='submit'>Save</button>
@@ -259,7 +251,11 @@ function DetailsContainer({
     )
 }
 
-const TimeSelector = memo(({ modifyTheValueOfInputBox, teacherDetails, periodCount = 8 }) => {
+const TimeSelector = memo(({ modifyTheValueOfInputBox, teacherDetails }) => {
+    const [periodCount, setPeriodCount] = useState(8);
+    useEffect(() => {
+        getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) });
+    }, [])
     let noOfDays = 5;
     let timeTable = [];
     let newTeacherDetailsFreeTime = teacherDetails.freeTime

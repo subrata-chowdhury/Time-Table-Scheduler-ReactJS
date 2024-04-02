@@ -25,12 +25,6 @@ function SubjectsPage() {
 
 function MainComponents() {
     const [subjectsList, setSubjectsList] = useState([])
-    const [subjectDetails, setSubjectDetails] = useState({
-        isPractical: false,
-        lectureCount: 4,
-        roomCodes: [],
-        sem: ""
-    })
     const [subjectName, setSubjectName] = useState()
     const [displayLoader, setDisplayLoader] = useState(false);
 
@@ -41,27 +35,14 @@ function MainComponents() {
     }, [])
     const startUpFunction = useCallback(() => {
         getSubjectList(setSubjectsList)
-        setSubjectDetails({
-            isPractical: false,
-            lectureCount: 4,
-            roomCodes: [],
-            sem: ""
-        })
         setSubjectName("")
         setDisplayLoader(false)
     }, [])
     const subjectCardOnClickHandler = useCallback((event) => {
-        getSubjectDetails(event.target.title, setSubjectDetails)
         setSubjectName(event.target.title)
         subjectDeleteBtn.current.style.cssText = "display: block";
     }, [])
     const addSubjectCardClickHandler = useCallback(() => {
-        setSubjectDetails({
-            isPractical: false,
-            lectureCount: 4,
-            roomCodes: [],
-            sem: ""
-        })
         setSubjectName("")
         subjectDeleteBtn.current.style.cssText = "display: none;";
     }, [])
@@ -82,11 +63,8 @@ function MainComponents() {
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer
-                        subjectName={subjectName}
-                        subjectDetails={subjectDetails}
+                        outerSubjectName={subjectName}
                         subjectsList={subjectsList}
-                        setSubjectDetails={setSubjectDetails}
-                        setSubjectName={setSubjectName}
                         onSubmitCallBack={startUpFunction}
 
                         subjectDeleteBtnRef={subjectDeleteBtn}
@@ -99,16 +77,34 @@ function MainComponents() {
 }
 
 function DetailsContainer({
-    subjectName = "",
-    subjectDetails,
+    outerSubjectName = "",
     subjectsList,
-    setSubjectDetails,
-    setSubjectName,
     onSubmitCallBack,
 
     subjectDeleteBtnRef,
     setDisplayLoader
 }) {
+    const [subjectName, setSubjectName] = useState('')
+    const [subjectDetails, setSubjectDetails] = useState({
+        isPractical: false,
+        lectureCount: 4,
+        roomCodes: [],
+        sem: ""
+    })
+    useEffect(() => {
+        if (!outerSubjectName) {
+            setSubjectName("")
+            setSubjectDetails({
+                isPractical: false,
+                lectureCount: 4,
+                roomCodes: [],
+                sem: ""
+            })
+        } else {
+            setSubjectName(outerSubjectName)
+            getSubjectDetails(outerSubjectName, setSubjectDetails)
+        }
+    }, [outerSubjectName])
     const subjectTypeClickHandler = useCallback((event) => {
         let checkbox = event.target;
         let isLab = false;

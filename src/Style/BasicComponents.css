@@ -81,6 +81,8 @@
     display: none;
 }
 
-.input-box {
-    padding: 5px;
+@media (max-width: 620px) {
+    .input-box {
+        padding: 5px;
+    }
 }
