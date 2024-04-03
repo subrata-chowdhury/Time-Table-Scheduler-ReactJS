@@ -7,6 +7,7 @@ import TimeTablesPage from './Pages/TimeTablesPage';
 import TimeTableStructurePage from './Pages/TimeTableStructurePage';
 import FilesPage from './Pages/FilesPage';
 import "./Style/BasicComponents.css"
+import ContactUs from './Pages/ContactUs';
 
 function App() {
 	return (
@@ -19,6 +20,7 @@ function App() {
 					<Route path="/TimeTables" element={<TimeTablesPage />} />
 					<Route path="/TimeTableStructure" element={<TimeTableStructurePage />} />
 					<Route path="/Files" element={<FilesPage />} />
+					<Route path="/ContactUs" element={<ContactUs />} />
 				</Routes>
 			</div>
 		</BrowserRouter>

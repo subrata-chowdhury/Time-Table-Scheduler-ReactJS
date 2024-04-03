@@ -3,24 +3,22 @@ import { getCurrentFileIsSaved, getCurrentFileName, getSaveFileList, loadSaveFil
 import "../Style/Mini-state-container.css";
 
 function MiniStateContainer({ callBackAfterStateUpdate = () => { } }) {
-    const [currentFileName, setCurrentFileName] = useState("");
     const [states, setStates] = useState([])
     const fileSelector = useRef()
     useEffect(() => {
-        getSaveFileList(setStates);
-        getCurrentFileName((data) => {
-            setCurrentFileName(data)
+        getSaveFileList((data) => {
+            setStates(data)
+            getCurrentFileName((currentFileName) => {
+                let options = fileSelector.current.querySelectorAll("option");
+                for (let index = 0; index < options.length; index++) {
+                    if (options[index].value === currentFileName.toLowerCase()) {
+                        options[index].selected = 'selected';
+                        break;
+                    }
+                }
+            });
         });
     }, [])
-    useEffect(() => {
-        let options = fileSelector.current.querySelectorAll("option");
-        for (let index = 0; index < options.length; index++) {
-            if (options[index].value === currentFileName.toLowerCase()) {
-                options[index].selected = 'selected';
-                break;
-            }
-        }
-    }, [currentFileName, states])
 
     const onChangeStateHandler = useCallback((event) => {
         getCurrentFileIsSaved((isSaved) => {
@@ -33,7 +31,6 @@ function MiniStateContainer({ callBackAfterStateUpdate = () => { } }) {
             else changeTheState();
         })
         function changeTheState() {
-            setCurrentFileName(event.target.value)
             loadSaveFile(event.target.value, callBackAfterStateUpdate);
         }
     }, [])

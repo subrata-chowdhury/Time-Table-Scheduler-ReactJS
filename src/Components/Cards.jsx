@@ -88,14 +88,14 @@ export const Card = memo(({
     )
 })
 
-export function HorizentalCardsContainer({
+export const HorizentalCardsContainer = memo(({
     cardData = [],
     className = "",
     cardClassName,
     cardClickHandler,
     compressText,
     cardsContainer = useRef()
-}) {
+}) => {
     let cards = [];
     for (let index = 0; index < cardData.length; index++) {
         cards.push(
@@ -133,4 +133,4 @@ export function HorizentalCardsContainer({
             <Arrow className="right-arrow-for-scroll arrow-for-scroll" arrowIconClickHandler={() => { arrowClickHandler(125) }} />
         </div>
     )
-}
+})

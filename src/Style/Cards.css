@@ -88,10 +88,10 @@
 .arrow-for-scroll {
     width: 25px;
     height: 25px;
-    background: #fff;
+    background: #f0f7ff;
     border-radius: 20px;
     padding: 8px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); */
     cursor: pointer;
 }
 

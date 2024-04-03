@@ -9,6 +9,7 @@ import Arrow from "../Icons/Arrow"
 
 import React, { memo, useEffect } from "react"
 import { Link } from "react-router-dom"
+import Contact from "../Icons/ContactIcon"
 
 function Menubar({ activeMenuIndex }) {
     function toggleMenubar() {
@@ -63,6 +64,10 @@ function Menubar({ activeMenuIndex }) {
             <Link to="/Files" className="menu-container" id={activeMenuIndex === 5 ? "active" : ""}>
                 <Files />
                 <div>Files</div>
+            </Link>
+            <Link to="/ContactUs" className="menu-container" id={activeMenuIndex === 6 ? "active" : ""}>
+                <Contact />
+                <div>Contact Us</div>
             </Link>
         </div>
     )

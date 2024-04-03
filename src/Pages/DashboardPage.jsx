@@ -26,10 +26,15 @@ function MainComponents() {
     const [perDayValue, setPerDayValue] = useState([0, 0, 0, 0, 0])
     const [fileChange, setFileChange] = useState(false)
 
+    const startUpFunction = useCallback(() => {
+        setFileChange(val => !val)
+        setPerDayValue([0, 0, 0, 0, 0])
+    }, [setFileChange, setPerDayValue])
+
     return (
         <div className='top-sub-container'>
             <div className='left-sub-container'>
-                <MiniStateContainer callBackAfterStateUpdate={() => { setFileChange(val => !val) }} />
+                <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
                 <div className='empty-container'>Under Development</div>
                 <WorkingHourBarChat perDayValue={perDayValue} />
             </div>

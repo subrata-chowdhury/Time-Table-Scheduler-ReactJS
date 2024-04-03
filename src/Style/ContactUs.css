@@ -1,0 +1,61 @@
+.developers-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    gap: 30px;
+    padding: 0 80px;
+    height: 90vh;
+}
+
+.developer {
+    background: #fff;
+    border-radius: 10px;
+    display: grid;
+    grid-auto-flow: row;
+    align-items: start;
+    padding: 20px 50px;
+}
+
+.profile-picture-container {
+    width: 100%;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-pic {
+    border-radius: 20px;
+    width: 250px;
+}
+
+.heading.role {
+    font-size: 25px;
+    font-weight: bold;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-links {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 10px;
+    justify-content: start;
+    margin-top: 7px;
+}
+
+.contact-links .contact-link {
+    width: 30px;
+}
+
+.developer-details-container .basic-details .name {
+    font-size: 20px;
+}
+
+.developer-details-container .basic-details .value,
+.developer-details-container .basic-details .value a {
+    color: dodgerblue;
+}
+
+.contact-details-container .heading {
+    font-size: 19px;
+}

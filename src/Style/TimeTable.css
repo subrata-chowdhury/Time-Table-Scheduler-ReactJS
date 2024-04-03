@@ -4,6 +4,7 @@
     gap: 10px;
     grid-auto-flow: row;
     border-radius: 12px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .time-table-container div div {
