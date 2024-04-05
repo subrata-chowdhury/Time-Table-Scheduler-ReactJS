@@ -38,7 +38,33 @@ function MainComponents() {
     const startUpFunction = useCallback(() => {
         getTeacherList(setTeahersList);
         setTeacherName("");
-        setDisplayLoader(false)
+        setDisplayLoader(false);
+        try {
+            let paramString = window.location.href.split('?')[1];
+            let queryString = new URLSearchParams(paramString);
+            let urlData;
+            for (let pair of queryString.entries()) {
+                urlData = [pair[0], pair[1].split("#")[0]];
+                break;
+            }
+            if (urlData[0] === "click") {
+                let clicked = false;
+                let interval = setInterval(() => {
+                    const cardsContainer = document.querySelector(".cards-container")
+                    const card = cardsContainer.querySelector(".card.data[title=" + urlData[1] + "]")
+                    if (!clicked) {
+                        try {
+                            card.click()
+                            clicked = true
+                        } catch (err) { }
+                    } else {
+                        clearInterval(interval)
+                    }
+                }, 500)
+            }
+        } catch (err) {
+            console.log("%cNo Click Query Found", "color: green");
+        }
     }, [])
     const teacherCardOnClickHandler = useCallback((event) => {
         setTeacherName(event.target.title);

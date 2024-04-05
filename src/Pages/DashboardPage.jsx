@@ -118,7 +118,11 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange }) {
             <HorizentalCardsContainer
                 cardClassName={"teacher-card"}
                 cardData={teachersList}
-                cardClickHandler={teacherCardClickHandler} />
+                cardClickHandler={teacherCardClickHandler}
+                showEditBtn={true}
+                editBtnClickHandler={(details) => {
+                    window.location.href = window.location.origin + "/Teachers?click=" + details
+                }} />
             <TeachersTimeTableContainer
                 teacherTimeTableDetails={teacherTimeTableDetails.current}
                 subjectsDetails={subjectsDetails.current} />

@@ -54,6 +54,27 @@
         0 0 0px 6px dodgerblue;
 }
 
+.card-wrapper .edit-btn {
+    position: relative;
+    float: right;
+    width: 20px;
+    height: 20px;
+    background: #deedff;
+    z-index: 2;
+    right: 5px;
+    top: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-wrapper .edit-btn svg {
+    width: 10px;
+    height: 10px;
+}
+
 
 .horizental-cards-container {
     display: grid;

@@ -2,6 +2,7 @@ import Plus from "../Icons/Plus";
 import "../Style/Cards.css"
 import Arrow from '../Icons/Arrow'
 import { memo, useCallback, useRef, useState } from "react";
+import EditIcon from "../Icons/Edit";
 
 function Cards({
     cardDetails = [],
@@ -9,7 +10,8 @@ function Cards({
     cardClickHandler = () => { },
     addBtnClickHandler = () => { },
     canStayActiveMultipleCards = false,
-    cardsContainer = useRef()
+    cardsContainer = useRef(),
+    showEditBtn = false
 }) {
 
     let cards = [];
@@ -24,6 +26,7 @@ function Cards({
                 className={cardClassName}
                 canStayActiveMultipleCards={canStayActiveMultipleCards}
                 cardsContainer={cardsContainer}
+                showEditBtn={showEditBtn}
             ></Card>
         )
     }
@@ -46,7 +49,9 @@ export const Card = memo(({
     cardClickHandler = () => { },
     compressText = true,
     canStayActiveMultipleCards,
-    cardsContainer
+    cardsContainer,
+    showEditBtn,
+    editBtnClickHandler = () => { }
 }) => {
     const defaultClickHandler = useCallback((event) => {
         event.stopPropagation();
@@ -78,12 +83,17 @@ export const Card = memo(({
             }
         } else event.currentTarget.classList.add("active")
     }, [canStayActiveMultipleCards])
+    let cardStyle = {}
+    if (showEditBtn) cardStyle = { position: "relative", top: "-20px" }
     return (
-        <div className={"card data " + className} onClick={(e) => {
-            cardClickHandler(e)
-            defaultClickHandler(e)
-        }} title={details}>
-            {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
+        <div className="card-wrapper">
+            {showEditBtn && <div className="edit-btn" onClick={() => { editBtnClickHandler(details) }}><EditIcon /></div>}
+            <div className={"card data " + className} onClick={(e) => {
+                cardClickHandler(e)
+                defaultClickHandler(e)
+            }} title={details} style={cardStyle}>
+                {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
+            </div>
         </div>
     )
 })
@@ -94,7 +104,9 @@ export const HorizentalCardsContainer = memo(({
     cardClassName,
     cardClickHandler,
     compressText,
-    cardsContainer = useRef()
+    cardsContainer = useRef(),
+    showEditBtn = false,
+    editBtnClickHandler
 }) => {
     let cards = [];
     for (let index = 0; index < cardData.length; index++) {
@@ -106,6 +118,8 @@ export const HorizentalCardsContainer = memo(({
                 cardClickHandler={cardClickHandler}
                 compressText={compressText}
                 cardsContainer={cardsContainer}
+                showEditBtn={showEditBtn}
+                editBtnClickHandler={editBtnClickHandler}
             />
         )
     }
