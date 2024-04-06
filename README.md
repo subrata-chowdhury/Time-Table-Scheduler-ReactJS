@@ -5,9 +5,41 @@ This UI created using ReactJS and it use some API requests to communicate with b
 
 First version of this project is created using HTML, CSS & JS which is available [here](https://github.com/Super7000/Time_Table_Designer)
 
-Backend Code is created using Java. It use genetic algorithm to create a time table.
+Backend Code is created using Java. It use genetic algorithm to create a time table and uses a Browser Compoent to show the UI.
 
+Bowser Component code is avaliable [here](https://github.com/srideep-banerjee/TTSBrowserComponent)
 Backend codes is available [here](https://github.com/srideep-banerjee/TimeTableScheduler-Backend)
+
+# How to set up the project (without any released version of this app)?
+
+**Step 1:**
+First Fork this repositories:<br/>
+[Time-Table-Creator-ReactJS (UI)](https://github.com/Super7000/Time-Table-Creator-ReactJS) <br/>
+[TTSBrowserComponent (Browser Component)](https://github.com/srideep-banerjee/TTSBrowserComponent) <br/>
+[TimeTableScheduler-Backend (Bankend Java Code)](https://github.com/srideep-banerjee/TimeTableScheduler-Backend) <br/>
+
+**Step 2:**
+Then use Intellij IDEA or any other framework to build a jar file of the TTSBrowserComponent.
+
+**Step 3:**
+Then copy the jar file of TTSBrowserComponent to Forked TimeTableScheduler-Backend's main directory.
+
+![image](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/ceab5a00-2620-4746-bdb9-92ac73caa114)
+
+**Step 4:**
+Now open fored Time-Table-Creator-ReactJS and build the product using command like `npm run build`
+
+**Step 5:**
+Then Copy the build product to TimeTableScheduler-Backend's `web` directory. **(If web directory is not present in TimeTableScheduler-Backend then create one)**
+
+**Step 6:**
+Now you just need to run the TimeTableScheduler-Backend's `main.java` file using Intellij IDEA or any code editor or framework.
+
+# Tips to develop UI:
+
+You don't have to create a build of the UI and then copying it to `web` folder each time you modifies the UI code.<br/>
+You can directly use API requests just change the value of **url** variable in `fetchUrl.js` file to `http://localhost:9000/`.
+Now you can directly access API requests when you are developing the UI in any localhost. **(Make sure you have a free 9000 port on your PC before running the TimeTableScheduler-Backend's `main.java` file)**
 
 # How to use this UI?
 
@@ -27,7 +59,7 @@ To add a teacher you need to enter all the required values:
 2. **Subjects** - type all the subject names pressing enter key after typing each subject (subject must need to be present in subjects tab)
 3. **Available Time** - when teacher is available to take classes (if you leave it blank means you did't select any time then it will be consider as teacher is available all the time)
 
-![image](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/6f26fb32-e45e-4bd6-b7ee-d025f0a29c89)
+![TimeTableScheduler-Backend-Main-Directory](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/6f26fb32-e45e-4bd6-b7ee-d025f0a29c89)
 
 After adding all the subjects and teachers you can generate the time table from Time Tables tab.
 **To generate the time table** click on `Auto fill using AI` button. Also you can manually fill the time table to fill manually first you have to click on Fill Manually button then click on periods after that a popup will appear and from there you can select the subject and teacher for that period (you can select multiple teachers but only one subject can be selected), you can also do this after using the Auto fill using AI method.
