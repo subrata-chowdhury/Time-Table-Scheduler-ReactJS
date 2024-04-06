@@ -2,7 +2,11 @@ import { url } from "./fetchUrl"
 export function getCurrentFileName(callBackFunction) {
     try {
         let status;
-        fetch(`${url}io/saves/currentName`)
+        fetch(`${url}io/saves/currentName`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((response) => {
                 status = response.status;
                 return response.text();
@@ -22,7 +26,11 @@ export function getCurrentFileName(callBackFunction) {
 export function getCurrentFileIsSaved(callBackFunction = () => { }) {
     let status;
     try {
-        fetch(`${url}io/saves/isSaved`)
+        fetch(`${url}io/saves/isSaved`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((Response) => {
                 status = Response.status;
                 return Response.text();
@@ -43,7 +51,11 @@ export function getCurrentFileIsSaved(callBackFunction = () => { }) {
 export function saveCurrentState(name, callBackFunction = () => { }) {
     let status;
     try {
-        fetch(`${url}io/saves/save?name=${name}`)
+        fetch(`${url}io/saves/save?name=${name}`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((Response) => {
                 status = Response.status;
                 return Response.text();
@@ -65,7 +77,11 @@ export function saveCurrentState(name, callBackFunction = () => { }) {
 export function createNewFile(name, callBackFunction = () => { }) {
     let status;
     try {
-        fetch(`${url}io/Saves/newEmpty?name=${name}`)
+        fetch(`${url}io/Saves/newEmpty?name=${name}`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((Response) => {
                 status = Response.status;
                 return Response.text();
@@ -86,7 +102,11 @@ export function createNewFile(name, callBackFunction = () => { }) {
 export function getSaveFileList(callBackFunction = (data) => { }) {
     let status;
     try {
-        fetch(`${url}io/saves/list`)
+        fetch(`${url}io/saves/list`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((response) => {
                 status = response.status;
                 return response.text();
@@ -111,7 +131,11 @@ export function getSaveFileList(callBackFunction = (data) => { }) {
 export function loadSaveFile(name, callBackFunction = (data) => { }) {
     let status;
     try {
-        fetch(`${url}io/saves/load?name=${name}`)
+        fetch(`${url}io/saves/load?name=${name}`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((response) => {
                 status = response.status;
                 return response.text();
@@ -133,7 +157,10 @@ export function deleteFile(name, callBackFunction = () => { }) {
     let statusValue;
     try {
         fetch(url + "io/saves/delete?name=" + name, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: {
+                'Api-Token': window.apiToken
+            }
         })
             .then(Response => {
                 statusValue = Response.status;

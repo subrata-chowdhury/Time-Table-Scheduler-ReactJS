@@ -4,7 +4,11 @@ import { url } from "./fetchUrl"
 export function getTeacherList(callBackFunction) {
     let status;
     try {
-        fetch(`${url}io/teachers`)
+        fetch(`${url}io/teachers`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((response) => {
                 status = response.status;
                 return response.text();
@@ -31,7 +35,11 @@ export function getTeacherList(callBackFunction) {
 export function getTeacher(sirName, callBackFunction) {
     let status;
     try {
-        fetch(`${url}io/teachers/${sirName}`)
+        fetch(`${url}io/teachers/${sirName}`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((response) => {
                 status = response.status;
                 return response.text();
@@ -57,7 +65,11 @@ export function getTeacher(sirName, callBackFunction) {
 export function getTeacherSchedule(sirName, callBackFunction) {
     let status;
     try {
-        fetch(`${url}io/schedule/teacher/${sirName}`)
+        fetch(`${url}io/schedule/teacher/${sirName}`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((response) => {
                 status = response.status;
                 return response.text();
@@ -87,7 +99,10 @@ export function saveTeacher(data, callBackFunction = () => { }, callBackIfFailed
         let body = JSON.stringify(data)
         fetch(url + "io/teachers", {
             method: "PUT",
-            headers: { 'content-type': 'application/json' },
+            headers: {
+                'content-type': 'application/json',
+                'Api-Token': window.apiToken
+            },
             body: body
         })
             .then(Response => {
@@ -114,7 +129,10 @@ export function deleteTeacher(teacherName, callBackFunction = () => { }, callBac
     let statusValue;
     try {
         fetch(url + "io/teachers/" + teacherName, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: {
+                'Api-Token': window.apiToken
+            }
         })
             .then(Response => {
                 statusValue = Response.status;

@@ -3,7 +3,11 @@ import { url } from "./fetchUrl"
 export function generateTimeTable(callBackFunction, callBackIfFailed) {
     try {
         let status;
-        fetch(`${url}io/schedule?generateNew=True`)
+        fetch(`${url}io/schedule?generateNew=True`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then(Response => {
                 status = Response.status;
                 return Response.text();
@@ -25,7 +29,11 @@ export function generateTimeTable(callBackFunction, callBackIfFailed) {
 export function getSchedule(callBackFunction) {
     let status;
     try {
-        fetch(`${url}io/schedule`)
+        fetch(`${url}io/schedule`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((response) => {
                 status = response.status;
                 return response.text();
@@ -56,6 +64,7 @@ export function saveSchedule(data, callBackFunction, callBackIfFailed = () => { 
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Api-Token': window.apiToken
             },
             body: data,
         })
@@ -80,7 +89,11 @@ export function saveSchedule(data, callBackFunction, callBackIfFailed = () => { 
 export function getTimeTableStructure(callBackFunction) {
     let status;
     try {
-        fetch(`${url}io/schedule/structure`)
+        fetch(`${url}io/schedule/structure`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((response) => {
                 status = response.status;
                 return response.text();
@@ -117,6 +130,7 @@ export function saveTimeTableStructure(data, callBackFunction = () => { }) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Api-Token': window.apiToken
             },
             body: data,
         })

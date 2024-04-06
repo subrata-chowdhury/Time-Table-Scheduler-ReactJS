@@ -1,1 +1,1 @@
-export let url = window.location.origin + "/";
+export const url = window.location.origin + "/";

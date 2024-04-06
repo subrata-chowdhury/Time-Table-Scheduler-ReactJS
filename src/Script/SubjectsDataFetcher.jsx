@@ -3,7 +3,11 @@ import { url } from "./fetchUrl"
 export function getSubjectList(callBackFunction = (data) => { }) {
     let status;
     try {
-        fetch(`${url}io/subjects`)
+        fetch(`${url}io/subjects`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((response) => {
                 status = response.status;
                 return response.text();
@@ -30,7 +34,11 @@ export function getSubjectList(callBackFunction = (data) => { }) {
 export function getSubjects(callBackFunction = (data) => { }, setSubjectsList) {
     let status;
     try {
-        fetch(`${url}io/subjects`)
+        fetch(`${url}io/subjects`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((response) => {
                 status = response.status;
                 return response.text();
@@ -56,7 +64,11 @@ export function getSubjects(callBackFunction = (data) => { }, setSubjectsList) {
 export async function getSubjectDetails(subjectName, callBackFunction = (data) => { }) {
     let status;
     try {
-        fetch(`${url}io/subjects/${subjectName}`)
+        fetch(`${url}io/subjects/${subjectName}`, {
+            headers: {
+                'Api-Token': window.apiToken
+            }
+        })
             .then((response) => {
                 status = response.status;
                 return response.text();
@@ -84,7 +96,10 @@ export function saveSubject(data, callBackFunction = () => { }, callBackIfFailed
         let subjectData = JSON.stringify(data)
         fetch(url + "io/subjects", {
             method: "PUT",
-            headers: { 'content-type': 'application/json' },
+            headers: {
+                'content-type': 'application/json',
+                'Api-Token': window.apiToken
+            },
             body: subjectData
         })
             .then(Response => {
@@ -109,7 +124,10 @@ export function deleteSubject(subjectName, callBackFunction = () => { }, callBac
     let statusValue; console.log(url + "/io/teachers/" + subjectName)
     try {
         fetch(url + "io/subjects/" + subjectName, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: {
+                'Api-Token': window.apiToken
+            }
         })
             .then(Response => {
                 statusValue = Response.status;
