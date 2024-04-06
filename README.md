@@ -35,11 +35,6 @@ Then Copy the build product to TimeTableScheduler-Backend's `web` directory. **(
 **Step 6:**
 Now you just need to run the TimeTableScheduler-Backend's `main.java` file using Intellij IDEA or any code editor or framework.
 
-# Tips to develop UI:
-
-You don't have to create a build of the UI and then copying it to `web` folder each time you modifies the UI code.<br/>
-You can directly use API requests just change the value of **url** variable in `fetchUrl.js` file to `http://localhost:9000/`.
-Now you can directly access API requests when you are developing the UI in any localhost. **(Make sure you have a free 9000 port on your PC before running the TimeTableScheduler-Backend's `main.java` file)**
 
 # How to use this UI?
 
