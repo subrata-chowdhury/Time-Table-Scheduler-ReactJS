@@ -27,7 +27,7 @@ Then copy the jar file of TTSBrowserComponent to Forked TimeTableScheduler-Backe
 ![image](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/ceab5a00-2620-4746-bdb9-92ac73caa114)
 
 **Step 4:**
-Now open fored Time-Table-Creator-ReactJS and build the product using command like `npm run build`
+Now open forked Time-Table-Creator-ReactJS and build the product using command like `npm run build`
 
 **Step 5:**
 Then Copy the build product to TimeTableScheduler-Backend's `web` directory. **(If web directory is not present in TimeTableScheduler-Backend then create one)**
