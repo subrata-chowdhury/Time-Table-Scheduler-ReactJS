@@ -1,4 +1,4 @@
-import { url } from "./fetchUrl"
+import { getApiToken, url } from "./fetchUrl"
 
 
 export function getTeacherList(callBackFunction) {
@@ -6,7 +6,7 @@ export function getTeacherList(callBackFunction) {
     try {
         fetch(`${url}io/teachers`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((response) => {
@@ -37,7 +37,7 @@ export function getTeacher(sirName, callBackFunction) {
     try {
         fetch(`${url}io/teachers/${sirName}`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((response) => {
@@ -67,7 +67,7 @@ export function getTeacherSchedule(sirName, callBackFunction) {
     try {
         fetch(`${url}io/schedule/teacher/${sirName}`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((response) => {
@@ -101,7 +101,7 @@ export function saveTeacher(data, callBackFunction = () => { }, callBackIfFailed
             method: "PUT",
             headers: {
                 'content-type': 'application/json',
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             },
             body: body
         })
@@ -131,7 +131,7 @@ export function deleteTeacher(teacherName, callBackFunction = () => { }, callBac
         fetch(url + "io/teachers/" + teacherName, {
             method: "DELETE",
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then(Response => {

@@ -1,11 +1,11 @@
-import { url } from "./fetchUrl"
+import { getApiToken, url } from "./fetchUrl"
 
 export function generateTimeTable(callBackFunction, callBackIfFailed) {
     try {
         let status;
         fetch(`${url}io/schedule?generateNew=True`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then(Response => {
@@ -31,7 +31,7 @@ export function getSchedule(callBackFunction) {
     try {
         fetch(`${url}io/schedule`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((response) => {
@@ -64,7 +64,7 @@ export function saveSchedule(data, callBackFunction, callBackIfFailed = () => { 
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             },
             body: data,
         })
@@ -91,7 +91,7 @@ export function getTimeTableStructure(callBackFunction) {
     try {
         fetch(`${url}io/schedule/structure`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((response) => {
@@ -130,7 +130,7 @@ export function saveTimeTableStructure(data, callBackFunction = () => { }) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             },
             body: data,
         })

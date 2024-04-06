@@ -1,11 +1,11 @@
-import { url } from "./fetchUrl"
+import { getApiToken, url } from "./fetchUrl"
 
 export function getSubjectList(callBackFunction = (data) => { }) {
     let status;
     try {
         fetch(`${url}io/subjects`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((response) => {
@@ -36,7 +36,7 @@ export function getSubjects(callBackFunction = (data) => { }, setSubjectsList) {
     try {
         fetch(`${url}io/subjects`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((response) => {
@@ -66,7 +66,7 @@ export async function getSubjectDetails(subjectName, callBackFunction = (data) =
     try {
         fetch(`${url}io/subjects/${subjectName}`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((response) => {
@@ -98,7 +98,7 @@ export function saveSubject(data, callBackFunction = () => { }, callBackIfFailed
             method: "PUT",
             headers: {
                 'content-type': 'application/json',
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             },
             body: subjectData
         })
@@ -126,7 +126,7 @@ export function deleteSubject(subjectName, callBackFunction = () => { }, callBac
         fetch(url + "io/subjects/" + subjectName, {
             method: "DELETE",
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then(Response => {

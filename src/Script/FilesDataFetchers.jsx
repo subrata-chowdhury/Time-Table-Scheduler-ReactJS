@@ -1,10 +1,10 @@
-import { url } from "./fetchUrl"
+import { getApiToken, url } from "./fetchUrl"
 export function getCurrentFileName(callBackFunction) {
     try {
         let status;
         fetch(`${url}io/saves/currentName`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((response) => {
@@ -28,7 +28,7 @@ export function getCurrentFileIsSaved(callBackFunction = () => { }) {
     try {
         fetch(`${url}io/saves/isSaved`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((Response) => {
@@ -53,7 +53,7 @@ export function saveCurrentState(name, callBackFunction = () => { }) {
     try {
         fetch(`${url}io/saves/save?name=${name}`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((Response) => {
@@ -79,7 +79,7 @@ export function createNewFile(name, callBackFunction = () => { }) {
     try {
         fetch(`${url}io/Saves/newEmpty?name=${name}`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((Response) => {
@@ -104,7 +104,7 @@ export function getSaveFileList(callBackFunction = (data) => { }) {
     try {
         fetch(`${url}io/saves/list`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((response) => {
@@ -133,7 +133,7 @@ export function loadSaveFile(name, callBackFunction = (data) => { }) {
     try {
         fetch(`${url}io/saves/load?name=${name}`, {
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then((response) => {
@@ -159,7 +159,7 @@ export function deleteFile(name, callBackFunction = () => { }) {
         fetch(url + "io/saves/delete?name=" + name, {
             method: "DELETE",
             headers: {
-                'Api-Token': window.apiToken
+                'Api-Token': getApiToken()
             }
         })
             .then(Response => {
