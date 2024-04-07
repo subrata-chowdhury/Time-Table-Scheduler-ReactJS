@@ -60,6 +60,7 @@ export async function saveCurrentState(name, callBackFunction = () => { }) {
 export async function createNewFile(name, callBackFunction = () => { }) {
     try {
         let response = await fetch(`${url}io/Saves/newEmpty?name=${name}`, {
+            method: 'POST',
             headers: {
                 'Api-Token': getApiToken()
             }
