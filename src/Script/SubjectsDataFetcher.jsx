@@ -1,100 +1,79 @@
 import { getApiToken, url } from "./fetchUrl"
 
-export function getSubjectList(callBackFunction = (data) => { }) {
-    let status;
+export async function getSubjectList(callBackFunction = (data) => { }) {
     try {
-        fetch(`${url}io/subjects`, {
+        let response = await fetch(`${url}io/subjects`, {
             headers: {
                 'Api-Token': getApiToken()
             }
         })
-            .then((response) => {
-                status = response.status;
-                return response.text();
-            })
-            .then((data) => {
-                if (status !== 200) {
-                    console.log("%cError in getting subject list", "color: orange;", data)
-                    return;
-                }
-                let listArray = [];
-                try {
-                    listArray = JSON.parse(data);
-                    listArray = Object.keys(listArray)
-                } catch (error) {
-                    console.log("%cSubject List Data is invaild", "color: orange;", data)
-                }
-                callBackFunction(listArray);
-            });
+        if (response.status === 200) {
+            let listArray = [];
+            try {
+                listArray = await response.json()
+                listArray = Object.keys(listArray)
+            } catch (error) {
+                console.log("%cSubject List Data is invaild", "color: orange;", await response.text())
+            }
+            callBackFunction(listArray);
+        } else {
+            console.log("%cError in getting subject list", "color: orange;", await response.text())
+        }
     } catch (error) {
         console.log("Unable to Fetch Data of Subject List")
     }
 }
 
-export function getSubjects(callBackFunction = (data) => { }, setSubjectsList) {
-    let status;
+export async function getSubjects(callBackFunction = (data) => { }, setSubjectsList) {
     try {
-        fetch(`${url}io/subjects`, {
+        let response = await fetch(`${url}io/subjects`, {
             headers: {
                 'Api-Token': getApiToken()
             }
         })
-            .then((response) => {
-                status = response.status;
-                return response.text();
-            })
-            .then((data) => {
-                if (status !== 200) {
-                    console.log("%cError in getting subjects details", "color: orange;", data)
-                    return;
-                }
-                let listArray = [];
-                try {
-                    listArray = JSON.parse(data);
-                } catch (error) {
-                    console.log("%cSubjects Data is invaild", "color: orange;", data)
-                }
-                callBackFunction(listArray);
-            });
+        if (response.status === 200) {
+            let listArray = [];
+            try {
+                listArray = await response.json();
+            } catch (error) {
+                console.log("%cSubjects Data is invaild", "color: orange;", await response.text())
+            }
+            callBackFunction(listArray);
+        } else {
+            console.log("%cError in getting subjects details", "color: orange;", await response.text())
+        }
     } catch (error) {
         console.log("Unable to Fetch Data of subjects")
     }
 }
 
 export async function getSubjectDetails(subjectName, callBackFunction = (data) => { }) {
-    let status;
     try {
-        fetch(`${url}io/subjects/${subjectName}`, {
+        let response = await fetch(`${url}io/subjects/${subjectName}`, {
             headers: {
                 'Api-Token': getApiToken()
             }
         })
-            .then((response) => {
-                status = response.status;
-                return response.text();
-            })
-            .then((data) => {
-                if (status !== 200) {
-                    console.log(`Request URL: %c${url}io/subjects/${subjectName} \n%cError in getting subject details data`, "color: blue;", "color: orange;", data)
-                    return;
-                }
-                try {
-                    data = JSON.parse(data);
-                } catch (error) {
-                    console.log("%cSubject Details Data is invaild", "color: red;", data)
-                }
-                callBackFunction(data);
-            });
+        if (response.status === 200) {
+            let data;
+            try {
+                data = await response.json();
+            } catch (error) {
+                console.log("%cSubject Details Data is invaild", "color: red;", await response.text())
+            }
+            callBackFunction(data);
+        } else {
+            console.log(`Request URL: %c${url}io/subjects/${subjectName} \n%cError in getting subject details data`, "color: blue;", "color: orange;", await response.text())
+        }
     } catch {
         console.log("Unable to Fetch Data of subject")
     }
 }
 
-export function saveSubject(data, callBackFunction = () => { }, callBackIfFailed = () => { }) {
-    let statusValue;
+export async function saveSubject(data, callBackFunction = () => { }, callBackIfFailed = () => { }) {
     try {
         let subjectData = JSON.stringify(data)
-        fetch(url + "io/subjects", {
+        let response = await fetch(url + "io/subjects", {
             method: "PUT",
             headers: {
                 'content-type': 'application/json',
@@ -102,46 +81,33 @@ export function saveSubject(data, callBackFunction = () => { }, callBackIfFailed
             },
             body: subjectData
         })
-            .then(Response => {
-                statusValue = Response.status;
-                return Response.text();
-            })
-            .then(data => {
-                if (statusValue !== 200) {
-                    alert("Something went wrong");
-                    console.log("%cError in Saveing Subject Details", "color: orange;", data)
-                    callBackIfFailed()
-                    return;
-                }
-                callBackFunction();
-            })
+        if (response.status === 200)
+            callBackFunction();
+        else {
+            alert("Something went wrong");
+            console.log("%cError in Saveing Subject Details", "color: orange;", await response.text())
+            callBackIfFailed()
+        }
     } catch (error) {
         console.log("%cData is invaild of the Subject details or %cUnable to use Fetch call", "color: red;", "color: orange;", data)
     }
 }
 
-export function deleteSubject(subjectName, callBackFunction = () => { }, callBackIfFailed = () => { }) {
-    let statusValue; console.log(url + "/io/teachers/" + subjectName)
+export async function deleteSubject(subjectName, callBackFunction = () => { }, callBackIfFailed = () => { }) {
     try {
-        fetch(url + "io/subjects/" + subjectName, {
+        let response = await fetch(url + "io/subjects/" + subjectName, {
             method: "DELETE",
             headers: {
                 'Api-Token': getApiToken()
             }
         })
-            .then(Response => {
-                statusValue = Response.status;
-                return Response.text()
-            })
-            .then(data => {
-                if (statusValue !== 200) {
-                    alert("Something went wrong");
-                    console.log("%cError in Deleteing Subject", "color: red;", subjectName, data)
-                    callBackIfFailed()
-                    return;
-                }
-                callBackFunction();
-            })
+        if (response.status === 200)
+            callBackFunction()
+        else {
+            alert("Something went wrong");
+            console.log("%cError in Deleteing Subject", "color: red;", subjectName, await response.text())
+            callBackIfFailed()
+        }
     } catch (error) {
         console.log("unable to send request of delete subject")
     }
