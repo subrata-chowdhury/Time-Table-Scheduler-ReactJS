@@ -106,16 +106,7 @@ function DetailsContainer({
         }
     }, [outerSubjectName])
     const subjectTypeClickHandler = useCallback((event) => {
-        let checkbox = event.target;
-        let isLab = false;
-        if (hasElement(event.target.classList, "active")) {
-            checkbox.classList.remove("active");
-            isLab = false;
-        } else {
-            checkbox.classList.add("active");
-            isLab = true;
-        }
-        setSubjectDetails(value => ({ ...value, isPractical: isLab }))
+        setSubjectDetails(value => ({ ...value, isPractical: !value["isPractical"] }))
     }, [])
     const inputOnChangeHandler = useCallback((event) => {
         if (event.target.name === 'subjectName') setSubjectName(event.target.value.toUpperCase())
@@ -268,9 +259,10 @@ function DetailsContainer({
                 />
             </div>
             <div className="input-container">
-                <div className="input-box-heading">Subject Type (On if Sub. is Practical)</div>
-                <div className={'box ' + (subjectDetails.isPractical ? "active" : "")} name="isPractical" onClick={subjectTypeClickHandler}>
-                    <div className='dot'></div>
+                <div className="input-box-heading">Subject Type</div>
+                <div className={'box'} name="isPractical" onClick={subjectTypeClickHandler}>
+                    <div className={'option' + (!subjectDetails.isPractical ? " active" : "")}>Theory</div>
+                    <div className={'option' + (subjectDetails.isPractical ? " active" : "")}>Practical</div>
                 </div>
             </div>
             <div className='save-btn-container'>

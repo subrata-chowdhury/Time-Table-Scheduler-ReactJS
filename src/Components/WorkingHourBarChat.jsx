@@ -22,8 +22,11 @@ function WorkingHourBarChat({ dayNames = ["Tue", "Wed", "Thu", "Fri", "Sat"], pe
     }
 
     return (
-        <div className="working-hour-barchat-container" style={{ gridTemplateColumns: gridCss }}>
-            {bars}
+        <div className="working-hour-barchat-container-wrapper">
+            <div className="title">Class Taken Per Day</div>
+            <div className="working-hour-barchat-container" style={{ gridTemplateColumns: gridCss }}>
+                {bars}
+            </div>
         </div>
     )
 }

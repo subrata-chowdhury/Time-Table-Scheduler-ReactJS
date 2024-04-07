@@ -1,9 +1,25 @@
+.working-hour-barchat-container-wrapper {
+    display: grid;
+    grid-template-rows: 30px auto;
+    justify-content: stretch;
+    align-items: stretch;
+    width: 85%;
+    height: 100%;
+}
+
+.working-hour-barchat-container-wrapper .title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: auto;
+    margin-top: 0;
+}
+
 .working-hour-barchat-container {
     background: #fff;
     border-radius: 15px;
     display: grid;
     grid-auto-flow: column;
-    width: 80%;
+    width: 94%;
     padding: 0 10px;
 }
 

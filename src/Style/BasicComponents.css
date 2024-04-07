@@ -19,35 +19,49 @@
 }
 
 .input-container .box {
-    width: 50px;
-    height: 30px;
-    border-radius: 20px;
+    width: 170px;
+    height: 35px;
+    border-radius: 40px;
     background: rgba(0, 0, 0, 0.10);
     display: grid;
+    grid-template-columns: 50% 50%;
     justify-content: start;
     align-items: center;
-    padding: 0 5px;
     cursor: pointer;
     transition: 0.3s;
+    border: 2px solid rgba(0, 0, 0, 0.20);
+    overflow: hidden;
 }
 
-.input-container .box.active {
-    justify-content: end;
-    background: rgba(30, 144, 255, 0.8);
-}
-
-.input-container .dot {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    background: #fff;
+.input-container .box .option {
+    width: 100%;
+    height: 100%;
     transition: 0.3s;
+    background: #fff;
+    color: rgba(30, 144, 255, 0.8);
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
+
+.input-container .box .option.active {
+    background: rgba(30, 144, 255, 0.8);
+    color: #fff;
 }
 
 .input-container {
     display: grid;
     grid-auto-flow: row;
     gap: 8px;
+}
+
+.input-container:has(.box) {
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: start;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
 .save-btn-container {
