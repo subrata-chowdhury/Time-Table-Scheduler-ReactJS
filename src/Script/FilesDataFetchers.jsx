@@ -59,7 +59,7 @@ export async function saveCurrentState(name, callBackFunction = () => { }) {
 
 export async function createNewFile(name, callBackFunction = () => { }) {
     try {
-        let response = await fetch(`${url}io/Saves/newEmpty?name=${name}`, {
+        let response = await fetch(`${url}io/saves/newEmpty?name=${name}`, {
             method: 'POST',
             headers: {
                 'Api-Token': getApiToken()
@@ -102,13 +102,14 @@ export async function getSaveFileList(callBackFunction = (data) => { }) {
 export async function loadSaveFile(name, callBackFunction = (data) => { }) {
     try {
         let response = await fetch(`${url}io/saves/load?name=${name}`, {
+            method: 'POST',
             headers: {
                 'Api-Token': getApiToken()
             }
         })
         if (response.status === 200) {
             alert("Opend Sucessfully")
-            callBackFunction(await response.json());
+            callBackFunction(await response.text());
         } else {
             console.log(`Request URL: %c${url}io/saves/load?name=${name} \n%cError in loading state`, "color: blue;", "color: red;", await response.text())
         }

@@ -4,9 +4,10 @@ import "../Style/Files.css"
 import Cards from '../Components/Cards'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { createNewFile, deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers'
-import SearchBar, { match } from '../Components/SearchBar'
+import SearchBar from '../Components/SearchBar'
 import "../Script/commonJS"
 import OwnerFooter from '../Components/OwnerFooter'
+import { hasElement } from '../Script/util'
 
 function FilesPage() {
     return (
@@ -24,8 +25,8 @@ function MainComponents() {
     const [files, setFiles] = useState([]);
     const [fileName, setFileName] = useState("")
 
-    const fileDeleteBtn = useRef()
-    const fileCreateBtn = useRef()
+    const hideDeleteBtnFunction = useRef(() => { })
+    const showDeleteBtnFunction = useRef(() => { })
 
     useEffect(() => {
         startUp();
@@ -38,19 +39,17 @@ function MainComponents() {
 
     const fileCardClickHandler = useCallback((event) => {
         setFileName(event.target.title)
-        fileDeleteBtn.current.style.cssText = "display: block;";
-        fileCreateBtn.current.style.cssText = "display: none;";
+        showDeleteBtnFunction.current()
     }, [])
     const addFileBtnClickHandler = useCallback(() => {
-        fileDeleteBtn.current.style.cssText = "display: none;";
-        fileCreateBtn.current.style.cssText = "display: block;";
+        hideDeleteBtnFunction.current()
         setFileName("")
     }, [])
     return (
         <div className='top-sub-container'>
             <div className='left-sub-container'>
                 <div className='tools-container'>
-                    <MiniStateContainer />
+                    <MiniStateContainer callBackAfterStateUpdate={startUp} />
                     <SearchBar />
                 </div>
                 <Cards
@@ -66,52 +65,73 @@ function MainComponents() {
                     setFileName={setFileName}
                     files={files}
                     startUp={startUp}
-                    fileCreateBtnRef={fileCreateBtn}
-                    fileDeleteBtnRef={fileDeleteBtn}
+                    showDeleteBtnFunction={showDeleteBtnFunction}
+                    hideDeleteBtnFunction={hideDeleteBtnFunction}
                 />
             </div>
         </div>
     )
 }
 
-function DetailsContainer({ fileName, setFileName, files, startUp, fileCreateBtnRef, fileDeleteBtnRef }) {
+function DetailsContainer({ fileName, setFileName, files, startUp, showDeleteBtnFunction, hideDeleteBtnFunction }) {
+
+    const fileDeleteBtnRef = useRef()
+    const fileCreateBtnRef = useRef()
+
     const inputOnChangeHandler = useCallback((event) => {
-        setFileName(event.target.value.trim().toUpperCase())
+        setFileName(event.target.value.toUpperCase())
     }, [])
     const fileFormOnSubmitHandler = useCallback((event) => {
         event.preventDefault();
-        if (fileName.trim() === "") {
+        const file = fileName.trim().toUpperCase()
+        if (file === "") {
             alert("File Name can't be Empty");
             return;
         }
-        if (match(files, fileName).length > 0) {
-            saveCurrentState(fileName, startUp);
+        if (hasElement(files, file)) {
+            saveCurrentState(file, startUp);
         } else {
-            if (window.confirm("Are you want to save the current state into " + fileName + "?"))
-                saveCurrentState(fileName, startUp);
+            if (window.confirm("Are you want to save the current state into " + file + "?"))
+                saveCurrentState(file, startUp);
         }
     }, [fileName, files])
     const createNewBtnClickHandler = useCallback((event) => {
         event.preventDefault();
-        if (fileName.trim() === "") {
+        const file = fileName.trim().toUpperCase();
+        if (file === "") {
             alert("File Name can't be Empty");
             return;
         }
-        if (match(files, fileName).length > 0) {
+        if (hasElement(files, file)) {
             alert("File already exist with same name")
             return
         } else {
-            createNewFile(fileName, startUp);
+            createNewFile(file, startUp);
         }
     }, [fileName, files])
     const deleteFileBtnClickHandler = useCallback((event) => {
         event.preventDefault();
-        if (window.confirm("Are You Sure? Want to delete " + fileName + "?")) {
-            deleteFile(fileName, () => {
-                startUp();
-            })
-        }
-    }, [fileName])
+        if (hasElement(files, fileName))
+            if (window.confirm("Are You Sure? Want to delete " + fileName + "?")) {
+                deleteFile(fileName, () => {
+                    startUp();
+                    hideDeleteBtnFunction.current()
+                })
+            }
+    }, [files, fileName])
+    const checkIfAlreadyExist = useCallback((file) => {
+        if (hasElement(files, file)) showDeleteBtnFunction.current()
+        else hideDeleteBtnFunction.current()
+    }, [files])
+
+    hideDeleteBtnFunction.current = useCallback(() => {
+        fileDeleteBtnRef.current.style.cssText = "display: none;";
+        fileCreateBtnRef.current.style.cssText = "display: block;";
+    }, [])
+    showDeleteBtnFunction.current = useCallback(() => {
+        fileDeleteBtnRef.current.style.cssText = "display: block;";
+        fileCreateBtnRef.current.style.cssText = "display: none;";
+    }, [])
     return (
         <form className='details-container' onSubmit={fileFormOnSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>
@@ -124,6 +144,7 @@ function DetailsContainer({ fileName, setFileName, files, startUp, fileCreateBtn
                     value={fileName}
                     placeholder='Ex. ABC'
                     onChange={event => {
+                        checkIfAlreadyExist(event.target.value.trim().toUpperCase())
                         inputOnChangeHandler(event)
                     }}></input>
             </div>

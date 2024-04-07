@@ -1,6 +1,6 @@
 import MiniStateContainer from '../Components/MiniStateContainer'
 import Menubar from '../Components/Menubar'
-import SearchBar, { match } from '../Components/SearchBar'
+import SearchBar from '../Components/SearchBar'
 import Cards from '../Components/Cards'
 import "../Style/Subjects.css"
 import { useEffect, useState, useRef, memo, useCallback } from 'react'
@@ -118,13 +118,13 @@ function DetailsContainer({
         setSubjectDetails(value => ({ ...value, isPractical: isLab }))
     }, [])
     const inputOnChangeHandler = useCallback((event) => {
-        if (event.target.name === 'subjectName') setSubjectName(event.target.value.trim().toUpperCase())
-        else {
-            let newData = { ...subjectDetails }
-            newData[event.target.name] = event.target.value
-            setSubjectDetails(newData)
-        }
+        if (event.target.name === 'subjectName') setSubjectName(event.target.value.toUpperCase())
+        else setSubjectDetails(value => ({ ...value, [event.target.name]: event.target.value }))
     }, [subjectDetails])
+    const checkIfAlreadyExist = useCallback((teacher) => {
+        if (hasElement(subjectsList, teacher)) subjectDeleteBtnRef.current.style.cssText = "display: block;";
+        else subjectDeleteBtnRef.current.style.cssText = "display: none;";
+    }, [subjectsList])
     const subjectFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
         let data = { ...subjectDetails }
@@ -184,7 +184,7 @@ function DetailsContainer({
             alert("Please Enter a Valid Room Code");
             return false
         }
-        if (match(subjectsList, newSubjectName).length > 0) {
+        if (hasElement(subjectsList, newSubjectName)) {
             if (window.confirm("Are you want to overwrite " + newSubjectName))
                 saveData(newSubjectName, data);
         } else saveData(newSubjectName, data);
@@ -202,12 +202,14 @@ function DetailsContainer({
     }, [])
     const deleteSubjectBtnClickHandler = useCallback((event) => {
         event.preventDefault();
-        if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?"))
-            deleteSubject(subjectName, () => {
-                onSubmitCallBack();
-            }, () => {
-                setDisplayLoader(false)
-            })
+        if (hasElement(subjectsList, subjectName))
+            if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?"))
+                deleteSubject(subjectName, () => {
+                    onSubmitCallBack();
+                    subjectDeleteBtnRef.current.style.cssText = "display: none;";
+                }, () => {
+                    setDisplayLoader(false)
+                })
     }, [subjectName])
     return (
         <form className='details-container' onSubmit={subjectFormSubmitHandler}>
@@ -221,6 +223,7 @@ function DetailsContainer({
                     value={subjectName}
                     placeholder='Ex. ABC'
                     onChange={event => {
+                        checkIfAlreadyExist(event.target.value.trim().toUpperCase())
                         inputOnChangeHandler(event)
                     }}></input>
             </div>

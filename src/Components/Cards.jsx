@@ -83,18 +83,23 @@ export const Card = memo(({
             }
         } else event.currentTarget.classList.add("active")
     }, [canStayActiveMultipleCards])
+
     let cardStyle = {}
     if (showEditBtn) cardStyle = { position: "relative", top: "-20px" }
+
+    const innerCard = (<div className={"card data " + className} onClick={(e) => {
+        cardClickHandler(e)
+        defaultClickHandler(e)
+    }} title={details} style={cardStyle}>
+        {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
+    </div>)
     return (
-        <div className="card-wrapper">
-            {showEditBtn && <div className="edit-btn" onClick={() => { editBtnClickHandler(details) }}><EditIcon /></div>}
-            <div className={"card data " + className} onClick={(e) => {
-                cardClickHandler(e)
-                defaultClickHandler(e)
-            }} title={details} style={cardStyle}>
-                {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
+        (showEditBtn ? (
+            <div className="card-wrapper">
+                <div className="edit-btn" onClick={() => { editBtnClickHandler(details) }}><EditIcon /></div>
+                {innerCard}
             </div>
-        </div>
+        ) : innerCard)
     )
 })
 

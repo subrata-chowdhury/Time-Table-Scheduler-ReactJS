@@ -152,18 +152,24 @@ function DetailsContainer({
         setTeacherDetails(newDetails)
     }, [teacherDetails])
     const inputOnChangeHandler = useCallback((event) => {
-        if (event.target.name === 'teacherName') setTeacherName(event.target.value.trim().toUpperCase())
+        if (event.target.name === 'teacherName') setTeacherName(event.target.value.toUpperCase())
         else setTeacherDetails(value => ({ ...value, [event.target.name]: event.target.value }))
     }, [])
+    const checkIfAlreadyExist = useCallback((teacher) => {
+        if (hasElement(teachersList, teacher)) teacherDeleteBtnRef.current.style.cssText = "display: block;";
+        else teacherDeleteBtnRef.current.style.cssText = "display: none;";
+    }, [teachersList])
     const deleteTeacherBtnClickHandler = useCallback((event) => {
         event.preventDefault();
-        if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) {
-            deleteTeacher(teacherName, () => {
-                onSubmitCallBack();
-            }, () => {
-                setDisplayLoader(false)
-            });
-        }
+        if (hasElement(teachersList, teacherName))
+            if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) {
+                deleteTeacher(teacherName, () => {
+                    onSubmitCallBack();
+                    teacherDeleteBtnRef.current.style.cssText = "display: none;";
+                }, () => {
+                    setDisplayLoader(false)
+                });
+            }
     }, [teacherName])
     const teacherFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
@@ -219,7 +225,7 @@ function DetailsContainer({
             teacherData.freeTime = [];
         }
 
-        if (match(teachersList, newTeacherName).length > 0) {
+        if (hasElement(teachersList, newTeacherName)) {
             if (window.confirm("Are you want to overwrite " + teacherName))
                 saveData(newTeacherName, teacherData);
         } else saveData(newTeacherName, teacherData);
@@ -247,6 +253,7 @@ function DetailsContainer({
                     value={teacherName}
                     placeholder='Ex. ABC'
                     onChange={event => {
+                        checkIfAlreadyExist(event.target.value.trim().toUpperCase())
                         inputOnChangeHandler(event)
                     }}></input>
             </div>
