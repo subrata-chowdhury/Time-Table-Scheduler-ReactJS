@@ -24,6 +24,7 @@ function FilesPage() {
 function MainComponents() {
     const [files, setFiles] = useState([]);
     const [fileName, setFileName] = useState("")
+    const [forceReRenderer, setForceReRenderer] = useState(false)
 
     const hideDeleteBtnFunction = useRef(() => { })
     const showDeleteBtnFunction = useRef(() => { })
@@ -49,7 +50,7 @@ function MainComponents() {
         <div className='top-sub-container'>
             <div className='left-sub-container'>
                 <div className='tools-container'>
-                    <MiniStateContainer callBackAfterStateUpdate={startUp} />
+                    <MiniStateContainer forceReRenderer={forceReRenderer} />
                     <SearchBar />
                 </div>
                 <Cards
@@ -67,13 +68,14 @@ function MainComponents() {
                     startUp={startUp}
                     showDeleteBtnFunction={showDeleteBtnFunction}
                     hideDeleteBtnFunction={hideDeleteBtnFunction}
+                    setForceReRenderer={setForceReRenderer}
                 />
             </div>
         </div>
     )
 }
 
-function DetailsContainer({ fileName, setFileName, files, startUp, showDeleteBtnFunction, hideDeleteBtnFunction }) {
+function DetailsContainer({ fileName, setFileName, files, startUp, showDeleteBtnFunction, hideDeleteBtnFunction, setForceReRenderer }) {
 
     const fileDeleteBtnRef = useRef()
     const fileCreateBtnRef = useRef()
@@ -107,6 +109,7 @@ function DetailsContainer({ fileName, setFileName, files, startUp, showDeleteBtn
             return
         } else {
             createNewFile(file, startUp);
+            setForceReRenderer(val => !val)
         }
     }, [fileName, files])
     const deleteFileBtnClickHandler = useCallback((event) => {
@@ -115,6 +118,7 @@ function DetailsContainer({ fileName, setFileName, files, startUp, showDeleteBtn
             if (window.confirm("Are You Sure? Want to delete " + fileName + "?")) {
                 deleteFile(fileName, () => {
                     startUp();
+                    setForceReRenderer(val => !val)
                     hideDeleteBtnFunction.current()
                 })
             }

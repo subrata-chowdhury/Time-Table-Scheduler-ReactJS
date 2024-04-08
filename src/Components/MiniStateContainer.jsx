@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react"
 import { getCurrentFileIsSaved, getCurrentFileName, getSaveFileList, loadSaveFile, saveCurrentState } from "../Script/FilesDataFetchers";
 import "../Style/Mini-state-container.css";
 
-function MiniStateContainer({ callBackAfterStateUpdate = () => { } }) {
+function MiniStateContainer({ callBackAfterStateUpdate = () => { }, forceReRenderer = false }) {
     const [states, setStates] = useState([])
     const fileSelector = useRef()
     useEffect(() => {
@@ -18,7 +18,7 @@ function MiniStateContainer({ callBackAfterStateUpdate = () => { } }) {
                 }
             });
         });
-    }, [])
+    }, [forceReRenderer])
 
     const onChangeStateHandler = useCallback((event) => {
         getCurrentFileIsSaved((isSaved) => {

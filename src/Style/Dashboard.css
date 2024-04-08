@@ -6,19 +6,56 @@
 
 .dashboard .left-sub-container {
     display: grid;
-    grid-template-rows: 10% 50% 40%;
+    grid-template-rows: 7% 46.5% 46.5%;
     justify-items: center;
 }
 
 .dashboard .left-sub-container .empty-container {
     background: #fff;
-    width: 85%;
-    height: 90%;
     border-radius: 15px;
-    display: grid;
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+.basic-details {
+    display: grid;
+    grid-template-rows: 50% 50%;
+    gap: 10px;
+    width: 85%;
+    height: 90%;
+}
+
+.basic-details .basic-details-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+}
+
+.basic-details .basic-details-container .container {
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 10px;
+}
+
+.basic-details .container .sub-container{
+    background: #fff;
+    border-radius: 7px;
+    display: grid;
+    align-items: center;
+}
+
+.basic-details .basic-details-container .container .value {
+    font-size: 22px;
+    font-weight: bold;
+    padding: 0 10px;
+    padding-bottom: 5px;
+    color: dodgerblue;
+}
+
+.basic-details .basic-details-container .container .title {
+    padding: 0 10px;
+    padding-bottom: 0;
 }
 
 .dashboard .right-sub-container {

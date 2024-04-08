@@ -26,6 +26,13 @@ function MainComponents() {
     const [perDayValue, setPerDayValue] = useState([0, 0, 0, 0, 0])
     const [fileChange, setFileChange] = useState(false)
 
+    const [basicDetails, setBasicDetails] = useState({
+        subjectsCount: 0,
+        teachersCount: 0,
+        practicalSubjects: 0,
+        theroySubjects: 0
+    })
+
     const startUpFunction = useCallback(() => {
         setFileChange(val => !val)
         setPerDayValue([0, 0, 0, 0, 0])
@@ -35,22 +42,67 @@ function MainComponents() {
         <div className='top-sub-container'>
             <div className='left-sub-container'>
                 <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                <div className='empty-container'>Under Development</div>
+                <BasicDetails basicDetails={basicDetails} />
                 <WorkingHourBarChat perDayValue={perDayValue} />
             </div>
             <div className='right-sub-container'>
-                <TeacherDetailsContainer setPerDayValue={setPerDayValue} fileChange={fileChange} />
+                <TeacherDetailsContainer setPerDayValue={setPerDayValue} fileChange={fileChange} setBasicDetails={setBasicDetails} />
             </div>
         </div>
     )
 }
 
-function TeacherDetailsContainer({ setPerDayValue, fileChange }) {
+const BasicDetails = memo(({ basicDetails }) => {
+    return (
+        <div className='basic-details'>
+            <div className='basic-details-container'>
+                <div className='container'>
+                    <Container lable="Subjects" value={basicDetails.subjectsCount} />
+                    <Container lable="Teachers" value={basicDetails.teachersCount} />
+                </div>
+                <div className='container'>
+                    <Container lable="Practical Subjects" value={basicDetails.practicalSubjects} />
+                    <Container lable="Theory Subjects" value={basicDetails.theroySubjects} />
+                </div>
+            </div>
+            <div className='basic-details-container empty-container'>Under Development</div>
+        </div>)
+})
+
+const Container = memo(({ lable = "Demo", value = 0 }) => {
+    return (
+        <div className='sub-container'>
+            <div className='title'>{lable}</div>
+            <div className='value'>{value}</div>
+        </div>
+    )
+})
+
+function TeacherDetailsContainer({ setPerDayValue, fileChange, setBasicDetails }) {
     const [teachersList, setTeahersList] = useState([])
     useEffect(() => {
-        getTeacherList(setTeahersList);
+        let basicDetails = {
+            subjectsCount: 0,
+            teachersCount: 0,
+            practicalSubjects: 0,
+            theroySubjects: 0
+        }
+        getTeacherList((data) => {
+            setTeahersList(data)
+            basicDetails.teachersCount = data.length;
+            setBasicDetails(val => ({ ...val, ["teachersCount"]: basicDetails.teachersCount }))
+        });
         getSubjects(data => {
             subjectsDetails.current = data;
+            let subjects = Object.keys(data)
+            basicDetails.subjectsCount = subjects.length;
+            let practicalSubjects = 0
+            for (let index = 0; index < subjects.length; index++) {
+                if (data[subjects[index]].isPractical) practicalSubjects += 1
+            }
+            basicDetails.practicalSubjects = practicalSubjects;
+            basicDetails.theroySubjects = basicDetails.subjectsCount - practicalSubjects;
+            setBasicDetails(basicDetails)
         });
         teacherTimeTableDetails.current = []
         teacherDetails.current = {
