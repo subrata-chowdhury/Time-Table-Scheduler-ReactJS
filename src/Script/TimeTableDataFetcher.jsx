@@ -18,8 +18,8 @@ export async function generateTimeTable(callBackFunction, callBackIfFailed) {
         }
         else {
             alert("Failed to generate beacause: " + await response.text());
-            console.log("%cError in generating Time Table", "color: orange;", await response.text())
             callBackIfFailed()
+            console.log("%cError in generating Time Table", "color: orange;", await response.text())
         }
     } catch (error) {
         console.log("Unable to call Fetch of Generate Time Table")

@@ -10,6 +10,7 @@ import { hasElement } from '../Script/util'
 import TagInput from '../Components/TagInput'
 import OwnerFooter from '../Components/OwnerFooter'
 import Loader from '../Components/Loader'
+import { verifySubjectInputs } from '../Script/SubjectFormVerifier'
 
 function SubjectsPage() {
     return (
@@ -113,72 +114,18 @@ function DetailsContainer({
         else setSubjectDetails(value => ({ ...value, [event.target.name]: event.target.value }))
     }, [subjectDetails])
     const checkIfAlreadyExist = useCallback((teacher) => {
-        if (hasElement(subjectsList, teacher)) subjectDeleteBtnRef.current.style.cssText = "display: block;";
-        else subjectDeleteBtnRef.current.style.cssText = "display: none;";
+        if (hasElement(subjectsList, teacher)) subjectDeleteBtnRef.current.style.cssText = "display: block;"; // if teacher exist show delete btn
+        else subjectDeleteBtnRef.current.style.cssText = "display: none;"; // if not teacher exist show delete btn
     }, [subjectsList])
     const subjectFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
-        let data = { ...subjectDetails }
-        let newSubjectName = subjectName.trim().toUpperCase()
 
-        //form validating
-        if (newSubjectName.length > 100) {
-            alert("Length of the name must be less than 100");
-            return false;
-        }
-        if (newSubjectName.length === 0) {
-            alert("Please Enter a vaild name");
-            return false;
-        }
-        //sem validation
-        if (data.sem.length === 0) {
-            alert("Please Enter a Number in semester");
-            return false;
-        }
-        if (parseInt(data.sem)) {
-            data.sem = parseInt(data.sem);
-        } else {
-            alert("Please Enter a number in semester");
-            return false;
-        }
-        if (data.sem < 1 || data.sem > 8) {
-            alert("Value must be in 1 to 8 range in semester");
-            return false;
-        }
-        //lecture count validation
-        if (data.lectureCount === 0 || data.lectureCount === "") {
-            data.lectureCount = 4;
-        }
-        if (parseInt(data.lectureCount)) {
-            data.lectureCount = parseInt(data.lectureCount);
-        } else {
-            alert("Please Enter a number in lecture count per week");
-            return false;
-        }
-        if (data.lectureCount < 0 || data.lectureCount > 40) {
-            alert("Value must be in range 0 to 40 in lecture count per week");
-            return false;
-        }
-        //room code validation
-        if (data.roomCodes.length === 0) {
-            alert("Please Enter a Classroom name");
-            return false;
-        }
-
-        try {
-            let temp_rCode = [];
-            for (let index = 0; index < data.roomCodes.length; index++) {
-                temp_rCode.push(data.roomCodes[index].trim().toUpperCase())
-            }
-            data.roomCodes = temp_rCode;
-        } catch (err) {
-            alert("Please Enter a Valid Room Code");
-            return false
-        }
-        if (hasElement(subjectsList, newSubjectName)) {
-            if (window.confirm("Are you want to overwrite " + newSubjectName))
-                saveData(newSubjectName, data);
-        } else saveData(newSubjectName, data);
+        let verifiedData = verifySubjectInputs(subjectName, subjectDetails)
+        if (verifiedData)
+            if (hasElement(subjectsList, verifiedData.newSubjectName)) {
+                if (window.confirm("Are you want to overwrite " + verifiedData.newSubjectName))
+                    saveData(verifiedData.newSubjectName, verifiedData.data);
+            } else saveData(verifiedData.newSubjectName, verifiedData.data);
     }, [subjectName, subjectDetails, subjectsList])
     const saveData = useCallback((subjectName, subjectData) => {
         setDisplayLoader(true)
@@ -187,19 +134,29 @@ function DetailsContainer({
         saveSubject(newData, () => {
             alert(JSON.stringify(newData) + "---------- is added");
             onSubmitCallBack();
+
+            // reseting form fields
+            setSubjectName("")
+            setSubjectDetails({
+                isPractical: false,
+                lectureCount: 4,
+                roomCodes: [],
+                sem: ""
+            })
         }, () => {
             setDisplayLoader(false)
         })
     }, [])
+
     const deleteSubjectBtnClickHandler = useCallback((event) => {
         event.preventDefault();
-        if (hasElement(subjectsList, subjectName))
-            if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?"))
+        if (hasElement(subjectsList, subjectName)) // checking if the subject exsist or not
+            if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?")) // if exist show a confirmation box
                 deleteSubject(subjectName, () => {
-                    onSubmitCallBack();
-                    subjectDeleteBtnRef.current.style.cssText = "display: none;";
+                    onSubmitCallBack(); // referenced to start up function
+                    subjectDeleteBtnRef.current.style.cssText = "display: none;"; // hide delete btn
                 }, () => {
-                    setDisplayLoader(false)
+                    setDisplayLoader(false) // if failed only hide loader
                 })
     }, [subjectName])
     return (

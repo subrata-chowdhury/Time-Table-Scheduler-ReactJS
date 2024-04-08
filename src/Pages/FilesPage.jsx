@@ -99,6 +99,8 @@ function DetailsContainer({ fileName, setFileName, files, startUp, showDeleteBtn
     }, [fileName, files])
     const createNewBtnClickHandler = useCallback((event) => {
         event.preventDefault();
+
+        //verifing data
         const file = fileName.trim().toUpperCase();
         if (file === "") {
             alert("File Name can't be Empty");
@@ -114,9 +116,9 @@ function DetailsContainer({ fileName, setFileName, files, startUp, showDeleteBtn
     }, [fileName, files])
     const deleteFileBtnClickHandler = useCallback((event) => {
         event.preventDefault();
-        if (hasElement(files, fileName))
-            if (window.confirm("Are You Sure? Want to delete " + fileName + "?")) {
-                deleteFile(fileName, () => {
+        if (hasElement(files, fileName)) // checking if the file exsist or not
+            if (window.confirm("Are You Sure? Want to delete " + fileName + "?")) { // if exist show a confirmation box
+                deleteFile(fileName, () => { // if yes then delete else do nothing
                     startUp();
                     setForceReRenderer(val => !val)
                     hideDeleteBtnFunction.current()
@@ -128,11 +130,11 @@ function DetailsContainer({ fileName, setFileName, files, startUp, showDeleteBtn
         else hideDeleteBtnFunction.current()
     }, [files])
 
-    hideDeleteBtnFunction.current = useCallback(() => {
+    hideDeleteBtnFunction.current = useCallback(() => { // hide delete btn & hide create btn
         fileDeleteBtnRef.current.style.cssText = "display: none;";
         fileCreateBtnRef.current.style.cssText = "display: block;";
     }, [])
-    showDeleteBtnFunction.current = useCallback(() => {
+    showDeleteBtnFunction.current = useCallback(() => { // show delete btn & hide create btn
         fileDeleteBtnRef.current.style.cssText = "display: block;";
         fileCreateBtnRef.current.style.cssText = "display: none;";
     }, [])

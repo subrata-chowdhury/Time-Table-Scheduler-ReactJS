@@ -12,6 +12,7 @@ import { hasElement } from '../Script/util'
 import TagInput from '../Components/TagInput'
 import OwnerFooter from '../Components/OwnerFooter'
 import Loader from '../Components/Loader'
+import { verifyTeacherInputs } from '../Script/TeacherFormVerifier'
 
 function TeachersPage() {
     return (
@@ -155,80 +156,19 @@ function DetailsContainer({
         if (event.target.name === 'teacherName') setTeacherName(event.target.value.toUpperCase())
         else setTeacherDetails(value => ({ ...value, [event.target.name]: event.target.value }))
     }, [])
-    const checkIfAlreadyExist = useCallback((teacher) => {
-        if (hasElement(teachersList, teacher)) teacherDeleteBtnRef.current.style.cssText = "display: block;";
-        else teacherDeleteBtnRef.current.style.cssText = "display: none;";
+    const checkIfAlreadyExist = useCallback((teacher) => { 
+        if (hasElement(teachersList, teacher)) teacherDeleteBtnRef.current.style.cssText = "display: block;"; // if teacher exist show delete btn
+        else teacherDeleteBtnRef.current.style.cssText = "display: none;"; // if not teacher exist show delete btn
     }, [teachersList])
-    const deleteTeacherBtnClickHandler = useCallback((event) => {
-        event.preventDefault();
-        if (hasElement(teachersList, teacherName))
-            if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) {
-                deleteTeacher(teacherName, () => {
-                    onSubmitCallBack();
-                    teacherDeleteBtnRef.current.style.cssText = "display: none;";
-                }, () => {
-                    setDisplayLoader(false)
-                });
-            }
-    }, [teacherName])
     const teacherFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
         //verification of inputs
-        let teacherData = { ...teacherDetails };
-        let newTeacherName = teacherName.trim().toUpperCase();
-        if (newTeacherName.length === 0) {
-            alert("Please Enter Teacher Name");
-            return;
-        }
-        if (newTeacherName.length > 100) {
-            alert("Length of the name must be less than 100");
-            return;
-        }
-        if (teacherData.subjects.length <= 0) {
-            alert("Please Enter a Subject")
-            return;
-        }
-        for (let subjectStr of teacherData.subjects) {
-            if (subjectList.current !== "unavailable" && subjectList.current.indexOf(subjectStr) === -1) {
-                alert("Couldn't find subject - " + subjectStr);
-                return;
-            }
-        }
-        if (teacherData.freeTime.length > 0) {
-            try {
-                let jsonInput;
-                try {
-                    jsonInput = (teacherData.freeTime);
-                } catch (err) {
-                    alert("please enter a vaild time");
-                    return;
-                }
-                if (!(jsonInput instanceof Array)) {
-                    alert("Please enter a vaild time");
-                    return;
-                }
-                for (let slot of jsonInput) {
-                    if (!(slot instanceof Array) && !slot.length === 2) {
-                        alert("Value must contain integers and length must be 2");
-                        return;
-                    }
-                    if (isNaN(slot[0]) || isNaN(slot[1])) {
-                        alert("Value can't be non-numeric or empty");
-                        return;
-                    }
-                }
-                teacherData.freeTime = jsonInput;
-            } catch (err) {
-                console.log("Error in verifying time")
-            }
-        } else {
-            teacherData.freeTime = [];
-        }
-
-        if (hasElement(teachersList, newTeacherName)) {
-            if (window.confirm("Are you want to overwrite " + teacherName))
-                saveData(newTeacherName, teacherData);
-        } else saveData(newTeacherName, teacherData);
+        let verifiedData = verifyTeacherInputs(teacherName, teacherDetails, subjectList)
+        if (verifiedData)
+            if (hasElement(teachersList, verifiedData.newTeacherName)) { // checking if the teacher exsist or not
+                if (window.confirm("Are you want to overwrite " + teacherName)) // if exist show a confirmation box
+                    saveData(verifiedData.newTeacherName, verifiedData.teacherData); // if yes then save else do nothing
+            } else saveData(verifiedData.newTeacherName, verifiedData.teacherData);
     }, [teacherName, teacherDetails, teachersList])
     const saveData = useCallback((teacherName, teacherData) => {
         setDisplayLoader(true)
@@ -236,11 +176,30 @@ function DetailsContainer({
         data[teacherName] = teacherData;
         saveTeacher(data, () => {
             alert(JSON.stringify(data) + "---------- is added")
-            onSubmitCallBack();
+            onSubmitCallBack(); // referenced to start up function
+
+            // reseting form fields
+            setTeacherName("");
+            setTeacherDetails({
+                freeTime: [],
+                subjects: [],
+            })
         }, () => {
             setDisplayLoader(false)
         })
     }, [])
+    const deleteTeacherBtnClickHandler = useCallback((event) => {
+        event.preventDefault();
+        if (hasElement(teachersList, teacherName)) // checking if the teacher exsist or not
+            if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) { // if exist show a confirmation box
+                deleteTeacher(teacherName, () => {
+                    onSubmitCallBack();  // referenced to start up function
+                    teacherDeleteBtnRef.current.style.cssText = "display: none;"; // hide delete btn
+                }, () => {
+                    setDisplayLoader(false) // if failed only hide loader
+                });
+            }
+    }, [teacherName])
     return (
         <form className='details-container' onSubmit={teacherFormSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>
