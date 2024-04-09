@@ -46,8 +46,8 @@ function MainComponents() {
     const teacherSubjectPopUpBg = useRef();
 
     useEffect(() => {
-        getSubjects(setSubjectsDetails)
-        getTimeTableStructure((data) => {
+        getSubjects(setSubjectsDetails) // api call
+        getTimeTableStructure((data) => { // api call
             if (data) {
                 setTimeTableStructure(data)
                 let sem = []
@@ -71,7 +71,7 @@ function MainComponents() {
         startUpFunction()
     }, [currentOpenSem, currentOpenSection, allTimeTables, startUpFunction])
     useEffect(() => {
-        getSchedule(data => {
+        getSchedule(data => { // api call
             setAllTimeTables(data)
         })
     }, [])
@@ -139,7 +139,12 @@ function MainComponents() {
             <Loader display={displayLoader} />
             <div className='top-sub-container'>
                 <div className='menubar'>
-                    <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
+                    <MiniStateContainer callBackAfterStateUpdate={() => {
+                        startUpFunction();
+                        getSchedule(data => { // api call
+                            setAllTimeTables(data)
+                        })
+                    }} />
                     <div className='main-btn-container'>
                         <ButtonsContainer setAllTimeTables={setAllTimeTables} setDisplayLoader={setDisplayLoader} fillManually={fillManually} />
                         {timeTableStructure && <SectionsBtnContainer
@@ -185,7 +190,7 @@ function MainComponents() {
 const ButtonsContainer = memo(({ setAllTimeTables, setDisplayLoader, fillManually }) => {
     const autoFillBtnClickHandler = useCallback(() => {
         setDisplayLoader(true)
-        generateTimeTable((data) => {
+        generateTimeTable((data) => { // api call
             setAllTimeTables(data);
             setDisplayLoader(false)
         }, () => { setDisplayLoader(false) })
@@ -266,7 +271,7 @@ const TeacherAndSubjectSelector = memo(({
 const TeacherCardsContainer = memo(({ teacherCardsContainerRef = useRef() }) => {
     const [teacherList, setTeacherList] = useState()
     useEffect(() => {
-        getTeacherList(setTeacherList)
+        getTeacherList(setTeacherList) // api call
     }, [])
     return (
         <div className='teacher-cards-container' ref={teacherCardsContainerRef}>
@@ -279,7 +284,7 @@ const TeacherCardsContainer = memo(({ teacherCardsContainerRef = useRef() }) => 
 const SubjectCardsContainer = memo(({ subjectCardsContainerRef = useRef() }) => {
     const [subjectsList, setSubjectsList] = useState()
     useEffect(() => {
-        getSubjectList(setSubjectsList)
+        getSubjectList(setSubjectsList) // api call
     }, [])
     return (
         <div className='subject-cards-container' ref={subjectCardsContainerRef}>

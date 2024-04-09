@@ -1,9 +1,9 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback } from "react";
 import { hasElement } from "../Script/util";
 import "../Style/Tags.css"
 
 function TagInput({
-    tagList = [],
+    tagList,
     inputName = "",
     details,
     updateWithNewValues = () => { }
@@ -27,7 +27,11 @@ function TagInput({
         if (event.key === 'Enter') {
             event.preventDefault();
             let tagValue = event.target.value.trim().toUpperCase();
-            if (tagList.length > 0)
+            if (tagValue.length <= 0) {
+                alert("Value can't be empty")
+                return
+            }
+            if (Array.isArray(tagList))
                 if (hasElement(tagList, tagValue)) {
                     if (hasElement(details[inputName], tagValue)) {
                         alert("Already Present");

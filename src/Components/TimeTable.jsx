@@ -3,11 +3,11 @@ import { hasElement } from "../Script/util";
 import "../Style/TimeTable.css"
 
 export let emptyTimeTableDetails = [
-    [["FirstSir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
-    [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
-    [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
-    [["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]],
-    [["Sir", "Lab", "roomCode"], ["Sir", "Lab", "roomCode"], ["Sir", "Lab", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"], ["Sirlast", "Subject", "roomCode"], ["Sir", "Subject", "roomCode"]]
+    [["FirstTeacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
+    [["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
+    [["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
+    [["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
+    [["Teacher", "Lab", "roomCode"], ["Teacher", "Lab", "roomCode"], ["Teacher", "Lab", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacherlast", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]]
 ]
 
 function TimeTable({

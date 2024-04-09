@@ -5,6 +5,7 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { getTimeTableStructure, saveTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import "../Script/commonJS"
 import OwnerFooter from '../Components/OwnerFooter'
+import verifyTimeTableStructureInputs from '../Script/TimeTableStructureVerifier'
 
 function TimeTableStructurePage() {
     return (
@@ -48,109 +49,22 @@ function TimeTableStructureInputContainer({ fileChange }) {
     }, [])
 
     useEffect(() => {
-        getTimeTableStructure(updateFieldsFromObject)
+        getTimeTableStructure(updateFieldsFromObject) // api call
     }, [fileChange])
 
     const inputOnChangeHandler = useCallback((event) => {
         setTimeTableStructureFieldValues(value => ({ ...value, [event.target.name]: event.target.value }))
     }, [])
 
-    const isPositiveWholeNumber = useCallback((num) => {
-        if (!Number.isInteger(num) || num < 0 || Number.isNaN(num)) return false
-        else return true
-    }, [])
-
     const timeTableStructureOnSubmitHandler = useCallback((event) => {
         event.preventDefault();
 
-        let timeTableStructure = Object()
-
-        //Validating year count
-        try {
-            let semesterCount = Number.parseInt(timeTableStructureFieldValues.semesterCount)
-            if (!isPositiveWholeNumber(semesterCount)) {
-                alert("Please enter a valid year count")
-                return
-            }
-            timeTableStructure.semesterCount = semesterCount
-        } catch (err) {
-            alert("Please enter a valid year count")
-            return
+        let timeTableStructure = verifyTimeTableStructureInputs(timeTableStructureFieldValues)
+        if (timeTableStructure) {
+            saveTimeTableStructure(timeTableStructure, () => { // api call
+                alert(JSON.stringify(timeTableStructure) + "----------- is saved")
+            })
         }
-
-        //Validating period count
-        try {
-            let periodCount = Number.parseInt(timeTableStructureFieldValues.periodCount)
-            if (!isPositiveWholeNumber(periodCount)) {
-                alert("Please enter a valid period count")
-                return
-            }
-            timeTableStructure.periodCount = periodCount
-        } catch (err) {
-            alert("Please enter a valid period count")
-            return
-        }
-
-        //Validating sections per year
-        try {
-            let sectionsPerSemester = JSON.parse(`[${timeTableStructureFieldValues.sectionsPerSemester}]`)
-            if (!((sectionsPerSemester instanceof Array) && sectionsPerSemester.every(
-                (value) => isPositiveWholeNumber(value)
-            ))) {
-                alert("Please enter sections per year in correct format")
-                return
-            }
-            if (sectionsPerSemester.length !== timeTableStructure.semesterCount) {
-                alert("Number of year in sections per year must be equal to year count")
-                return
-            }
-            timeTableStructure.sectionsPerSemester = sectionsPerSemester
-        } catch (err) {
-            alert("Please enter sections per year in correct format")
-            return
-        }
-
-        //Validating breaks per year
-        try {
-            let breaksPerSemester = JSON.parse(`[${timeTableStructureFieldValues.breaksPerSemester}]`)
-            if (!((breaksPerSemester instanceof Array) && breaksPerSemester.every(
-                (subarr) =>
-                    (subarr instanceof Array) &&
-                    subarr.every(
-                        (value) => isPositiveWholeNumber(value)
-                    )
-            ))) {
-                alert("Please enter break locations per year in correct format")
-                return
-            }
-            if (breaksPerSemester.length !== timeTableStructure.semesterCount) {
-                alert("Number of semesters in break locations per year must be equal to year count")
-                return
-            }
-            if (
-                !((breaksPerSemester instanceof Array) && breaksPerSemester.every(
-                    (subarr) =>
-                        (subarr instanceof Array) &&
-                        subarr.every(
-                            (value) => (value <= timeTableStructure.periodCount)
-                        )
-                ))
-            ) {
-                alert("Break locations must be lesser than or equal to period count")
-                return
-            }
-            timeTableStructure.breaksPerSemester = breaksPerSemester
-
-        } catch (err) {
-            alert("Please enter break locations per year in correct format")
-            return
-        }
-
-        console.log(timeTableStructure)
-
-        saveTimeTableStructure(timeTableStructure, () => {
-            alert(JSON.stringify(timeTableStructure) + "----------- is saved")
-        })
     }, [timeTableStructureFieldValues])
     return (
         <form className='time-table-structure-inputs-container' onSubmit={timeTableStructureOnSubmitHandler}>

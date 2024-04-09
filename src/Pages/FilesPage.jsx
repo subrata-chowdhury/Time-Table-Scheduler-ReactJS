@@ -34,7 +34,7 @@ function MainComponents() {
     }, [])
 
     const startUp = useCallback(() => {
-        getSaveFileList(setFiles);
+        getSaveFileList(setFiles); // api call
         setFileName("");
     }, [])
 
@@ -91,10 +91,10 @@ function DetailsContainer({ fileName, setFileName, files, startUp, showDeleteBtn
             return;
         }
         if (hasElement(files, file)) {
-            saveCurrentState(file, startUp);
+            saveCurrentState(file, startUp); // api call
         } else {
             if (window.confirm("Are you want to save the current state into " + file + "?"))
-                saveCurrentState(file, startUp);
+                saveCurrentState(file, startUp); // api call
         }
     }, [fileName, files])
     const createNewBtnClickHandler = useCallback((event) => {
@@ -110,7 +110,7 @@ function DetailsContainer({ fileName, setFileName, files, startUp, showDeleteBtn
             alert("File already exist with same name")
             return
         } else {
-            createNewFile(file, startUp);
+            createNewFile(file, startUp); // api call
             setForceReRenderer(val => !val)
         }
     }, [fileName, files])
@@ -118,7 +118,7 @@ function DetailsContainer({ fileName, setFileName, files, startUp, showDeleteBtn
         event.preventDefault();
         if (hasElement(files, fileName)) // checking if the file exsist or not
             if (window.confirm("Are You Sure? Want to delete " + fileName + "?")) { // if exist show a confirmation box
-                deleteFile(fileName, () => { // if yes then delete else do nothing
+                deleteFile(fileName, () => { // if yes then delete else do nothing  // api call
                     startUp();
                     setForceReRenderer(val => !val)
                     hideDeleteBtnFunction.current()

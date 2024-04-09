@@ -3,7 +3,7 @@ import Menubar from '../Components/Menubar'
 import Cards from '../Components/Cards'
 import "../Style/Teachers.css"
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
-import SearchBar, { match } from '../Components/SearchBar'
+import SearchBar from '../Components/SearchBar'
 import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Script/TeachersDataFetcher'
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import { getSubjectList } from '../Script/SubjectsDataFetcher'
@@ -37,7 +37,7 @@ function MainComponents() {
         startUpFunction()
     }, [])
     const startUpFunction = useCallback(() => {
-        getTeacherList(setTeahersList);
+        getTeacherList(setTeahersList); // api call
         setTeacherName("");
         setDisplayLoader(false);
         try {
@@ -119,9 +119,9 @@ function DetailsContainer({
         freeTime: [],
         subjects: [],
     })
-    const subjectList = useRef([]);
+    const subjectList = useRef();
     useEffect(() => {
-        getSubjectList(data => subjectList.current = data)
+        getSubjectList(data => subjectList.current = data) // api call
     }, [])
     useEffect(() => {
         if (!outerTeacherName) {
@@ -132,7 +132,7 @@ function DetailsContainer({
             })
         } else {
             setTeacherName(outerTeacherName)
-            getTeacher(outerTeacherName, setTeacherDetails);
+            getTeacher(outerTeacherName, setTeacherDetails); // api call
         }
     }, [outerTeacherName])
     const modifyTheValueOfInputBox = useCallback((time, isSelected) => {
@@ -156,7 +156,7 @@ function DetailsContainer({
         if (event.target.name === 'teacherName') setTeacherName(event.target.value.toUpperCase())
         else setTeacherDetails(value => ({ ...value, [event.target.name]: event.target.value }))
     }, [])
-    const checkIfAlreadyExist = useCallback((teacher) => { 
+    const checkIfAlreadyExist = useCallback((teacher) => {
         if (hasElement(teachersList, teacher)) teacherDeleteBtnRef.current.style.cssText = "display: block;"; // if teacher exist show delete btn
         else teacherDeleteBtnRef.current.style.cssText = "display: none;"; // if not teacher exist show delete btn
     }, [teachersList])
@@ -174,7 +174,7 @@ function DetailsContainer({
         setDisplayLoader(true)
         let data = new Map();
         data[teacherName] = teacherData;
-        saveTeacher(data, () => {
+        saveTeacher(data, () => { // api call
             alert(JSON.stringify(data) + "---------- is added")
             onSubmitCallBack(); // referenced to start up function
 
@@ -192,7 +192,7 @@ function DetailsContainer({
         event.preventDefault();
         if (hasElement(teachersList, teacherName)) // checking if the teacher exsist or not
             if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) { // if exist show a confirmation box
-                deleteTeacher(teacherName, () => {
+                deleteTeacher(teacherName, () => { // api call
                     onSubmitCallBack();  // referenced to start up function
                     teacherDeleteBtnRef.current.style.cssText = "display: none;"; // hide delete btn
                 }, () => {
@@ -218,7 +218,7 @@ function DetailsContainer({
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Subject Names</div>
-                <TagInput
+                {subjectList.current && <TagInput
                     tagList={subjectList.current}
                     inputName={'subjects'}
                     details={teacherDetails}
@@ -227,7 +227,7 @@ function DetailsContainer({
                         newTeacherDetails.subjects = data;
                         setTeacherDetails(newTeacherDetails)
                     }}
-                />
+                />}
             </div>
             <div className='input-container'>
                 <div>Available Times</div>
@@ -246,7 +246,7 @@ function DetailsContainer({
 const TimeSelector = memo(({ modifyTheValueOfInputBox, teacherDetails }) => {
     const [periodCount, setPeriodCount] = useState(8);
     useEffect(() => {
-        getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) });
+        getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) }); // api call
     }, [])
     let noOfDays = 5;
     let timeTable = [];

@@ -4,6 +4,10 @@
     gap: 10px;
 }
 
+.subjects .save-btn-container button {
+    margin-top: 20px;
+}
+
 @media (max-width: 680px) {
     .subjects .top-sub-container {
         grid-template-rows: 34% auto;

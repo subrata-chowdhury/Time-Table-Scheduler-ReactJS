@@ -1,14 +1,15 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react"
-import { getCurrentFileIsSaved, getCurrentFileName, getSaveFileList, loadSaveFile, saveCurrentState } from "../Script/FilesDataFetchers";
+import { getCurrentFileName, getSaveFileList, loadSaveFile } from "../Script/FilesDataFetchers";
 import "../Style/Mini-state-container.css";
+import { checkCurrentStateIsSavedBeforeClose } from "../Script/commonJS";
 
 function MiniStateContainer({ callBackAfterStateUpdate = () => { }, forceReRenderer = false }) {
     const [states, setStates] = useState([])
     const fileSelector = useRef()
     useEffect(() => {
-        getSaveFileList((data) => {
+        getSaveFileList((data) => { // api call
             setStates(data)
-            getCurrentFileName((currentFileName) => {
+            getCurrentFileName((currentFileName) => { // api call
                 let options = fileSelector.current.querySelectorAll("option");
                 for (let index = 0; index < options.length; index++) {
                     if (options[index].value === currentFileName.toLowerCase()) {
@@ -21,17 +22,9 @@ function MiniStateContainer({ callBackAfterStateUpdate = () => { }, forceReRende
     }, [forceReRenderer])
 
     const onChangeStateHandler = useCallback((event) => {
-        getCurrentFileIsSaved((isSaved) => {
-            if (!isSaved)
-                if (window.confirm("You did't save the current state, Want to Save it now?")) {
-                    getCurrentFileName((fileName) => {
-                        saveCurrentState(fileName, changeTheState)
-                    })
-                } else changeTheState();
-            else changeTheState();
-        })
+        checkCurrentStateIsSavedBeforeClose(changeTheState) // api calls present in the function
         function changeTheState() {
-            loadSaveFile(event.target.value, callBackAfterStateUpdate);
+            loadSaveFile(event.target.value, callBackAfterStateUpdate); // api call
         }
     }, [])
     let options = [];

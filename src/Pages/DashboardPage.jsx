@@ -87,12 +87,12 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange, setBasicDetails }
             practicalSubjects: 0,
             theroySubjects: 0
         }
-        getTeacherList((data) => {
+        getTeacherList((data) => { // api call
             setTeahersList(data)
             basicDetails.teachersCount = data.length;
             setBasicDetails(val => ({ ...val, ["teachersCount"]: basicDetails.teachersCount }))
         });
-        getSubjects(data => {
+        getSubjects(data => { // api call
             subjectsDetails.current = data;
             let subjects = Object.keys(data)
             basicDetails.subjectsCount = subjects.length;
@@ -120,7 +120,7 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange, setBasicDetails }
         subjects: [],
     })
     const teacherCardClickHandler = useCallback((event) => {
-        getTeacher(event.target.title, updateValues)
+        getTeacher(event.target.title, updateValues) // api call
         function updateValues(data) {
             teacherDetails.current = data
             let semesters = [];
@@ -131,7 +131,7 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange, setBasicDetails }
                 if (semesters.indexOf(subjectData.sem) === -1) semesters.push(subjectData.sem)
                 semestersRef.current = semesters
             }
-            getTeacherSchedule(event.target.title, data => {
+            getTeacherSchedule(event.target.title, data => { // api call
                 for (let index = 0; index < data.length; index++) {
                     for (let innerIndex = 0; innerIndex < data[index].length; innerIndex++) {
                         if (!data[index][innerIndex]) continue

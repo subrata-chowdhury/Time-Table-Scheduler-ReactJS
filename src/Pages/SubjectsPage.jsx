@@ -35,7 +35,7 @@ function MainComponents() {
         startUpFunction()
     }, [])
     const startUpFunction = useCallback(() => {
-        getSubjectList(setSubjectsList)
+        getSubjectList(setSubjectsList) // api call
         setSubjectName("")
         setDisplayLoader(false)
     }, [])
@@ -90,7 +90,8 @@ function DetailsContainer({
         isPractical: false,
         lectureCount: 4,
         roomCodes: [],
-        sem: ""
+        sem: "",
+        isFree: false
     })
     useEffect(() => {
         if (!outerSubjectName) {
@@ -99,15 +100,19 @@ function DetailsContainer({
                 isPractical: false,
                 lectureCount: 4,
                 roomCodes: [],
-                sem: ""
+                sem: "",
+                isFree: false
             })
         } else {
             setSubjectName(outerSubjectName)
-            getSubjectDetails(outerSubjectName, setSubjectDetails)
+            getSubjectDetails(outerSubjectName, setSubjectDetails) // api call
         }
     }, [outerSubjectName])
     const subjectTypeClickHandler = useCallback((event) => {
         setSubjectDetails(value => ({ ...value, isPractical: !value["isPractical"] }))
+    }, [])
+    const isFreeClickHandler = useCallback((event) => {
+        setSubjectDetails(value => ({ ...value, isFree: !value["isFree"] }))
     }, [])
     const inputOnChangeHandler = useCallback((event) => {
         if (event.target.name === 'subjectName') setSubjectName(event.target.value.toUpperCase())
@@ -131,7 +136,7 @@ function DetailsContainer({
         setDisplayLoader(true)
         let newData = new Map();
         newData[subjectName] = subjectData;
-        saveSubject(newData, () => {
+        saveSubject(newData, () => { // api call
             alert(JSON.stringify(newData) + "---------- is added");
             onSubmitCallBack();
 
@@ -141,7 +146,8 @@ function DetailsContainer({
                 isPractical: false,
                 lectureCount: 4,
                 roomCodes: [],
-                sem: ""
+                sem: "",
+                isFree: false
             })
         }, () => {
             setDisplayLoader(false)
@@ -152,7 +158,7 @@ function DetailsContainer({
         event.preventDefault();
         if (hasElement(subjectsList, subjectName)) // checking if the subject exsist or not
             if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?")) // if exist show a confirmation box
-                deleteSubject(subjectName, () => {
+                deleteSubject(subjectName, () => { // api call
                     onSubmitCallBack(); // referenced to start up function
                     subjectDeleteBtnRef.current.style.cssText = "display: none;"; // hide delete btn
                 }, () => {
@@ -185,9 +191,7 @@ function DetailsContainer({
                     placeholder='Ex. 8'
                     onChange={event => {
                         inputOnChangeHandler(event)
-                    }}
-                    min={1}
-                    max={8}></input>
+                    }}></input>
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Lecture Count per Week (Value: {subjectDetails.lectureCount})</div>
@@ -196,7 +200,7 @@ function DetailsContainer({
                     className="input-box"
                     name='lectureCount'
                     max={40}
-                    min={0}
+                    min={1}
                     value={subjectDetails.lectureCount}
                     title={subjectDetails.lectureCount}
                     onChange={event => {
@@ -220,6 +224,13 @@ function DetailsContainer({
                 <div className={'box'} name="isPractical" onClick={subjectTypeClickHandler}>
                     <div className={'option' + (!subjectDetails.isPractical ? " active" : "")}>Theory</div>
                     <div className={'option' + (subjectDetails.isPractical ? " active" : "")}>Practical</div>
+                </div>
+            </div>
+            <div className="input-container">
+                <div className="input-box-heading">Should be Taken by<br /> Teacher or Not</div>
+                <div className={'box'} name="isFree" onClick={isFreeClickHandler}>
+                    <div className={'option' + (subjectDetails.isFree ? " active" : "")}>No</div>
+                    <div className={'option' + (!subjectDetails.isFree ? " active" : "")}>Yes</div>
                 </div>
             </div>
             <div className='save-btn-container'>
