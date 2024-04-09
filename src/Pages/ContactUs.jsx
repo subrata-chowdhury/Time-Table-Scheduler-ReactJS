@@ -11,7 +11,7 @@ export default function ContactUs() {
     return (
         <>
             <Menubar activeMenuIndex={6} />
-            <div className='main-container dashboard'>
+            <div className='main-container contactus'>
                 <MainComponents />
                 <OwnerFooter />
             </div>
@@ -56,8 +56,14 @@ function Developer({
             </div>
             <div className="developer-details-container">
                 <div className="basic-details">
-                    <div className="name">Name: <span className="value">{developerName}</span></div>
-                    <div className="name">Email: <span className="value"><a href={"mailto:" + email} target="_blank">{email}</a></span></div>
+                    <div className="field">
+                        <div className="field-name">Name:</div>
+                        <div className="value">{developerName}</div>
+                    </div>
+                    <div className="field email">
+                        <div className="field-name">Email:</div>
+                        <div className="value"><a href={"mailto:" + email} target="_blank">{email}</a></div>
+                    </div>
                 </div>
                 <div className="contact-details-container">
                     <div className="heading">Contact Using</div>

@@ -47,7 +47,7 @@ function MainComponents() {
                 <WorkingHourBarChat perDayValue={perDayValue} />
             </div>
             <div className='right-sub-container'>
-                <TeacherDetailsContainer setPerDayValue={setPerDayValue} fileChange={fileChange} setBasicDetails={setBasicDetails} />
+                <TeachersDetailsContainer setPerDayValue={setPerDayValue} fileChange={fileChange} setBasicDetails={setBasicDetails} />
             </div>
         </div>
     )
@@ -84,7 +84,7 @@ const Container = memo(({ lable = "Demo", value = 0 }) => {
     )
 })
 
-function TeacherDetailsContainer({ setPerDayValue, fileChange, setBasicDetails }) {
+function TeachersDetailsContainer({ setPerDayValue, fileChange, setBasicDetails }) {
     const [teachersList, setTeahersList] = useState([])
     useEffect(() => {
         let basicDetails = {

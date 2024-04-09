@@ -87,12 +87,14 @@ export const Card = memo(({
     let cardStyle = {}
     if (showEditBtn) cardStyle = { position: "relative", top: "-20px" }
 
-    const innerCard = (<div className={"card data " + className} onClick={(e) => {
-        cardClickHandler(e)
-        defaultClickHandler(e)
-    }} title={details} style={cardStyle}>
-        {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
-    </div>)
+    const innerCard = (
+        <div className={"card data " + className} onClick={(e) => {
+            cardClickHandler(e)
+            defaultClickHandler(e)
+        }} title={details} style={cardStyle}>
+            {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
+        </div>
+    )
     return (
         (showEditBtn ? (
             <div className="card-wrapper">
