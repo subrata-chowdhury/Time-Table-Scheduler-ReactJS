@@ -12,8 +12,7 @@ export function checkCurrentStateIsSavedBeforeClose(callBackIfIsSavedOrCanceledO
         if (!isSaved)
             if (window.confirm("You did't save the current state, Want to Save it now?")) { // if yes then save the current state
                 getCurrentFileName((fileName) => { // api call
-                    saveCurrentState(fileName) // api call
-                    callBackIfIsSavedOrCanceledOrAfterSaved()
+                    saveCurrentState(fileName, callBackIfIsSavedOrCanceledOrAfterSaved()) // api call
                 })
             } else callBackIfIsSavedOrCanceledOrAfterSaved(); // if cancel then close the window
         else callBackIfIsSavedOrCanceledOrAfterSaved(); // if it's already saved the close the window
