@@ -30,7 +30,8 @@ function MainComponents() {
         subjectsCount: 0,
         teachersCount: 0,
         practicalSubjects: 0,
-        theroySubjects: 0
+        theroySubjects: 0,
+        freeSubjects: 0
     })
 
     const startUpFunction = useCallback(() => {
@@ -65,7 +66,12 @@ const BasicDetails = memo(({ basicDetails }) => {
                     <Container lable="Theory Subjects" value={basicDetails.theroySubjects} />
                 </div>
             </div>
-            <div className='basic-details-container empty-container'>Under Development</div>
+            <div className='basic-details-container' style={{ gridTemplateColumns: "auto" }}>
+                <div className='container'>
+                    <Container lable="Subjects (Not Taken by Teacher)" value={basicDetails.freeSubjects} />
+                    <Container lable="Subjects (Taken by Teacher)" value={basicDetails.subjectsCount - basicDetails.freeSubjects} />
+                </div>
+            </div>
         </div>)
 })
 
@@ -97,11 +103,14 @@ function TeacherDetailsContainer({ setPerDayValue, fileChange, setBasicDetails }
             let subjects = Object.keys(data)
             basicDetails.subjectsCount = subjects.length;
             let practicalSubjects = 0
+            let freeSubjects = 0
             for (let index = 0; index < subjects.length; index++) {
                 if (data[subjects[index]].isPractical) practicalSubjects += 1
+                if (data[subjects[index]].isFree) freeSubjects += 1
             }
             basicDetails.practicalSubjects = practicalSubjects;
             basicDetails.theroySubjects = basicDetails.subjectsCount - practicalSubjects;
+            basicDetails.freeSubjects = freeSubjects
             setBasicDetails(basicDetails)
         });
         teacherTimeTableDetails.current = []
