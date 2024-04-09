@@ -23,7 +23,7 @@ Then use Intellij IDEA or any other framework to build a jar file of the TTSBrow
 **Step 3:**
 Then copy the jar file of TTSBrowserComponent to Forked TimeTableScheduler-Backend's main directory.
 
-![image](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/ceab5a00-2620-4746-bdb9-92ac73caa114)
+![TimeTableScheduler-Backend-Main-Directory](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/ceab5a00-2620-4746-bdb9-92ac73caa114)
 
 **Step 4:**
 Now open forked Time-Table-Creator-ReactJS and build the product using command like `npm run build`
@@ -46,7 +46,7 @@ To add a subject you need to enter all the required values:
 5. **Subject Type** - if the subject is practical or theory *(default value **theory**)*
 6. **Should be Taken by Teacher or Not** - if subject is taken by teacher then make it yes either make it no *(default value **yes**)*
 
-![image](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/ad25c647-8fb1-42f2-81c7-385bb4d357ac)
+![Subjects-Tab](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/ad25c647-8fb1-42f2-81c7-385bb4d357ac)
 
 
 After adding all the subject next you have to add Teachers on **Teachers tab**.
@@ -55,18 +55,38 @@ To add a teacher you need to enter all the required values:
 2. **Subjects** - type all the subject names pressing enter key after typing each subject (subject must need to be present in subjects tab)
 3. **Available Time** - when teacher is available to take classes (if you leave it blank means you did't select any time then it will be consider as teacher is available all the time)
 
-![TimeTableScheduler-Backend-Main-Directory](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/6f26fb32-e45e-4bd6-b7ee-d025f0a29c89)
+![Teachers-Tab](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/d2d98ee3-d272-4cc3-80e4-adc91f0d5bb0)
 
 After adding all the subjects and teachers you can generate the time table from Time Tables tab.
-**To generate the time table** click on `Auto fill using AI` button. Also you can manually fill the time table to fill manually.<br/>
+**To generate the time table** click on `Auto fill using AI` button. Also you can manually fill the time table.
+# These are the Constraints that are used in our AI system to generate the time table:
+**Hard (Mandatory) Constraints include :**
+1. One practical subject class per week
+2. All teachers alloted within availability
+3. Subjects alloted their required no. of lectures in all sections
+4. Practical subjects not allocated same room at same time
+5. Two teachers not teaching a semester-section same subject (theory only)
+6. Two teachers/subject not at a semester-section at same time (theory only)
+7. Teachers only teaching one semster-section at a time
+8. Practical subjects assigned consecutive periods
+9. Practical teachers must be available during all practical subjects
+10. All teachers assigned atleast one subject in a section class
+11. All teachers get assigned subjects known to them
+12. Theory teachers also teaching practical
+13. Teachers count for practical class equals lecture count
+
+**Soft (Preffered) Constraints include :**
+1. Practical Lab in end of second half
+
 # How to use fill manually feature
 **1.** You have to click on Fill Manually button then<br/>
 **2.** Click on periods after that a popup will appear and <br/>
 **3.** From there you can select the subject and teacher for that period *(you can select multiple teachers but only one subject can be selected)*, <br/>
 you can also use this feature after using the Auto fill using AI method.
 
-![Screenshot 2024-03-24 112131](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/e399201a-411d-419c-b9f0-dd1a8cce946a)
-![Screenshot 2024-03-24 112249](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/a3b97581-c8c7-4fb6-8544-717de9dc27bb)
+![TimeTable-Tab](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/86a289ad-b86f-4f93-aa26-ab1782550369)
+
+![TimeTable-FillManuallyPopUp](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/c685ca67-1dbb-43d6-b9d7-2980b20529bb)
 
 After generating the time table you can use the features of Dashboard Tab from here you can see
 1. The time tables for a particular teacher
@@ -79,15 +99,25 @@ After generating the time table you can use the features of Dashboard Tab from h
     v. *Subjects (Taken By Teachers)*<br/>
     vi. *Subjects (Not Taken By Teachers)*<br/>
 
-![image](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/d8935e20-dfd2-4c16-b2ee-fd3a32a2ccc4)
+![Dashboard-Tab](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/d8935e20-dfd2-4c16-b2ee-fd3a32a2ccc4)
 
-If you want to customize time table more like defining when will be breaks for each semesters, number of periods per day, number of section per semester etc. then you can do that from Time Table Structure Tab but we currently recommend to avoid using this feature beacause it is not tested yet.
+If you want to customize time table more like defining when will be breaks for each semesters, number of periods per day, number of section per semester etc. then you can do that from Time Table Structure Tab.
 
-![image](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/3779ae9a-f85f-4325-b1a4-816f2e3fba87)
+![Time-Table-Structure-Tab](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/3bc14d56-d5f7-4b55-a45d-b36d8d202ef1)
 
 Also we have included files or states by using this feature you can create multiple files of teachers, subjects & time tables you can create a new file also delete a file from Files Tab. You can open or change the files from the top left side of the page and also you can see the currently open or used file. To change a state or file you only have to select that file from the drop down.
 
-![image](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/dec280d9-ca38-4163-955f-e681cab5aeac)
+![Files-Tab](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/c38a49df-fe1c-4ea4-92ab-134c25144ebc)
+
+# Report a Bug
+If you encounter any bug please try to contact us from the **contact us** tab.<br/>
+In contact us tab you can find our emails and other platforms links from there you can contact us <br/>
+*(Please try to explain the bug in details and try to provide screenshorts)* <br/>
+**Also there might be some cases that UI don't show data at all because of token mismatch (for data security purpose) then you can just wait 4-5 seconds then reload the page using right click,<br/>
+If this did't solve the problem then try to switch between tabs or restart the application.**
+
+![ContactUs-Tab](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/9cf4230e-a597-487b-bc43-20e00ad8f728)
+
 
 # React + Vite
 
