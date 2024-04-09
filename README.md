@@ -118,6 +118,25 @@ If this did't solve the problem then try to switch between tabs or restart the a
 
 ![ContactUs-Tab](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/9cf4230e-a597-487b-bc43-20e00ad8f728)
 
+# Some pictures to understand some react components and classname (for developers)
+
+Classnames represented using `.` before the name. (Ex.: .classname)<br/>
+React Component name is represented using normal manner. (Ex.: ComponentName)
+
+![Dashboard-UI-Guide](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/9f21e665-1594-41c7-a018-01afe4ac9348)
+
+![Horizental-cards-container-component-guide](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/de042307-7396-42b2-97a2-f64cbf138a15)
+
+![Basic-Deatils-Component-Guide](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/4e2c1110-cd23-478a-a95f-4b1a59b9031d)
+
+![WrokingHourBarChart-UI-Component-Guide](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/6a2468ea-3da4-49dc-b48b-dc54f0ae4067)
+
+![Subjects-UI-Guide](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/50ff1770-c46d-40ad-81c3-bda419c4cf38)
+
+![Teachers-UI-Guide](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/3049faac-73c5-482d-a004-8b5b0ad37bbb)
+
+![TimeTable-UI-Guide](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/e44ba941-445d-4b49-9583-c8cdb81ff51f)
+
 
 # React + Vite
 
