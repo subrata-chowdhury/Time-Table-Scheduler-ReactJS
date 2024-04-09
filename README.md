@@ -1,4 +1,3 @@
-
 This repository contains frontend codes of the web application.
 
 This UI created using ReactJS and it use some API requests to communicate with backend.
@@ -42,11 +41,13 @@ First you have to add all the subjects on **Subjects tab**.
 To add a subject you need to enter all the required values:
 1. **Subject Name** - the unique subject code or name
 2. **Semester** - the class or semester in which the subject is taken
-3. **Classroom** - the room no where the class will be taken (you can add multiple classroom pressing enter key after typing each classroom)
-4. **Lecture Count** - number of classes of that subject is need to take in a week
-5. **Subject Type (check box)** - if the subject is practical then check it either uncheck it
+3. **Classroom** - the room no where the class will be taken (you can add multiple classroom pressing enter key after typing each classroom) *(don't forget to press enter after typing the classroom)*
+4. **Lecture Count** - number of classes of that subject is need to take in a week *(default value **4**)*
+5. **Subject Type** - if the subject is practical or theory *(default value **theory**)*
+6. **Should be Taken by Teacher or Not** - if subject is taken by teacher then make it yes either make it no *(default value **yes**)*
 
-![Screenshot 2024-03-24 111251](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/878b02d5-627d-45d6-8e64-54f6c64635f1)
+![image](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/ad25c647-8fb1-42f2-81c7-385bb4d357ac)
+
 
 After adding all the subject next you have to add Teachers on **Teachers tab**.
 To add a teacher you need to enter all the required values:
@@ -57,14 +58,28 @@ To add a teacher you need to enter all the required values:
 ![TimeTableScheduler-Backend-Main-Directory](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/6f26fb32-e45e-4bd6-b7ee-d025f0a29c89)
 
 After adding all the subjects and teachers you can generate the time table from Time Tables tab.
-**To generate the time table** click on `Auto fill using AI` button. Also you can manually fill the time table to fill manually first you have to click on Fill Manually button then click on periods after that a popup will appear and from there you can select the subject and teacher for that period (you can select multiple teachers but only one subject can be selected), you can also do this after using the Auto fill using AI method.
+**To generate the time table** click on `Auto fill using AI` button. Also you can manually fill the time table to fill manually.<br/>
+# How to use fill manually feature
+**1.** You have to click on Fill Manually button then<br/>
+**2.** Click on periods after that a popup will appear and <br/>
+**3.** From there you can select the subject and teacher for that period *(you can select multiple teachers but only one subject can be selected)*, <br/>
+you can also use this feature after using the Auto fill using AI method.
 
 ![Screenshot 2024-03-24 112131](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/e399201a-411d-419c-b9f0-dd1a8cce946a)
 ![Screenshot 2024-03-24 112249](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/a3b97581-c8c7-4fb6-8544-717de9dc27bb)
 
-After generating the time table you can use the features of Dashboard Tab from where you can see the time tables for a particular teacher also you can see how long a perticular teacher is busy taking classes per day in hours.
+After generating the time table you can use the features of Dashboard Tab from here you can see
+1. The time tables for a particular teacher
+2. You can see how many classes a perticular teacher is busy taking classes per day in class unit *(for theory the value is 1 and for practical the value is 3)*.
+3. You can see Total number of<br/>
+    i. *Subjects*<br/>
+    ii. *Teachers*<br/>
+    iii. *Practical Subjects*<br/>
+    iv. *Theory Subjects*<br/>
+    v. *Subjects (Taken By Teachers)*<br/>
+    vi. *Subjects (Not Taken By Teachers)*<br/>
 
-![image](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/98edcade-54cd-4928-8e9a-4ec2e40a9207)
+![image](https://github.com/Super7000/Time-Table-Creator-ReactJS/assets/86580414/d8935e20-dfd2-4c16-b2ee-fd3a32a2ccc4)
 
 If you want to customize time table more like defining when will be breaks for each semesters, number of periods per day, number of section per semester etc. then you can do that from Time Table Structure Tab but we currently recommend to avoid using this feature beacause it is not tested yet.
 
