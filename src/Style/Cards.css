@@ -54,8 +54,12 @@
         0 0 0px 6px dodgerblue;
 }
 
-.card-wrapper .edit-btn {
+.card-wrapper {
     position: relative;
+}
+
+.card-wrapper .edit-btn {
+    position: absolute;
     float: right;
     width: 20px;
     height: 20px;

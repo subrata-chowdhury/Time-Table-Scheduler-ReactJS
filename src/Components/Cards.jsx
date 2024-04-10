@@ -84,14 +84,11 @@ export const Card = memo(({
         } else event.currentTarget.classList.add("active")
     }, [canStayActiveMultipleCards])
 
-    let cardStyle = {}
-    if (showEditBtn) cardStyle = { position: "relative", top: "-20px" }
-
     const innerCard = (
         <div className={"card data " + className} onClick={(e) => {
             cardClickHandler(e)
             defaultClickHandler(e)
-        }} title={details} style={cardStyle}>
+        }} title={details}>
             {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
         </div>
     )
