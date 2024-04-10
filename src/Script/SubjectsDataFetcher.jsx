@@ -2,9 +2,11 @@ import { getApiToken, url } from "./fetchUrl"
 
 export async function getSubjectList(callBackFunction = (data) => { }) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/subjects`, {
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         let listArray = [];
@@ -18,6 +20,7 @@ export async function getSubjectList(callBackFunction = (data) => { }) {
             callBackFunction(listArray);
         } else {
             callBackFunction(listArray)
+            console.log(apiToken)
             console.log("%cError in getting subject list", "color: orange;", await response.text())
         }
     } catch (error) {
@@ -27,9 +30,11 @@ export async function getSubjectList(callBackFunction = (data) => { }) {
 
 export async function getSubjects(callBackFunction = (data) => { }, setSubjectsList) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/subjects`, {
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         if (response.status === 200) {
@@ -50,9 +55,11 @@ export async function getSubjects(callBackFunction = (data) => { }, setSubjectsL
 
 export async function getSubjectDetails(subjectName, callBackFunction = (data) => { }) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/subjects/${subjectName}`, {
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         if (response.status === 200) {
@@ -74,11 +81,13 @@ export async function getSubjectDetails(subjectName, callBackFunction = (data) =
 export async function saveSubject(data, callBackFunction = () => { }, callBackIfFailed = () => { }) {
     try {
         let subjectData = JSON.stringify(data)
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(url + "io/subjects", {
             method: "PUT",
             headers: {
                 'content-type': 'application/json',
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             },
             body: subjectData
         })
@@ -96,10 +105,12 @@ export async function saveSubject(data, callBackFunction = () => { }, callBackIf
 
 export async function deleteSubject(subjectName, callBackFunction = () => { }, callBackIfFailed = () => { }) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(url + "io/subjects/" + subjectName, {
             method: "DELETE",
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         if (response.status === 200)

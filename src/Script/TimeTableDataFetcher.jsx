@@ -2,9 +2,11 @@ import { getApiToken, url } from "./fetchUrl"
 
 export async function generateTimeTable(callBackFunction, callBackIfFailed) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/schedule?generateNew=True`, {
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         if (response.status === 200) {
@@ -28,9 +30,11 @@ export async function generateTimeTable(callBackFunction, callBackIfFailed) {
 
 export async function getSchedule(callBackFunction) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/schedule`, {
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         if (response.status === 200) {
@@ -52,11 +56,13 @@ export async function getSchedule(callBackFunction) {
 export async function saveSchedule(data, callBackFunction, callBackIfFailed = () => { }) {
     try {
         data = JSON.stringify(data);
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/schedule`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             },
             body: data,
         })
@@ -74,9 +80,11 @@ export async function saveSchedule(data, callBackFunction, callBackIfFailed = ()
 
 export async function getTimeTableStructure(callBackFunction) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/schedule/structure`, {
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         if (response.status === 200) {
@@ -98,11 +106,13 @@ export async function getTimeTableStructure(callBackFunction) {
 export async function saveTimeTableStructure(data, callBackFunction = () => { }) {
     try {
         data = JSON.stringify(data)
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/schedule/structure`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             },
             body: data,
         })

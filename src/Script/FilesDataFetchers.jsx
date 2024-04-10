@@ -1,9 +1,11 @@
 import { getApiToken, url } from "./fetchUrl"
 export async function getCurrentFileName(callBackFunction) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/saves/currentName`, {
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         let textResponse = await response.text()
@@ -21,9 +23,11 @@ export async function getCurrentFileName(callBackFunction) {
 
 export async function getCurrentFileIsSaved(callBackFunction = () => { }) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/saves/isSaved`, {
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         if (response.status !== 200) {
@@ -40,9 +44,11 @@ export async function getCurrentFileIsSaved(callBackFunction = () => { }) {
 
 export async function saveCurrentState(name, callBackFunction = () => { }) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/saves/save?name=${name}`, {
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         if (response.status === 200) {
@@ -59,10 +65,12 @@ export async function saveCurrentState(name, callBackFunction = () => { }) {
 
 export async function createNewFile(name, callBackFunction = () => { }) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/saves/newEmpty?name=${name}`, {
             method: 'POST',
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         if (response.status === 200) {
@@ -78,9 +86,11 @@ export async function createNewFile(name, callBackFunction = () => { }) {
 
 export async function getSaveFileList(callBackFunction = (data) => { }) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/saves/list`, {
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         let files = [];
@@ -93,6 +103,7 @@ export async function getSaveFileList(callBackFunction = (data) => { }) {
             callBackFunction(files);
         } else {
             callBackFunction(files)
+            console.log(apiToken)
             console.log("%cError in getting save states list:", "color: red;", await response.text())
         }
     } catch (error) {
@@ -102,10 +113,12 @@ export async function getSaveFileList(callBackFunction = (data) => { }) {
 
 export async function loadSaveFile(name, callBackFunction = (data) => { }) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/saves/load?name=${name}`, {
             method: 'POST',
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         if (response.status === 200) {
@@ -121,10 +134,12 @@ export async function loadSaveFile(name, callBackFunction = (data) => { }) {
 
 export async function deleteFile(name, callBackFunction = () => { }) {
     try {
+        let apiToken = await getApiToken()
+        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(url + "io/saves/delete?name=" + name, {
             method: "DELETE",
             headers: {
-                'Api-Token': getApiToken()
+                'Api-Token': apiToken
             }
         })
         if (response.status === 200) {
