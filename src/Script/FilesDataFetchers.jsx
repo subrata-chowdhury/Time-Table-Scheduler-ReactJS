@@ -83,8 +83,8 @@ export async function getSaveFileList(callBackFunction = (data) => { }) {
                 'Api-Token': getApiToken()
             }
         })
+        let files = [];
         if (response.status === 200) {
-            let files = [];
             try {
                 files = await response.json()
             } catch (error) {
@@ -92,6 +92,7 @@ export async function getSaveFileList(callBackFunction = (data) => { }) {
             }
             callBackFunction(files);
         } else {
+            callBackFunction(files)
             console.log("%cError in getting save states list:", "color: red;", await response.text())
         }
     } catch (error) {

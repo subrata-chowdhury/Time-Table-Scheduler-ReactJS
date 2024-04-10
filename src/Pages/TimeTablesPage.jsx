@@ -37,7 +37,7 @@ function MainComponents() {
     const [timeTableStructure, setTimeTableStructure] = useState({
         breaksPerSemester: [4],
         periodCount: 9,
-        sectionsPerSemester: [0, 0, 3, 0],
+        sectionsPerSemester: [0, 0, 0, 0],
         semesterCount: 4
     })
     const fillManually = useRef(false)

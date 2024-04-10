@@ -8,8 +8,8 @@ export async function getTeacherList(callBackFunction) {
                 'Api-Token': getApiToken()
             }
         })
+        let listArray = [];
         if (response.status === 200) {
-            let listArray = [];
             try {
                 listArray = await response.json();
                 listArray = Object.keys(listArray)
@@ -18,6 +18,7 @@ export async function getTeacherList(callBackFunction) {
             }
             callBackFunction(listArray);
         } else {
+            callBackFunction(listArray)
             console.log("%cError in getting teacher list", "color: orange", await response.text())
         }
     } catch (error) {
