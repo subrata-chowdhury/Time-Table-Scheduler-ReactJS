@@ -4,7 +4,6 @@ import { getApiToken, url } from "./fetchUrl"
 export async function getTeacherList(callBackFunction) {
     try {
         let apiToken = await getApiToken()
-        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/teachers`, {
             headers: {
                 'Api-Token': apiToken
@@ -31,7 +30,6 @@ export async function getTeacherList(callBackFunction) {
 export async function getTeacher(sirName, callBackFunction) {
     try {
         let apiToken = await getApiToken()
-        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/teachers/${sirName}`, {
             headers: {
                 'Api-Token': apiToken
@@ -56,7 +54,6 @@ export async function getTeacher(sirName, callBackFunction) {
 export async function getTeacherSchedule(sirName, callBackFunction) {
     try {
         let apiToken = await getApiToken()
-        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/schedule/teacher/${sirName}`, {
             headers: {
                 'Api-Token': apiToken
@@ -83,7 +80,6 @@ export async function saveTeacher(data, callBackFunction = () => { }, callBackIf
     try {
         let body = JSON.stringify(data)
         let apiToken = await getApiToken()
-        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(url + "io/teachers", {
             method: "PUT",
             headers: {
@@ -108,7 +104,6 @@ export async function saveTeacher(data, callBackFunction = () => { }, callBackIf
 export async function deleteTeacher(teacherName, callBackFunction = () => { }, callBackIfFailed = () => { }) {
     try {
         let apiToken = await getApiToken()
-        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(url + "io/teachers/" + teacherName, {
             method: "DELETE",
             headers: {

@@ -3,7 +3,6 @@ import { getApiToken, url } from "./fetchUrl"
 export async function getSubjectList(callBackFunction = (data) => { }) {
     try {
         let apiToken = await getApiToken()
-        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/subjects`, {
             headers: {
                 'Api-Token': apiToken
@@ -31,7 +30,6 @@ export async function getSubjectList(callBackFunction = (data) => { }) {
 export async function getSubjects(callBackFunction = (data) => { }, setSubjectsList) {
     try {
         let apiToken = await getApiToken()
-        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/subjects`, {
             headers: {
                 'Api-Token': apiToken
@@ -56,7 +54,6 @@ export async function getSubjects(callBackFunction = (data) => { }, setSubjectsL
 export async function getSubjectDetails(subjectName, callBackFunction = (data) => { }) {
     try {
         let apiToken = await getApiToken()
-        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(`${url}io/subjects/${subjectName}`, {
             headers: {
                 'Api-Token': apiToken
@@ -82,7 +79,6 @@ export async function saveSubject(data, callBackFunction = () => { }, callBackIf
     try {
         let subjectData = JSON.stringify(data)
         let apiToken = await getApiToken()
-        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(url + "io/subjects", {
             method: "PUT",
             headers: {
@@ -106,7 +102,6 @@ export async function saveSubject(data, callBackFunction = () => { }, callBackIf
 export async function deleteSubject(subjectName, callBackFunction = () => { }, callBackIfFailed = () => { }) {
     try {
         let apiToken = await getApiToken()
-        while (!apiToken) { } // wait until server apiToken value is null
         let response = await fetch(url + "io/subjects/" + subjectName, {
             method: "DELETE",
             headers: {
