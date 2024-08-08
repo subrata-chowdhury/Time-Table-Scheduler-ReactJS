@@ -2,7 +2,7 @@
     width: 97%;
     height: 83vh;
     display: grid;
-    grid-template-columns: repeat(6, auto);
+    grid-template-columns: repeat(6, 1fr);
     overflow-y: scroll;
     gap: 30px;
     scrollbar-width: none;
@@ -15,19 +15,19 @@
 
 @media (max-width: 1495px) {
     .cards-container {
-        grid-template-columns: repeat(5, auto);
+        grid-template-columns: repeat(5, 1fr);
     }
 }
 
 @media (max-width: 1225px) {
     .cards-container {
-        grid-template-columns: repeat(4, auto);
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
 @media (max-width: 1070px) {
     .cards-container {
-        grid-template-columns: repeat(3, auto);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
@@ -48,7 +48,10 @@
     cursor: pointer;
 }
 
-.card:hover,
+.card:hover {
+    background: rgb(212, 212, 212)
+}
+
 .card.active {
     box-shadow: 0 0 0px 3px #fff,
         0 0 0px 6px dodgerblue;
@@ -126,7 +129,7 @@
 
 @media (max-width: 680px) {
     .cards-container {
-        grid-template-columns: repeat(4, auto);
+        grid-template-columns: repeat(4, 1fr);
         height: 90%;
         gap: 15px;
     }
