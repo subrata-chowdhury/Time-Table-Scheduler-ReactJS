@@ -153,6 +153,8 @@ function MainComponents() {
                             noOfSections={timeTableStructure.sectionsPerSemester[currentOpenSem]} />}
                     </div>
                 </div>
+
+                {/* Year btns */}
                 <HorizentalCardsContainer
                     className='sem-cards-container'
                     cardClassName={"semester-card"}

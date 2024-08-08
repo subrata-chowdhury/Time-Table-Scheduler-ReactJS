@@ -76,14 +76,20 @@
     transition: 0.3s;
 }
 
-.menu-container:hover .icon,
+.menu-container:hover .icon {
+    box-shadow: 0px 8px 15px #74757596;
+}
+
 .menu-container#active .icon {
     fill: #fff;
     background: #1479FF;
     box-shadow: 0px 8px 15px #147aff96;
 }
 
-.menu-container:hover,
+.menu-container:hover {
+    color: #59a1ff;
+}
+
 .menu-container#active {
     color: #1479FF;
 }

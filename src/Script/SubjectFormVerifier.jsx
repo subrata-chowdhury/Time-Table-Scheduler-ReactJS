@@ -13,11 +13,11 @@ export const verifySubjectInputs = (subjectName, subjectDetails) => {
         return false;
     }
     // name must not contain greater then 100 characters
-    const regExp = /[^\w\s]/ // reg exp for containing special character
-    if (regExp.test(newSubjectName)) {
-        alert("Only Character, Number & Space is allowed")
-        return false
-    }
+    // const regExp = /[^\w\s()\-_]/; // reg exp for containing special characters except white space and ()-_
+    // if (regExp.test(newSubjectName)) {
+    //     alert("Only Character, Number & Space is allowed")
+    //     return false
+    // }
 
     // sem value can't be empty
     if (data.sem.length === 0) {
