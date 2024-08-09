@@ -3,16 +3,27 @@ import "../Style/Cards.css"
 import Arrow from '../Icons/Arrow.tsx'
 import { memo, useCallback, useRef, useState } from "react";
 import EditIcon from "../Icons/Edit.tsx";
+import React from "react";
 
-function Cards({
+interface CardsProps {
+    cardDetails?: string[],
+    cardClassName?: string,
+    cardClickHandler?: (event: React.MouseEvent<HTMLDivElement>) => void,
+    addBtnClickHandler?: (event: React.MouseEvent<HTMLDivElement>) => void,
+    canStayActiveMultipleCards?: boolean,
+    cardsContainer?: React.RefObject<HTMLDivElement>,
+    showEditBtn?: boolean
+}
+
+const Cards: React.FC<CardsProps> = ({
     cardDetails = [],
     cardClassName = "",
     cardClickHandler = () => { },
     addBtnClickHandler = () => { },
     canStayActiveMultipleCards = false,
-    cardsContainer = useRef(),
+    cardsContainer = useRef<HTMLDivElement | null>(null),
     showEditBtn = false
-}) {
+}) => {
 
     let cards = [];
     for (let index = 0; index < cardDetails.length; index++) {
@@ -43,7 +54,18 @@ function Cards({
 
 export default memo(Cards)
 
-export const Card = memo(({
+interface CardProps {
+    details: string,
+    className?: string,
+    cardClickHandler?: (event: React.MouseEvent<HTMLDivElement>) => void,
+    compressText?: boolean,
+    canStayActiveMultipleCards?: boolean,
+    cardsContainer: React.RefObject<HTMLDivElement>,
+    showEditBtn?: boolean,
+    editBtnClickHandler?: (details: string) => void
+}
+
+export const Card: React.FC<CardProps> = memo(({
     details = "Sample",
     className = "",
     cardClickHandler = () => { },
@@ -53,41 +75,24 @@ export const Card = memo(({
     showEditBtn,
     editBtnClickHandler = () => { }
 }) => {
-    const defaultClickHandler = useCallback((event) => {
-        event.stopPropagation();
-        try {
-            if (!canStayActiveMultipleCards) {
-                let activeCard = "";
-                if (className)
-                    activeCard = cardsContainer.current.querySelector(".card.data.active." + className)
-                else
-                    activeCard = cardsContainer.current.querySelector(".card.data.active")
-                if (activeCard)
-                    activeCard.classList.remove("active");
-            }
-        } catch (error) {
-            console.log("%cError in deselecting card", "color: orange")
-        }
+    const [active, setActive] = useState<boolean>(false)
+    const defaultClickHandler = useCallback(() => {
         if (canStayActiveMultipleCards) {
-            let currentTargetClasses = event.currentTarget.classList;
-            let found = false
-            for (let index = 0; index < currentTargetClasses.length; index++) {
-                if (currentTargetClasses[index] === "active") {
-                    found = true
-                    event.currentTarget.classList.remove("active")
-                    break
-                }
-            }
-            if (!found) {
-                event.currentTarget.classList.add("active")
-            }
-        } else event.currentTarget.classList.add("active")
-    }, [canStayActiveMultipleCards])
+            setActive(!active)
+        } else {
+            if (cardsContainer.current == null || cardsContainer.current.childNodes.length > 0) return
+            cardsContainer.current.childNodes.forEach((child) => {
+                let card = child as HTMLDivElement
+                card.classList.remove('active')
+            })
+            setActive(true)
+        }
+    }, [canStayActiveMultipleCards, active, cardsContainer])
 
     const innerCard = (
-        <div className={"card data " + className} onClick={(e) => {
+        <div className={"card data " + className + (active ? ' active' : '')} onClick={(e) => {
+            defaultClickHandler()
             cardClickHandler(e)
-            defaultClickHandler(e)
         }} title={details}>
             {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
         </div>
@@ -102,13 +107,24 @@ export const Card = memo(({
     )
 })
 
-export const HorizentalCardsContainer = memo(({
+interface HorizentalCardsContainerProps {
+    cardData?: string[],
+    className?: string,
+    cardClassName?: string,
+    cardClickHandler?: (event: React.MouseEvent<HTMLDivElement>) => void,
+    compressText?: boolean,
+    cardsContainer?: React.RefObject<HTMLDivElement>,
+    showEditBtn?: boolean,
+    editBtnClickHandler?: (details: string) => void
+}
+
+export const HorizentalCardsContainer: React.FC<HorizentalCardsContainerProps> = memo(({
     cardData = [],
     className = "",
     cardClassName,
     cardClickHandler,
     compressText,
-    cardsContainer = useRef(),
+    cardsContainer = useRef<HTMLDivElement | null>(null),
     showEditBtn = false,
     editBtnClickHandler
 }) => {
@@ -127,15 +143,18 @@ export const HorizentalCardsContainer = memo(({
             />
         )
     }
-    const horizentalCardsOnWheelHandler = useCallback((event) => {
+    const horizentalCardsOnWheelHandler = useCallback((event: React.WheelEvent) => {
+        if (cardsContainer.current == null) return
         cardsContainer.current.scrollLeft += (event.deltaY);
     }, [])
-    const arrowClickHandler = useCallback((value) => {
+    const arrowClickHandler = useCallback((value: number) => {
+        if (cardsContainer.current == null) return
         cardsContainer.current.scrollLeft += value;
         showLeftArrow()
     }, [])
     const [showArrow, setShowArrow] = useState(false)
     const showLeftArrow = useCallback(() => {
+        if (cardsContainer.current == null) return
         if (cardsContainer.current.scrollLeft >= 120) {
             setShowArrow(true)
         } else {

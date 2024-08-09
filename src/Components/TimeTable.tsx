@@ -1,4 +1,4 @@
-import { memo } from "react";
+import React, { memo } from "react";
 import { hasElement } from "../Script/util.ts";
 import "../Style/TimeTable.css"
 
@@ -10,7 +10,21 @@ export let emptyTimeTableDetails = [
     [["Teacher", "Lab", "roomCode"], ["Teacher", "Lab", "roomCode"], ["Teacher", "Lab", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacherlast", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]]
 ]
 
-function TimeTable({
+interface TimeTableProps {
+    noOfDays?: number,
+    noOfPeriods?: number,
+    breakTimeIndexs?: number[],
+    dayNames?: string[],
+    periodTimes?: string[],
+    details?: string[][][],
+    subjectIndexAtPeriod?: number,
+    subjectsDetails?: { [key: string]: any }[],
+    className?: string,
+    timeTableWidthInPercent?: number,
+    periodClickHandler?: (event: React.MouseEvent<HTMLDivElement>) => void
+}
+
+const TimeTable: React.FC<TimeTableProps> = ({
     noOfDays = 5,
     noOfPeriods = 9,
     breakTimeIndexs = [4],
@@ -18,11 +32,11 @@ function TimeTable({
     periodTimes = ["9:30AM", "10:20AM", "11:10AM", "12:00PM", "12:50PM", "01:40PM", "02:30PM", "03:20PM", "04:10PM"],
     details = emptyTimeTableDetails,
     subjectIndexAtPeriod = 1,
-    subjectsDetails,
+    subjectsDetails = [],
     className = "",
     timeTableWidthInPercent = 95,
     periodClickHandler = () => { }
-}) {
+}) => {
     if (details.length <= 0) return
     let periodTimesRow = [];
     for (let index = 0; index < periodTimes.length; index++) {
@@ -51,7 +65,7 @@ function TimeTable({
         </div>
     )
 
-    function createDayRows(subjectsDetails) {
+    function createDayRows(subjectsDetails: { [key: string]: any }[]) {
         for (let index = 0; index < dayNames.length; index++) {
             dayRows.push(
                 <div className="day-container" style={{ gridTemplateColumns: gridCss }} key={"day" + index}>
@@ -60,12 +74,12 @@ function TimeTable({
             )
         }
     }
-    function createASingleDayRow(dayNameIndex = "", listOfDetailsOfThatDay = "", breakWord, subjectsDetails) {
+    function createASingleDayRow(dayNameIndex: number, listOfDetailsOfThatDay: string[][] | "", breakWord: string, subjectsDetails:{ [key: string]: any }[]) {
         if (listOfDetailsOfThatDay === "") return
         let dayRow = [];
         dayRow.push(<div className="day-name" key={0}>{dayNames[dayNameIndex]}</div>)
         let totalNoOfPeriods = noOfPeriods;
-        let index = 1
+        let index: number = 1
         while (index <= totalNoOfPeriods) {
             if (hasElement(breakTimeIndexs, index)) {
                 dayRow.push(

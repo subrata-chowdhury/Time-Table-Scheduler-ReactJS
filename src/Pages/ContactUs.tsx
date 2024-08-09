@@ -41,7 +41,7 @@ function MainComponents() {
 }
 
 function Developer({
-    picture = { subrata },
+    picture = subrata,
     role = "Frontend",
     developerName = "Name",
     gitHubLink = "https://github.com/Super7000",

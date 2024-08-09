@@ -2,13 +2,20 @@ import { memo, useCallback } from "react";
 import { hasElement } from "../Script/util.ts";
 import "../Style/Tags.css"
 
-function TagInput({
+interface TagInputProps {
+    tagList: string[] | undefined,
+    inputName?: string,
+    details: { [key: string]: string[] },
+    updateWithNewValues?: (newValues: string[]) => void
+}
+
+const TagInput: React.FC<TagInputProps> = ({
     tagList,
     inputName = "",
     details,
     updateWithNewValues = () => { }
-}) {
-    const deleteTag = useCallback((event, tagIndex) => {
+}) => {
+    const deleteTag = useCallback((event: React.MouseEvent<HTMLButtonElement>, tagIndex: number) => {
         event.preventDefault();
         let newTags = [...details[inputName]]
         newTags.splice(tagIndex, 1);
@@ -22,11 +29,11 @@ function TagInput({
         )
     }
 
-    const inputBoxInputHandler = useCallback((event) => {
+    const inputBoxInputHandler = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
         event.stopPropagation()
         if (event.key === 'Enter') {
             event.preventDefault();
-            let tagValue = event.target.value.trim().toUpperCase();
+            let tagValue = (event.target as HTMLInputElement).value.trim().toUpperCase();
             if (tagValue.length <= 0) {
                 alert("Value can't be empty")
                 return
@@ -44,11 +51,11 @@ function TagInput({
             else updateTags(event, tagValue)
         }
     }, [details[inputName], details])
-    const updateTags = useCallback((event, tagValue) => {
+    const updateTags = useCallback((event: React.KeyboardEvent<HTMLInputElement>, tagValue: string) => {
         let newTags = [...details[inputName]];
         newTags.push(tagValue);
         updateWithNewValues(newTags)
-        event.target.value = ""
+        event.currentTarget.value = ""
     }, [details])
 
     return (
@@ -65,7 +72,7 @@ function TagInput({
     )
 }
 
-function Tag({ value, tagIndex, onClickHandler = () => { } }) {
+function Tag({ value, tagIndex, onClickHandler = () => { } }: { value: string, tagIndex: number, onClickHandler?: (event: React.MouseEvent<HTMLButtonElement>, tagIndex: number) => void }) {
     return (
         <div className="tag">
             <div>{value}</div>

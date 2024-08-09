@@ -33,7 +33,7 @@ function WorkingHourBarChat({ dayNames = ["Tue", "Wed", "Thu", "Fri", "Sat"], pe
 
 function Bar({ value = 0, maxValue = 8 }) {
     return (
-        <div className="bar" title={value}>
+        <div className="bar" title={value.toString()}>
             <div className="inner-bar" style={{ height: (value / maxValue) * 100 + "%" }}></div>
         </div>
     )

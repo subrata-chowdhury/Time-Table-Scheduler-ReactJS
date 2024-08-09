@@ -11,21 +11,24 @@ import React, { memo, useEffect } from "react"
 import { Link } from "react-router-dom"
 import Contact from "../Icons/ContactIcon.tsx"
 
-function Menubar({ activeMenuIndex }) {
+interface MenubarProps {
+    activeMenuIndex: number
+}
+
+const Menubar: React.FC<MenubarProps> = ({ activeMenuIndex }) => {
     function toggleMenubar() {
         let activeApp = document.querySelector(".app.active");
-        if (activeApp != null) {
-            activeApp.classList.remove("active");
-        } else {
-            document.querySelector(".app").classList.add("active");
-        }
+        activeApp!.classList.remove("active");
+        document.querySelector(".app")!.classList.add("active");
     }
     function autoToggleInResize() {
         let app = document.querySelector(".app")
         if (window.innerWidth <= 1250) {
-            app.classList.add("active");
+            if (app)
+                app.classList.add("active");
         } else {
-            app.classList.remove("active");
+            if (app)
+                app.classList.remove("active");
         }
     }
     useEffect(() => {
