@@ -1,5 +1,5 @@
 import { getApiToken, url } from "./fetchUrl"
-export async function getCurrentFileName(callBackFunction) {
+export async function getCurrentFileName(callBackFunction: (data: any) => void = () => { }) {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/currentName`, {
@@ -20,7 +20,7 @@ export async function getCurrentFileName(callBackFunction) {
     }
 }
 
-export async function getCurrentFileIsSaved(callBackFunction = () => { }) {
+export async function getCurrentFileIsSaved(callBackFunction: (data: any) => void = () => { }) {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/isSaved`, {
@@ -40,7 +40,7 @@ export async function getCurrentFileIsSaved(callBackFunction = () => { }) {
     }
 }
 
-export async function saveCurrentState(name, callBackFunction = () => { }) {
+export async function saveCurrentState(name:string, callBackFunction: any) {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/save?name=${name}`, {
@@ -60,7 +60,7 @@ export async function saveCurrentState(name, callBackFunction = () => { }) {
     }
 }
 
-export async function createNewFile(name, callBackFunction = () => { }) {
+export async function createNewFile(name: string, callBackFunction = () => { }) {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/newEmpty?name=${name}`, {
@@ -80,7 +80,7 @@ export async function createNewFile(name, callBackFunction = () => { }) {
     }
 }
 
-export async function getSaveFileList(callBackFunction = (data) => { }) {
+export async function getSaveFileList(callBackFunction: (data: any) => void = () => { }) {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/list`, {
@@ -88,7 +88,7 @@ export async function getSaveFileList(callBackFunction = (data) => { }) {
                 'Api-Token': apiToken
             }
         })
-        let files = [];
+        let files: any = [];
         if (response.status === 200) {
             try {
                 files = await response.json()
@@ -106,7 +106,7 @@ export async function getSaveFileList(callBackFunction = (data) => { }) {
     }
 }
 
-export async function loadSaveFile(name, callBackFunction = (data) => { }) {
+export async function loadSaveFile(name: string, callBackFunction: (data: any) => void = () => { }) {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/load?name=${name}`, {
@@ -126,7 +126,7 @@ export async function loadSaveFile(name, callBackFunction = (data) => { }) {
     }
 }
 
-export async function deleteFile(name, callBackFunction = () => { }) {
+export async function deleteFile(name: string, callBackFunction = () => { }) {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(url + "io/saves/delete?name=" + name, {

@@ -1,12 +1,12 @@
-import Plus from "../Icons/Plus";
+import Plus from "../Icons/Plus.tsx";
 import "../Style/Cards.css"
-import Arrow from '../Icons/Arrow'
+import Arrow from '../Icons/Arrow.tsx'
 import { memo, useCallback, useRef, useState } from "react";
-import EditIcon from "../Icons/Edit";
+import EditIcon from "../Icons/Edit.tsx";
 
 function Cards({
     cardDetails = [],
-    cardClassName,
+    cardClassName = "",
     cardClickHandler = () => { },
     addBtnClickHandler = () => { },
     canStayActiveMultipleCards = false,

@@ -1,16 +1,16 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react"
-import { getCurrentFileName, getSaveFileList, loadSaveFile } from "../Script/FilesDataFetchers";
+import { getCurrentFileName, getSaveFileList, loadSaveFile } from "../Script/FilesDataFetchers.ts";
 import "../Style/Mini-state-container.css";
-import { checkCurrentStateIsSavedBeforeClose } from "../Script/commonJS";
+import { checkCurrentStateIsSavedBeforeClose } from "../Script/commonJS.ts";
 
 function MiniStateContainer({ callBackAfterStateUpdate = () => { }, forceReRenderer = false }) {
     const [states, setStates] = useState([])
-    const fileSelector = useRef()
+    const fileSelector = useRef<any>()
     useEffect(() => {
         getSaveFileList((data) => { // api call
             setStates(data)
             getCurrentFileName((currentFileName) => { // api call
-                let options = fileSelector.current.querySelectorAll("option");
+                let options = fileSelector.current? fileSelector.current.querySelectorAll("option"):"";
                 for (let index = 0; index < options.length; index++) {
                     if (options[index].value === currentFileName.toLowerCase()) {
                         options[index].selected = 'selected';
@@ -21,7 +21,7 @@ function MiniStateContainer({ callBackAfterStateUpdate = () => { }, forceReRende
         });
     }, [forceReRenderer])
 
-    const onChangeStateHandler = useCallback((event) => {
+    const onChangeStateHandler = useCallback((event:any) => {
         checkCurrentStateIsSavedBeforeClose(changeTheState) // api calls present in the function
         function changeTheState() {
             loadSaveFile(event.target.value, callBackAfterStateUpdate); // api call
@@ -41,7 +41,7 @@ function MiniStateContainer({ callBackAfterStateUpdate = () => { }, forceReRende
     )
 }
 
-function Option({ value }) {
+function Option({ value = "" }) {
     return (
         <option value={value.toLowerCase()}>{value}</option>
     )

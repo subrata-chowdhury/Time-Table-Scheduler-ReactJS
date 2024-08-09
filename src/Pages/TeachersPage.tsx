@@ -1,18 +1,18 @@
-import MiniStateContainer from '../Components/MiniStateContainer'
-import Menubar from '../Components/Menubar'
-import Cards from '../Components/Cards'
+import MiniStateContainer from '../Components/MiniStateContainer.tsx'
+import Menubar from '../Components/Menubar.tsx'
+import Cards from '../Components/Cards.tsx'
 import "../Style/Teachers.css"
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
-import SearchBar from '../Components/SearchBar'
-import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Script/TeachersDataFetcher'
-import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
+import SearchBar from '../Components/SearchBar.tsx'
+import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Script/TeachersDataFetcher.tsx'
+import { getTimeTableStructure } from '../Script/TimeTableDataFetcher.tsx'
 import { getSubjectList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
-import { hasElement } from '../Script/util'
-import TagInput from '../Components/TagInput'
-import OwnerFooter from '../Components/OwnerFooter'
-import Loader from '../Components/Loader'
-import { verifyTeacherInputs } from '../Script/TeacherFormVerifier'
+import { hasElement } from '../Script/util.ts'
+import TagInput from '../Components/TagInput.tsx'
+import OwnerFooter from '../Components/OwnerFooter.tsx'
+import Loader from '../Components/Loader.tsx'
+import { verifyTeacherInputs } from '../Script/TeacherFormVerifier.tsx'
 
 function TeachersPage() {
     return (

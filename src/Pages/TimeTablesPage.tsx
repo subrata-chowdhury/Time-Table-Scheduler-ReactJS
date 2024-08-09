@@ -1,17 +1,17 @@
-import MiniStateContainer from '../Components/MiniStateContainer'
-import Menubar from '../Components/Menubar'
-import TimeTable from '../Components/TimeTable'
+import MiniStateContainer from '../Components/MiniStateContainer.tsx'
+import Menubar from '../Components/Menubar.tsx'
+import TimeTable from '../Components/TimeTable.tsx'
 import "../Style/TimeTablesPage.css"
-import Cards, { Card, HorizentalCardsContainer } from '../Components/Cards'
+import Cards, { Card, HorizentalCardsContainer } from '../Components/Cards.tsx'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getSubjectList, getSubjects } from '../Script/SubjectsDataFetcher'
-import { generateTimeTable, getSchedule, getTimeTableStructure, saveSchedule } from '../Script/TimeTableDataFetcher'
-import { getTeacherList } from '../Script/TeachersDataFetcher'
-import { emptyTimeTableDetails } from '../Components/TimeTable'
+import { generateTimeTable, getSchedule, getTimeTableStructure, saveSchedule } from '../Script/TimeTableDataFetcher.tsx'
+import { getTeacherList } from '../Script/TeachersDataFetcher.tsx'
+import { emptyTimeTableDetails } from '../Components/TimeTable.tsx'
 import "../Script/commonJS"
-import { hasElement } from '../Script/util'
-import OwnerFooter from '../Components/OwnerFooter'
-import Loader from '../Components/Loader'
+import { hasElement } from '../Script/util.ts'
+import OwnerFooter from '../Components/OwnerFooter.tsx'
+import Loader from '../Components/Loader.tsx'
 
 function TimeTablesPage() {
     return (

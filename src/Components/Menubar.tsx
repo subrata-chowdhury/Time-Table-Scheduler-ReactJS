@@ -1,15 +1,15 @@
 import "../Style/Menubar.css"
-import Dashboard from "../Icons/Dashboard"
-import EditSubjects from "../Icons/EditSubjects"
-import EditTeachers from "../Icons/EditTeachers"
-import Files from "../Icons/Files"
-import TimeTables from "../Icons/TimeTables"
-import TimeTableStructure from "../Icons/TimeTableStructure"
-import Arrow from "../Icons/Arrow"
+import Dashboard from "../Icons/Dashboard.tsx"
+import EditSubjects from "../Icons/EditSubjects.tsx"
+import EditTeachers from "../Icons/EditTeachers.tsx"
+import Files from "../Icons/Files.tsx"
+import TimeTables from "../Icons/TimeTables.tsx"
+import TimeTableStructure from "../Icons/TimeTableStructure.tsx"
+import Arrow from "../Icons/Arrow.tsx"
 
 import React, { memo, useEffect } from "react"
 import { Link } from "react-router-dom"
-import Contact from "../Icons/ContactIcon"
+import Contact from "../Icons/ContactIcon.tsx"
 
 function Menubar({ activeMenuIndex }) {
     function toggleMenubar() {
@@ -42,7 +42,7 @@ function Menubar({ activeMenuIndex }) {
                 <p>Time Table <br />Designer</p>
             </div>
             <Link to="/Subjects" className="menu-container" id={activeMenuIndex === 0 ? "active" : ""}>
-                <EditSubjects className="icon" />
+                <EditSubjects />
                 <div>Subjects</div>
             </Link>
             <Link to="/Teachers" className="menu-container" id={activeMenuIndex === 1 ? "active" : ""}>

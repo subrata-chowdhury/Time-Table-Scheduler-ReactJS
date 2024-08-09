@@ -1,6 +1,6 @@
 import { getApiToken, url } from "./fetchUrl"
 
-export async function generateTimeTable(callBackFunction, callBackIfFailed) {
+export async function generateTimeTable(callBackFunction: (data: any) => void = () => { }, callBackIfFailed: () => void = () => { }) {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/schedule?generateNew=True`, {
@@ -27,7 +27,7 @@ export async function generateTimeTable(callBackFunction, callBackIfFailed) {
     }
 }
 
-export async function getSchedule(callBackFunction) {
+export async function getSchedule(callBackFunction: (data: any) => void = () => { }) {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/schedule`, {
@@ -51,7 +51,7 @@ export async function getSchedule(callBackFunction) {
     }
 }
 
-export async function saveSchedule(data, callBackFunction, callBackIfFailed = () => { }) {
+export async function saveSchedule(data: any, callBackFunction: (data: any) => void = () => { }, callBackIfFailed = () => { }) {
     try {
         data = JSON.stringify(data);
         let apiToken = await getApiToken()
@@ -64,7 +64,7 @@ export async function saveSchedule(data, callBackFunction, callBackIfFailed = ()
             body: data,
         })
         if (response.status === 200)
-            callBackFunction(schedule);
+            callBackFunction(data);
         else {
             alert("Something went wrong")
             console.log("%cError in saving schedule data", "color: orange;", await response.text())
@@ -75,7 +75,7 @@ export async function saveSchedule(data, callBackFunction, callBackIfFailed = ()
     }
 }
 
-export async function getTimeTableStructure(callBackFunction) {
+export async function getTimeTableStructure(callBackFunction: (data: any) => void = () => { }) {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/schedule/structure`, {
@@ -99,7 +99,7 @@ export async function getTimeTableStructure(callBackFunction) {
     }
 }
 
-export async function saveTimeTableStructure(data, callBackFunction = () => { }) {
+export async function saveTimeTableStructure(data: any, callBackFunction = () => { }) {
     try {
         data = JSON.stringify(data)
         let apiToken = await getApiToken()

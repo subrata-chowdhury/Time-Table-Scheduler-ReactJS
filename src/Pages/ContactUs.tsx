@@ -1,11 +1,11 @@
-import Menubar from "../Components/Menubar";
-import OwnerFooter from "../Components/OwnerFooter";
+import Menubar from "../Components/Menubar.tsx";
+import OwnerFooter from "../Components/OwnerFooter.tsx";
 import "../Style/ContactUs.css"
 import subrata from "../assets/Subrata.png"
 import srideep from "../assets/Srideep.jpg"
-import GitHub from "../Icons/github";
-import LinkedIn from "../Icons/linkedin";
-import Gmail from "../Icons/Gmail";
+import GitHub from "../Icons/github.tsx";
+import LinkedIn from "../Icons/linkedin.tsx";
+import Gmail from "../Icons/Gmail.tsx";
 
 export default function ContactUs() {
     return (

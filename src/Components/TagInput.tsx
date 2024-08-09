@@ -1,5 +1,5 @@
 import { memo, useCallback } from "react";
-import { hasElement } from "../Script/util";
+import { hasElement } from "../Script/util.ts";
 import "../Style/Tags.css"
 
 function TagInput({

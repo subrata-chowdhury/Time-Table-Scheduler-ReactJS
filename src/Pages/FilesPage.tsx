@@ -1,13 +1,13 @@
-import MiniStateContainer from '../Components/MiniStateContainer'
-import Menubar from '../Components/Menubar'
+import MiniStateContainer from '../Components/MiniStateContainer.tsx'
+import Menubar from '../Components/Menubar.tsx'
 import "../Style/Files.css"
-import Cards from '../Components/Cards'
+import Cards from '../Components/Cards.tsx'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { createNewFile, deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers'
-import SearchBar from '../Components/SearchBar'
+import { createNewFile, deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers.tsx'
+import SearchBar from '../Components/SearchBar.tsx'
 import "../Script/commonJS"
-import OwnerFooter from '../Components/OwnerFooter'
-import { hasElement } from '../Script/util'
+import OwnerFooter from '../Components/OwnerFooter.tsx'
+import { hasElement } from '../Script/util.ts'
 
 function FilesPage() {
     return (

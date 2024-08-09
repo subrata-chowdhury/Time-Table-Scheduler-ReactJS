@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { hasElement } from "../Script/util";
+import { hasElement } from "../Script/util.ts";
 import "../Style/TimeTable.css"
 
 export let emptyTimeTableDetails = [

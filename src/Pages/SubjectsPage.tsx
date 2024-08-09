@@ -1,16 +1,16 @@
-import MiniStateContainer from '../Components/MiniStateContainer'
-import Menubar from '../Components/Menubar'
-import SearchBar from '../Components/SearchBar'
-import Cards from '../Components/Cards'
+import MiniStateContainer from '../Components/MiniStateContainer.tsx'
+import Menubar from '../Components/Menubar.tsx'
+import SearchBar from '../Components/SearchBar.tsx'
+import Cards from '../Components/Cards.tsx'
 import "../Style/Subjects.css"
 import { useEffect, useState, useRef, memo, useCallback } from 'react'
 import { deleteSubject, getSubjectDetails, getSubjectList, saveSubject } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
-import { hasElement } from '../Script/util'
-import TagInput from '../Components/TagInput'
-import OwnerFooter from '../Components/OwnerFooter'
-import Loader from '../Components/Loader'
-import { verifySubjectInputs } from '../Script/SubjectFormVerifier'
+import { hasElement } from '../Script/util.ts'
+import TagInput from '../Components/TagInput.tsx'
+import OwnerFooter from '../Components/OwnerFooter.tsx'
+import Loader from '../Components/Loader.tsx'
+import { verifySubjectInputs } from '../Script/SubjectFormVerifier.tsx'
 
 function SubjectsPage() {
     return (

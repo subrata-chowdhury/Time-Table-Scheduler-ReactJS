@@ -1,4 +1,4 @@
-import { getCurrentFileIsSaved, getCurrentFileName, saveCurrentState } from './FilesDataFetchers'
+import { getCurrentFileIsSaved, getCurrentFileName, saveCurrentState } from './FilesDataFetchers.ts'
 
 function windowcloseEventHandler() { // function to check if current state is saved or not
     window.addEventListener("windowclose", () => { // windowclose event is only works on TTSBrowserComponent

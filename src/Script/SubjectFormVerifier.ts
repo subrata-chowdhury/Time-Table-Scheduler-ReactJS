@@ -1,4 +1,4 @@
-export const verifySubjectInputs = (subjectName, subjectDetails) => {
+export const verifySubjectInputs = (subjectName: string, subjectDetails: any) => {
     let data = { ...subjectDetails }
     let newSubjectName = subjectName.trim().toUpperCase() // string
 
