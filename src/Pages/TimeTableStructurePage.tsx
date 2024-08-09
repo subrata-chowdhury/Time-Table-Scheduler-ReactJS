@@ -5,7 +5,7 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { getTimeTableStructure, saveTimeTableStructure } from '../Script/TimeTableDataFetcher.tsx'
 import "../Script/commonJS"
 import OwnerFooter from '../Components/OwnerFooter.tsx'
-import verifyTimeTableStructureInputs from '../Script/TimeTableStructureVerifier.tsx'
+import verifyTimeTableStructureInputs from '../Script/InputVerifiers/TimeTableStructureVerifier.ts'
 
 function TimeTableStructurePage() {
     return (

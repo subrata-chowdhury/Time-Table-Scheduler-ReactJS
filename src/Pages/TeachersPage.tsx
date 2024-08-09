@@ -12,7 +12,7 @@ import { hasElement } from '../Script/util.ts'
 import TagInput from '../Components/TagInput.tsx'
 import OwnerFooter from '../Components/OwnerFooter.tsx'
 import Loader from '../Components/Loader.tsx'
-import { verifyTeacherInputs } from '../Script/TeacherFormVerifier.tsx'
+import { verifyTeacherInputs } from '../Script/InputVerifiers/TeacherFormVerifier.ts'
 
 function TeachersPage() {
     return (
