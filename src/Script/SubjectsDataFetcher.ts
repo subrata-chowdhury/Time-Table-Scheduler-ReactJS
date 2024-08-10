@@ -34,11 +34,11 @@ export const getSubjectsList = async (
     }
 }
 
-type SubjectsDetailsList = {
+export type SubjectsDetailsList = {
     [subjectName: string]: Subject
 }
 
-export const getSubjectsDetailsList = async (onSuccess: (data: SubjectsDetailsList[]) => void = () => { }): Promise<SubjectsDetailsList[]> => {
+export const getSubjectsDetailsList = async (onSuccess: (data: SubjectsDetailsList) => void = () => { }): Promise<SubjectsDetailsList[]> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/subjects`, {

@@ -8,16 +8,46 @@ export const getTeachersList = async (
 ): Promise<string[]> => {
     try {
         let apiToken = await getApiToken()
+        let response = await fetch(`${url}io/teachers/names`, {
+            headers: {
+                'Api-Token': apiToken
+            }
+        })
+        let listArray: string[] = [];
+        if (response.status === 200) {
+            try {
+                listArray = await response.json();
+            } catch (error) {
+                console.log("%cTeacher list data is invaild", "color: orange;", await response.text())
+            }
+            onSuccess(listArray);
+            return listArray
+        } else {
+            onFailed([])
+            console.log("%cError in getting teacher list", "color: orange", await response.text())
+            return []
+        }
+    } catch (error) {
+        console.log("Unable to Fetch Data of Teachers List")
+        throw error
+    }
+}
+
+export const getTeachersDetailsList = async (
+    onSuccess: (data: Teacher[]) => void = () => { },
+    onFailed: (data: []) => void = () => { }
+): Promise<Teacher[]> => {
+    try {
+        let apiToken = await getApiToken()
         let response = await fetch(`${url}io/teachers`, {
             headers: {
                 'Api-Token': apiToken
             }
         })
-        let listArray = [];
+        let listArray: Teacher[] = [];
         if (response.status === 200) {
             try {
                 listArray = await response.json();
-                listArray = Object.keys(listArray)
             } catch (error) {
                 console.log("%cTeacher list data is invaild", "color: orange;", await response.text())
             }

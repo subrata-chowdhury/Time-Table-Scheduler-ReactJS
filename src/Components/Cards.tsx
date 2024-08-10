@@ -107,10 +107,10 @@ export const Card: React.FC<CardProps> = memo(({
 
 interface HorizentalCardsContainerProps {
     cardList?: string[],
-    className: string,
+    className?: string,
     onChange?: (activeCards?: string[]) => void,
     cardClassName?: string,
-    cardClickHandler?: (event: React.MouseEvent<HTMLDivElement>) => void,
+    cardClickHandler?: (name: string) => void,
     compressText?: boolean,
     showEditBtn?: boolean,
     editBtnClickHandler?: (details: string) => void,
@@ -175,9 +175,9 @@ export const HorizentalCardsContainer: React.FC<HorizentalCardsContainerProps> =
                             key={card}
                             className={cardClassName}
                             active={activeCards.includes(card)}
-                            onClick={e => {
+                            onClick={() => {
                                 defaultCardClickHandler(card)
-                                cardClickHandler(e)
+                                cardClickHandler(card)
                             }}
                             compressText={compressText}
                             showEditBtn={showEditBtn}

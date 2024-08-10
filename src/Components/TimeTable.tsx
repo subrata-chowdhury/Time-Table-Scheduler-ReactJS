@@ -50,7 +50,7 @@ const TimeTable: React.FC<TimeTableProps> = ({
 
     const breakWord = "BREAK";
     let dayRows = [];
-    if (details.length !== 0)
+    if (details)
         if (dayNames.length === details.length && subjectsDetails) {
             for (let i = 0; i < details.length; i++) {
                 dayRows.push(
@@ -117,7 +117,7 @@ const DaysRow: React.FC<DaysRowProps> = ({
     let DayElements = [];
     if (!details) return <div className="day-container"></div>
     while (index < details.length) {
-        let periodsDeatils = details[index]
+        let periodDetails: Period | TeacherSchedulePeriod = details[index]
         if (hasElement(breakTimeIndexs, index)) {
             DayElements.push(<div className="period-details-container break" onClick={periodClickHandler}>
                 <div> </div>
@@ -125,26 +125,26 @@ const DaysRow: React.FC<DaysRowProps> = ({
                 <div> </div>
             </div>)
         } else {
-            if (periodsDeatils === null) {
+            if (periodDetails === null) {
                 DayElements.push(<PeriodComp
                     key={index}
-                    periodDetails={[]}
+                    periodDetails={null}
                     index={index}
                     breakTimeIndexs={breakTimeIndexs}
                     breakWord={breakWord}
                     onClick={() => { }} />)
-            } else if (periodsDeatils !== null && periodsDeatils.length === 0 && periodsDeatils[subjectIndexAtPeriodElementInDetails]) {
+            } else if (periodDetails !== null && periodDetails && periodDetails[subjectIndexAtPeriodElementInDetails]) {
                 DayElements.push(<PeriodComp
                     key={index}
-                    periodDetails={[]}
+                    periodDetails={periodDetails}
                     index={index}
                     breakTimeIndexs={breakTimeIndexs}
                     breakWord={breakWord}
-                    isLab={subjectsDetails[periodsDeatils[subjectIndexAtPeriodElementInDetails]].isPractical}
+                    isLab={subjectsDetails[periodDetails[subjectIndexAtPeriodElementInDetails]].isPractical}
                     onClick={periodClickHandler} />)
             } else DayElements.push(<PeriodComp
                 key={index}
-                periodDetails={periodsDeatils}
+                periodDetails={periodDetails}
                 index={index}
                 breakTimeIndexs={breakTimeIndexs}
                 breakWord={breakWord}

@@ -14,21 +14,21 @@ export type Teacher = {
 
 export type TimeTableStructure = {
     semesterCount: number;
-    sectionsPerSemester: number[];
+    sectionsPerSemester: [number, number, number, number];
     periodCount: number;
-    breaksPerSemester: number[][];
+    breaksPerSemester: [number[], number[], number[], number[]];
 }
 
 
-export type TeacherSchedulePeriod = string[] | null // has 4 elements [sem, sec, subject, roomCode]
+export type TeacherSchedulePeriod = [string, string, string, string] | null | [string, string, string] // has 4 elements [sem, sec, subject, roomCode]
 export type TeacherScheduleDay = TeacherSchedulePeriod[]
-type TeacherScheduleWeek = TeacherScheduleDay[]
-export type TeacherSchedule = TeacherScheduleWeek
+type TeacherScheduleWeek = [TeacherScheduleDay, TeacherScheduleDay, TeacherScheduleDay, TeacherScheduleDay, TeacherScheduleDay]
+export type TeacherSchedule = TeacherScheduleWeek | []
 
 
-export type Period = string[] | null[] // has 3 elements: [Sir, Subject Name, Room Code]
+export type Period = [string, string, string] | [null, null, null] // has 3 elements: [Sir, Subject Name, Room Code]
 export type Day = Period[] | null
-type Week = Day[]
+type Week = [Day, Day, Day, Day, Day]
 export type TimeTable = Week
 
 export type SectionTimeTable = Week[]
