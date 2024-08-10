@@ -20,17 +20,17 @@ export type TimeTableStructure = {
 }
 
 
-type TeacherSchedulePeriod = string[] | null // has 4 elements [sem, sec, subject, roomCode]
-type TeacherScheduleDay = TeacherSchedulePeriod[]
+export type TeacherSchedulePeriod = string[] | null // has 4 elements [sem, sec, subject, roomCode]
+export type TeacherScheduleDay = TeacherSchedulePeriod[]
 type TeacherScheduleWeek = TeacherScheduleDay[]
 export type TeacherSchedule = TeacherScheduleWeek
 
 
-type Period = string[] | null[] // has 3 elements: [Sir, Subject Name, Room Code]
-type Day = Period[] | null
+export type Period = string[] | null[] // has 3 elements: [Sir, Subject Name, Room Code]
+export type Day = Period[] | null
 type Week = Day[]
-export type TimeTable = Week[]
+export type TimeTable = Week
 
 export type SectionTimeTable = Week[]
 export type YearTimeTable = SectionTimeTable[]
-export type FullTimeTable = YearTimeTable[]
+export type FullTimeTable = YearTimeTable

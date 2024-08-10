@@ -18,7 +18,7 @@
     background: #fff;
     border-radius: 15px;
     display: grid;
-    grid-auto-flow: column;
+    grid-template-columns: auto(auto-fill, 1fr);
     width: 94%;
     padding: 0 10px;
 }

@@ -16,6 +16,7 @@
 .day-container,
 .period-times-container {
     display: grid;
+    grid-template-columns: auto(auto-fill, 1fr);
     gap: 5px;
     justify-content: stretch;
 }

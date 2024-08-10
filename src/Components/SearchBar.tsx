@@ -1,4 +1,4 @@
-import { memo, useCallback, useRef } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import Cross from "../Icons/Cross.tsx";
 import Search from "../Icons/Search.tsx";
 import "../Style/SearchBar.css"
@@ -13,52 +13,46 @@ export function match(list: string[], key: string) {
     return res
 }
 
-function SearchBar() {
+interface SearchBarProps {
+    array: string[],
+    onChange?: (filteredArray: string[]) => void
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ array = [], onChange = () => { } }) => {
+    const [active, setActive] = useState(false);
+    const [searchKey, setSearchKey] = useState("");
+
     const searchInputBox = useRef<HTMLInputElement>(null);
     const searchInputContainer = useRef<HTMLDivElement>(null);
-    const dataCards = useRef<NodeListOf<Element>>();
-    const searchInputHandler = useCallback(() => {
-        let list: string[] = [];
-        if (!dataCards.current) {
-            const cardsContainer = document.querySelector(".cards-container")
-            if (cardsContainer)
-                dataCards.current = cardsContainer.querySelectorAll(".card.data");
+
+    const searchChangeHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        let searchKey = e.target.value.trim().toUpperCase();
+        setSearchKey(searchKey);
+        if (searchKey === "") {
+            onChange(array)
+        } else {
+            onChange(array.filter((item) => item.toUpperCase().indexOf(searchKey) !== -1))
         }
-        if (dataCards.current)
-            dataCards.current.forEach((e) => {
-                const element = e as HTMLElement;
-                list.push(element.title);
-                element.style.cssText = "display: none;";
-            })
-        let result;
-        if (searchInputBox.current)
-            result = match(list, searchInputBox.current.value.trim());
-        if (result)
-            result.forEach((e) => {
-                if (dataCards.current)
-                    (dataCards.current[e] as HTMLDivElement).style.cssText = "display: grid;";
-            })
-    }, [])
+    }, [array, onChange])
 
     const searchIconClickHandler = useCallback(() => {
         if (searchInputBox.current != null && searchInputContainer.current != null) {
-            searchInputContainer.current.classList.add("active");
+            setActive(true);
             searchInputBox.current.focus()
         }
-    }, [])
+    }, [searchInputBox, searchInputContainer])
 
     const crossIconClickHandler = useCallback(() => {
         if (searchInputBox.current != null && searchInputContainer.current != null) {
-            searchInputBox.current.value = "";
-            searchInputContainer.current.classList.remove("active");
-            searchInputHandler()
+            setSearchKey("");
+            setActive(false);
         }
-    }, [])
+    }, [searchInputBox, searchInputContainer])
 
     return (
-        <div className="search-container" ref={searchInputContainer}>
+        <div className={"search-container" + (active ? " active" : "")} ref={searchInputContainer}>
             <Search searchIconClickHandler={searchIconClickHandler} />
-            <input className="search-input" placeholder="Search Name" onInput={searchInputHandler} ref={searchInputBox}></input>
+            <input className="search-input" placeholder="Search Name" value={searchKey} onChange={searchChangeHandler} ref={searchInputBox}></input>
             <Cross crossIconClickHandler={crossIconClickHandler} />
         </div>
     )

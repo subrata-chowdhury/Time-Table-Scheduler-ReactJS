@@ -1,47 +1,51 @@
-import { memo, useCallback, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useState } from "react"
 import { getCurrentFileName, getSaveFileList, loadSaveFile } from "../Script/FilesDataFetchers.ts";
 import "../Style/Mini-state-container.css";
 import { checkCurrentStateIsSavedBeforeClose } from "../Script/commonJS.ts";
 
-function MiniStateContainer({ callBackAfterStateUpdate = () => { }, forceReRenderer = false }) {
-    const [states, setStates] = useState([])
-    const fileSelector = useRef<any>()
+interface MiniStateContainerProps {
+    onChange?: () => void,
+    forceReRenderer?: boolean
+}
+
+const MiniStateContainer: React.FC<MiniStateContainerProps> = ({ onChange = () => { }, forceReRenderer = false }) => {
+    const [files, setFiles] = useState<string[]>([])
+    const [activeFile, setActiveFile] = useState<string>("")
+
     useEffect(() => {
-        getSaveFileList((data) => { // api call
-            setStates(data)
-            getCurrentFileName((currentFileName) => { // api call
-                let options = fileSelector.current? fileSelector.current.querySelectorAll("option"):"";
-                for (let index = 0; index < options.length; index++) {
-                    if (options[index].value === currentFileName.toLowerCase()) {
-                        options[index].selected = 'selected';
-                        break;
-                    }
-                }
+        getSaveFileList(files => { // api call
+            setFiles(files)
+            getCurrentFileName(currentFileName => { // api call
+                setActiveFile(currentFileName)
             });
         });
     }, [forceReRenderer])
 
-    const onChangeStateHandler = useCallback((event:any) => {
-        checkCurrentStateIsSavedBeforeClose(changeTheState) // api calls present in the function
-        function changeTheState() {
-            loadSaveFile(event.target.value, callBackAfterStateUpdate); // api call
-        }
+    const onChangeStateHandler = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
+        checkCurrentStateIsSavedBeforeClose(() => {
+            loadSaveFile(event.target.value, () => {
+                setActiveFile(event.target.value)
+                onChange()
+            }) // api call
+        }) // api calls present in the function
     }, [])
-    let options = [];
-    for (let index = 0; index < states.length; index++) {
-        options.push(<Option value={states[index]} key={index}></Option>)
-    }
+
     return (
         <div className="mini-states-container">
             <label>Current File:</label>
-            <select className="state-selector" onChange={event => { onChangeStateHandler(event) }} ref={fileSelector}>
-                {options}
+            <select className="state-selector" onChange={onChangeStateHandler} value={activeFile}>
+                {files && files.length > 0 && files.map((file: string, index: number) => (
+                    <Option value={file} key={index}></Option>
+                ))}
             </select>
         </div>
     )
 }
 
-function Option({ value = "" }) {
+interface OptionProps {
+    value: string
+}
+const Option: React.FC<OptionProps> = ({ value }) => {
     return (
         <option value={value.toLowerCase()}>{value}</option>
     )

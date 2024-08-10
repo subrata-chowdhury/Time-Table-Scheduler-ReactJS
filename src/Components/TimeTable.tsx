@@ -1,8 +1,9 @@
 import React, { memo } from "react";
 import { hasElement } from "../Script/util.ts";
 import "../Style/TimeTable.css"
+import { TimeTable as TimeTableType, Subject, TeacherSchedule, Day, TeacherScheduleDay, Period, TeacherSchedulePeriod } from "../data/Types.ts";
 
-export let emptyTimeTableDetails = [
+export let emptyTimeTableDetails: TimeTableType = [
     [["FirstTeacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
     [["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
     [["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
@@ -14,47 +15,58 @@ interface TimeTableProps {
     noOfDays?: number,
     noOfPeriods?: number,
     breakTimeIndexs?: number[],
+
     dayNames?: string[],
     periodTimes?: string[],
-    details?: string[][][],
-    subjectIndexAtPeriod?: number,
-    subjectsDetails?: { [key: string]: any }[],
+
+    details?: TimeTableType | TeacherSchedule,
+    subjectIndexAtPeriodElementInDetails?: number,
+    subjectsDetails?: { [subjectName: string]: Subject },
+
+    periodClickHandler?: (event: React.MouseEvent<HTMLDivElement>) => void,
     className?: string,
-    timeTableWidthInPercent?: number,
-    periodClickHandler?: (event: React.MouseEvent<HTMLDivElement>) => void
+    timeTableWidthInPercent?: number
 }
 
 const TimeTable: React.FC<TimeTableProps> = ({
     noOfDays = 5,
     noOfPeriods = 9,
     breakTimeIndexs = [4],
+
     dayNames = ["Tue", "Wed", "Thu", "Fri", "Sat"],
     periodTimes = ["9:30AM", "10:20AM", "11:10AM", "12:00PM", "12:50PM", "01:40PM", "02:30PM", "03:20PM", "04:10PM"],
+
     details = emptyTimeTableDetails,
-    subjectIndexAtPeriod = 1,
-    subjectsDetails = [],
+
+    subjectIndexAtPeriodElementInDetails = 1,
+    subjectsDetails,
+
+    periodClickHandler = () => { },
+
     className = "",
     timeTableWidthInPercent = 95,
-    periodClickHandler = () => { }
-}) => {
-    if (details.length <= 0) return
-    let periodTimesRow = [];
-    for (let index = 0; index < periodTimes.length; index++) {
-        periodTimesRow.push(<div className="time" key={periodTimes[index]}>{periodTimes[index]}</div>);
-    }
+}): JSX.Element => {
+    if (details.length <= 0) return <></>
 
-    let breakWord = "BREAK";
+    const breakWord = "BREAK";
     let dayRows = [];
-    let gridCss = "";
-    let gridWidth = timeTableWidthInPercent / (noOfPeriods + 1)
-    for (let i = 0; i < (noOfPeriods) + 1; i++) {
-        gridCss += gridWidth + "%";
-    }
     if (details.length !== 0)
-        if (dayNames.length === details.length) {
-            createDayRows(subjectsDetails)
+        if (dayNames.length === details.length && subjectsDetails) {
+            for (let i = 0; i < details.length; i++) {
+                dayRows.push(
+                    <DaysRow
+                        key={i}
+                        details={details[i]}
+                        breakWord={breakWord[i]}
+                        subjectsDetails={subjectsDetails}
+                        breakTimeIndexs={breakTimeIndexs}
+                        subjectIndexAtPeriodElementInDetails={subjectIndexAtPeriodElementInDetails}
+                        dayName={dayNames[i]}
+                        periodClickHandler={periodClickHandler} />
+                )
+            }
         } else {
-            dayRows.push(<div className="invalid-text" key={"error"}>Invalid Inputs</div>)
+            dayRows.push(<div className="invalid-text" key={"error"}>Invalid Data</div>)
         }
     else dayRows.push(
         <div
@@ -65,87 +77,111 @@ const TimeTable: React.FC<TimeTableProps> = ({
         </div>
     )
 
-    function createDayRows(subjectsDetails: { [key: string]: any }[]) {
-        for (let index = 0; index < dayNames.length; index++) {
-            dayRows.push(
-                <div className="day-container" style={{ gridTemplateColumns: gridCss }} key={"day" + index}>
-                    {createASingleDayRow(index, details[index], breakWord[index], subjectsDetails)}
-                </div>
-            )
-        }
-    }
-    function createASingleDayRow(dayNameIndex: number, listOfDetailsOfThatDay: string[][] | "", breakWord: string, subjectsDetails:{ [key: string]: any }[]) {
-        if (listOfDetailsOfThatDay === "") return
-        let dayRow = [];
-        dayRow.push(<div className="day-name" key={0}>{dayNames[dayNameIndex]}</div>)
-        let totalNoOfPeriods = noOfPeriods;
-        let index: number = 1
-        while (index <= totalNoOfPeriods) {
-            if (hasElement(breakTimeIndexs, index)) {
-                dayRow.push(
-                    <div
-                        className="period-details-container break"
-                        key={"class" + index}
-                        data-day={dayNameIndex}
-                        data-period={index - 1}
-                        onClick={periodClickHandler}>
-                        <div> </div>
-                        <div> {breakWord} </div>
-                        <div> </div>
-                    </div>
-                )
-                index++
-            } else {
-                let periodDetails = [];
-                let spanCss = {};
-                let lab = false;
-                if (listOfDetailsOfThatDay[index - 1] === null) {
-                    index++;
-                } else {
-                    let subject = subjectsDetails[listOfDetailsOfThatDay[index - 1][subjectIndexAtPeriod]]
-                    if (subject) lab = subject.isPractical
-                    for (let detailsIndex = 0; detailsIndex < listOfDetailsOfThatDay[index - 1].length; detailsIndex++) {
-                        periodDetails.push(
-                            <div key={"data" + detailsIndex}>
-                                {listOfDetailsOfThatDay[index - 1][detailsIndex]}
-                            </div>
-                        )
-                    }
-                    if (lab === true) {
-                        spanCss = { gridColumn: 'auto / span 3' };
-                        index += 3
-                    } else {
-                        index++
-                    }
-                }
-                let classNameDetails = "period-details-container ";
-                periodDetails.length !== 0 ? classNameDetails += "class" : classNameDetails += ""
-                dayRow.push(
-                    <div
-                        className={classNameDetails}
-                        key={dayNameIndex + index}
-                        data-day={dayNameIndex}
-                        data-period={lab ? index - 4 : index - 2}
-                        style={spanCss}
-                        onClick={periodClickHandler}>
-                        {periodDetails}
-                    </div>
-                )
-            }
-        }
-        return dayRow;
-    }
     return (
         <div className={"time-table-container " + className}>
-            <div className="period-times-container" style={{ gridTemplateColumns: gridCss }}>
+            <div className="period-times-container">
                 <div className="column-row-identifier">
                     <span className="column-indentifier">Day\
                         <span className="row-indentifier">Time</span>
                     </span>
                 </div>
-                {periodTimesRow}
+                {periodTimes && periodTimes.length > 0 && periodTimes.map((time) => (
+                    <div className="time" key={time}>{time}</div>
+                ))}
             </div>
             {dayRows}
+        </div>
+    )
+}
+
+interface DaysRowProps {
+    details: Day | TeacherScheduleDay,
+    breakWord: string,
+    subjectsDetails: { [subjectName: string]: Subject },
+    breakTimeIndexs: number[]
+    dayName: string,
+    subjectIndexAtPeriodElementInDetails: number,
+    periodClickHandler?: (event: React.MouseEvent<HTMLDivElement>) => void
+}
+
+const DaysRow: React.FC<DaysRowProps> = ({
+    details,
+    breakWord,
+    subjectsDetails,
+    breakTimeIndexs,
+    dayName,
+    subjectIndexAtPeriodElementInDetails,
+    periodClickHandler = () => { }
+}) => {
+    let index = 0;
+    let DayElements = [];
+    if (!details) return <div className="day-container"></div>
+    while (index < details.length) {
+        let periodsDeatils = details[index]
+        if (hasElement(breakTimeIndexs, index)) {
+            DayElements.push(<div className="period-details-container break" onClick={periodClickHandler}>
+                <div> </div>
+                <div> {breakWord} </div>
+                <div> </div>
+            </div>)
+        } else {
+            if (periodsDeatils === null) {
+                DayElements.push(<PeriodComp
+                    key={index}
+                    periodDetails={[]}
+                    index={index}
+                    breakTimeIndexs={breakTimeIndexs}
+                    breakWord={breakWord}
+                    onClick={() => { }} />)
+            } else if (periodsDeatils !== null && periodsDeatils.length === 0 && periodsDeatils[subjectIndexAtPeriodElementInDetails]) {
+                DayElements.push(<PeriodComp
+                    key={index}
+                    periodDetails={[]}
+                    index={index}
+                    breakTimeIndexs={breakTimeIndexs}
+                    breakWord={breakWord}
+                    isLab={subjectsDetails[periodsDeatils[subjectIndexAtPeriodElementInDetails]].isPractical}
+                    onClick={periodClickHandler} />)
+            } else DayElements.push(<PeriodComp
+                key={index}
+                periodDetails={periodsDeatils}
+                index={index}
+                breakTimeIndexs={breakTimeIndexs}
+                breakWord={breakWord}
+                onClick={periodClickHandler} />)
+            index++
+        }
+    }
+    return (
+        <div className="day-container">
+            <div className="day-name">{dayName}</div>
+            {DayElements}
+        </div>
+    )
+}
+
+interface PeriodProps {
+    periodDetails: Period | TeacherSchedulePeriod,
+    index: number,
+    breakTimeIndexs: number[],
+    breakWord?: string,
+    isLab?: boolean,
+    onClick: (event: React.MouseEvent<HTMLDivElement>) => void
+}
+
+const PeriodComp: React.FC<PeriodProps> = ({ periodDetails = [], index, breakTimeIndexs = [], breakWord, isLab = false, onClick = () => { } }) => {
+    if (hasElement(breakTimeIndexs, index)) return (
+        <div className="period-details-container break" onClick={onClick}>
+            <div> </div>
+            <div> {breakWord} </div>
+            <div> </div>
+        </div>
+    )
+    return (
+        <div className="period-details-container" style={isLab ? { gridColumn: 'auto / span 3' } : {}} onClick={onClick}>
+            {periodDetails && periodDetails.map((detail, index) => (
+                <div key={index}>{detail}</div>
+            ))}
         </div>
     )
 }
