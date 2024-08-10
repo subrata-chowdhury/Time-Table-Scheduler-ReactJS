@@ -23,7 +23,7 @@ interface TimeTableProps {
     subjectIndexAtPeriodElementInDetails?: number,
     subjectsDetails?: { [subjectName: string]: Subject },
 
-    periodClickHandler?: (event: React.MouseEvent<HTMLDivElement>) => void,
+    periodClickHandler?: (dayIndex: number, periodIndex: number) => void,
     className?: string,
     timeTableWidthInPercent?: number
 }
@@ -56,6 +56,7 @@ const TimeTable: React.FC<TimeTableProps> = ({
                 dayRows.push(
                     <DaysRow
                         key={i}
+                        dayIndex={i}
                         details={details[i]}
                         breakWord={breakWord[i]}
                         subjectsDetails={subjectsDetails}
@@ -95,16 +96,18 @@ const TimeTable: React.FC<TimeTableProps> = ({
 }
 
 interface DaysRowProps {
+    dayIndex: number,
     details: Day | TeacherScheduleDay,
     breakWord: string,
     subjectsDetails: { [subjectName: string]: Subject },
     breakTimeIndexs: number[]
     dayName: string,
     subjectIndexAtPeriodElementInDetails: number,
-    periodClickHandler?: (event: React.MouseEvent<HTMLDivElement>) => void
+    periodClickHandler?: (dayIndex: number, periodIndex: number) => void
 }
 
 const DaysRow: React.FC<DaysRowProps> = ({
+    dayIndex,
     details,
     breakWord,
     subjectsDetails,
@@ -119,7 +122,7 @@ const DaysRow: React.FC<DaysRowProps> = ({
     while (index < details.length) {
         let periodDetails: Period | TeacherSchedulePeriod = details[index]
         if (hasElement(breakTimeIndexs, index)) {
-            DayElements.push(<div className="period-details-container break" onClick={periodClickHandler}>
+            DayElements.push(<div className="period-details-container break">
                 <div> </div>
                 <div> {breakWord} </div>
                 <div> </div>
@@ -129,25 +132,22 @@ const DaysRow: React.FC<DaysRowProps> = ({
                 DayElements.push(<PeriodComp
                     key={index}
                     periodDetails={null}
+                    dayIndex={dayIndex}
                     index={index}
-                    breakTimeIndexs={breakTimeIndexs}
-                    breakWord={breakWord}
                     onClick={() => { }} />)
             } else if (periodDetails !== null && periodDetails && periodDetails[subjectIndexAtPeriodElementInDetails]) {
                 DayElements.push(<PeriodComp
                     key={index}
                     periodDetails={periodDetails}
+                    dayIndex={dayIndex}
                     index={index}
-                    breakTimeIndexs={breakTimeIndexs}
-                    breakWord={breakWord}
                     isLab={subjectsDetails[periodDetails[subjectIndexAtPeriodElementInDetails]].isPractical}
                     onClick={periodClickHandler} />)
             } else DayElements.push(<PeriodComp
                 key={index}
                 periodDetails={periodDetails}
+                dayIndex={dayIndex}
                 index={index}
-                breakTimeIndexs={breakTimeIndexs}
-                breakWord={breakWord}
                 onClick={periodClickHandler} />)
             index++
         }
@@ -162,23 +162,15 @@ const DaysRow: React.FC<DaysRowProps> = ({
 
 interface PeriodProps {
     periodDetails: Period | TeacherSchedulePeriod,
+    dayIndex: number,
     index: number,
-    breakTimeIndexs: number[],
-    breakWord?: string,
     isLab?: boolean,
-    onClick: (event: React.MouseEvent<HTMLDivElement>) => void
+    onClick: (dayIndex: number, periodIndex: number) => void
 }
 
-const PeriodComp: React.FC<PeriodProps> = ({ periodDetails = [], index, breakTimeIndexs = [], breakWord, isLab = false, onClick = () => { } }) => {
-    if (hasElement(breakTimeIndexs, index)) return (
-        <div className="period-details-container break" onClick={onClick}>
-            <div> </div>
-            <div> {breakWord} </div>
-            <div> </div>
-        </div>
-    )
+const PeriodComp: React.FC<PeriodProps> = ({ periodDetails = [], dayIndex, index, isLab = false, onClick = () => { } }) => {
     return (
-        <div className="period-details-container" style={isLab ? { gridColumn: 'auto / span 3' } : {}} onClick={onClick}>
+        <div className="period-details-container" style={isLab ? { gridColumn: 'auto / span 3' } : {}} onClick={() => onClick(dayIndex, index)}>
             {periodDetails && periodDetails.map((detail, index) => (
                 <div key={index}>{detail}</div>
             ))}

@@ -2,17 +2,18 @@ import MiniStateContainer from '../Components/MiniStateContainer.tsx'
 import Menubar from '../Components/Menubar.tsx'
 import Cards from '../Components/Cards.tsx'
 import "../Style/Teachers.css"
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { FormEvent, memo, useCallback, useEffect, useRef, useState } from 'react'
 import SearchBar from '../Components/SearchBar.tsx'
-import { deleteTeacher, getTeacher, getTeacherList, saveTeacher } from '../Script/TeachersDataFetcher.tsx'
+import { deleteTeacher, getTeachersList, saveTeacher } from '../Script/TeachersDataFetcher.tsx'
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher.tsx'
-import { getSubjectList } from '../Script/SubjectsDataFetcher'
+import { getSubjectsList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
 import { hasElement } from '../Script/util.ts'
 import TagInput from '../Components/TagInput.tsx'
 import OwnerFooter from '../Components/OwnerFooter.tsx'
 import Loader from '../Components/Loader.tsx'
 import { verifyTeacherInputs } from '../Script/InputVerifiers/TeacherFormVerifier.ts'
+import { Teacher } from '../data/Types.ts'
 
 function TeachersPage() {
     return (
@@ -27,23 +28,21 @@ function TeachersPage() {
 }
 
 function MainComponents() {
-    const [teachersList, setTeahersList] = useState([]);
-    const [teacherName, setTeacherName] = useState();
-    const [displayLoader, setDisplayLoader] = useState(false);
-
-    const teacherDeleteBtn = useRef()
+    const [teachersList, setTeahersList] = useState<string[]>([]);
+    const [teacherName, setTeacherName] = useState<string>("");
+    const [displayLoader, setDisplayLoader] = useState<boolean>(false);
 
     useEffect(() => {
         startUpFunction()
     }, [])
     const startUpFunction = useCallback(() => {
-        getTeacherList(setTeahersList); // api call
+        getTeachersList(setTeahersList); // api call
         setTeacherName("");
         setDisplayLoader(false);
         try {
             let paramString = window.location.href.split('?')[1];
             let queryString = new URLSearchParams(paramString);
-            let urlData;
+            let urlData: [string, string] = ["", ""];
             for (let pair of queryString.entries()) {
                 urlData = [pair[0], pair[1].split("#")[0]];
                 break;
@@ -52,10 +51,10 @@ function MainComponents() {
                 let clicked = false;
                 let interval = setInterval(() => {
                     const cardsContainer = document.querySelector(".cards-container")
-                    const card = cardsContainer.querySelector(".card.data[title=" + urlData[1] + "]")
+                    let card: HTMLDivElement | null | undefined = cardsContainer?.querySelector(".card.data[title=" + urlData[1] + "]")
                     if (!clicked) {
                         try {
-                            card.click()
+                            (card !== undefined && card !== null) ? card.click() : ""
                             clicked = true
                         } catch (err) { }
                     } else {
@@ -67,13 +66,11 @@ function MainComponents() {
             console.log("%cNo Click Query Found", "color: green");
         }
     }, [])
-    const teacherCardOnClickHandler = useCallback((event) => {
-        setTeacherName(event.target.title);
-        teacherDeleteBtn.current.style.cssText = "display: block";
+    const teacherCardOnClickHandler = useCallback((teacherName: string) => {
+        setTeacherName(teacherName);
     }, [])
     const addTeacherCardClickHandler = useCallback(() => {
         setTeacherName("")
-        teacherDeleteBtn.current.style.cssText = "display: none;";
     }, [])
     return (
         <>
@@ -81,23 +78,22 @@ function MainComponents() {
             <div className='top-sub-container'>
                 <div className='left-sub-container'>
                     <div className='tools-container'>
-                        <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                        <SearchBar />
+                        <MiniStateContainer onChange={startUpFunction} />
+                        <SearchBar array={teachersList} onChange={setTeahersList} />
                     </div>
                     <Cards
-                        cardDetails={teachersList}
+                        cardList={teachersList}
                         cardClassName={"teacher-card"}
-                        cardClickHandler={teacherCardOnClickHandler}
-                        addBtnClickHandler={addTeacherCardClickHandler}
+                        onCardClick={teacherCardOnClickHandler}
+                        onAddBtnClick={addTeacherCardClickHandler}
                     />
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer
-                        outerTeacherName={teacherName}
+                        activeTeacherName={teacherName}
                         teachersList={teachersList}
                         onSubmitCallBack={startUpFunction}
 
-                        teacherDeleteBtnRef={teacherDeleteBtn}
                         setDisplayLoader={setDisplayLoader}
                     />
                 </div>
@@ -106,61 +102,57 @@ function MainComponents() {
     )
 }
 
-function DetailsContainer({
-    outerTeacherName = "",
+interface DetailsContainerProps {
+    activeTeacherName: string,
+    teachersList: string[],
+    onSubmitCallBack: () => void,
+
+    setDisplayLoader: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const DetailsContainer: React.FC<DetailsContainerProps> = ({
+    activeTeacherName = "",
     teachersList,
     onSubmitCallBack,
 
-    teacherDeleteBtnRef,
     setDisplayLoader
-}) {
-    const [teacherName, setTeacherName] = useState("");
-    const [teacherDetails, setTeacherDetails] = useState({
+}) => {
+    const [teacherName, setTeacherName] = useState<string>(activeTeacherName);
+    const [teacherDetails, setTeacherDetails] = useState<Teacher>({
         freeTime: [],
         subjects: [],
     })
-    const subjectList = useRef();
+    const subjectList = useRef<string[] | undefined>();
+
     useEffect(() => {
-        getSubjectList(data => subjectList.current = data) // api call
+        getSubjectsList(data => subjectList.current = data) // api call
     }, [])
-    useEffect(() => {
-        if (!outerTeacherName) {
-            setTeacherName("")
-            setTeacherDetails({
-                freeTime: [],
-                subjects: [],
-            })
-        } else {
-            setTeacherName(outerTeacherName)
-            getTeacher(outerTeacherName, setTeacherDetails); // api call
-        }
-    }, [outerTeacherName])
-    const modifyTheValueOfInputBox = useCallback((time, isSelected) => {
-        let newDetails = { ...teacherDetails };
-        time = JSON.parse(time)
+    const modifyTheValueOfInputBox = useCallback((time: string, isSelected: boolean) => {
+        let newDetails: Teacher = { ...teacherDetails };
+        let parsedTime: [number, number] = JSON.parse(time)
         if (isSelected) {
             let found = -1;
             for (let index = 0; index < newDetails.freeTime.length; index++) {
-                if (newDetails.freeTime[index][0] === time[0] && newDetails.freeTime[index][1] === time[1]) {
+                if (newDetails.freeTime[index][0] === parsedTime[0] && newDetails.freeTime[index][1] === parsedTime[1]) {
                     found = index;
                     break
                 }
             }
             newDetails.freeTime.splice(found, 1);
         } else {
-            newDetails.freeTime.push(time)
+            newDetails.freeTime[newDetails.freeTime.length] = parsedTime;
         }
         setTeacherDetails(newDetails)
     }, [teacherDetails])
-    const inputOnChangeHandler = useCallback((event) => {
+    const inputOnChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.name === 'teacherName') setTeacherName(event.target.value.toUpperCase())
         else setTeacherDetails(value => ({ ...value, [event.target.name]: event.target.value }))
     }, [])
-    const checkIfAlreadyExist = useCallback((teacher) => {
-        if (hasElement(teachersList, teacher)) teacherDeleteBtnRef.current.style.cssText = "display: block;"; // if teacher exist show delete btn
-        else teacherDeleteBtnRef.current.style.cssText = "display: none;"; // if not teacher exist show delete btn
+    const checkIfAlreadyExist = useCallback((teacher: string) => {
+        if (hasElement(teachersList, teacher)) { } // if teacher exist show delete btn
+        else { } // if not teacher exist show delete btn
     }, [teachersList])
-    const teacherFormSubmitHandler = useCallback((event) => {
+    const teacherFormSubmitHandler = useCallback((event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         //verification of inputs
         let verifiedData = verifyTeacherInputs(teacherName, teacherDetails, subjectList)
@@ -170,12 +162,10 @@ function DetailsContainer({
                     saveData(verifiedData.newTeacherName, verifiedData.teacherData); // if yes then save else do nothing
             } else saveData(verifiedData.newTeacherName, verifiedData.teacherData);
     }, [teacherName, teacherDetails, teachersList])
-    const saveData = useCallback((teacherName, teacherData) => {
+    const saveData = useCallback((teacherName: string, teacherData: Teacher) => {
         setDisplayLoader(true)
-        let data = new Map();
-        data[teacherName] = teacherData;
-        saveTeacher(data, () => { // api call
-            alert(JSON.stringify(data) + "---------- is added")
+        saveTeacher(teacherName, teacherData, () => { // api call
+            alert(JSON.stringify({ teacherName: teacherData }) + "---------- is added")
             onSubmitCallBack(); // referenced to start up function
 
             // reseting form fields
@@ -188,13 +178,12 @@ function DetailsContainer({
             setDisplayLoader(false)
         })
     }, [])
-    const deleteTeacherBtnClickHandler = useCallback((event) => {
+    const deleteTeacherBtnClickHandler = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         if (hasElement(teachersList, teacherName)) // checking if the teacher exsist or not
             if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) { // if exist show a confirmation box
                 deleteTeacher(teacherName, () => { // api call
                     onSubmitCallBack();  // referenced to start up function
-                    teacherDeleteBtnRef.current.style.cssText = "display: none;"; // hide delete btn
                 }, () => {
                     setDisplayLoader(false) // if failed only hide loader
                 });
@@ -219,12 +208,10 @@ function DetailsContainer({
             <div className="input-container">
                 <div className="input-box-heading">Subject Names</div>
                 {subjectList.current && <TagInput
-                    tagList={subjectList.current}
-                    inputName={'subjects'}
-                    details={teacherDetails}
-                    updateWithNewValues={(data) => {
-                        let newTeacherDetails = { ...teacherDetails }
-                        newTeacherDetails.subjects = data;
+                    validTags={subjectList.current}
+                    tagList={teacherDetails.subjects}
+                    onChange={(data) => {
+                        let newTeacherDetails = { ...teacherDetails, subject: data }
                         setTeacherDetails(newTeacherDetails)
                     }}
                 />}
@@ -237,14 +224,19 @@ function DetailsContainer({
             </div>
             <div className='save-btn-container'>
                 <button className='teacher-save-btn' type='submit'>Save</button>
-                <button className='teacher-delete-btn' onClick={deleteTeacherBtnClickHandler} ref={teacherDeleteBtnRef}>Delete</button>
+                <button className='teacher-delete-btn' onClick={deleteTeacherBtnClickHandler}>Delete</button>
             </div>
         </form>
     )
 }
 
-const TimeSelector = memo(({ modifyTheValueOfInputBox, teacherDetails }) => {
-    const [periodCount, setPeriodCount] = useState(8);
+interface TimeSelectorProps {
+    modifyTheValueOfInputBox: (time: string, isSelected: boolean) => void,
+    teacherDetails: Teacher
+}
+
+const TimeSelector: React.FC<TimeSelectorProps> = memo(({ modifyTheValueOfInputBox, teacherDetails }) => {
+    const [periodCount, setPeriodCount] = useState<number>(8);
     useEffect(() => {
         getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) }); // api call
     }, [])
@@ -276,26 +268,32 @@ const TimeSelector = memo(({ modifyTheValueOfInputBox, teacherDetails }) => {
     )
 })
 
-const Periods = memo(({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetailsFreeTimeOfThatDay }) => {
+interface PeriodsProps {
+    noOfPeriods: number,
+    day: number,
+    modifyTheValueOfInputBox: (time: string, isSelected: boolean) => void,
+    teacherDetailsFreeTimeOfThatDay: number[]
+}
+
+const Periods: React.FC<PeriodsProps> = memo(({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetailsFreeTimeOfThatDay }) => {
+    const [selected, setSelected] = useState(false)
     let periods = []
     for (let period = 0; period < noOfPeriods; period++) {
-        let selectClass = "";
         if (hasElement(teacherDetailsFreeTimeOfThatDay, (period + 1))) {
-            selectClass = "selected";
+            setSelected(true)
         }
         periods.push(
             <div
                 key={period}
-                className={'period ' + selectClass}
-                onClick={event => periodClickHandler(event, period)}>
+                className={'period ' + (selected ? "selected" : "")}
+                onClick={() => periodClickHandler(period)}>
                 {period + 1}
             </div>
         )
     }
-    const periodClickHandler = useCallback((event, period) => {
-        let isSelected = hasElement(event.target.classList, "selected");
-        modifyTheValueOfInputBox(`[${day + 1},${[period + 1]}]`, isSelected);
-    }, [modifyTheValueOfInputBox])
+    const periodClickHandler = useCallback((period: number) => {
+        modifyTheValueOfInputBox(`[${day + 1},${[period + 1]}]`, selected);
+    }, [modifyTheValueOfInputBox, selected])
 
     return (
         <div className='periods-container' >

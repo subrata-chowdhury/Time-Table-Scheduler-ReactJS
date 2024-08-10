@@ -30,6 +30,7 @@ function MainComponents() {
     const [activeSubjectName, setActiveSubjectName] = useState<string>("")
     const [activeSubjectDetails, setActiveSubjectDetails] = useState<Subject>()
     const [displayLoader, setDisplayLoader] = useState(false);
+    const [filterdSubjectList, setFilterdSubjectList] = useState<string[]>(subjectsList)
 
     useEffect(() => {
         startUpFunction()
@@ -45,10 +46,10 @@ function MainComponents() {
                 <div className='left-sub-container'>
                     <div className='tools-container'>
                         <MiniStateContainer onChange={startUpFunction} />
-                        <SearchBar array={subjectsList} onChange={setSubjectsList} />
+                        <SearchBar array={subjectsList} onChange={setFilterdSubjectList} />
                     </div>
                     <Cards
-                        cardList={subjectsList}
+                        cardList={filterdSubjectList}
                         cardClassName={"subject-card"}
                         onCardClick={(name) => {
                             setActiveSubjectName(name)

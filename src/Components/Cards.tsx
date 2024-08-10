@@ -54,7 +54,7 @@ const Cards: React.FC<CardsProps> = ({
                     key={card}
                     className={cardClassName}
                     active={activeCards.includes(card)}
-                    onClick={() => {
+                    onClick={(card) => {
                         defaultCardClickHandler(card)
                         onCardClick(card)
                     }}
@@ -74,7 +74,7 @@ interface CardProps {
     className: string,
 
     active?: boolean,
-    onClick?: (event: React.MouseEvent<HTMLDivElement>) => void,
+    onClick?: (card: string) => void,
     compressText?: boolean,
     showEditBtn?: boolean,
     onEditBtnClick?: (details: string) => void
@@ -91,7 +91,7 @@ export const Card: React.FC<CardProps> = memo(({
     onEditBtnClick = () => { }
 }) => {
     const innerCard = (
-        <div className={"card data " + className + (active ? ' active' : '')} onClick={onClick} title={details}>
+        <div className={"card data " + className + (active ? ' active' : '')} onClick={()=>onClick(details)} title={details}>
             {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
         </div>
     )

@@ -1,11 +1,12 @@
 import MiniStateContainer from '../Components/MiniStateContainer.tsx'
 import Menubar from '../Components/Menubar.tsx'
 import "../Style/TimeTableStructure.css"
-import { memo, useCallback, useEffect, useState } from 'react'
+import React, { FormEvent, memo, useCallback, useEffect, useState } from 'react'
 import { getTimeTableStructure, saveTimeTableStructure } from '../Script/TimeTableDataFetcher.tsx'
 import "../Script/commonJS"
 import OwnerFooter from '../Components/OwnerFooter.tsx'
 import verifyTimeTableStructureInputs from '../Script/InputVerifiers/TimeTableStructureVerifier.ts'
+import { TimeTableStructure } from '../data/Types.ts'
 
 function TimeTableStructurePage() {
     return (
@@ -23,13 +24,17 @@ function MainComponents() {
     const [fileChange, setFileChange] = useState(false)
     return (
         <div className='top-sub-container'>
-            <MiniStateContainer callBackAfterStateUpdate={() => { setFileChange(val => !val) }} />
+            <MiniStateContainer onChange={() => { setFileChange(val => !val) }} />
             <TimeTableStructureInputContainer fileChange={fileChange} />
         </div>
     )
 }
 
-function TimeTableStructureInputContainer({ fileChange }) {
+interface TimeTableStructureInputContainerProps {
+    fileChange: boolean
+}
+
+const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContainerProps> = ({ fileChange }) => {
 
     const [timeTableStructureFieldValues, setTimeTableStructureFieldValues] = useState({
         breaksPerSemester: "",
@@ -38,7 +43,7 @@ function TimeTableStructureInputContainer({ fileChange }) {
         semesterCount: "0"
     })
 
-    const updateFieldsFromObject = useCallback((obj) => {
+    const updateFieldsFromObject = useCallback((obj: TimeTableStructure) => {
         let fieldValues = {
             breaksPerSemester: JSON.stringify(obj.breaksPerSemester).slice(1, -1),
             periodCount: JSON.stringify(obj.periodCount),
@@ -52,11 +57,11 @@ function TimeTableStructureInputContainer({ fileChange }) {
         getTimeTableStructure(updateFieldsFromObject) // api call
     }, [fileChange])
 
-    const inputOnChangeHandler = useCallback((event) => {
+    const inputOnChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setTimeTableStructureFieldValues(value => ({ ...value, [event.target.name]: event.target.value }))
     }, [])
 
-    const timeTableStructureOnSubmitHandler = useCallback((event) => {
+    const timeTableStructureOnSubmitHandler = useCallback((event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         let timeTableStructure = verifyTimeTableStructureInputs(timeTableStructureFieldValues)
