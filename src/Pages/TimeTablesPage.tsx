@@ -5,11 +5,10 @@ import "../Style/TimeTablesPage.css"
 import Cards, { Card, HorizentalCardsContainer } from '../Components/Cards.tsx'
 import { LegacyRef, memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getSubjectsList, getSubjectsDetailsList, SubjectsDetailsList } from '../Script/SubjectsDataFetcher'
-import { generateTimeTable, getSchedule, getTimeTableStructure } from '../Script/TimeTableDataFetcher.tsx'
-import { getTeachersList } from '../Script/TeachersDataFetcher.tsx'
+import { generateTimeTable, getSchedule, getTimeTableStructure } from '../Script/TimeTableDataFetcher'
+import { getTeachersList } from '../Script/TeachersDataFetcher'
 import { emptyTimeTableDetails } from '../Components/TimeTable.tsx'
 import "../Script/commonJS"
-import { hasElement } from '../Script/util.ts'
 import OwnerFooter from '../Components/OwnerFooter.tsx'
 import Loader from '../Components/Loader.tsx'
 import { FullTimeTable, TimeTable as TimeTableType, TimeTableStructure } from '../data/Types.ts'
@@ -167,7 +166,7 @@ const ButtonsContainer: React.FC<ButtonsContainerProps> = memo(({ setAllTimeTabl
         }, () => { setDisplayLoader(false) })
     }, [])
     const fillManuallyBtnClickHandler = useCallback((value: string) => {
-        let found = hasElement(value, "Fill Manually")
+        let found = (value === "Fill Manually")
         if (found) fillManually.current = false
         else fillManually.current = true
     }, [])

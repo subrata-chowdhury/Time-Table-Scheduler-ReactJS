@@ -29,8 +29,8 @@ interface TimeTableProps {
 }
 
 const TimeTable: React.FC<TimeTableProps> = ({
-    noOfDays = 5,
-    noOfPeriods = 9,
+    // noOfDays = 5,
+    // noOfPeriods = 9,
     breakTimeIndexs = [4],
 
     dayNames = ["Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -44,7 +44,7 @@ const TimeTable: React.FC<TimeTableProps> = ({
     periodClickHandler = () => { },
 
     className = "",
-    timeTableWidthInPercent = 95,
+    // timeTableWidthInPercent = 95,
 }): JSX.Element => {
     if (details.length <= 0) return <></>
 

@@ -3,7 +3,7 @@ import Menubar from '../Components/Menubar.tsx'
 import "../Style/Files.css"
 import Cards from '../Components/Cards.tsx'
 import { FormEvent, memo, useCallback, useEffect, useState } from 'react'
-import { createNewFile, deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers.tsx'
+import { createNewFile, deleteFile, getSaveFileList, saveCurrentState } from '../Script/FilesDataFetchers.ts'
 import SearchBar from '../Components/SearchBar.tsx'
 import "../Script/commonJS"
 import OwnerFooter from '../Components/OwnerFooter.tsx'

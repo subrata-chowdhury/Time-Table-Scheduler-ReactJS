@@ -5,7 +5,7 @@ import WorkingHourBarChat from '../Components/WorkingHourBarChat.tsx'
 import { HorizentalCardsContainer } from '../Components/Cards.tsx'
 import TimeTable from '../Components/TimeTable.tsx'
 import React, { memo, useCallback, useRef, useState } from 'react'
-import { getTeacher, getTeachersList, getTeacherSchedule } from '../Script/TeachersDataFetcher.tsx'
+import { getTeacher, getTeachersList, getTeacherSchedule } from '../Script/TeachersDataFetcher'
 import { getSubjectsDetailsList, SubjectsDetailsList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
 import OwnerFooter from '../Components/OwnerFooter.tsx'

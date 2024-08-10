@@ -1,4 +1,4 @@
-import { memo, useCallback, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import Cross from "../Icons/Cross.tsx";
 import Search from "../Icons/Search.tsx";
 import "../Style/SearchBar.css"
@@ -48,6 +48,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ array = [], onChange = () => { } 
             setActive(false);
         }
     }, [searchInputBox, searchInputContainer])
+
+    useEffect(() => {
+        searchChangeHandler({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>)
+    }, [array, searchChangeHandler])
 
     return (
         <div className={"search-container" + (active ? " active" : "")} ref={searchInputContainer}>

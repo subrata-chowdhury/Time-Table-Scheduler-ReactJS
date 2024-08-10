@@ -1,4 +1,6 @@
-export const verifyTeacherInputs = (teacherName, teacherDetails, subjectList) => {
+import { Teacher } from "../../data/Types";
+
+export const verifyTeacherInputs = (teacherName: string, teacherDetails: Teacher, subjectList: any) => {
     let teacherData = { ...teacherDetails };
     let newTeacherName = teacherName.trim().toUpperCase();
 
@@ -50,10 +52,10 @@ export const verifyTeacherInputs = (teacherName, teacherDetails, subjectList) =>
                 alert("Length of each element must be 2")
                 return false
             }
-            if (!typeof teacherData.freeTime[index][0] === 'number' && !typeof teacherData.freeTime[index][1] === 'number') {
-                alert("day & week index must be a number")
-                return false
-            }
+            // if (!typeof teacherData.freeTime[index][0] === 'number' && !typeof teacherData.freeTime[index][1] === 'number') {
+            //     alert("day & week index must be a number")
+            //     return false
+            // }
             if (teacherData.freeTime[index][0] < 0 && teacherData.freeTime[index][1] < 0) {
                 alert("day & week index value must be positive or zero")
                 return false

@@ -4,8 +4,8 @@ import Cards from '../Components/Cards.tsx'
 import "../Style/Teachers.css"
 import { FormEvent, memo, useCallback, useEffect, useRef, useState } from 'react'
 import SearchBar from '../Components/SearchBar.tsx'
-import { deleteTeacher, getTeachersList, saveTeacher } from '../Script/TeachersDataFetcher.tsx'
-import { getTimeTableStructure } from '../Script/TimeTableDataFetcher.tsx'
+import { deleteTeacher, getTeachersList, saveTeacher } from '../Script/TeachersDataFetcher'
+import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import { getSubjectsList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
 import { hasElement } from '../Script/util.ts'

@@ -1,13 +1,13 @@
-export default function verifyTimeTableStructureInputs(timeTableStructureFieldValues) {
+export default function verifyTimeTableStructureInputs(timeTableStructureFieldValues: any) {
     let timeTableStructure = Object()
 
     //Validating year count
-    if (!timeTableStructureFieldValues.semesterCount || timeTableStructureFieldValues.semesterCount.length === 0) {
+    if (!timeTableStructureFieldValues.semesterCount) {
         alert("semester count can't be empty")
         return false
     }
     // must be an positive integer number
-    let semesterCount = Number.parseInt(timeTableStructureFieldValues.semesterCount)
+    let semesterCount = timeTableStructureFieldValues.semesterCount
     if (!isPositiveWholeNumber(semesterCount)) {
         alert("Please enter a valid year count")
         return false
@@ -15,12 +15,12 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
     timeTableStructure.semesterCount = semesterCount
 
     //Validating period count
-    if (!timeTableStructureFieldValues.periodCount || timeTableStructureFieldValues.periodCount.length === 0) {
+    if (!timeTableStructureFieldValues.periodCount) {
         alert("period count can't be empty")
         return false
     }
     // must be an positive integer number
-    let periodCount = Number.parseInt(timeTableStructureFieldValues.periodCount)
+    let periodCount = timeTableStructureFieldValues.periodCount
     if (!isPositiveWholeNumber(periodCount)) {
         alert("Please enter a valid period count")
         return false
@@ -28,7 +28,7 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
     timeTableStructure.periodCount = periodCount
 
     //Validating sections per year
-    if (!timeTableStructureFieldValues.sectionsPerSemester || timeTableStructureFieldValues.sectionsPerSemester.length === 0) {
+    if (!timeTableStructureFieldValues.sectionsPerSemester) {
         alert("period count can't be empty")
         return false
     }
@@ -54,7 +54,7 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
     timeTableStructure.sectionsPerSemester = sectionsPerSemester
 
     //Validating breaks per year
-    if (!timeTableStructureFieldValues.breaksPerSemester || timeTableStructureFieldValues.breaksPerSemester.length === 0) {
+    if (!timeTableStructureFieldValues.breaksPerSemester) {
         alert("period count can't be empty")
         return false
     }
@@ -97,7 +97,7 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
     return timeTableStructure
 }
 
-const isPositiveWholeNumber = (num) => {
+const isPositiveWholeNumber = (num: number) => {
     if (!Number.isInteger(num) || num < 0 || Number.isNaN(num)) return false
     else return true
 }

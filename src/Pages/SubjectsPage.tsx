@@ -103,6 +103,17 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
         isFree: false
     })
 
+    useEffect(() => {
+        setSubjectName(activeSubjectName)
+        setSubjectDetails(activeSubjectDetails ? activeSubjectDetails : {
+            isPractical: false,
+            lectureCount: 4,
+            roomCodes: [],
+            sem: "",
+            isFree: false
+        })
+    }, [activeSubjectName, activeSubjectDetails])
+
     const subjectTypeClickHandler = useCallback(() => {
         setSubjectDetails(value => ({ ...value, isPractical: !value["isPractical"] }))
     }, [])
