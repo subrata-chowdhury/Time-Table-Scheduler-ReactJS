@@ -2,7 +2,7 @@ export type Subject = {
     sem: number;
     lectureCount: number;
     isPractical: boolean;
-    roomCode: string;
+    roomCodes: string[];
     isFree: boolean;
 };
 

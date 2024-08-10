@@ -8,7 +8,7 @@ import React from "react";
 interface CardsProps {
     cardList?: string[],
     cardClassName: string,
-    onCardClick?: (event: React.MouseEvent<HTMLDivElement>) => void,
+    onCardClick?: (name: string) => void,
     onAddBtnClick?: (event: React.MouseEvent<HTMLDivElement>) => void,
     canStayActiveMultipleCards?: boolean,
     cardsContainer?: React.RefObject<HTMLDivElement>,
@@ -54,9 +54,9 @@ const Cards: React.FC<CardsProps> = ({
                     key={card}
                     className={cardClassName}
                     active={activeCards.includes(card)}
-                    onClick={e => {
+                    onClick={() => {
                         defaultCardClickHandler(card)
-                        onCardClick(e)
+                        onCardClick(card)
                     }}
                     compressText={true}
                     showEditBtn={showEditBtn}

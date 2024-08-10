@@ -4,7 +4,7 @@ import "../Style/Tags.css"
 
 interface TagInputProps {
     tagList: string[]
-    validTags: string[]
+    validTags?: string[]
     onChange?: (newTags: string[]) => void
 }
 
@@ -24,9 +24,11 @@ const TagInput: React.FC<TagInputProps> = ({
             alert("Value can't be empty")
             return
         }
-        if (!hasElement(validTags, tag)) {
-            alert("Value not valid")
-            return
+        if (validTags.length > 0) {
+            if (!hasElement(validTags, tag)) {
+                alert("Value not valid")
+                return
+            }
         }
         if (hasElement(tagList, tag)) {
             alert("Value already exists")

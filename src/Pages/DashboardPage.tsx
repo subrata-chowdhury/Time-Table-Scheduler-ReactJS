@@ -33,7 +33,7 @@ type BasicDetails = {
 
 function MainComponents() {
     const [teachersList, setTeahersList] = useState<string[]>([])
-    const [perDayValue, setPerDayValue] = useState([0, 0, 0, 0, 0])
+    const [perDayValue, setPerDayValue] = useState<number[]>([0, 0, 0, 0, 0])
 
     const [basicDetails, setBasicDetails] = useState<BasicDetails>({
         subjectsCount: 0,
