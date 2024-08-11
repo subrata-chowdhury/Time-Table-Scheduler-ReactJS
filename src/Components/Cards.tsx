@@ -1,7 +1,7 @@
 import Plus from "../Icons/Plus.tsx";
 import "../Style/Cards.css"
 import Arrow from '../Icons/Arrow.tsx'
-import { memo, useCallback, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import EditIcon from "../Icons/Edit.tsx";
 import React from "react";
 
@@ -30,6 +30,10 @@ const Cards: React.FC<CardsProps> = ({
 }) => {
     const [activeCards, setActiveCards] = useState<string[]>([])
 
+    useEffect(() => {
+        setActiveCards([])
+    }, [cardList])
+
     const defaultCardClickHandler = useCallback((card: string) => {
         if (canStayActiveMultipleCards) {
             if (activeCards.includes(card)) {
@@ -45,7 +49,10 @@ const Cards: React.FC<CardsProps> = ({
 
     return (
         <div className="cards-container" ref={cardsContainer}>
-            <div className="card add" onClick={onAddBtnClick}>
+            <div className="card add" onClick={(e) => {
+                setActiveCards([])
+                onAddBtnClick(e)
+            }}>
                 <Plus />
             </div>
             {cardList && cardList.length > 0 && cardList.map((card) => (
@@ -91,7 +98,7 @@ export const Card: React.FC<CardProps> = memo(({
     onEditBtnClick = () => { }
 }) => {
     const innerCard = (
-        <div className={"card data " + className + (active ? ' active' : '')} onClick={()=>onClick(details)} title={details}>
+        <div className={"card data " + className + (active ? ' active' : '')} onClick={() => onClick(details)} title={details}>
             {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
         </div>
     )
@@ -149,6 +156,7 @@ export const HorizentalCardsContainer: React.FC<HorizentalCardsContainerProps> =
     const horizentalCardsOnWheelHandler = useCallback((event: React.WheelEvent) => {
         if (cardsContainer.current == null) return
         cardsContainer.current.scrollLeft += (event.deltaY);
+        showLeftArrow()
     }, [])
     const arrowClickHandler = useCallback((value: number) => {
         if (cardsContainer.current == null) return

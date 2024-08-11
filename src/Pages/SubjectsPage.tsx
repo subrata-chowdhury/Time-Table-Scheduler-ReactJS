@@ -28,7 +28,6 @@ function SubjectsPage() {
 function MainComponents() {
     const [subjectsList, setSubjectsList] = useState<string[]>([])
     const [activeSubjectName, setActiveSubjectName] = useState<string>("")
-    const [activeSubjectDetails, setActiveSubjectDetails] = useState<Subject>()
     const [displayLoader, setDisplayLoader] = useState(false);
     const [filterdSubjectList, setFilterdSubjectList] = useState<string[]>(subjectsList)
 
@@ -38,6 +37,7 @@ function MainComponents() {
     const startUpFunction = useCallback(() => {
         getSubjectsList(setSubjectsList) // api call
         setDisplayLoader(false)
+        setActiveSubjectName("")
     }, [])
     return (
         <>
@@ -53,14 +53,15 @@ function MainComponents() {
                         cardClassName={"subject-card"}
                         onCardClick={(name) => {
                             setActiveSubjectName(name)
-                            getSubject(name, setActiveSubjectDetails) // api call
+                        }}
+                        onAddBtnClick={() => {
+                            setActiveSubjectName("")
                         }}
                     />
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer
                         activeSubjectName={activeSubjectName}
-                        activeSubjectDetails={activeSubjectDetails}
                         subjectsList={subjectsList}
                         onSubmitCallBack={startUpFunction}
                         setDisplayLoader={setDisplayLoader}
@@ -73,7 +74,6 @@ function MainComponents() {
 
 interface DetailsContainerProps {
     activeSubjectName: string,
-    activeSubjectDetails: Subject | undefined,
     subjectsList: string[],
     onSubmitCallBack: () => void,
     setDisplayLoader: (value: boolean) => void
@@ -89,30 +89,32 @@ type SubjectInput = {
 
 const DetailsContainer: React.FC<DetailsContainerProps> = ({
     activeSubjectName = "",
-    activeSubjectDetails = null,
     subjectsList,
     onSubmitCallBack,
     setDisplayLoader
 }) => {
     const [subjectName, setSubjectName] = useState<string>(activeSubjectName)
-    const [subjectDetails, setSubjectDetails] = useState<Subject | SubjectInput>(activeSubjectDetails ? activeSubjectDetails : {
+    const [subjectDetails, setSubjectDetails] = useState<Subject | SubjectInput>({
         isPractical: false,
         lectureCount: 4,
         roomCodes: [],
         sem: "",
         isFree: false
     })
+    const [disabled, setDisabled] = useState<boolean>(false)
 
     useEffect(() => {
         setSubjectName(activeSubjectName)
-        setSubjectDetails(activeSubjectDetails ? activeSubjectDetails : {
+        if (activeSubjectName !== "")
+            getSubject(activeSubjectName, setSubjectDetails) // api call
+        else setSubjectDetails({
             isPractical: false,
             lectureCount: 4,
             roomCodes: [],
             sem: "",
             isFree: false
         })
-    }, [activeSubjectName, activeSubjectDetails])
+    }, [activeSubjectName])
 
     const subjectTypeClickHandler = useCallback(() => {
         setSubjectDetails(value => ({ ...value, isPractical: !value["isPractical"] }))
@@ -141,21 +143,16 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     }, [subjectName, subjectDetails, subjectsList])
     const saveData = useCallback((subjectName: string, subjectData: Subject) => {
         setDisplayLoader(true)
+        setDisabled(true)
         saveSubject(subjectName, subjectData, () => { // api call
-            alert(JSON.stringify({ subjectName: subjectData }) + "---------- is added");
+            alert(JSON.stringify({ subjectName, subjectData }) + "---------- is added");
             onSubmitCallBack();
-
-            // reseting form fields
-            setSubjectName("")
-            setSubjectDetails({
-                isPractical: false,
-                lectureCount: 4,
-                roomCodes: [],
-                sem: "",
-                isFree: false
-            })
-        }, () => {
+        }).then(() => {
             setDisplayLoader(false)
+            setDisabled(false)
+        }).catch(() => {
+            setDisplayLoader(false)
+            setDisabled(true)
         })
     }, [])
 
@@ -232,7 +229,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                 </div>
             </div>
             <div className='save-btn-container'>
-                <button className='subject-save-btn' type='submit'>Save</button>
+                <button className='subject-save-btn' type='submit' disabled={disabled}>Save</button>
                 <button className='subject-delete-btn' onClick={deleteSubjectBtnClickHandler}>Delete</button>
             </div>
         </form>

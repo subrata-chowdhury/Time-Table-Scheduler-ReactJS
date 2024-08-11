@@ -128,8 +128,6 @@ export const saveTeacher = async (
     onSuccess: () => void = () => { },
     onFailed: () => void = () => { }
 ): Promise<string | null> => {
-    let data = new Map();
-    data.set(teacherName, teacherData);
     try {
         let apiToken = await getApiToken()
         let response = await fetch(url + `io/teachers/${teacherName}`, {
@@ -138,7 +136,7 @@ export const saveTeacher = async (
                 'content-type': 'application/json',
                 'Api-Token': apiToken
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(teacherData)
         })
         if (response.status === 200) {
             onSuccess()

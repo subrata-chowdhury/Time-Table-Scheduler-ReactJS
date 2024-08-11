@@ -98,8 +98,6 @@ export const saveSubject = async (
     onSuccess: () => void = () => { },
     onFailed: () => void = () => { }
 ): Promise<string | null> => {
-    let newData = new Map<string, Subject>();
-    newData.set(subjectName, subjectDetails)
     try {
         let apiToken = await getApiToken()
         let response = await fetch(url + `io/subjects/${subjectName}`, {
@@ -108,7 +106,7 @@ export const saveSubject = async (
                 'content-type': 'application/json',
                 'Api-Token': apiToken
             },
-            body: JSON.stringify(newData)
+            body: JSON.stringify(subjectDetails)
         })
         if (response.status === 200) {
             onSuccess();

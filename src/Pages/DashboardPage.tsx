@@ -4,7 +4,7 @@ import "../Style/Dashboard.css"
 import WorkingHourBarChat from '../Components/WorkingHourBarChat.tsx'
 import { HorizentalCardsContainer } from '../Components/Cards.tsx'
 import TimeTable from '../Components/TimeTable.tsx'
-import React, { memo, useCallback, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getTeacher, getTeachersList, getTeacherSchedule } from '../Script/TeachersDataFetcher'
 import { getSubjectsDetailsList, SubjectsDetailsList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
@@ -64,6 +64,7 @@ function MainComponents() {
     }, [])
 
     const startUpFunction = () => {
+        setPerDayValue([0, 0, 0, 0, 0])
         getTeachersList((data) => { // api call
             setTeahersList(data)
             setBasicDetails(val => {
@@ -85,6 +86,10 @@ function MainComponents() {
             })
         })
     }
+
+    useEffect(() => {
+        startUpFunction()
+    }, [])
 
     return (
         <div className='top-sub-container'>
@@ -165,6 +170,13 @@ const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
         freeTime: [],
         subjects: [],
     })
+    const [teachersNameList, setTeahersNameList] = useState<string[]>([])
+
+    useEffect(() => {
+        setTeahersNameList(teachersList)
+        setSemesters([])
+        setTeahersDetails(val => { return { ...val, subjects: [] } })
+    }, [teachersList])
 
 
     const teacherCardClickHandler = useCallback((name: string) => {
@@ -209,7 +221,7 @@ const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
     return (
         <div className='teachers-details-container'>
             <HorizentalCardsContainer
-                cardList={teachersList}
+                cardList={teachersNameList}
                 cardClickHandler={(name) => {
                     teacherCardClickHandler(name)
                 }}

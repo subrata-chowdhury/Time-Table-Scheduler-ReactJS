@@ -4,7 +4,7 @@ import Cards from '../Components/Cards.tsx'
 import "../Style/Teachers.css"
 import { FormEvent, memo, useCallback, useEffect, useRef, useState } from 'react'
 import SearchBar from '../Components/SearchBar.tsx'
-import { deleteTeacher, getTeachersList, saveTeacher } from '../Script/TeachersDataFetcher'
+import { deleteTeacher, getTeacher, getTeachersList, saveTeacher } from '../Script/TeachersDataFetcher'
 import { getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import { getSubjectsList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
@@ -66,12 +66,6 @@ function MainComponents() {
             console.log("%cNo Click Query Found", "color: green");
         }
     }, [])
-    const teacherCardOnClickHandler = useCallback((teacherName: string) => {
-        setTeacherName(teacherName);
-    }, [])
-    const addTeacherCardClickHandler = useCallback(() => {
-        setTeacherName("")
-    }, [])
     return (
         <>
             <Loader display={displayLoader} />
@@ -84,8 +78,10 @@ function MainComponents() {
                     <Cards
                         cardList={teachersList}
                         cardClassName={"teacher-card"}
-                        onCardClick={teacherCardOnClickHandler}
-                        onAddBtnClick={addTeacherCardClickHandler}
+                        onCardClick={name => setTeacherName(name)}
+                        onAddBtnClick={() => {
+                            setTeacherName("")
+                        }}
                     />
                 </div>
                 <div className='right-sub-container'>
@@ -121,8 +117,15 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     const [teacherDetails, setTeacherDetails] = useState<Teacher>({
         freeTime: [],
         subjects: [],
-    })
+    });
+    const [disabled, setDisabled] = useState<boolean>(false)
     const subjectList = useRef<string[] | undefined>();
+
+    useEffect(() => {
+        setTeacherName(activeTeacherName)
+        if (activeTeacherName === "") setTeacherDetails({ freeTime: [], subjects: [] })
+        else getTeacher(activeTeacherName, setTeacherDetails); // api call
+    }, [activeTeacherName])
 
     useEffect(() => {
         getSubjectsList(data => subjectList.current = data) // api call
@@ -164,18 +167,16 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     }, [teacherName, teacherDetails, teachersList])
     const saveData = useCallback((teacherName: string, teacherData: Teacher) => {
         setDisplayLoader(true)
+        setDisabled(true)
         saveTeacher(teacherName, teacherData, () => { // api call
-            alert(JSON.stringify({ teacherName: teacherData }) + "---------- is added")
+            alert(JSON.stringify({ teacherName, teacherData }) + "---------- is added")
             onSubmitCallBack(); // referenced to start up function
-
-            // reseting form fields
-            setTeacherName("");
-            setTeacherDetails({
-                freeTime: [],
-                subjects: [],
-            })
-        }, () => {
+        }).then(() => {
             setDisplayLoader(false)
+            setDisabled(false)
+        }).catch(() => {
+            setDisplayLoader(false)
+            setDisabled(false)
         })
     }, [])
     const deleteTeacherBtnClickHandler = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -223,7 +224,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                     teacherDetails={teacherDetails} />
             </div>
             <div className='save-btn-container'>
-                <button className='teacher-save-btn' type='submit'>Save</button>
+                <button className='teacher-save-btn' type='submit' disabled={disabled} >Save</button>
                 <button className='teacher-delete-btn' onClick={deleteTeacherBtnClickHandler}>Delete</button>
             </div>
         </form>

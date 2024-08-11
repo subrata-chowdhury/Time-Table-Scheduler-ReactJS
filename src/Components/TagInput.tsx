@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { hasElement } from "../Script/util.ts";
 import "../Style/Tags.css"
 
@@ -14,13 +14,18 @@ const TagInput: React.FC<TagInputProps> = ({
     onChange = () => { }
 }) => {
     const [tag, setTag] = useState<string>("")
+    const [tagsList, setTagsList] = useState<string[]>(tagList)
+    console.log("Render")
+    useEffect(() => {
+        setTagsList(tagList)
+    }, [tagList])
 
     const tagChangeHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setTag(e.target.value.trim().toUpperCase())
+        setTag(e.currentTarget.value.trim().toUpperCase())
     }, [])
 
     const addTag = useCallback(() => {
-        if (tag !== "") {
+        if (tag === "" || tag.length === 0) {
             alert("Value can't be empty")
             return
         }
@@ -34,6 +39,7 @@ const TagInput: React.FC<TagInputProps> = ({
             alert("Value already exists")
             return
         }
+        setTagsList([...tagList, tag])
         onChange([...tagList, tag])
         setTag("")
     }, [tag, tagList, onChange])
@@ -41,7 +47,7 @@ const TagInput: React.FC<TagInputProps> = ({
     return (
         <div className='tag-input-container'>
             <div className='tags-container'>
-                {tagList.map((tag, index) => (
+                {tagsList.map((tag, index) => (
                     <Tag
                         key={index}
                         value={tag}
@@ -52,10 +58,11 @@ const TagInput: React.FC<TagInputProps> = ({
                 ))}</div>
             <input
                 type="text"
-                name={tag}
+                value={tag}
                 onChange={tagChangeHandler}
                 onKeyDown={e => {
                     if (e.key === "Enter") {
+                        e.preventDefault()
                         addTag()
                     }
                 }}
