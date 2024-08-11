@@ -4,6 +4,7 @@
     gap: 10px;
     grid-auto-flow: row;
     border-radius: 12px;
+    padding-right: 1rem;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -16,7 +17,6 @@
 .day-container,
 .period-times-container {
     display: grid;
-    grid-template-columns: auto(auto-fill, 1fr);
     gap: 5px;
     justify-content: stretch;
 }

@@ -82,6 +82,10 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
 }) => {
     const [fileName, setFileName] = useState<string>(activeFileName)
 
+    useEffect(() => {
+        setFileName(activeFileName)
+    }, [activeFileName])
+
     const fileFormOnSubmitHandler = useCallback((event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const file = fileName.trim().toUpperCase()

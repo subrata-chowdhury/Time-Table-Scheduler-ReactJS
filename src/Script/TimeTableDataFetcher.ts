@@ -47,6 +47,7 @@ export const getSchedule = async (onSuccess: (data: FullTimeTable) => void = () 
             let schedule;
             try {
                 schedule = await response.json()
+                console.log(schedule)
             } catch (error) {
                 console.log("%cInvaild schedule data", "color: red;", await response.text())
             }

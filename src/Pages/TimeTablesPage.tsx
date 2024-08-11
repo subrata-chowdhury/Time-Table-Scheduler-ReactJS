@@ -38,7 +38,7 @@ function MainComponents() {
         breaksPerSemester: [[4, 5], [5], [5], [5]],
         periodCount: 9,
         sectionsPerSemester: [0, 0, 0, 0],
-        semesterCount: 4
+        semesterCount: 3
     })
     const fillManually = useRef(false)
 
@@ -116,13 +116,14 @@ function MainComponents() {
 
                 {/* Year btns */}
                 <HorizentalCardsContainer
-                    className='sem-cards-container'
-                    cardClassName={"semester-card"}
+                    // className='sem-cards-container'
+                    // cardClassName={"semester-card"}
                     cardList={sems}
                     compressText={false}
                     cardClickHandler={semCardClickHandler} />
 
                 {subjectsDetails && timeTableStructure && <TimeTable
+                    className='class-time-table'
                     subjectsDetails={subjectsDetails}
                     details={timeTable}
                     periodClickHandler={(dayIndex: number, periodIndex: number) => {
@@ -136,7 +137,7 @@ function MainComponents() {
                         } catch (err) { }
                     }}
                     breakTimeIndexs={timeTableStructure.breaksPerSemester[currentOpenSem]}
-                    noOfPeriods={timeTableStructure.periodCount} />}
+                    noOfPeriods={Number(timeTableStructure.periodCount)} />}
                 {!timeTable &&
                     (<div style={{ display: 'grid', justifyContent: 'center', alignItems: 'center' }}>
                         No Time Table Found for Year {currentOpenSem + 1} Sec {String.fromCharCode(65 + currentOpenSection)}

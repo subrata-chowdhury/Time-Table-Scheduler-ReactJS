@@ -30,7 +30,7 @@ interface TimeTableProps {
 
 const TimeTable: React.FC<TimeTableProps> = ({
     // noOfDays = 5,
-    // noOfPeriods = 9,
+    noOfPeriods = 9,
     breakTimeIndexs = [4],
 
     dayNames = ["Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -57,6 +57,7 @@ const TimeTable: React.FC<TimeTableProps> = ({
                     <DaysRow
                         key={i}
                         dayIndex={i}
+                        noOfPeriods={noOfPeriods}
                         details={details[i]}
                         breakWord={breakWord[i]}
                         subjectsDetails={subjectsDetails}
@@ -80,7 +81,7 @@ const TimeTable: React.FC<TimeTableProps> = ({
 
     return (
         <div className={"time-table-container " + className}>
-            <div className="period-times-container">
+            <div className="period-times-container" style={{ gridTemplateColumns: `repeat(${noOfPeriods + 1},1fr)` }}>
                 <div className="column-row-identifier">
                     <span className="column-indentifier">Day\
                         <span className="row-indentifier">Time</span>
@@ -96,6 +97,7 @@ const TimeTable: React.FC<TimeTableProps> = ({
 }
 
 interface DaysRowProps {
+    noOfPeriods?: number,
     dayIndex: number,
     details: Day | TeacherScheduleDay,
     breakWord: string,
@@ -107,6 +109,7 @@ interface DaysRowProps {
 }
 
 const DaysRow: React.FC<DaysRowProps> = ({
+    noOfPeriods = 9,
     dayIndex,
     details,
     breakWord,
@@ -116,12 +119,15 @@ const DaysRow: React.FC<DaysRowProps> = ({
     subjectIndexAtPeriodElementInDetails,
     periodClickHandler = () => { }
 }) => {
-    let index = 0;
+    let periodCompIndex = 1
+    let timeTableDataInteratorIndex = 0
+    let infiniteLoopPreventerIndex = 0;
+
     let DayElements = [];
     if (!details) return <div className="day-container"></div>
-    while (index < details.length) {
-        let periodDetails: Period | TeacherSchedulePeriod = details[index]
-        if (hasElement(breakTimeIndexs, index)) {
+    while (periodCompIndex <= noOfPeriods && timeTableDataInteratorIndex < details.length && infiniteLoopPreventerIndex < 50) {
+        let periodDetails: Period | TeacherSchedulePeriod = details[timeTableDataInteratorIndex]
+        if (hasElement(breakTimeIndexs, periodCompIndex)) {
             DayElements.push(<div className="period-details-container break">
                 <div> </div>
                 <div> {breakWord} </div>
@@ -130,30 +136,44 @@ const DaysRow: React.FC<DaysRowProps> = ({
         } else {
             if (periodDetails === null) {
                 DayElements.push(<PeriodComp
-                    key={index}
+                    key={timeTableDataInteratorIndex}
                     periodDetails={null}
                     dayIndex={dayIndex}
-                    index={index}
+                    periodIndex={timeTableDataInteratorIndex}
                     onClick={() => { }} />)
             } else if (periodDetails !== null && periodDetails && periodDetails[subjectIndexAtPeriodElementInDetails]) {
+                const isLab = (periodDetails[subjectIndexAtPeriodElementInDetails].toUpperCase() === "Subject".toUpperCase())
+                    || (periodDetails[subjectIndexAtPeriodElementInDetails].toUpperCase() === "Lab".toUpperCase()) ?
+                    false
+                    : subjectsDetails[periodDetails[subjectIndexAtPeriodElementInDetails]].isPractical
                 DayElements.push(<PeriodComp
-                    key={index}
+                    key={timeTableDataInteratorIndex}
                     periodDetails={periodDetails}
                     dayIndex={dayIndex}
-                    index={index}
-                    isLab={subjectsDetails[periodDetails[subjectIndexAtPeriodElementInDetails]].isPractical}
+                    periodIndex={timeTableDataInteratorIndex}
+                    isLab={isLab}
                     onClick={periodClickHandler} />)
+                if (isLab) { timeTableDataInteratorIndex += 2 } //+2 beacause in outer block it will increament which will cause +3
             } else DayElements.push(<PeriodComp
-                key={index}
+                key={timeTableDataInteratorIndex}
                 periodDetails={periodDetails}
                 dayIndex={dayIndex}
-                index={index}
+                periodIndex={timeTableDataInteratorIndex}
                 onClick={periodClickHandler} />)
-            index++
+        }
+        timeTableDataInteratorIndex++
+        periodCompIndex++
+
+        infiniteLoopPreventerIndex++
+        if (infiniteLoopPreventerIndex === 49) {
+            DayElements = []
+            DayElements.push(
+                <div>Error In Data</div>
+            )
         }
     }
     return (
-        <div className="day-container">
+        <div className="day-container" style={{ gridTemplateColumns: `repeat(${noOfPeriods + 1},1fr)` }}>
             <div className="day-name">{dayName}</div>
             {DayElements}
         </div>
@@ -163,17 +183,22 @@ const DaysRow: React.FC<DaysRowProps> = ({
 interface PeriodProps {
     periodDetails: Period | TeacherSchedulePeriod,
     dayIndex: number,
-    index: number,
+    periodIndex: number,
     isLab?: boolean,
     onClick: (dayIndex: number, periodIndex: number) => void
 }
 
-const PeriodComp: React.FC<PeriodProps> = ({ periodDetails = [], dayIndex, index, isLab = false, onClick = () => { } }) => {
+const PeriodComp: React.FC<PeriodProps> = ({ periodDetails = [], dayIndex, periodIndex, isLab = false, onClick = () => { } }) => {
     return (
-        <div className="period-details-container" style={isLab ? { gridColumn: 'auto / span 3' } : {}} onClick={() => onClick(dayIndex, index)}>
-            {periodDetails && periodDetails.map((detail, index) => (
+        <div className="period-details-container class" style={isLab ? { gridColumn: 'auto / span 3' } : {}} onClick={() => onClick(dayIndex, periodIndex)}>
+            {periodDetails && periodDetails?.length > 0 && periodDetails.map((detail, index) => (
                 <div key={index}>{detail}</div>
             ))}
+            {!periodDetails && <>
+                <div>&nbsp;</div>
+                <div>&nbsp;</div>
+                <div>&nbsp;</div>
+            </>}
         </div>
     )
 }

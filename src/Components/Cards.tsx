@@ -14,7 +14,7 @@ interface CardsProps {
     cardsContainer?: React.RefObject<HTMLDivElement>,
     showEditBtn?: boolean
     onEditBtnClick?: (details: string) => void,
-    onChange?: (activeCards?: string[]) => void
+    onActive?: (activeCards?: string[]) => void
 }
 
 const Cards: React.FC<CardsProps> = ({
@@ -26,7 +26,7 @@ const Cards: React.FC<CardsProps> = ({
     cardsContainer = useRef<HTMLDivElement | null>(null),
     showEditBtn = false,
     onEditBtnClick = () => { },
-    onChange = () => { }
+    onActive = () => { }
 }) => {
     const [activeCards, setActiveCards] = useState<string[]>([])
 
@@ -44,7 +44,7 @@ const Cards: React.FC<CardsProps> = ({
         } else {
             setActiveCards([card])
         }
-        onChange(activeCards)
+        onActive(activeCards)
     }, [activeCards, canStayActiveMultipleCards])
 
     return (
