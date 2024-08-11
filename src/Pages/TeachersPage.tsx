@@ -130,31 +130,35 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     useEffect(() => {
         getSubjectsList(data => subjectList.current = data) // api call
     }, [])
-    const modifyTheValueOfInputBox = useCallback((time: string, isSelected: boolean) => {
+
+
+    const updateTeacherFreeTimeDetails = useCallback((time: [number, number], active: boolean) => {
         let newDetails: Teacher = { ...teacherDetails };
-        let parsedTime: [number, number] = JSON.parse(time)
-        if (isSelected) {
+        if (active) {
             let found = -1;
             for (let index = 0; index < newDetails.freeTime.length; index++) {
-                if (newDetails.freeTime[index][0] === parsedTime[0] && newDetails.freeTime[index][1] === parsedTime[1]) {
+                if (newDetails.freeTime[index][0] === time[0] && newDetails.freeTime[index][1] === time[1]) {
                     found = index;
                     break
                 }
             }
             newDetails.freeTime.splice(found, 1);
         } else {
-            newDetails.freeTime[newDetails.freeTime.length] = parsedTime;
+            newDetails.freeTime[newDetails.freeTime.length] = time;
         }
         setTeacherDetails(newDetails)
     }, [teacherDetails])
+
     const inputOnChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.name === 'teacherName') setTeacherName(event.target.value.toUpperCase())
         else setTeacherDetails(value => ({ ...value, [event.target.name]: event.target.value }))
     }, [])
+
     const checkIfAlreadyExist = useCallback((teacher: string) => {
         if (hasElement(teachersList, teacher)) { } // if teacher exist show delete btn
         else { } // if not teacher exist show delete btn
     }, [teachersList])
+
     const teacherFormSubmitHandler = useCallback((event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         //verification of inputs
@@ -165,6 +169,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                     saveData(verifiedData.newTeacherName, verifiedData.teacherData); // if yes then save else do nothing
             } else saveData(verifiedData.newTeacherName, verifiedData.teacherData);
     }, [teacherName, teacherDetails, teachersList])
+
     const saveData = useCallback((teacherName: string, teacherData: Teacher) => {
         setDisplayLoader(true)
         setDisabled(true)
@@ -179,6 +184,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
             setDisabled(false)
         })
     }, [])
+
     const deleteTeacherBtnClickHandler = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         if (hasElement(teachersList, teacherName)) // checking if the teacher exsist or not
@@ -190,6 +196,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                 });
             }
     }, [teacherName])
+
     return (
         <form className='details-container' onSubmit={teacherFormSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>
@@ -220,8 +227,8 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
             <div className='input-container'>
                 <div>Available Times</div>
                 <TimeSelector
-                    modifyTheValueOfInputBox={modifyTheValueOfInputBox}
-                    teacherDetails={teacherDetails} />
+                    onChange={updateTeacherFreeTimeDetails}
+                    selectedValues={teacherDetails.freeTime} />
             </div>
             <div className='save-btn-container'>
                 <button className='teacher-save-btn' type='submit' disabled={disabled} >Save</button>
@@ -232,31 +239,30 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
 }
 
 interface TimeSelectorProps {
-    modifyTheValueOfInputBox: (time: string, isSelected: boolean) => void,
-    teacherDetails: Teacher
+    onChange?: (time: [number, number], active: boolean) => void,
+    selectedValues: [number, number][] | []
 }
 
-const TimeSelector: React.FC<TimeSelectorProps> = memo(({ modifyTheValueOfInputBox, teacherDetails }) => {
+const TimeSelector: React.FC<TimeSelectorProps> = memo(({ onChange = () => { }, selectedValues = [] }) => {
     const [periodCount, setPeriodCount] = useState<number>(8);
     useEffect(() => {
         getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) }); // api call
     }, [])
     let noOfDays = 5;
     let timeTable = [];
-    let newTeacherDetailsFreeTime = teacherDetails.freeTime
     for (let day = 0; day < noOfDays; day++) {
-        let teacherDetailsFreeTimeOfThatDay = [];
-        for (let index = 0; index < newTeacherDetailsFreeTime.length; index++) {
-            if (newTeacherDetailsFreeTime[index][0] === (day + 1))
-                teacherDetailsFreeTimeOfThatDay.push(newTeacherDetailsFreeTime[index][1])
+        let selectedValuesOfThatDay: number[] = [];
+        for (let index = 0; index < selectedValues.length; index++) {
+            if (selectedValues[index][0] === (day + 1))
+                selectedValuesOfThatDay.push(selectedValues[index][1])
         }
         timeTable.push(
             <Periods
-                noOfPeriods={periodCount}
-                day={day}
-                modifyTheValueOfInputBox={modifyTheValueOfInputBox}
                 key={day}
-                teacherDetailsFreeTimeOfThatDay={teacherDetailsFreeTimeOfThatDay}
+                day={day}
+                noOfPeriods={periodCount}
+                activeIndexs={selectedValuesOfThatDay}
+                onClick={onChange}
             ></Periods>
         )
     }
@@ -270,31 +276,27 @@ const TimeSelector: React.FC<TimeSelectorProps> = memo(({ modifyTheValueOfInputB
 })
 
 interface PeriodsProps {
-    noOfPeriods: number,
     day: number,
-    modifyTheValueOfInputBox: (time: string, isSelected: boolean) => void,
-    teacherDetailsFreeTimeOfThatDay: number[]
+    noOfPeriods: number,
+    activeIndexs: number[],
+    onClick?: (time: [number, number], active: boolean) => void,
 }
 
-const Periods: React.FC<PeriodsProps> = memo(({ noOfPeriods, day, modifyTheValueOfInputBox, teacherDetailsFreeTimeOfThatDay }) => {
-    const [selected, setSelected] = useState(false)
+const Periods: React.FC<PeriodsProps> = memo(({ noOfPeriods, day, onClick = () => { }, activeIndexs = [] }) => {
     let periods = []
     for (let period = 0; period < noOfPeriods; period++) {
-        if (hasElement(teacherDetailsFreeTimeOfThatDay, (period + 1))) {
-            setSelected(true)
-        }
+        const active = hasElement(activeIndexs, (period + 1))
         periods.push(
             <div
                 key={period}
-                className={'period ' + (selected ? "selected" : "")}
-                onClick={() => periodClickHandler(period)}>
+                className={'period' + (active ? " selected" : "")}
+                onClick={() => {
+                    onClick([day + 1, period + 1], active)
+                }}>
                 {period + 1}
             </div>
         )
     }
-    const periodClickHandler = useCallback((period: number) => {
-        modifyTheValueOfInputBox(`[${day + 1},${[period + 1]}]`, selected);
-    }, [modifyTheValueOfInputBox, selected])
 
     return (
         <div className='periods-container' >

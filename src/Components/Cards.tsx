@@ -11,7 +11,6 @@ interface CardsProps {
     onCardClick?: (name: string) => void,
     onAddBtnClick?: (event: React.MouseEvent<HTMLDivElement>) => void,
     canStayActiveMultipleCards?: boolean,
-    cardsContainer?: React.RefObject<HTMLDivElement>,
     showEditBtn?: boolean
     onEditBtnClick?: (details: string) => void,
     onActive?: (activeCards?: string[]) => void
@@ -23,7 +22,6 @@ const Cards: React.FC<CardsProps> = ({
     onCardClick = () => { },
     onAddBtnClick = () => { },
     canStayActiveMultipleCards = false,
-    cardsContainer = useRef<HTMLDivElement | null>(null),
     showEditBtn = false,
     onEditBtnClick = () => { },
     onActive = () => { }
@@ -48,7 +46,7 @@ const Cards: React.FC<CardsProps> = ({
     }, [activeCards, canStayActiveMultipleCards])
 
     return (
-        <div className="cards-container" ref={cardsContainer}>
+        <div className="cards-container">
             <div className="card add" onClick={(e) => {
                 setActiveCards([])
                 onAddBtnClick(e)
