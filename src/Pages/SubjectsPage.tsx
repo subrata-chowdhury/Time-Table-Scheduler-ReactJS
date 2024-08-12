@@ -41,7 +41,6 @@ function MainComponents() {
     }, [])
     return (
         <>
-            <Loader display={displayLoader} />
             <div className='top-sub-container'>
                 <div className='left-sub-container'>
                     <div className='tools-container'>
@@ -68,6 +67,7 @@ function MainComponents() {
                     />
                 </div>
             </div>
+            {displayLoader && <Loader />}
         </>
     )
 }

@@ -135,7 +135,7 @@ export const HorizentalCardsContainer: React.FC<HorizentalCardsContainerProps> =
     editBtnClickHandler,
     canStayActiveMultipleCards = false
 }) => {
-    const cardsContainer = useRef<HTMLDivElement | null>(null)
+    const cardsContainer = useRef<HTMLDivElement>(null)
     const [showArrow, setShowArrow] = useState(false)
     const [activeCards, setActiveCards] = useState<string[]>([])
 
@@ -155,7 +155,7 @@ export const HorizentalCardsContainer: React.FC<HorizentalCardsContainerProps> =
         onChange(newActiveCards)
     }, [activeCards, canStayActiveMultipleCards])
 
-    const horizentalCardsOnWheelHandler = useCallback((event: React.WheelEvent) => {
+    const horizentalCardsOnWheelHandler = useCallback((event: React.WheelEvent<HTMLDivElement>) => {
         if (cardsContainer.current == null) return
         cardsContainer.current.scrollLeft += (event.deltaY);
         showLeftArrow()

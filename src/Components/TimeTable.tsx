@@ -143,7 +143,8 @@ const DaysRow: React.FC<DaysRowProps> = ({
                     onClick={() => { }} />)
             } else if (periodDetails !== null && periodDetails && periodDetails[subjectIndexAtPeriodElementInDetails]) {
                 const isLab = (periodDetails[subjectIndexAtPeriodElementInDetails].toUpperCase() === "Subject".toUpperCase())
-                    || (periodDetails[subjectIndexAtPeriodElementInDetails].toUpperCase() === "Lab".toUpperCase()) ?
+                    || (periodDetails[subjectIndexAtPeriodElementInDetails].toUpperCase() === "Lab".toUpperCase()) 
+                    || subjectsDetails[periodDetails[subjectIndexAtPeriodElementInDetails]] === undefined?
                     false
                     : subjectsDetails[periodDetails[subjectIndexAtPeriodElementInDetails]].isPractical
                 DayElements.push(<PeriodComp

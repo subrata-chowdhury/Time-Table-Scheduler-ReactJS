@@ -27,7 +27,7 @@ function MainComponents() {
                 role="Frontend"
                 developerName="Subrata Chowdhury"
                 gitHubLink="https://github.com/Super7000"
-                linkedInLink="https://www.linkedin.com/in/subratachowdhury7000"
+                linkedInLink="https://www.linkedin.com/in/subrata7000"
                 email="subratachowdhury7000@gmail.com" />
             <Developer
                 picture={srideep}

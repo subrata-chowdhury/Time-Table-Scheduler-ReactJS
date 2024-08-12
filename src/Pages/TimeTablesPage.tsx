@@ -98,7 +98,6 @@ function MainComponents() {
     }, [subjectsDetails, periodDetailsIndex, timeTable])
     return (
         <>
-            <Loader display={displayLoader} />
             <div className='top-sub-container'>
                 <div className='menubar'>
                     <MiniStateContainer onChange={() => {
@@ -156,6 +155,7 @@ function MainComponents() {
                 onSetBtnClick={setBtnClickHandler}
                 onCancelBtnClick={() => setShowPopUp(false)}
             />}
+            {displayLoader && <Loader />}
         </>
     )
 }
@@ -240,7 +240,7 @@ const TeacherAndSubjectSelector: React.FC<TeacherAndSubjectSelectorProps> = memo
                     <SubjectCardsContainer onActive={onSubjectActive} />
                 </div>
                 <div className='teacher-subject-selector-btns-container'>
-                    <button onClick={() => onSetBtnClick(teacherList.current, subjectList.current)}>Set</button>
+                    <button onClick={() => onSetBtnClick(teacherList.current, subjectList.current)}>SET</button>
                     <button onClick={() => onCancelBtnClick()}>Cancel</button>
                 </div>
             </div >

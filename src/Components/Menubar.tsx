@@ -57,8 +57,11 @@ const menus = [
 const Menubar: React.FC<MenubarProps> = ({ activeMenuIndex, onMenuToggleClick = () => { } }) => {
     function toggleMenubar() {
         let activeApp = document.querySelector(".app.active");
-        activeApp!.classList.remove("active");
-        document.querySelector(".app")!.classList.add("active");
+        let app = document.querySelector(".app")
+        if (activeApp)
+            activeApp.classList.remove("active");
+        else if (app)
+            app.classList.add("active");
     }
 
     return (

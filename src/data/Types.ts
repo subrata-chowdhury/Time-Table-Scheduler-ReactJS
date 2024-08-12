@@ -14,9 +14,9 @@ export type Teacher = {
 
 export type TimeTableStructure = {
     semesterCount: number;
-    sectionsPerSemester: [number, number, number, number];
+    sectionsPerSemester: number[];
     periodCount: number;
-    breaksPerSemester: [number[], number[], number[], number[]];
+    breaksPerSemester: number[][];
 }
 
 
