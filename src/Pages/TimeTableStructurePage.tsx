@@ -36,29 +36,28 @@ interface TimeTableStructureInputContainerProps {
 
 const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContainerProps> = ({ fileChange }) => {
 
-    const [timeTableStructureFieldValues, setTimeTableStructureFieldValues] = useState({
-        breaksPerSemester: "",
-        periodCount: "0",
-        sectionsPerSemester: "",
-        semesterCount: "0"
+    const [timeTableStructureFieldValues, setTimeTableStructureFieldValues] = useState<TimeTableStructure>({
+        breaksPerSemester: [[0], [0], [4, 5], [4]],
+        periodCount: 9,
+        sectionsPerSemester: [0, 0, 3, 0],
+        semesterCount: 4
     })
 
-    const updateFieldsFromObject = useCallback((obj: TimeTableStructure) => {
-        let fieldValues = {
-            breaksPerSemester: JSON.stringify(obj.breaksPerSemester).slice(1, -1),
-            periodCount: JSON.stringify(obj.periodCount),
-            sectionsPerSemester: JSON.stringify(obj.sectionsPerSemester).slice(1, -1),
-            semesterCount: JSON.stringify(obj.semesterCount)
-        }
-        setTimeTableStructureFieldValues(fieldValues)
-    }, [])
-
     useEffect(() => {
-        getTimeTableStructure(updateFieldsFromObject) // api call
+        getTimeTableStructure(setTimeTableStructureFieldValues) // api call
     }, [fileChange])
 
     const inputOnChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setTimeTableStructureFieldValues(value => ({ ...value, [event.target.name]: event.target.value }))
+        switch (event.target.name) {
+            case 'semesterCount':
+                if (event.target.value === '' || Number(event.target.value) < 1) event.target.value = '1'
+                setTimeTableStructureFieldValues(value => ({ ...value, semesterCount: Number(event.target.value) }))
+                break
+            case 'periodCount':
+                if (event.target.value === '' || Number(event.target.value) < 4) event.target.value = '4'
+                setTimeTableStructureFieldValues(value => ({ ...value, periodCount: Number(event.target.value) }))
+                break
+        }
     }, [])
 
     const timeTableStructureOnSubmitHandler = useCallback((event: FormEvent<HTMLFormElement>) => {
@@ -71,15 +70,56 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
             })
         }
     }, [timeTableStructureFieldValues])
+
+    let sectionsPerSemester = []
+    for (let index = 0; index < timeTableStructureFieldValues.semesterCount; index++) {
+        sectionsPerSemester.push(
+            <input
+                key={index}
+                type='number'
+                className='input-box'
+                min={0}
+                name='sectionsPerSemester'
+                value={timeTableStructureFieldValues.sectionsPerSemester[index]?.toString() || 0}
+                onChange={(e) => {
+                    setTimeTableStructureFieldValues(prev => {
+                        let temp = [...prev.sectionsPerSemester]
+                        temp[index] = Number(e.target.value)
+                        return { ...prev, sectionsPerSemester: temp }
+                    })
+                }} />
+        )
+    }
+
+    let breaksPerSemester = []
+    for (let index = 0; index < timeTableStructureFieldValues.semesterCount; index++) {
+        breaksPerSemester.push(
+            <input
+                key={index}
+                type='text'
+                className='input-box'
+                name='breaksPerSemester'
+                value={timeTableStructureFieldValues.breaksPerSemester[index]?.toString() || 2}
+                onChange={(e) => {
+                    setTimeTableStructureFieldValues(prev => {
+                        let temp = [...prev.breaksPerSemester]
+                        temp[index] = e.target.value.split(',').map(val => Number(val))
+                        temp[index] = temp[index].filter(val => val !== 0)
+                        return { ...prev, breaksPerSemester: temp }
+                    })
+                }} />
+        )
+    }
+
     return (
         <form className='time-table-structure-inputs-container' onSubmit={timeTableStructureOnSubmitHandler}>
-            <div className='top-input-container'>
+            <div className='top-input-container input-grp'>
                 <div className="input-container">
                     <div className="input-box-heading">Number of Year</div>
                     <input
                         type='number'
                         className='input-box'
-                        min={0}
+                        min={1}
                         name='semesterCount'
                         value={timeTableStructureFieldValues.semesterCount}
                         onChange={inputOnChangeHandler} />
@@ -89,7 +129,7 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
                     <input
                         type='number'
                         className='input-box'
-                        min={0} name='periodCount'
+                        min={4} name='periodCount'
                         value={timeTableStructureFieldValues.periodCount}
                         onChange={inputOnChangeHandler} />
                 </div>
@@ -98,23 +138,21 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
             <div className='mid-input-container'>
                 <div className="input-container">
                     <div className="input-box-heading">Number of Sections per Year</div>
-                    <input
-                        type='text'
-                        className='input-box'
-                        name='sectionsPerSemester'
-                        value={timeTableStructureFieldValues.sectionsPerSemester}
-                        onChange={inputOnChangeHandler} />
+                    <div className='input-grp'>
+                        {
+                            sectionsPerSemester
+                        }
+                    </div>
                 </div>
             </div>
             <div className='bottom-input-container'>
                 <div className="input-container">
                     <div className="input-box-heading">Break Times per Year</div>
-                    <input
-                        type='text'
-                        className='input-box'
-                        name='breaksPerSemester'
-                        value={timeTableStructureFieldValues.breaksPerSemester}
-                        onChange={inputOnChangeHandler} />
+                    <div className='input-grp'>
+                        {
+                            breaksPerSemester
+                        }
+                    </div>
                 </div>
             </div>
             <div className='save-btn-container'>
