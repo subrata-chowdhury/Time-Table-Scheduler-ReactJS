@@ -225,11 +225,11 @@ const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
         <div className='teachers-details-container'>
             <HorizentalCardsContainer
                 cardList={teachersNameList}
-                cardClickHandler={(name) => {
+                onCardClick={(name) => {
                     teacherCardClickHandler(name)
                 }}
                 showEditBtn={true}
-                editBtnClickHandler={(details) => {
+                onEditBtnClick={(details) => {
                     window.location.href = window.location.origin + "/Teachers?click=" + details
                 }} />
             <TeachersTimeTableContainer
@@ -253,12 +253,13 @@ const TeachersTimeTableContainer: React.FC<TeachersTimeTableContainerProps> = me
     return (
         <div className='time-table-wrapper'>
             <div className='heading'>Time Table for {sir}</div>
-            {subjectsDetails && teacherTimeTableDetails &&
+            {subjectsDetails && teacherTimeTableDetails.length > 0 &&
                 <TimeTable
                     className='teacher-time-table'
                     timeTableWidthInPercent={92}
                     details={teacherTimeTableDetails}
                     subjectsDetails={subjectsDetails} />}
+            {teacherTimeTableDetails.length <= 0 && <div className='time-table-error-text'>Click a Card</div>}
         </div>
     )
 })

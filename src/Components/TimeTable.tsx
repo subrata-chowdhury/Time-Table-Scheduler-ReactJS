@@ -124,7 +124,7 @@ const DaysRow: React.FC<DaysRowProps> = ({
     let infiniteLoopPreventerIndex = 0;
 
     let DayElements = [];
-    if (!details) return <div className="day-container"></div>
+    if (!details) return <div className='time-table-error-text'>NO TIME TABLE FOUND / OR AN ERROR OCCURED</div>
     while (periodCompIndex <= noOfPeriods && timeTableDataInteratorIndex < details.length && infiniteLoopPreventerIndex < 50) {
         let periodDetails: Period | TeacherSchedulePeriod = details[timeTableDataInteratorIndex]
         if (hasElement(breakTimeIndexs, periodCompIndex)) {

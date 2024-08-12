@@ -117,10 +117,10 @@ interface HorizentalCardsContainerProps {
     className?: string,
     onChange?: (activeCards?: string[]) => void,
     cardClassName?: string,
-    cardClickHandler?: (name: string) => void,
+    onCardClick?: (name: string) => void,
     compressText?: boolean,
     showEditBtn?: boolean,
-    editBtnClickHandler?: (details: string) => void,
+    onEditBtnClick?: (details: string) => void,
     canStayActiveMultipleCards?: boolean
 }
 
@@ -129,16 +129,22 @@ export const HorizentalCardsContainer: React.FC<HorizentalCardsContainerProps> =
     className = "",
     onChange = () => { },
     cardClassName = "",
-    cardClickHandler = () => { },
+    onCardClick = () => { },
     compressText,
     showEditBtn = false,
-    editBtnClickHandler,
+    onEditBtnClick,
     canStayActiveMultipleCards = false
 }) => {
     const cardsContainer = useRef<HTMLDivElement>(null)
     const [showArrow, setShowArrow] = useState(false)
     const [activeCards, setActiveCards] = useState<string[]>([])
 
+    useEffect(() => {
+        if (cardList.length > 0) {
+            setActiveCards([cardList[0]])
+            onCardClick(cardList[0])
+        }
+    }, [cardList])
 
     const defaultCardClickHandler = useCallback((card: string) => {
         let newActiveCards = [...activeCards]
@@ -187,11 +193,11 @@ export const HorizentalCardsContainer: React.FC<HorizentalCardsContainerProps> =
                             active={activeCards.includes(card)}
                             onClick={() => {
                                 defaultCardClickHandler(card)
-                                cardClickHandler(card)
+                                onCardClick(card)
                             }}
                             compressText={compressText}
                             showEditBtn={showEditBtn}
-                            onEditBtnClick={editBtnClickHandler}
+                            onEditBtnClick={onEditBtnClick}
                         />
                     );
                 })}

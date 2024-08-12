@@ -21,10 +21,9 @@ html {
 	gap: 10px;
 	justify-content: stretch;
 	max-height: 100vh;
-	width: 100vw;
 	overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
 
 .main-container .top-sub-container {
@@ -44,5 +43,9 @@ html {
 @media (max-width: 800px) {
 	.app {
 		grid-template-columns: 0px auto;
+	}
+
+	.main-container {
+		width: 100vw;
 	}
 }

@@ -132,7 +132,7 @@ function MainComponents() {
                     // cardClassName={"semester-card"}
                     cardList={sems}
                     compressText={false}
-                    cardClickHandler={semCardClickHandler} />
+                    onCardClick={semCardClickHandler} />
 
                 {subjectsDetails && timeTableStructure && <TimeTable
                     className='class-time-table'
