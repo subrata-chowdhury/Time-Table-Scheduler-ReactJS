@@ -5,7 +5,7 @@ import "../Style/TimeTablesPage.css"
 import Cards, { Card, HorizentalCardsContainer } from '../Components/Cards.tsx'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getSubjectsList, getSubjectsDetailsList, SubjectsDetailsList } from '../Script/SubjectsDataFetcher'
-import { generateTimeTable, getSchedule, getTimeTableStructure } from '../Script/TimeTableDataFetcher'
+import { generateTimeTable, getSchedule, getTimeTableStructure, saveSchedule } from '../Script/TimeTableDataFetcher'
 import { getTeachersList } from '../Script/TeachersDataFetcher'
 import { emptyTimeTableDetails } from '../Components/TimeTable.tsx'
 import "../Script/commonJS"
@@ -86,15 +86,14 @@ function MainComponents() {
             let newTimeTable: TimeTableType = [...timeTable]
             if (newTimeTable[dayIndex] === null) return
             newTimeTable[dayIndex][periodIndex] = [
-                activeTeacherName.join("+"), 
-                activeSubjectName[0], 
-                (subjectsDetails && subjectsDetails[activeSubjectName[0]]) ? 
-                subjectsDetails[activeSubjectName[0]].roomCodes[0] : ""
+                activeTeacherName.join("+"),
+                activeSubjectName[0],
+                (subjectsDetails && subjectsDetails[activeSubjectName[0]]) ?
+                    subjectsDetails[activeSubjectName[0]].roomCodes[0] : ""
             ]
 
             newTimeTable ? setTimeTable(newTimeTable) : ""
-            // saveSchedule(sem) // api call
-            setShowPopUp(false)
+            saveSchedule(currentOpenSem, currentOpenSection, newTimeTable, () => setShowPopUp(false)) // api call
         }
     }, [subjectsDetails, periodDetailsIndex, timeTable])
     return (
@@ -155,6 +154,7 @@ function MainComponents() {
             {subjectsDetails && <TeacherAndSubjectSelector
                 active={showPopUp}
                 onSetBtnClick={setBtnClickHandler}
+                onCancelBtnClick={() => setShowPopUp(false)}
             />}
         </>
     )

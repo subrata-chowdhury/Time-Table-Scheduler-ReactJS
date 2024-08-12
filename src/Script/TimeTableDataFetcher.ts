@@ -1,4 +1,4 @@
-import { FullTimeTable, SectionTimeTable, TimeTableStructure } from "../data/Types";
+import { FullTimeTable, TimeTable, TimeTableStructure } from "../data/Types";
 import { getApiToken, url } from "./fetchUrl"
 
 export const generateTimeTable = async (
@@ -65,10 +65,10 @@ export const getSchedule = async (onSuccess: (data: FullTimeTable) => void = () 
 export const saveSchedule = async (
     sem: number,
     sec: number,
-    timeTableData: SectionTimeTable,
-    onSuccess: (data: SectionTimeTable) => void = () => { },
+    timeTableData: TimeTable,
+    onSuccess: (data: TimeTable) => void = () => { },
     onFailed: () => void = () => { }
-): Promise<SectionTimeTable | null> => {
+): Promise<TimeTable | null> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/schedule?sem=${sem}&sec=${sec}`, {
@@ -85,6 +85,7 @@ export const saveSchedule = async (
         } else {
             alert("Something went wrong")
             console.log("%cError in saving schedule data", "color: orange;", await response.text())
+            console.log(timeTableData)
             onFailed();
             return null
         }

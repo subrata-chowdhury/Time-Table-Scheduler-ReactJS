@@ -31,6 +31,5 @@ export type Day = Period[] | null
 type Week = [Day, Day, Day, Day, Day]
 export type TimeTable = Week
 
-export type SectionTimeTable = Week[]
-export type YearTimeTable = SectionTimeTable[]
-export type FullTimeTable = YearTimeTable
+export type YearTimeTable = Week[]
+export type FullTimeTable = YearTimeTable[]
