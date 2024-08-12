@@ -23,12 +23,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ array = [], onChange = () => { } 
     const [searchKey, setSearchKey] = useState("");
 
     const searchInputBox = useRef<HTMLInputElement>(null);
-    const searchInputContainer = useRef<HTMLDivElement>(null);
 
     const searchChangeHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        let searchKey = e.target.value.trim().toUpperCase();
+        let searchKey = e.target.value.toUpperCase();
         setSearchKey(searchKey);
-        if (searchKey === "") {
+        if (searchKey.length === 0) {
             onChange(array)
         } else {
             onChange(array.filter((item) => item.toUpperCase().indexOf(searchKey) !== -1))
@@ -36,25 +35,24 @@ const SearchBar: React.FC<SearchBarProps> = ({ array = [], onChange = () => { } 
     }, [array, onChange])
 
     const searchIconClickHandler = useCallback(() => {
-        if (searchInputBox.current != null && searchInputContainer.current != null) {
+        if (searchInputBox.current != null) {
             setActive(true);
             searchInputBox.current.focus()
         }
-    }, [searchInputBox, searchInputContainer])
+    }, [searchInputBox, setActive])
 
     const crossIconClickHandler = useCallback(() => {
-        if (searchInputBox.current != null && searchInputContainer.current != null) {
-            setSearchKey("");
-            setActive(false);
-        }
-    }, [searchInputBox, searchInputContainer])
+        setSearchKey("");
+        onChange(array)
+        setActive(false);
+    }, [array, onChange])
 
     useEffect(() => {
-        searchChangeHandler({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>)
-    }, [array, searchChangeHandler])
+        onChange(array)
+    }, [array])
 
     return (
-        <div className={"search-container" + (active ? " active" : "")} ref={searchInputContainer}>
+        <div className={"search-container" + (active ? " active" : "")}>
             <Search searchIconClickHandler={searchIconClickHandler} />
             <input className="search-input" placeholder="Search Name" value={searchKey} onChange={searchChangeHandler} ref={searchInputBox}></input>
             <Cross crossIconClickHandler={crossIconClickHandler} />

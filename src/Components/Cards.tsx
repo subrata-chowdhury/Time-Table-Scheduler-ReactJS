@@ -33,16 +33,18 @@ const Cards: React.FC<CardsProps> = ({
     }, [cardList])
 
     const defaultCardClickHandler = useCallback((card: string) => {
+        let newActiveCards = [...activeCards]
         if (canStayActiveMultipleCards) {
             if (activeCards.includes(card)) {
-                setActiveCards(activeCards.filter(activeCard => activeCard !== card))
+                newActiveCards = activeCards.filter(activeCard => activeCard !== card)
             } else {
-                setActiveCards([...activeCards, card])
+                newActiveCards = [...activeCards, card]
             }
         } else {
-            setActiveCards([card])
+            newActiveCards = [card]
         }
-        onActive(activeCards)
+        setActiveCards(newActiveCards)
+        onActive(newActiveCards)
     }, [activeCards, canStayActiveMultipleCards])
 
     return (
@@ -139,16 +141,18 @@ export const HorizentalCardsContainer: React.FC<HorizentalCardsContainerProps> =
 
 
     const defaultCardClickHandler = useCallback((card: string) => {
+        let newActiveCards = [...activeCards]
         if (canStayActiveMultipleCards) {
             if (activeCards.includes(card)) {
-                setActiveCards(activeCards.filter(activeCard => activeCard !== card))
+                newActiveCards = activeCards.filter(activeCard => activeCard !== card)
             } else {
-                setActiveCards([...activeCards, card])
+                newActiveCards = [...activeCards, card]
             }
         } else {
-            setActiveCards([card])
+            newActiveCards = [card]
         }
-        onChange(activeCards)
+        setActiveCards(newActiveCards)
+        onChange(newActiveCards)
     }, [activeCards, canStayActiveMultipleCards])
 
     const horizentalCardsOnWheelHandler = useCallback((event: React.WheelEvent) => {

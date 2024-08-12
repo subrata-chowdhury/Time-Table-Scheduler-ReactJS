@@ -3,7 +3,7 @@ import Menubar from '../Components/Menubar.tsx'
 import TimeTable from '../Components/TimeTable.tsx'
 import "../Style/TimeTablesPage.css"
 import Cards, { Card, HorizentalCardsContainer } from '../Components/Cards.tsx'
-import { LegacyRef, memo, useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getSubjectsList, getSubjectsDetailsList, SubjectsDetailsList } from '../Script/SubjectsDataFetcher'
 import { generateTimeTable, getSchedule, getTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import { getTeachersList } from '../Script/TeachersDataFetcher'
@@ -40,10 +40,9 @@ function MainComponents() {
         sectionsPerSemester: [0, 0, 0, 0],
         semesterCount: 3
     })
-    const fillManually = useRef(false)
+    const [showPopUp, setShowPopUp] = useState<boolean>(false)
 
-    const teacherSubjectPopUp = useRef<HTMLDivElement>(null);
-    const teacherSubjectPopUpBg = useRef<HTMLDivElement>(null);
+    const fillManually = useRef<boolean>(true)
 
     useEffect(() => {
         getSubjectsDetailsList(setSubjectsDetails) // api call
@@ -81,17 +80,21 @@ function MainComponents() {
         let year = parseInt(value.slice(5))
         setCurrentOpenSem(year - 1)
     }, [])
-    const setBtnClickListener = useCallback((teacherCardsContainer: HTMLDivElement, subjectCardsContainer: HTMLDivElement, closeTeacherAndSubjectPopUp: () => void) => {
-        let teacher = teacherCardsContainer.querySelector(".active")?.textContent
-        let subject = subjectCardsContainer.querySelector(".active")?.textContent
-        if (teacher && subject && periodDetailsIndex) {
-            let [dayIndex, periodIndex] = periodDetailsIndex
-            let newTimeTable = [...timeTable]
+    const setBtnClickHandler = useCallback((activeTeacherName: string[], activeSubjectName: string[]) => {
+        if (activeSubjectName.length > 0 && activeTeacherName.length > 0 && periodDetailsIndex) {
+            let [dayIndex, periodIndex]: [number, number] = periodDetailsIndex
+            let newTimeTable: TimeTableType = [...timeTable]
             if (newTimeTable[dayIndex] === null) return
-            newTimeTable[dayIndex][periodIndex] = [teacher, subject, ""]
-            // newTimeTable ? setTimeTable(newTimeTable) : ""
+            newTimeTable[dayIndex][periodIndex] = [
+                activeTeacherName.join("+"), 
+                activeSubjectName[0], 
+                (subjectsDetails && subjectsDetails[activeSubjectName[0]]) ? 
+                subjectsDetails[activeSubjectName[0]].roomCodes[0] : ""
+            ]
+
+            newTimeTable ? setTimeTable(newTimeTable) : ""
             // saveSchedule(sem) // api call
-            closeTeacherAndSubjectPopUp()
+            setShowPopUp(false)
         }
     }, [subjectsDetails, periodDetailsIndex, timeTable])
     return (
@@ -106,7 +109,18 @@ function MainComponents() {
                         })
                     }} />
                     <div className='main-btn-container'>
-                        <ButtonsContainer setAllTimeTables={setAllTimeTables} setDisplayLoader={setDisplayLoader} fillManually={fillManually} />
+                        <ButtonsContainer
+                            onAutoFillBtnClick={() => {
+                                setDisplayLoader(true)
+                                generateTimeTable((data) => { // api call
+                                    setAllTimeTables(data);
+                                    setDisplayLoader(false)
+                                }, () => { setDisplayLoader(false) })
+                            }}
+                            onFillManuallyBtnClick={() => {
+                                fillManually.current = true;
+                            }}
+                        />
                         {timeTableStructure && <SectionsBtnContainer
                             currentOpenSection={currentOpenSection}
                             setCurrentOpenSection={setCurrentOpenSection}
@@ -129,12 +143,7 @@ function MainComponents() {
                     periodClickHandler={(dayIndex: number, periodIndex: number) => {
                         if (!fillManually.current) return
                         setPeriodDetailsIndex([dayIndex, periodIndex]);
-                        try {
-                            if (teacherSubjectPopUp.current && teacherSubjectPopUpBg.current) {
-                                teacherSubjectPopUp.current.classList.add("active");
-                                teacherSubjectPopUpBg.current.classList.add("active");
-                            }
-                        } catch (err) { }
+                        setShowPopUp(true)
                     }}
                     breakTimeIndexs={timeTableStructure.breaksPerSemester[currentOpenSem]}
                     noOfPeriods={Number(timeTableStructure.periodCount)} />}
@@ -144,38 +153,24 @@ function MainComponents() {
                     </div>)}
             </div>
             {subjectsDetails && <TeacherAndSubjectSelector
-                setBtnClickListener={setBtnClickListener}
-                teacherSubjectPopUpRef={teacherSubjectPopUp}
-                teacherSubjectPopUpBgRef={teacherSubjectPopUpBg}
+                active={showPopUp}
+                onSetBtnClick={setBtnClickHandler}
             />}
         </>
     )
 }
 
 interface ButtonsContainerProps {
-    setAllTimeTables: (data: FullTimeTable) => void
-    setDisplayLoader: (val: boolean) => void
-    fillManually?: React.MutableRefObject<boolean>
+    onAutoFillBtnClick?: () => void
+    onFillManuallyBtnClick?: (value: string) => void
 }
 
-const ButtonsContainer: React.FC<ButtonsContainerProps> = memo(({ setAllTimeTables, setDisplayLoader, fillManually = useRef<boolean>(false) }) => {
-    const autoFillBtnClickHandler = useCallback(() => {
-        setDisplayLoader(true)
-        generateTimeTable((data) => { // api call
-            setAllTimeTables(data);
-            setDisplayLoader(false)
-        }, () => { setDisplayLoader(false) })
-    }, [])
-    const fillManuallyBtnClickHandler = useCallback((value: string) => {
-        let found = (value === "Fill Manually")
-        if (found) fillManually.current = false
-        else fillManually.current = true
-    }, [])
+const ButtonsContainer: React.FC<ButtonsContainerProps> = memo(({ onAutoFillBtnClick, onFillManuallyBtnClick = () => { } }) => {
     const btnContainer = useRef<HTMLDivElement>(null)
     return (
         <div className='buttons-container' ref={btnContainer}>
-            <Card details='Auto Fill Using AI' className='btn' compressText={false} onClick={autoFillBtnClickHandler}></Card>
-            <Card details='Fill Manually' className='btn' compressText={false} onClick={fillManuallyBtnClickHandler}></Card>
+            <Card details='Auto Fill Using AI' className='btn' compressText={false} onClick={onAutoFillBtnClick}></Card>
+            <Card details='Fill Manually' className='btn' compressText={false} onClick={onFillManuallyBtnClick}></Card>
         </div>
     )
 })
@@ -216,76 +211,85 @@ const SectionsBtnContainer: React.FC<SectionsBtnContainerProps> = memo(({ noOfSe
 })
 
 interface TeacherAndSubjectSelectorProps {
-    setBtnClickListener: (teacherCardsContainer: HTMLDivElement, subjectCardsContainer: HTMLDivElement, closeTeacherAndSubjectPopUp: () => void) => void
-    teacherSubjectPopUpRef: React.RefObject<HTMLDivElement>
-    teacherSubjectPopUpBgRef: React.RefObject<HTMLDivElement>
+    active: boolean
+    onCancelBtnClick?: () => void
+    onSetBtnClick?: (teacherList: string[], subjectList: string[]) => void
 }
 
 const TeacherAndSubjectSelector: React.FC<TeacherAndSubjectSelectorProps> = memo(({
-    setBtnClickListener = () => { },
-    teacherSubjectPopUpRef,
-    teacherSubjectPopUpBgRef
+    active = false,
+    onCancelBtnClick = () => { },
+    onSetBtnClick = () => { }
 }) => {
-    const teacherCardsContainer = useRef<HTMLDivElement>(null);
-    const subjectCardsContainer = useRef<HTMLDivElement>(null);
-    const closeTeacherAndSubjectPopUp = useCallback(() => {
-        if (teacherSubjectPopUpRef.current && teacherSubjectPopUpBgRef.current) {
-            teacherSubjectPopUpRef.current.classList.remove("active")
-            teacherSubjectPopUpBgRef.current.classList.remove("active")
-        }
-    }, [])
+    const teacherList = useRef<string[]>([])
+    const subjectList = useRef<string[]>([])
+
+    function onTeacherActive(list: string[] | undefined) {
+        if (list)
+            teacherList.current = list
+    }
+    function onSubjectActive(list: string[] | undefined) {
+        if (list)
+            subjectList.current = list
+    }
     return (
         <>
-            <div className='teacher-subject-selector-container' ref={teacherSubjectPopUpRef}>
+            <div className={'teacher-subject-selector-container' + (active ? " active" : " ")}>
                 <div className='teacher-subject-card-container'>
-                    <TeacherCardsContainer teacherCardsContainerRef={teacherCardsContainer} />
-                    <SubjectCardsContainer subjectCardsContainerRef={subjectCardsContainer} />
+                    <TeacherCardsContainer onActive={onTeacherActive} />
+                    <SubjectCardsContainer onActive={onSubjectActive} />
                 </div>
                 <div className='teacher-subject-selector-btns-container'>
-                    <button onClick={() => {
-                        if (teacherCardsContainer.current && subjectCardsContainer.current)
-                            setBtnClickListener(teacherCardsContainer.current, subjectCardsContainer.current, closeTeacherAndSubjectPopUp)
-                    }}>Set</button>
-                    <button onClick={closeTeacherAndSubjectPopUp}>Cancel</button>
+                    <button onClick={() => onSetBtnClick(teacherList.current, subjectList.current)}>Set</button>
+                    <button onClick={() => onCancelBtnClick()}>Cancel</button>
                 </div>
-            </div>
-            <div className='teacher-subject-selector-container-bg' ref={teacherSubjectPopUpBgRef}></div>
+            </div >
+            <div className={'teacher-subject-selector-container-bg' + (active ? " active" : " ")}></div>
         </>
     )
 })
 
 interface TeacherCardsContainerProps {
-    teacherCardsContainerRef: React.RefObject<HTMLDivElement>
+    onActive: (activeCards: string[] | undefined) => void
 }
 
-const TeacherCardsContainer: React.FC<TeacherCardsContainerProps> = memo(({ teacherCardsContainerRef }) => {
+const TeacherCardsContainer: React.FC<TeacherCardsContainerProps> = memo(({ onActive = () => { } }) => {
     const [teacherList, setTeacherList] = useState<string[]>()
     useEffect(() => {
         getTeachersList(setTeacherList) // api call
     }, [])
     return (
-        <div className='teacher-cards-container' ref={teacherCardsContainerRef}>
-            <Cards cardClassName={"select-teacher-card"} cardList={teacherList} onAddBtnClick={() => {
-                window.location.href = window.location.origin + "/Teachers";
-            }} canStayActiveMultipleCards={true} />
+        <div className='teacher-cards-container'>
+            <Cards
+                cardClassName={"select-teacher-card"}
+                cardList={teacherList}
+                onAddBtnClick={() => {
+                    window.location.href = window.location.origin + "/Teachers";
+                }}
+                canStayActiveMultipleCards={true}
+                onActive={onActive} />
         </div>
     )
 })
 
 interface SubjectsCardsContainerProps {
-    subjectCardsContainerRef: LegacyRef<HTMLDivElement>
+    onActive: (activeCards: string[] | undefined) => void
 }
 
-const SubjectCardsContainer: React.FC<SubjectsCardsContainerProps> = memo(({ subjectCardsContainerRef }) => {
+const SubjectCardsContainer: React.FC<SubjectsCardsContainerProps> = memo(({ onActive = () => { } }) => {
     const [subjectsList, setSubjectsList] = useState<string[]>()
     useEffect(() => {
         getSubjectsList(setSubjectsList) // api call
     }, [])
     return (
-        <div className='subject-cards-container' ref={subjectCardsContainerRef}>
-            <Cards cardClassName={"select-subject-card"} cardList={subjectsList} onAddBtnClick={() => {
-                window.location.href = window.location.origin + "/Subjects";
-            }} />
+        <div className='subject-cards-container'>
+            <Cards
+                cardClassName={"select-subject-card"}
+                cardList={subjectsList}
+                onAddBtnClick={() => {
+                    window.location.href = window.location.origin + "/Subjects";
+                }}
+                onActive={onActive} />
         </div>
     )
 })

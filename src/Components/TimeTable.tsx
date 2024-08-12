@@ -153,7 +153,10 @@ const DaysRow: React.FC<DaysRowProps> = ({
                     periodIndex={timeTableDataInteratorIndex}
                     isLab={isLab}
                     onClick={periodClickHandler} />)
-                if (isLab) { timeTableDataInteratorIndex += 2 } //+2 beacause in outer block it will increament which will cause +3
+                if (isLab) { 
+                    timeTableDataInteratorIndex += 2;
+                    periodCompIndex += 2;
+                } //+2 beacause in outer block it will increament which will cause +3
             } else DayElements.push(<PeriodComp
                 key={timeTableDataInteratorIndex}
                 periodDetails={periodDetails}

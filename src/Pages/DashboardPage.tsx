@@ -99,9 +99,12 @@ function MainComponents() {
                 <WorkingHourBarChat perDayValue={perDayValue} />
             </div>
             <div className='right-sub-container'>
-                <TeachersDetailsContainer onCardClick={(timeTable) => {
-                    calculatePerDayValue(timeTable, subjectsDetails.current)
-                }} teachersList={teachersList} subjectsDetailsList={subjectsDetails.current} />
+                <TeachersDetailsContainer
+                    onCardClick={(timeTable) => {
+                        calculatePerDayValue(timeTable, subjectsDetails.current)
+                    }}
+                    teachersList={teachersList}
+                    subjectsDetailsList={subjectsDetails.current} />
             </div>
         </div>
     )

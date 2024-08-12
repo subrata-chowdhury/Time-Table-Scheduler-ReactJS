@@ -31,6 +31,7 @@ function MainComponents() {
     const [teachersList, setTeahersList] = useState<string[]>([]);
     const [teacherName, setTeacherName] = useState<string>("");
     const [displayLoader, setDisplayLoader] = useState<boolean>(false);
+    const [filteredTeacherList, setFilteredTeacherList] = useState<string[]>([])
 
     useEffect(() => {
         startUpFunction()
@@ -73,10 +74,10 @@ function MainComponents() {
                 <div className='left-sub-container'>
                     <div className='tools-container'>
                         <MiniStateContainer onChange={startUpFunction} />
-                        <SearchBar array={teachersList} onChange={setTeahersList} />
+                        <SearchBar array={teachersList} onChange={setFilteredTeacherList} />
                     </div>
                     <Cards
-                        cardList={teachersList}
+                        cardList={filteredTeacherList}
                         cardClassName={"teacher-card"}
                         onCardClick={name => setTeacherName(name)}
                         onAddBtnClick={() => {

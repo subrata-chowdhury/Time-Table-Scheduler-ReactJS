@@ -15,7 +15,7 @@ const TagInput: React.FC<TagInputProps> = ({
 }) => {
     const [tag, setTag] = useState<string>("")
     const [tagsList, setTagsList] = useState<string[]>(tagList)
-    console.log("Render")
+
     useEffect(() => {
         setTagsList(tagList)
     }, [tagList])
