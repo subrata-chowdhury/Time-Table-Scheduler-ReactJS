@@ -104,7 +104,6 @@ export const getTeacherSchedule = async (
         })
         if (response.status === 200) {
             let schedule;
-            console.log(schedule)
             try {
                 schedule = await response.json();
             } catch (error) {

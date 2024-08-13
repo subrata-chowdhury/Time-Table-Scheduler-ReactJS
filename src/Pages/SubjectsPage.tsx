@@ -102,35 +102,35 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
         isFree: false
     })
     const [disabled, setDisabled] = useState<boolean>(false)
+    const [inEditState, setInEditState] = useState<boolean>(false)
 
     useEffect(() => {
         setSubjectName(activeSubjectName)
-        if (activeSubjectName !== "")
+        if (activeSubjectName !== "") {
             getSubject(activeSubjectName, setSubjectDetails) // api call
-        else setSubjectDetails({
-            isPractical: false,
-            lectureCount: 4,
-            roomCodes: [],
-            sem: "",
-            isFree: false
-        })
+            setInEditState(true)
+        } else {
+            setSubjectDetails({
+                isPractical: false,
+                lectureCount: 4,
+                roomCodes: [],
+                sem: "",
+                isFree: false
+            })
+            setInEditState(false)
+        }
     }, [activeSubjectName])
-
-    const subjectTypeClickHandler = useCallback(() => {
-        setSubjectDetails(value => ({ ...value, isPractical: !value["isPractical"] }))
-    }, [])
-    const isFreeClickHandler = useCallback(() => {
-        setSubjectDetails(value => ({ ...value, isFree: !value["isFree"] }))
-    }, [])
 
     const inputOnChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.name === 'subjectName') setSubjectName(event.target.value.toUpperCase())
         else setSubjectDetails(value => ({ ...value, [event.target.name]: event.target.value }))
     }, [])
-    const checkIfAlreadyExist = useCallback((teacher: string) => {
-        if (hasElement(subjectsList, teacher)) { } // if teacher exist show delete btn
-        else { } // if not teacher exist show delete btn
+
+    const checkIfAlreadyExist = useCallback((subjectName: string) => {
+        if (hasElement(subjectsList, subjectName)) setInEditState(true) // if subject exist show delete btn
+        else setInEditState(false) // if not subject exist show delete btn
     }, [subjectsList])
+
     const subjectFormSubmitHandler = useCallback((event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -141,6 +141,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                     saveData(verifiedData.newSubjectName, verifiedData.data);
             } else saveData(verifiedData.newSubjectName, verifiedData.data);
     }, [subjectName, subjectDetails, subjectsList])
+
     const saveData = useCallback((subjectName: string, subjectData: Subject) => {
         setDisplayLoader(true)
         setDisabled(true)
@@ -166,6 +167,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                     setDisplayLoader(false) // if failed only hide loader
                 })
     }, [subjectName])
+
     return (
         <form className='details-container' onSubmit={subjectFormSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>
@@ -178,7 +180,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                     value={subjectName}
                     placeholder='Ex. ABC'
                     onChange={event => {
-                        checkIfAlreadyExist(event.target.value.trim().toUpperCase())
+                        checkIfAlreadyExist(event.target.value.toUpperCase())
                         inputOnChangeHandler(event)
                     }}></input>
             </div>
@@ -216,21 +218,21 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Subject Type</div>
-                <div className={'box'} onClick={subjectTypeClickHandler}>
+                <div className={'box'} onClick={() => setSubjectDetails(value => ({ ...value, isPractical: !value["isPractical"] }))}>
                     <div className={'option' + (!subjectDetails.isPractical ? " active" : "")}>Theory</div>
                     <div className={'option' + (subjectDetails.isPractical ? " active" : "")}>Practical</div>
                 </div>
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Should be Taken by<br /> Teacher or Not</div>
-                <div className={'box'} onClick={isFreeClickHandler}>
+                <div className={'box'} onClick={() => setSubjectDetails(value => ({ ...value, isFree: !value["isFree"] }))}>
                     <div className={'option' + (subjectDetails.isFree ? " active" : "")}>No</div>
                     <div className={'option' + (!subjectDetails.isFree ? " active" : "")}>Yes</div>
                 </div>
             </div>
             <div className='save-btn-container'>
                 <button className='subject-save-btn' type='submit' disabled={disabled}>Save</button>
-                <button className='subject-delete-btn' onClick={deleteSubjectBtnClickHandler}>Delete</button>
+                {inEditState && <button className='subject-delete-btn' onClick={deleteSubjectBtnClickHandler}>Delete</button>}
             </div>
         </form>
     )

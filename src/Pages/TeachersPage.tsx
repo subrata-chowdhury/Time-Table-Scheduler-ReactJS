@@ -120,12 +120,19 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
         subjects: [],
     });
     const [disabled, setDisabled] = useState<boolean>(false)
+    const [inEditState, setInEditState] = useState<boolean>(false)
+
     const subjectList = useRef<string[] | undefined>();
 
     useEffect(() => {
         setTeacherName(activeTeacherName)
-        if (activeTeacherName === "") setTeacherDetails({ freeTime: [], subjects: [] })
-        else getTeacher(activeTeacherName, setTeacherDetails); // api call
+        if (activeTeacherName === "") {
+            setTeacherDetails({ freeTime: [], subjects: [] })
+            setInEditState(false)
+        } else {
+            getTeacher(activeTeacherName, setTeacherDetails) // api call
+            setInEditState(true)
+        };
     }, [activeTeacherName])
 
     useEffect(() => {
@@ -155,9 +162,9 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
         else setTeacherDetails(value => ({ ...value, [event.target.name]: event.target.value }))
     }, [])
 
-    const checkIfAlreadyExist = useCallback((teacher: string) => {
-        if (hasElement(teachersList, teacher)) { } // if teacher exist show delete btn
-        else { } // if not teacher exist show delete btn
+    const checkIfAlreadyExist = useCallback((teacherName: string) => {
+        if (hasElement(teachersList, teacherName)) setInEditState(true) // if teacher exist show delete btn
+        else setInEditState(false) // if not teacher exist show delete btn
     }, [teachersList])
 
     const teacherFormSubmitHandler = useCallback((event: FormEvent<HTMLFormElement>) => {
@@ -210,7 +217,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                     value={teacherName}
                     placeholder='Ex. ABC'
                     onChange={event => {
-                        checkIfAlreadyExist(event.target.value.trim().toUpperCase())
+                        checkIfAlreadyExist(event.target.value.toUpperCase())
                         inputOnChangeHandler(event)
                     }}></input>
             </div>
@@ -233,7 +240,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
             </div>
             <div className='save-btn-container'>
                 <button className='teacher-save-btn' type='submit' disabled={disabled} >Save</button>
-                <button className='teacher-delete-btn' onClick={deleteTeacherBtnClickHandler}>Delete</button>
+                {inEditState && <button className='teacher-delete-btn' onClick={deleteTeacherBtnClickHandler}>Delete</button>}
             </div>
         </form>
     )

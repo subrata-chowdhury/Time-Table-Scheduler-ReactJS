@@ -23,6 +23,7 @@ function FilesPage() {
 
 function MainComponents() {
     const [files, setFiles] = useState<string[]>([]);
+    const [filteredFiles, setFilteredFiles] = useState<string[]>([]);
     const [fileName, setFileName] = useState<string>("")
     const [forceReRenderer, setForceReRenderer] = useState(false)
 
@@ -35,24 +36,18 @@ function MainComponents() {
         setFileName("");
     }, [])
 
-    const fileCardClickHandler = useCallback((fileName: string) => {
-        setFileName(fileName)
-    }, [])
-    const addFileBtnClickHandler = useCallback(() => {
-        setFileName("")
-    }, [])
     return (
         <div className='top-sub-container'>
             <div className='left-sub-container'>
                 <div className='tools-container'>
                     <MiniStateContainer forceReRenderer={forceReRenderer} />
-                    <SearchBar array={files} onChange={setFiles} />
+                    <SearchBar array={files} onChange={setFilteredFiles} />
                 </div>
                 <Cards
-                    cardList={files}
+                    cardList={filteredFiles}
                     cardClassName={"file-card"}
-                    onCardClick={fileCardClickHandler}
-                    onAddBtnClick={addFileBtnClickHandler}
+                    onCardClick={fileName => setFileName(fileName)}
+                    onAddBtnClick={() => setFileName("")}
                 />
             </div>
             <div className='right-sub-container'>
@@ -81,9 +76,13 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     setForceReRenderer
 }) => {
     const [fileName, setFileName] = useState<string>(activeFileName)
+    const [inEditState, setInEditState] = useState<boolean>(false)
+
 
     useEffect(() => {
         setFileName(activeFileName)
+        if (activeFileName === "") setInEditState(false)
+        else setInEditState(true)
     }, [activeFileName])
 
     const fileFormOnSubmitHandler = useCallback((event: FormEvent<HTMLFormElement>) => {
@@ -117,6 +116,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
             setForceReRenderer(val => !val)
         }
     }, [fileName, files])
+
     const deleteFileBtnClickHandler = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         if (hasElement(files, fileName)) // checking if the file exsist or not
@@ -126,11 +126,13 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                     setForceReRenderer(val => !val)
                 })
             }
-    }, [files, fileName])
-    const checkIfAlreadyExist = useCallback((file: string) => {
-        if (hasElement(files, file)) { }
-        else { }
     }, [files])
+
+    const checkIfAlreadyExist = useCallback((fileName: string) => {
+        if (hasElement(files, fileName)) setInEditState(true)
+        else setInEditState(false)
+    }, [files, fileName])
+
     return (
         <form className='details-container' onSubmit={fileFormOnSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>
@@ -143,14 +145,14 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                     value={fileName}
                     placeholder='Ex. ABC'
                     onChange={event => {
-                        checkIfAlreadyExist(event.target.value.trim().toUpperCase())
+                        checkIfAlreadyExist(event.target.value.toUpperCase())
                         setFileName(event.target.value.toUpperCase())
                     }}></input>
             </div>
             <div className='save-btn-container'>
                 <button className='file-save-btn' type='submit'>Copy Current State</button>
-                <button className='file-delete-btn' onClick={deleteFileBtnClickHandler}>Delete</button>
-                <button className='file-create-btn' onClick={createNewBtnClickHandler}>Create New</button>
+                {inEditState && <button className='file-delete-btn' onClick={deleteFileBtnClickHandler}>Delete</button>}
+                {!inEditState && <button className='file-create-btn' onClick={createNewBtnClickHandler}>Create New</button>}
             </div>
         </form>
     )

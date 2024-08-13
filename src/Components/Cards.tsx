@@ -140,10 +140,12 @@ export const HorizentalCardsContainer: React.FC<HorizentalCardsContainerProps> =
     const [activeCards, setActiveCards] = useState<string[]>([])
 
     useEffect(() => {
-        if (cardList.length > 0) {
-            setActiveCards([cardList[0]])
-            onCardClick(cardList[0])
-        }
+        setTimeout(() => {
+            if (cardList.length > 0) {
+                setActiveCards([cardList[0]])
+                onCardClick(cardList[0])
+            }
+        }, 500)
     }, [cardList])
 
     const defaultCardClickHandler = useCallback((card: string) => {

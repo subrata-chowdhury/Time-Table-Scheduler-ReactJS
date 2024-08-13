@@ -5,13 +5,13 @@
 }
 
 .left-sub-container {
-    display: grid;
-    grid-auto-flow: row;
+    display: flex;
+    flex-direction: column;
 }
 
 .tools-container {
-    display: grid;
-    grid-auto-flow: column;
+    display: flex;
+    flex-direction: row;
     justify-content: space-between;
     padding: 0 35px;
     padding-left: 0;
