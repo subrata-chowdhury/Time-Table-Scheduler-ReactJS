@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react"
-import { getCurrentFileName, getSaveFileList, loadSaveFile } from "../Script/FilesDataFetchers.ts";
+import { getCurrentFileName, getSaveFileList, loadSaveFile } from "../Script/FilesDataFetchers";
 import "../Style/Mini-state-container.css";
-import { checkCurrentStateIsSavedBeforeClose } from "../Script/commonJS.ts";
+import { checkCurrentStateIsSavedBeforeClose } from "../Script/commonJS";
 
 interface MiniStateContainerProps {
     onChange?: () => void,

@@ -1,8 +1,8 @@
-import Plus from "../Icons/Plus.tsx";
+import Plus from "../Icons/Plus";
 import "../Style/Cards.css"
-import Arrow from '../Icons/Arrow.tsx'
+import Arrow from '../Icons/Arrow'
 import { memo, useCallback, useEffect, useRef, useState } from "react";
-import EditIcon from "../Icons/Edit.tsx";
+import EditIcon from "../Icons/Edit";
 import React from "react";
 
 interface CardsProps {

@@ -1,7 +1,7 @@
 import React, { memo } from "react";
-import { hasElement } from "../Script/util.ts";
+import { hasElement } from "../Script/util";
 import "../Style/TimeTable.css"
-import { TimeTable as TimeTableType, Subject, TeacherSchedule, Day, TeacherScheduleDay, Period, TeacherSchedulePeriod } from "../data/Types.ts";
+import { TimeTable as TimeTableType, Subject, TeacherSchedule, Day, TeacherScheduleDay, Period, TeacherSchedulePeriod } from "../data/Types";
 
 export let emptyTimeTableDetails: TimeTableType = [
     [["FirstTeacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],

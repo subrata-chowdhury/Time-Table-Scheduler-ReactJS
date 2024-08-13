@@ -1,12 +1,12 @@
-import MiniStateContainer from '../Components/MiniStateContainer.tsx'
-import Menubar from '../Components/Menubar.tsx'
+import MiniStateContainer from '../Components/MiniStateContainer'
+import Menubar from '../Components/Menubar'
 import "../Style/TimeTableStructure.css"
 import React, { FormEvent, memo, useCallback, useEffect, useState } from 'react'
-import { getTimeTableStructure, saveTimeTableStructure } from '../Script/TimeTableDataFetcher.ts'
+import { getTimeTableStructure, saveTimeTableStructure } from '../Script/TimeTableDataFetcher'
 import "../Script/commonJS"
-import OwnerFooter from '../Components/OwnerFooter.tsx'
-import verifyTimeTableStructureInputs from '../Script/InputVerifiers/TimeTableStructureVerifier.ts'
-import { TimeTableStructure } from '../data/Types.ts'
+import OwnerFooter from '../Components/OwnerFooter'
+import verifyTimeTableStructureInputs from '../Script/InputVerifiers/TimeTableStructureVerifier'
+import { TimeTableStructure } from '../data/Types'
 
 function TimeTableStructurePage() {
     return (

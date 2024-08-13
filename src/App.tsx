@@ -1,13 +1,13 @@
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import DashboardPage from './Pages/DashboardPage.tsx'
-import SubjectsPage from './Pages/SubjectsPage.tsx';
-import TeachersPage from './Pages/TeachersPage.tsx';
-import TimeTablesPage from './Pages/TimeTablesPage.tsx';
-import TimeTableStructurePage from './Pages/TimeTableStructurePage.tsx';
-import FilesPage from './Pages/FilesPage.tsx';
+import DashboardPage from './Pages/DashboardPage'
+import SubjectsPage from './Pages/SubjectsPage';
+import TeachersPage from './Pages/TeachersPage';
+import TimeTablesPage from './Pages/TimeTablesPage';
+import TimeTableStructurePage from './Pages/TimeTableStructurePage';
+import FilesPage from './Pages/FilesPage';
 import "./Style/BasicComponents.css"
-import ContactUs from './Pages/ContactUs.tsx';
+import ContactUs from './Pages/ContactUs';
 import { useEffect, useRef } from 'react';
 
 function App() {

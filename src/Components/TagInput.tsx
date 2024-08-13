@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useState } from "react";
-import { hasElement } from "../Script/util.ts";
+import { hasElement } from "../Script/util";
 import "../Style/Tags.css"
 
 interface TagInputProps {

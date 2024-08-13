@@ -1,15 +1,15 @@
-import MiniStateContainer from '../Components/MiniStateContainer.tsx'
-import Menubar from '../Components/Menubar.tsx'
+import MiniStateContainer from '../Components/MiniStateContainer'
+import Menubar from '../Components/Menubar'
 import "../Style/Dashboard.css"
-import WorkingHourBarChat from '../Components/WorkingHourBarChat.tsx'
-import { HorizentalCardsContainer } from '../Components/Cards.tsx'
-import TimeTable from '../Components/TimeTable.tsx'
+import WorkingHourBarChat from '../Components/WorkingHourBarChat'
+import { HorizentalCardsContainer } from '../Components/Cards'
+import TimeTable from '../Components/TimeTable'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getTeacher, getTeachersList, getTeacherSchedule } from '../Script/TeachersDataFetcher'
 import { getSubjectsDetailsList, SubjectsDetailsList } from '../Script/SubjectsDataFetcher'
 import "../Script/commonJS"
-import OwnerFooter from '../Components/OwnerFooter.tsx'
-import { Teacher, TeacherSchedule } from '../data/Types.ts'
+import OwnerFooter from '../Components/OwnerFooter'
+import { Teacher, TeacherSchedule } from '../data/Types'
 
 const DashboardPage: React.FC = (): JSX.Element => {
     return (

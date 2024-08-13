@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
-import Cross from "../Icons/Cross.tsx";
-import Search from "../Icons/Search.tsx";
+import Cross from "../Icons/Cross";
+import Search from "../Icons/Search";
 import "../Style/SearchBar.css"
 
 export function match(list: string[], key: string) {

@@ -1,15 +1,15 @@
 import "../Style/Menubar.css"
-import Dashboard from "../Icons/Dashboard.tsx"
-import EditSubjects from "../Icons/EditSubjects.tsx"
-import EditTeachers from "../Icons/EditTeachers.tsx"
-import Files from "../Icons/Files.tsx"
-import TimeTables from "../Icons/TimeTables.tsx"
-import TimeTableStructure from "../Icons/TimeTableStructure.tsx"
-import Arrow from "../Icons/Arrow.tsx"
+import Dashboard from "../Icons/Dashboard"
+import EditSubjects from "../Icons/EditSubjects"
+import EditTeachers from "../Icons/EditTeachers"
+import Files from "../Icons/Files"
+import TimeTables from "../Icons/TimeTables"
+import TimeTableStructure from "../Icons/TimeTableStructure"
+import Arrow from "../Icons/Arrow"
 
 import React, { memo } from "react"
 import { Link } from "react-router-dom"
-import Contact from "../Icons/ContactIcon.tsx"
+import Contact from "../Icons/ContactIcon"
 
 interface MenubarProps {
     activeMenuIndex: number,
