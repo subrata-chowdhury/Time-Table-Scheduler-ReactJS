@@ -139,9 +139,7 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
                 <div className="input-container">
                     <div className="input-box-heading">Number of Sections per Year</div>
                     <div className='input-grp'>
-                        {
-                            sectionsPerSemester
-                        }
+                        {sectionsPerSemester}
                     </div>
                 </div>
             </div>
@@ -149,9 +147,7 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
                 <div className="input-container">
                     <div className="input-box-heading">Break Times per Year</div>
                     <div className='input-grp'>
-                        {
-                            breaksPerSemester
-                        }
+                        {breaksPerSemester}
                     </div>
                 </div>
             </div>

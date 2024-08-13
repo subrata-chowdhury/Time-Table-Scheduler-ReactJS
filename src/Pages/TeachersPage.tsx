@@ -50,18 +50,26 @@ function MainComponents() {
             }
             if (urlData[0] === "click") {
                 let clicked = false;
+                let loop = 0
                 let interval = setInterval(() => {
                     const cardsContainer = document.querySelector(".cards-container")
                     let card: HTMLDivElement | null | undefined = cardsContainer?.querySelector(".card.data[title=" + urlData[1] + "]")
                     if (!clicked) {
                         try {
-                            (card !== undefined && card !== null) ? card.click() : ""
-                            clicked = true
-                        } catch (err) { }
+                            if (card !== undefined && card !== null) {
+                                card.click()
+                                clicked = true
+                            }
+                        } catch (err) { 
+                            clicked = false
+                        }
                     } else {
                         clearInterval(interval)
                     }
-                }, 500)
+                    if (loop++ == 50) {
+                        clearInterval(interval)
+                    }
+                }, 100)
             }
         } catch (err) {
             console.log("%cNo Click Query Found", "color: green");
