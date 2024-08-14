@@ -15,6 +15,7 @@ const TeachersDetailsContainer = ({ onCardClick = () => { }, teachersList = [], 
         setTeahersNameList(teachersList);
         setSemesters([]);
         setTeahersDetails(val => { return { ...val, subjects: [] }; });
+        setTeacherTimeTableDetails([]);
     }, [teachersList]);
     const teacherCardClickHandler = useCallback(async (name) => {
         getTeacher(name, async (data) => {
@@ -25,9 +26,9 @@ const TeachersDetailsContainer = ({ onCardClick = () => { }, teachersList = [], 
             }
             let semesters = [];
             for (let index = 0; index < data.subjects.length; index++) {
-                findAndPushSem(data.subjects[index]);
+                await findAndPushSem(data.subjects[index]);
             }
-            function findAndPushSem(subjectName) {
+            async function findAndPushSem(subjectName) {
                 if (!subjectsDetailsList)
                     return;
                 if (semesters.indexOf(subjectsDetailsList[subjectName].sem) === -1)

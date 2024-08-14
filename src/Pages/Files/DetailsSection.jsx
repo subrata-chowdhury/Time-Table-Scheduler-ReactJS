@@ -52,7 +52,7 @@ const DetailsContainer = ({ active = false, activeFileName = "", files, startUp,
                     setForceReRenderer(val => !val);
                 });
             }
-    }, [files]);
+    }, [files, fileName]);
     const checkIfAlreadyExist = useCallback((fileName) => {
         if (hasElement(files, fileName))
             setInEditState(true);

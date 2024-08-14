@@ -15,6 +15,27 @@
     align-content: space-around;
 }
 
+.add-btn {
+    background: #fff;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    font-size: 1.1rem;
+    font-weight: bold;
+    height: 100%;
+    border-top-right-radius: 0.2rem;
+    border-bottom-right-radius: 0.2rem;
+}
+
+.sub-input-grp {
+    display: flex;
+    flex-direction: row;
+}
+
+.sub-input-grp input {
+    flex-grow: 1;
+    border-top-right-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+}
+
 @media (max-width: 550px) {
     .main-container {
         gap: 5px;

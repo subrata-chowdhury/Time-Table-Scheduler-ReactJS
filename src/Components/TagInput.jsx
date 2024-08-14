@@ -31,7 +31,8 @@ const TagInput = ({ tagList = [], validTags = [], onChange = () => { } }) => {
     }, [tag, tagList, onChange]);
     return (<div className='tag-input-container'>
         <div className='tags-container'>
-            {tagsList.map((tag, index) => (<Tag key={index} value={tag} onDeleteBtnClick={() => {
+            {tagsList.map((tag, index) => (<Tag key={index} value={tag} onDeleteBtnClick={(e) => {
+                e.preventDefault();
                 onChange(tagList.filter(tagValue => tagValue !== tag));
             }} />))}</div>
         <input type="text" value={tag} onChange={tagChangeHandler} onKeyDown={e => {

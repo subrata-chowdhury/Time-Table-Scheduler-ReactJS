@@ -31,7 +31,7 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
     }
     let sectionsPerSemester;
     try {
-        sectionsPerSemester = JSON.parse(`[${timeTableStructureFieldValues.sectionsPerSemester}]`);
+        sectionsPerSemester = timeTableStructureFieldValues.sectionsPerSemester;
     }
     catch (error) {
         sectionsPerSemester = "";
@@ -56,7 +56,7 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
     }
     let breaksPerSemester;
     try {
-        breaksPerSemester = JSON.parse(`[${timeTableStructureFieldValues.breaksPerSemester}]`);
+        breaksPerSemester = timeTableStructureFieldValues.breaksPerSemester;
     }
     catch (error) {
         breaksPerSemester = "";
@@ -68,6 +68,7 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
     if (!((breaksPerSemester instanceof Array) && breaksPerSemester.every((subarr) => (subarr instanceof Array) &&
         subarr.every((value) => isPositiveWholeNumber(value))))) {
         alert("Please enter break locations per year in correct format");
+        console.log(timeTableStructure);
         return false;
     }
     if (breaksPerSemester.length !== timeTableStructure.semesterCount) {

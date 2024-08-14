@@ -43,9 +43,7 @@ function MainComponents() {
                     setShowDetailsPopup(true);
                 }} />
             </div>
-            <div className='right-sub-container'>
-                <DetailsSection active={showDetailsPopup} activeSubjectName={activeSubjectName} subjectsList={subjectsList} onSubmitCallBack={startUpFunction} setDisplayLoader={setDisplayLoader} onClose={() => setShowDetailsPopup(false)} />
-            </div>
+            <DetailsSection active={showDetailsPopup} activeSubjectName={activeSubjectName} subjectsList={subjectsList} onSubmitCallBack={startUpFunction} setDisplayLoader={setDisplayLoader} onClose={() => setShowDetailsPopup(false)} />
         </div>
         {displayLoader && <Loader />}
     </>);

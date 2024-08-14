@@ -40,9 +40,7 @@ function MainComponents() {
                 setShowDetailsPopup(true);
             }} />
         </div>
-        <div className='right-sub-container'>
-            <DetailsSection active={showDetailsPopup} activeFileName={fileName} files={files} startUp={startUp} setForceReRenderer={setForceReRenderer} onClose={() => setShowDetailsPopup(false)} />
-        </div>
+        <DetailsSection active={showDetailsPopup} activeFileName={fileName} files={files} startUp={startUp} setForceReRenderer={setForceReRenderer} onClose={() => setShowDetailsPopup(false)} />
     </div>);
 }
 export default memo(FilesPage);

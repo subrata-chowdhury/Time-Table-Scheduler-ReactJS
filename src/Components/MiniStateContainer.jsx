@@ -10,7 +10,7 @@ const MiniStateContainer = ({ onChange = () => { }, forceReRenderer = false }) =
             setFiles(files);
             getCurrentFileName(currentFileName => {
                 selectInput.current?.querySelectorAll("option").forEach((option) => {
-                    if (option.value === currentFileName.toLowerCase()) {
+                    if (option.value.toLowerCase() === currentFileName.toLowerCase()) {
                         option.selected = true;
                     }
                 });

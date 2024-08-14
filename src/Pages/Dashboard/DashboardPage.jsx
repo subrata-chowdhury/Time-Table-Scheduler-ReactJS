@@ -79,11 +79,9 @@ function MainComponents() {
             <BasicDetails basicDetails={basicDetails} />
             <WorkingHourBarChat perDayValue={perDayValue} />
         </div>
-        <div className='right-sub-container'>
-            <TeachersDetailsContainer onCardClick={(timeTable) => {
-                calculatePerDayValue(timeTable, subjectsDetails.current);
-            }} teachersList={teachersList} subjectsDetailsList={subjectsDetails.current} />
-        </div>
+        <TeachersDetailsContainer onCardClick={(timeTable) => {
+            calculatePerDayValue(timeTable, subjectsDetails.current);
+        }} teachersList={teachersList} subjectsDetailsList={subjectsDetails.current} />
     </div>);
 }
 export default memo(DashboardPage);

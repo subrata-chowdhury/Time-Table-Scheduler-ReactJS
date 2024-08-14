@@ -35,11 +35,11 @@ const Cards = ({ cardList = [], cardClassName = "", onCardClick = () => { }, onA
         {cardList && cardList.length > 0 && cardList.map((card) => (<Card details={card} key={card} className={cardClassName} active={activeCards.includes(card)} onClick={(card) => {
             defaultCardClickHandler(card);
             onCardClick(card);
-        }} compressText={true} showEditBtn={showEditBtn} onEditBtnClick={onEditBtnClick} />))}
+        }} compressText={false} showEditBtn={showEditBtn} onEditBtnClick={onEditBtnClick} />))}
     </div>);
 };
 export default memo(Cards);
-export const Card = memo(({ details = "Sample", className = "", active = false, onClick = () => { }, compressText = true, showEditBtn = false, onEditBtnClick = () => { } }) => {
+export const Card = memo(({ details = "Sample", className = "", active = false, onClick = () => { }, compressText = false, showEditBtn = false, onEditBtnClick = () => { } }) => {
     const innerCard = (<div className={"card data " + className + (active ? ' active' : '')} onClick={() => onClick(details)} title={details}>
         {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
     </div>);

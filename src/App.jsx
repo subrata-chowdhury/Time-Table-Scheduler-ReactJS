@@ -30,22 +30,22 @@ function App() {
         };
     }, []);
     return (<BrowserRouter>
-        <div className='app' ref={app}>
-            <Menubar />
-            <div className='main-container'>
-                <Routes>
-                    <Route path="/" element={<DashboardPage />} />
-                    <Route path="/Subjects" element={<SubjectsPage />} />
-                    <Route path="/Teachers" element={<TeachersPage />} />
-                    <Route path="/TimeTables" element={<TimeTablesPage />} />
-                    <Route path="/TimeTableStructure" element={<TimeTableStructurePage />} />
-                    <Route path="/Files" element={<FilesPage />} />
-                    <Route path="/ContactUs" element={<ContactUs />} />
-                </Routes>
-                <OwnerFooter />
-            </div>
-        </div>
-    </BrowserRouter>);
+			<div className='app' ref={app}>
+				<Menubar />
+				<div className='main-container'>
+					<Routes>
+						<Route path="/" element={<DashboardPage />}/>
+						<Route path="/Subjects" element={<SubjectsPage />}/>
+						<Route path="/Teachers" element={<TeachersPage />}/>
+						<Route path="/TimeTables" element={<TimeTablesPage />}/>
+						<Route path="/TimeTableStructure" element={<TimeTableStructurePage />}/>
+						<Route path="/Files" element={<FilesPage />}/>
+						<Route path="/ContactUs" element={<ContactUs />}/>
+					</Routes>
+					<OwnerFooter />
+				</div>
+			</div>
+		</BrowserRouter>);
 }
 // Remote typescript branch tracking test 2
 export default App;
