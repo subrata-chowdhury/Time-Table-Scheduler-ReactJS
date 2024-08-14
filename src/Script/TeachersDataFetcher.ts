@@ -1,7 +1,42 @@
+import { Teacher, TeacherSchedule } from "../data/Types";
 import { getApiToken, url } from "./fetchUrl"
 
 
-export async function getTeacherList(callBackFunction) {
+export const getTeachersList = async (
+    onSuccess: (data: string[]) => void = () => { },
+    onFailed: (data: []) => void = () => { }
+): Promise<string[]> => {
+    try {
+        let apiToken = await getApiToken()
+        let response = await fetch(`${url}io/teachers/names`, {
+            headers: {
+                'Api-Token': apiToken
+            }
+        })
+        let listArray: string[] = [];
+        if (response.status === 200) {
+            try {
+                listArray = await response.json();
+            } catch (error) {
+                console.log("%cTeacher list data is invaild", "color: orange;", await response.text())
+            }
+            onSuccess(listArray);
+            return listArray
+        } else {
+            onFailed([])
+            console.log("%cError in getting teacher list", "color: orange", await response.text())
+            return []
+        }
+    } catch (error) {
+        console.log("Unable to Fetch Data of Teachers List")
+        throw error
+    }
+}
+
+export const getTeachersDetailsList = async (
+    onSuccess: (data: Teacher[]) => void = () => { },
+    onFailed: (data: []) => void = () => { }
+): Promise<Teacher[]> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/teachers`, {
@@ -9,25 +44,27 @@ export async function getTeacherList(callBackFunction) {
                 'Api-Token': apiToken
             }
         })
-        let listArray = [];
+        let listArray: Teacher[] = [];
         if (response.status === 200) {
             try {
                 listArray = await response.json();
-                listArray = Object.keys(listArray)
             } catch (error) {
                 console.log("%cTeacher list data is invaild", "color: orange;", await response.text())
             }
-            callBackFunction(listArray);
+            onSuccess(listArray);
+            return listArray
         } else {
-            callBackFunction(listArray)
+            onFailed([])
             console.log("%cError in getting teacher list", "color: orange", await response.text())
+            return []
         }
     } catch (error) {
         console.log("Unable to Fetch Data of Teachers List")
+        throw error
     }
 }
 
-export async function getTeacher(sirName, callBackFunction) {
+export const getTeacher = async (sirName: string, onSuccess: (data: Teacher) => void = () => { }): Promise<Teacher | null> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/teachers/${sirName}`, {
@@ -42,16 +79,22 @@ export async function getTeacher(sirName, callBackFunction) {
             } catch (error) {
                 console.log("%cTeacher details data is invaild", "color: red;", await response.text())
             }
-            callBackFunction(teacherData);
+            onSuccess(teacherData);
+            return teacherData;
         } else {
             console.log(`Request URL: %c${url}io/teachers/${sirName} \n%cError in getting teacher details`, "color: blue;", "color: orange;", await response.text())
+            return null
         }
     } catch (error) {
         console.log("Unable to Fetch Data of Teacher Details")
+        throw error
     }
 }
 
-export async function getTeacherSchedule(sirName, callBackFunction) {
+export const getTeacherSchedule = async (
+    sirName: string,
+    onSuccess: (data: TeacherSchedule) => void = () => { }
+): Promise<TeacherSchedule | null> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/schedule/teacher/${sirName}`, {
@@ -66,42 +109,57 @@ export async function getTeacherSchedule(sirName, callBackFunction) {
             } catch (error) {
                 console.log("%cTeacher schedule data is invaild", "color: orange;", await response.text())
             }
-            callBackFunction(schedule);
+            onSuccess(schedule);
+            return schedule;
         } else {
             console.log(`Request URL: %c${url}io/schedule/teacher/${sirName} \n%cError in getting teacher schedule`, "color: blue;", "color: orange;", await response.text())
+            return null
         }
     } catch (error) {
         console.log("Unable to Fetch Data of Teacher Schedule")
+        throw error
     }
 }
 
 
-export async function saveTeacher(data, callBackFunction = () => { }, callBackIfFailed = () => { }) {
+export const saveTeacher = async (
+    teacherName: string,
+    teacherData: Teacher,
+    onSuccess: () => void = () => { },
+    onFailed: () => void = () => { }
+): Promise<string | null> => {
     try {
-        let body = JSON.stringify(data)
         let apiToken = await getApiToken()
-        let response = await fetch(url + "io/teachers", {
+        let response = await fetch(url + `io/teachers/${teacherName}`, {
             method: "PUT",
             headers: {
                 'content-type': 'application/json',
                 'Api-Token': apiToken
             },
-            body: body
+            body: JSON.stringify(teacherData)
         })
-        if (response.status === 200) callBackFunction();
-        else {
+        if (response.status === 200) {
+            onSuccess()
+            return await response.text()
+        } else {
             alert("Something went wrong");
             console.log("%cError in Saving teacher details", "color: orange;", await response.text())
-            callBackIfFailed()
+            onFailed()
+            return null
         }
     } catch (error) {
-        console.log("%cTeacher details data is invaild or %cUnable to call Fetch", "color: red;", "color: orange;", data)
+        console.log("%cTeacher details data is invaild or %cUnable to call Fetch", "color: red;", "color: orange;", teacherData)
+        throw error
     }
 }
 
 
 
-export async function deleteTeacher(teacherName, callBackFunction = () => { }, callBackIfFailed = () => { }) {
+export const deleteTeacher = async (
+    teacherName: string,
+    onSuccess: () => void = () => { },
+    onFailed: () => void = () => { }
+): Promise<string | null> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(url + "io/teachers/" + teacherName, {
@@ -110,13 +168,18 @@ export async function deleteTeacher(teacherName, callBackFunction = () => { }, c
                 'Api-Token': apiToken
             }
         })
-        if (response.status === 200) callBackFunction();
+        if (response.status === 200) {
+            onSuccess();
+            return await response.text()
+        }
         else {
             alert("Something went wrong");
             console.log(`Request URL: %c${url}io/teachers/${teacherName} %cUnable to delete teacher`, "color: blue;", "color: orange;", await response.text())
-            callBackIfFailed()
+            onFailed()
+            return null
         }
     } catch (error) {
         console.log("unable to send request of teacher deletion")
+        throw error
     }
 }

@@ -1,10 +1,6 @@
 export default function Files() {
-    return (
-        <svg className="icon" version="1.0" xmlns="http://www.w3.org/2000/svg"
-            width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
-            preserveAspectRatio="xMidYMid meet">
-            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-                stroke="none">
+    return (<svg className="icon" version="1.0" xmlns="http://www.w3.org/2000/svg" width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
+            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
                 <path d="M726 5100 c-60 -23 -119 -79 -149 -140 l-22 -45 0 -1920 0 -1920 21
 -45 c25 -55 72 -103 128 -133 33 -17 64 -23 156 -27 l115 -5 5 -115 c6 -129
 20 -169 78 -228 58 -57 111 -74 243 -80 l117 -5 4 -121 c3 -100 7 -128 25
@@ -37,6 +33,5 @@ l105 -105 -932 -5 c-925 -5 -933 -5 -979 -26 -55 -26 -115 -84 -138 -133 -15
                 <path d="M2085 1336 c-57 -25 -74 -113 -31 -163 l24 -28 932 0 932 0 24 28
 c47 55 23 148 -44 166 -60 17 -1798 14 -1837 -3z"/>
             </g>
-        </svg>
-    )
+        </svg>);
 }

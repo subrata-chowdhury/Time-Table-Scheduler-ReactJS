@@ -36,6 +36,10 @@
     gap: 15px;
 }
 
+.class-time-table {
+    margin-top: 0.5rem;
+}
+
 .main-btn-container {
     justify-content: space-between;
 }

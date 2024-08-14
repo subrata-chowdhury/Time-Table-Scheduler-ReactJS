@@ -1,8 +1,5 @@
 export default function EditTeachers() {
-    return (
-        <svg className="icon" version="1.0" xmlns="http://www.w3.org/2000/svg"
-            width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
-            preserveAspectRatio="xMidYMid meet">
+    return (<svg className="icon" version="1.0" xmlns="http://www.w3.org/2000/svg" width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
             <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
                 <path d="M2066 5109 c-359 -52 -680 -287 -837 -614 -119 -246 -146 -508 -80
 -767 98 -382 404 -691 784 -793 393 -105 799 4 1082 290 477 482 417 1265
@@ -19,6 +16,5 @@ export default function EditTeachers() {
 16 -68 19 -287 19 l-248 0 0 233 c0 242 -5 282 -43 338 -58 86 -182 123 -273
 81z"/>
             </g>
-        </svg>
-    )
+        </svg>);
 }

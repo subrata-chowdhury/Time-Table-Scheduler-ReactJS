@@ -1,139 +1,103 @@
-import { memo } from "react";
+import React, { memo } from "react";
 import { hasElement } from "../Script/util";
-import "../Style/TimeTable.css"
-
+import "../Style/TimeTable.css";
 export let emptyTimeTableDetails = [
     [["FirstTeacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
     [["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
     [["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
     [["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
     [["Teacher", "Lab", "roomCode"], ["Teacher", "Lab", "roomCode"], ["Teacher", "Lab", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacherlast", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]]
-]
-
-function TimeTable({
-    noOfDays = 5,
-    noOfPeriods = 9,
-    breakTimeIndexs = [4],
-    dayNames = ["Tue", "Wed", "Thu", "Fri", "Sat"],
-    periodTimes = ["9:30AM", "10:20AM", "11:10AM", "12:00PM", "12:50PM", "01:40PM", "02:30PM", "03:20PM", "04:10PM"],
-    details = emptyTimeTableDetails,
-    subjectIndexAtPeriod = 1,
-    subjectsDetails,
-    className = "",
-    timeTableWidthInPercent = 95,
-    periodClickHandler = () => { }
-}) {
-    if (details.length <= 0) return
-    let periodTimesRow = [];
-    for (let index = 0; index < periodTimes.length; index++) {
-        periodTimesRow.push(<div className="time" key={periodTimes[index]}>{periodTimes[index]}</div>);
-    }
-
-    let breakWord = "BREAK";
+];
+const TimeTable = ({ 
+// noOfDays = 5,
+noOfPeriods = 9, breakTimeIndexs = [4], dayNames = ["Tue", "Wed", "Thu", "Fri", "Sat"], periodTimes = ["9:30AM", "10:20AM", "11:10AM", "12:00PM", "12:50PM", "01:40PM", "02:30PM", "03:20PM", "04:10PM"], details = emptyTimeTableDetails, subjectIndexAtPeriodElementInDetails = 1, subjectsDetails, periodClickHandler = () => { }, className = "",
+// timeTableWidthInPercent = 95,
+ }) => {
+    if (details.length <= 0)
+        return <></>;
+    const breakWord = "BREAK";
     let dayRows = [];
-    let gridCss = "";
-    let gridWidth = timeTableWidthInPercent / (noOfPeriods + 1)
-    for (let i = 0; i < (noOfPeriods) + 1; i++) {
-        gridCss += gridWidth + "%";
-    }
-    if (details.length !== 0)
-        if (dayNames.length === details.length) {
-            createDayRows(subjectsDetails)
-        } else {
-            dayRows.push(<div className="invalid-text" key={"error"}>Invalid Inputs</div>)
-        }
-    else dayRows.push(
-        <div
-            className="text"
-            style={{ display: "grid", justifyContent: "center", alignItems: "center" }}
-            key={"error"}>
-            No Scedule Found <br />or <br />Time Table was not Generated Yet
-        </div>
-    )
-
-    function createDayRows(subjectsDetails) {
-        for (let index = 0; index < dayNames.length; index++) {
-            dayRows.push(
-                <div className="day-container" style={{ gridTemplateColumns: gridCss }} key={"day" + index}>
-                    {createASingleDayRow(index, details[index], breakWord[index], subjectsDetails)}
-                </div>
-            )
-        }
-    }
-    function createASingleDayRow(dayNameIndex = "", listOfDetailsOfThatDay = "", breakWord, subjectsDetails) {
-        if (listOfDetailsOfThatDay === "") return
-        let dayRow = [];
-        dayRow.push(<div className="day-name" key={0}>{dayNames[dayNameIndex]}</div>)
-        let totalNoOfPeriods = noOfPeriods;
-        let index = 1
-        while (index <= totalNoOfPeriods) {
-            if (hasElement(breakTimeIndexs, index)) {
-                dayRow.push(
-                    <div
-                        className="period-details-container break"
-                        key={"class" + index}
-                        data-day={dayNameIndex}
-                        data-period={index - 1}
-                        onClick={periodClickHandler}>
-                        <div> </div>
-                        <div> {breakWord} </div>
-                        <div> </div>
-                    </div>
-                )
-                index++
-            } else {
-                let periodDetails = [];
-                let spanCss = {};
-                let lab = false;
-                if (listOfDetailsOfThatDay[index - 1] === null) {
-                    index++;
-                } else {
-                    let subject = subjectsDetails[listOfDetailsOfThatDay[index - 1][subjectIndexAtPeriod]]
-                    if (subject) lab = subject.isPractical
-                    for (let detailsIndex = 0; detailsIndex < listOfDetailsOfThatDay[index - 1].length; detailsIndex++) {
-                        periodDetails.push(
-                            <div key={"data" + detailsIndex}>
-                                {listOfDetailsOfThatDay[index - 1][detailsIndex]}
-                            </div>
-                        )
-                    }
-                    if (lab === true) {
-                        spanCss = { gridColumn: 'auto / span 3' };
-                        index += 3
-                    } else {
-                        index++
-                    }
-                }
-                let classNameDetails = "period-details-container ";
-                periodDetails.length !== 0 ? classNameDetails += "class" : classNameDetails += ""
-                dayRow.push(
-                    <div
-                        className={classNameDetails}
-                        key={dayNameIndex + index}
-                        data-day={dayNameIndex}
-                        data-period={lab ? index - 4 : index - 2}
-                        style={spanCss}
-                        onClick={periodClickHandler}>
-                        {periodDetails}
-                    </div>
-                )
+    if (details)
+        if (dayNames.length === details.length && subjectsDetails) {
+            for (let i = 0; i < details.length; i++) {
+                dayRows.push(<DaysRow key={i} dayIndex={i} noOfPeriods={noOfPeriods} details={details[i]} breakWord={breakWord[i]} subjectsDetails={subjectsDetails} breakTimeIndexs={breakTimeIndexs} subjectIndexAtPeriodElementInDetails={subjectIndexAtPeriodElementInDetails} dayName={dayNames[i]} periodClickHandler={periodClickHandler}/>);
             }
         }
-        return dayRow;
-    }
-    return (
-        <div className={"time-table-container " + className}>
-            <div className="period-times-container" style={{ gridTemplateColumns: gridCss }}>
+        else {
+            dayRows.push(<div className="invalid-text" key={"error"}>Invalid Data</div>);
+        }
+    else
+        dayRows.push(<div className="text" style={{ display: "grid", justifyContent: "center", alignItems: "center" }} key={"error"}>
+            No Scedule Found <br />or <br />Time Table was not Generated Yet
+        </div>);
+    return (<div className={"time-table-container " + className}>
+            <div className="period-times-container" style={{ gridTemplateColumns: `repeat(${noOfPeriods + 1},1fr)` }}>
                 <div className="column-row-identifier">
                     <span className="column-indentifier">Day\
                         <span className="row-indentifier">Time</span>
                     </span>
                 </div>
-                {periodTimesRow}
+                {periodTimes && periodTimes.length > 0 && periodTimes.map((time) => (<div className="time" key={time}>{time}</div>))}
             </div>
             {dayRows}
-        </div>
-    )
-}
-
-export default memo(TimeTable)
+        </div>);
+};
+const DaysRow = ({ noOfPeriods = 9, dayIndex, details, breakWord, subjectsDetails, breakTimeIndexs, dayName, subjectIndexAtPeriodElementInDetails, periodClickHandler = () => { } }) => {
+    let periodCompIndex = 1;
+    let timeTableDataInteratorIndex = 0;
+    let infiniteLoopPreventerIndex = 0;
+    let DayElements = [];
+    if (!details)
+        return <div className='time-table-error-text'>NO TIME TABLE FOUND / OR AN ERROR OCCURED</div>;
+    while (periodCompIndex <= noOfPeriods && timeTableDataInteratorIndex < details.length && infiniteLoopPreventerIndex < 50) {
+        let periodDetails = details[timeTableDataInteratorIndex];
+        if (hasElement(breakTimeIndexs, periodCompIndex)) {
+            DayElements.push(<div className="period-details-container break">
+                <div> </div>
+                <div> {breakWord} </div>
+                <div> </div>
+            </div>);
+        }
+        else {
+            if (periodDetails === null) {
+                DayElements.push(<PeriodComp key={timeTableDataInteratorIndex} periodDetails={null} dayIndex={dayIndex} periodIndex={timeTableDataInteratorIndex} onClick={() => { }}/>);
+            }
+            else if (periodDetails !== null && periodDetails && periodDetails[subjectIndexAtPeriodElementInDetails]) {
+                const isLab = (periodDetails[subjectIndexAtPeriodElementInDetails].toUpperCase() === "Subject".toUpperCase())
+                    || (periodDetails[subjectIndexAtPeriodElementInDetails].toUpperCase() === "Lab".toUpperCase())
+                    || subjectsDetails[periodDetails[subjectIndexAtPeriodElementInDetails]] === undefined ?
+                    false
+                    : subjectsDetails[periodDetails[subjectIndexAtPeriodElementInDetails]].isPractical;
+                DayElements.push(<PeriodComp key={timeTableDataInteratorIndex} periodDetails={periodDetails} dayIndex={dayIndex} periodIndex={timeTableDataInteratorIndex} isLab={isLab} onClick={periodClickHandler}/>);
+                if (isLab) {
+                    timeTableDataInteratorIndex += 2;
+                    periodCompIndex += 2;
+                } //+2 beacause in outer block it will increament which will cause +3
+            }
+            else
+                DayElements.push(<PeriodComp key={timeTableDataInteratorIndex} periodDetails={periodDetails} dayIndex={dayIndex} periodIndex={timeTableDataInteratorIndex} onClick={periodClickHandler}/>);
+        }
+        timeTableDataInteratorIndex++;
+        periodCompIndex++;
+        infiniteLoopPreventerIndex++;
+        if (infiniteLoopPreventerIndex === 49) {
+            DayElements = [];
+            DayElements.push(<div>Error In Data</div>);
+        }
+    }
+    return (<div className="day-container" style={{ gridTemplateColumns: `repeat(${noOfPeriods + 1},1fr)` }}>
+            <div className="day-name">{dayName}</div>
+            {DayElements}
+        </div>);
+};
+const PeriodComp = ({ periodDetails = [], dayIndex, periodIndex, isLab = false, onClick = () => { } }) => {
+    return (<div className="period-details-container class" style={isLab ? { gridColumn: 'auto / span 3' } : {}} onClick={() => onClick(dayIndex, periodIndex)}>
+            {periodDetails && periodDetails?.length > 0 && periodDetails.map((detail, index) => (<div key={index}>{detail}</div>))}
+            {!periodDetails && <>
+                <div>&nbsp;</div>
+                <div>&nbsp;</div>
+                <div>&nbsp;</div>
+            </>}
+        </div>);
+};
+export default memo(TimeTable);

@@ -1,244 +1,175 @@
-import MiniStateContainer from '../Components/MiniStateContainer'
-import Menubar from '../Components/Menubar'
-import SearchBar from '../Components/SearchBar'
-import Cards from '../Components/Cards'
-import "../Style/Subjects.css"
-import { useEffect, useState, useRef, memo, useCallback } from 'react'
-import { deleteSubject, getSubjectDetails, getSubjectList, saveSubject } from '../Script/SubjectsDataFetcher'
-import "../Script/commonJS"
-import { hasElement } from '../Script/util'
-import TagInput from '../Components/TagInput'
-import OwnerFooter from '../Components/OwnerFooter'
-import Loader from '../Components/Loader'
-import { verifySubjectInputs } from '../Script/SubjectFormVerifier'
-
+import MiniStateContainer from '../Components/MiniStateContainer';
+import Menubar from '../Components/Menubar';
+import SearchBar from '../Components/SearchBar';
+import Cards from '../Components/Cards';
+import "../Style/Subjects.css";
+import { useEffect, useState, memo, useCallback } from 'react';
+import { deleteSubject, getSubject, getSubjectsList, saveSubject } from '../Script/SubjectsDataFetcher';
+import "../Script/commonJS";
+import { hasElement } from '../Script/util';
+import TagInput from '../Components/TagInput';
+import OwnerFooter from '../Components/OwnerFooter';
+import Loader from '../Components/Loader';
+import { verifySubjectInputs } from '../Script/InputVerifiers/SubjectFormVerifier';
 function SubjectsPage() {
-    return (
-        <>
-            <Menubar activeMenuIndex={0} />
+    return (<>
+            <Menubar activeMenuIndex={0}/>
             <div className='main-container subjects'>
                 <MainComponents />
                 <OwnerFooter />
             </div>
-        </>
-    )
+        </>);
 }
-
 function MainComponents() {
-    const [subjectsList, setSubjectsList] = useState([])
-    const [subjectName, setSubjectName] = useState()
+    const [subjectsList, setSubjectsList] = useState([]);
+    const [activeSubjectName, setActiveSubjectName] = useState("");
     const [displayLoader, setDisplayLoader] = useState(false);
-
-    const subjectDeleteBtn = useRef()
-
+    const [filterdSubjectList, setFilterdSubjectList] = useState(subjectsList);
     useEffect(() => {
-        startUpFunction()
-    }, [])
+        startUpFunction();
+    }, []);
     const startUpFunction = useCallback(() => {
-        getSubjectList(setSubjectsList) // api call
-        setSubjectName("")
-        setDisplayLoader(false)
-    }, [])
-    const subjectCardOnClickHandler = useCallback((event) => {
-        setSubjectName(event.target.title)
-        subjectDeleteBtn.current.style.cssText = "display: block";
-    }, [])
-    const addSubjectCardClickHandler = useCallback(() => {
-        setSubjectName("")
-        subjectDeleteBtn.current.style.cssText = "display: none;";
-    }, [])
-    return (
-        <>
-            <Loader display={displayLoader} />
+        getSubjectsList(setSubjectsList); // api call
+        setDisplayLoader(false);
+        setActiveSubjectName("");
+    }, []);
+    return (<>
             <div className='top-sub-container'>
                 <div className='left-sub-container'>
                     <div className='tools-container'>
-                        <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                        <SearchBar />
+                        <MiniStateContainer onChange={startUpFunction}/>
+                        <SearchBar array={subjectsList} onChange={setFilterdSubjectList}/>
                     </div>
-                    <Cards
-                        cardDetails={subjectsList}
-                        cardClassName={"subject-card"}
-                        cardClickHandler={subjectCardOnClickHandler}
-                        addBtnClickHandler={addSubjectCardClickHandler} />
+                    <Cards cardList={filterdSubjectList} cardClassName={"subject-card"} onCardClick={(name) => {
+            setActiveSubjectName(name);
+        }} onAddBtnClick={() => {
+            setActiveSubjectName("");
+        }}/>
                 </div>
                 <div className='right-sub-container'>
-                    <DetailsContainer
-                        outerSubjectName={subjectName}
-                        subjectsList={subjectsList}
-                        onSubmitCallBack={startUpFunction}
-
-                        subjectDeleteBtnRef={subjectDeleteBtn}
-                        setDisplayLoader={setDisplayLoader}
-                    />
+                    <DetailsContainer activeSubjectName={activeSubjectName} subjectsList={subjectsList} onSubmitCallBack={startUpFunction} setDisplayLoader={setDisplayLoader}/>
                 </div>
             </div>
-        </>
-    )
+            {displayLoader && <Loader />}
+        </>);
 }
-
-function DetailsContainer({
-    outerSubjectName = "",
-    subjectsList,
-    onSubmitCallBack,
-
-    subjectDeleteBtnRef,
-    setDisplayLoader
-}) {
-    const [subjectName, setSubjectName] = useState('')
+const DetailsContainer = ({ activeSubjectName = "", subjectsList, onSubmitCallBack, setDisplayLoader }) => {
+    const [subjectName, setSubjectName] = useState(activeSubjectName);
     const [subjectDetails, setSubjectDetails] = useState({
         isPractical: false,
         lectureCount: 4,
         roomCodes: [],
         sem: "",
         isFree: false
-    })
+    });
+    const [disabled, setDisabled] = useState(false);
+    const [inEditState, setInEditState] = useState(false);
     useEffect(() => {
-        if (!outerSubjectName) {
-            setSubjectName("")
+        setSubjectName(activeSubjectName);
+        if (activeSubjectName !== "") {
+            getSubject(activeSubjectName, setSubjectDetails); // api call
+            setInEditState(true);
+        }
+        else {
             setSubjectDetails({
                 isPractical: false,
                 lectureCount: 4,
                 roomCodes: [],
                 sem: "",
                 isFree: false
-            })
-        } else {
-            setSubjectName(outerSubjectName)
-            getSubjectDetails(outerSubjectName, setSubjectDetails) // api call
+            });
+            setInEditState(false);
         }
-    }, [outerSubjectName])
-    const subjectTypeClickHandler = useCallback((event) => {
-        setSubjectDetails(value => ({ ...value, isPractical: !value["isPractical"] }))
-    }, [])
-    const isFreeClickHandler = useCallback((event) => {
-        setSubjectDetails(value => ({ ...value, isFree: !value["isFree"] }))
-    }, [])
+    }, [activeSubjectName]);
     const inputOnChangeHandler = useCallback((event) => {
-        if (event.target.name === 'subjectName') setSubjectName(event.target.value.toUpperCase())
-        else setSubjectDetails(value => ({ ...value, [event.target.name]: event.target.value }))
-    }, [subjectDetails])
-    const checkIfAlreadyExist = useCallback((teacher) => {
-        if (hasElement(subjectsList, teacher)) subjectDeleteBtnRef.current.style.cssText = "display: block;"; // if teacher exist show delete btn
-        else subjectDeleteBtnRef.current.style.cssText = "display: none;"; // if not teacher exist show delete btn
-    }, [subjectsList])
+        if (event.target.name === 'subjectName')
+            setSubjectName(event.target.value.toUpperCase());
+        else
+            setSubjectDetails(value => ({ ...value, [event.target.name]: event.target.value }));
+    }, []);
+    const checkIfAlreadyExist = useCallback((subjectName) => {
+        if (hasElement(subjectsList, subjectName))
+            setInEditState(true); // if subject exist show delete btn
+        else
+            setInEditState(false); // if not subject exist show delete btn
+    }, [subjectsList]);
     const subjectFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
-
-        let verifiedData = verifySubjectInputs(subjectName, subjectDetails)
+        let verifiedData = verifySubjectInputs(subjectName, subjectDetails);
         if (verifiedData)
             if (hasElement(subjectsList, verifiedData.newSubjectName)) {
                 if (window.confirm("Are you want to overwrite " + verifiedData.newSubjectName))
                     saveData(verifiedData.newSubjectName, verifiedData.data);
-            } else saveData(verifiedData.newSubjectName, verifiedData.data);
-    }, [subjectName, subjectDetails, subjectsList])
+            }
+            else
+                saveData(verifiedData.newSubjectName, verifiedData.data);
+    }, [subjectName, subjectDetails, subjectsList]);
     const saveData = useCallback((subjectName, subjectData) => {
-        setDisplayLoader(true)
-        let newData = new Map();
-        newData[subjectName] = subjectData;
-        saveSubject(newData, () => { // api call
-            alert(JSON.stringify(newData) + "---------- is added");
+        setDisplayLoader(true);
+        setDisabled(true);
+        saveSubject(subjectName, subjectData, () => {
+            alert(JSON.stringify({ subjectName, subjectData }) + "---------- is added");
             onSubmitCallBack();
-
-            // reseting form fields
-            setSubjectName("")
-            setSubjectDetails({
-                isPractical: false,
-                lectureCount: 4,
-                roomCodes: [],
-                sem: "",
-                isFree: false
-            })
-        }, () => {
-            setDisplayLoader(false)
-        })
-    }, [])
-
+        }).then(() => {
+            setDisplayLoader(false);
+            setDisabled(false);
+        }).catch(() => {
+            setDisplayLoader(false);
+            setDisabled(true);
+        });
+    }, []);
     const deleteSubjectBtnClickHandler = useCallback((event) => {
         event.preventDefault();
         if (hasElement(subjectsList, subjectName)) // checking if the subject exsist or not
             if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?")) // if exist show a confirmation box
-                deleteSubject(subjectName, () => { // api call
+                deleteSubject(subjectName, () => {
                     onSubmitCallBack(); // referenced to start up function
-                    subjectDeleteBtnRef.current.style.cssText = "display: none;"; // hide delete btn
                 }, () => {
-                    setDisplayLoader(false) // if failed only hide loader
-                })
-    }, [subjectName])
-    return (
-        <form className='details-container' onSubmit={subjectFormSubmitHandler}>
+                    setDisplayLoader(false); // if failed only hide loader
+                });
+    }, [subjectName]);
+    return (<form className='details-container' onSubmit={subjectFormSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>
             <div className="input-container">
                 <div className="input-box-heading">Subject Name</div>
-                <input
-                    type="text"
-                    className="input-box"
-                    name='subjectName'
-                    value={subjectName}
-                    placeholder='Ex. ABC'
-                    onChange={event => {
-                        checkIfAlreadyExist(event.target.value.trim().toUpperCase())
-                        inputOnChangeHandler(event)
-                    }}></input>
+                <input type="text" className="input-box" name='subjectName' value={subjectName} placeholder='Ex. ABC' onChange={event => {
+            checkIfAlreadyExist(event.target.value.toUpperCase());
+            inputOnChangeHandler(event);
+        }}></input>
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Semester</div>
-                <input
-                    type="number"
-                    className="input-box"
-                    name='sem'
-                    value={subjectDetails.sem}
-                    placeholder='Ex. 8'
-                    onChange={event => {
-                        inputOnChangeHandler(event)
-                    }}></input>
+                <input type="number" className="input-box" name='sem' value={subjectDetails.sem} placeholder='Ex. 8' onChange={inputOnChangeHandler}></input>
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Lecture Count per Week (Value: {subjectDetails.lectureCount})</div>
-                <input
-                    type="range"
-                    className="input-box"
-                    name='lectureCount'
-                    max={40}
-                    min={1}
-                    value={subjectDetails.lectureCount}
-                    title={subjectDetails.lectureCount}
-                    onChange={event => {
-                        inputOnChangeHandler(event);
-                    }}></input>
+                <input type="range" className="input-box" name='lectureCount' max={40} min={1} value={subjectDetails.lectureCount} title={subjectDetails.lectureCount.toString()} onChange={inputOnChangeHandler}></input>
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Classroom</div>
-                <TagInput
-                    inputName={'roomCodes'}
-                    details={subjectDetails}
-                    updateWithNewValues={(data) => {
-                        let newSubjectDetails = { ...subjectDetails }
-                        newSubjectDetails.roomCodes = data;
-                        setSubjectDetails(newSubjectDetails)
-                    }}
-                />
+                <TagInput tagList={subjectDetails.roomCodes} onChange={(data) => {
+            let newSubjectDetails = { ...subjectDetails, roomCodes: data };
+            setSubjectDetails(newSubjectDetails);
+        }}/>
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Subject Type</div>
-                <div className={'box'} name="isPractical" onClick={subjectTypeClickHandler}>
+                <div className={'box'} onClick={() => setSubjectDetails(value => ({ ...value, isPractical: !value["isPractical"] }))}>
                     <div className={'option' + (!subjectDetails.isPractical ? " active" : "")}>Theory</div>
                     <div className={'option' + (subjectDetails.isPractical ? " active" : "")}>Practical</div>
                 </div>
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Should be Taken by<br /> Teacher or Not</div>
-                <div className={'box'} name="isFree" onClick={isFreeClickHandler}>
+                <div className={'box'} onClick={() => setSubjectDetails(value => ({ ...value, isFree: !value["isFree"] }))}>
                     <div className={'option' + (subjectDetails.isFree ? " active" : "")}>No</div>
                     <div className={'option' + (!subjectDetails.isFree ? " active" : "")}>Yes</div>
                 </div>
             </div>
             <div className='save-btn-container'>
-                <button className='subject-save-btn' type='submit'>Save</button>
-                <button className='subject-delete-btn' onClick={deleteSubjectBtnClickHandler} ref={subjectDeleteBtnRef}>Delete</button>
+                <button className='subject-save-btn' type='submit' disabled={disabled}>Save</button>
+                {inEditState && <button className='subject-delete-btn' onClick={deleteSubjectBtnClickHandler}>Delete</button>}
             </div>
-        </form>
-    )
-}
-
-export default memo(SubjectsPage)
+        </form>);
+};
+export default memo(SubjectsPage);

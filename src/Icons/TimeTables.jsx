@@ -1,8 +1,6 @@
 export default function TimeTables() {
-    return (
-        <svg className="icon" version="1.0" xmlns="http://www.w3.org/2000/svg" width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
-            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-                stroke="none">
+    return (<svg className="icon" version="1.0" xmlns="http://www.w3.org/2000/svg" width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
+            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
                 <path d="M732 5109 c-45 -13 -108 -80 -121 -126 -7 -23 -11 -158 -11 -340 l0
 -303 -35 -46 c-92 -121 -82 -287 25 -394 61 -61 119 -84 210 -84 99 -1 173 33
 230 106 89 112 91 260 5 372 l-34 45 -3 323 c-3 320 -3 323 -27 361 -47 76
@@ -59,6 +57,5 @@ export default function TimeTables() {
 127 -10 301 -10 l281 0 24 24 c34 34 41 71 21 113 -27 56 -57 63 -281 63
 l-195 0 0 261 0 261 -29 29 c-35 34 -93 39 -127 11z"/>
             </g>
-        </svg>
-    )
+        </svg>);
 }

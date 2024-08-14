@@ -1,5 +1,5 @@
 import { getApiToken, url } from "./fetchUrl"
-export async function getCurrentFileName(callBackFunction) {
+export const getCurrentFileName = async (onSuccess: (data: string) => void = () => { }): Promise<string> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/currentName`, {
@@ -8,19 +8,22 @@ export async function getCurrentFileName(callBackFunction) {
             }
         })
         let textResponse = await response.text()
-        let data = ""
+
+        let data: string = ""
         if (response.status !== 200) {
             console.log("%cError in getting current state name:", "color: red;", textResponse)
-        } else {
+        } else if (response.ok) {
             data = textResponse
+            onSuccess(data);
         }
-        callBackFunction(data);
+        return data
     } catch (error) {
         console.log("Unable to Fetch Data of Current File Name")
+        throw error
     }
 }
 
-export async function getCurrentFileIsSaved(callBackFunction = () => { }) {
+export const getCurrentFileIsSaved = async (onSuccess: (data: boolean) => void = () => { }): Promise<boolean> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/isSaved`, {
@@ -28,19 +31,22 @@ export async function getCurrentFileIsSaved(callBackFunction = () => { }) {
                 'Api-Token': apiToken
             }
         })
+        const data: boolean = await response.json()
         if (response.status !== 200) {
             console.log("%cError in getting current state is saved or not:", "color: red;", await response.text())
             window.close();
-            return
+        } else if (response.ok) {
+            onSuccess(data);
         }
-        callBackFunction(await response.json());
+        return data
     } catch (error) {
         console.log("Unable to Fetch Data of Current File Save State")
         window.close()
+        throw error
     }
 }
 
-export async function saveCurrentState(name, callBackFunction = () => { }) {
+export const saveCurrentState = async (name: string, onSuccess: () => void = () => { }): Promise<string> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/save?name=${name}`, {
@@ -50,17 +56,19 @@ export async function saveCurrentState(name, callBackFunction = () => { }) {
         })
         if (response.status === 200) {
             alert(`Current State is Saved in ${name.toUpperCase()}`);
-            callBackFunction();
+            onSuccess();
         } else {
             alert("Someting went wrong")
             console.log("%cError in saving current state in new file:", "color: orange;", await response.text())
         }
+        return await response.text()
     } catch (error) {
         console.log("Unable to Call Fetch of Save Current State")
+        throw error
     }
 }
 
-export async function createNewFile(name, callBackFunction = () => { }) {
+export const createNewFile = async (name: string, onSuccess: () => void = () => { }): Promise<string> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/newEmpty?name=${name}`, {
@@ -71,16 +79,21 @@ export async function createNewFile(name, callBackFunction = () => { }) {
         })
         if (response.status === 200) {
             alert(`Created a new file called ${name.toUpperCase()}`);
-            callBackFunction();
+            onSuccess();
         } else {
             console.log(`Request URL: %c${url}io/Saves/newEmpty?name=${name} \n%cError in creating a new file: `, "color: blue;", "color: orange;", await response.text())
         }
+        return await response.text()
     } catch (error) {
         console.log("Unable to Call Fetch of Create New File")
+        throw error
     }
 }
 
-export async function getSaveFileList(callBackFunction = (data) => { }) {
+export const getSaveFileList = async (
+    onSuccess: (data: string[]) => void = () => { },
+    onFailed: (data: string[]) => void = () => { }
+): Promise<string[]> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/list`, {
@@ -88,25 +101,28 @@ export async function getSaveFileList(callBackFunction = (data) => { }) {
                 'Api-Token': apiToken
             }
         })
-        let files = [];
+        let files: string[] = [];
         if (response.status === 200) {
             try {
                 files = await response.json()
             } catch (error) {
                 console.log("%cInvalid state list data", "color: orange;", await response.text())
             }
-            callBackFunction(files);
+            onSuccess(files);
+            return files
         } else {
-            callBackFunction(files)
-            console.log(apiToken)
-            console.log("%cError in getting save states list:", "color: red;", await response.text())
+            const serverResponse = await response.text()
+            onFailed(files)
+            console.log("%cError in getting save states list:", "color: red;", serverResponse)
+            return []
         }
     } catch (error) {
         console.log("Unable to Fetch Data of Save File List")
+        throw error
     }
 }
 
-export async function loadSaveFile(name, callBackFunction = (data) => { }) {
+export const loadSaveFile = async (name: string, onSuccess: () => void = () => { }): Promise<string> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/load?name=${name}`, {
@@ -117,16 +133,18 @@ export async function loadSaveFile(name, callBackFunction = (data) => { }) {
         })
         if (response.status === 200) {
             alert("Opend Sucessfully")
-            callBackFunction(await response.text());
+            onSuccess();
         } else {
             console.log(`Request URL: %c${url}io/saves/load?name=${name} \n%cError in loading state`, "color: blue;", "color: red;", await response.text())
         }
+        return await response.text()
     } catch (error) {
         console.log("Unable to Call Fetch of Load Saved File")
+        throw error
     }
 }
 
-export async function deleteFile(name, callBackFunction = () => { }) {
+export const deleteFile = async (name: string, onSuccess: () => void = () => { }): Promise<string> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(url + "io/saves/delete?name=" + name, {
@@ -136,12 +154,14 @@ export async function deleteFile(name, callBackFunction = () => { }) {
             }
         })
         if (response.status === 200) {
-            callBackFunction();
+            onSuccess();
         } else {
             alert("Something went wrong");
             console.log(`Request URL: %c${url}io/saves/delete?name=${name} %cError in Deleteing file`, "color: blue;", "color: yelow;", await response.text())
         }
+        return await response.text()
     } catch (error) {
         console.log("Unable to Call Fetch of Delete File")
+        throw error
     }
 }

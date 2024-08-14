@@ -1,33 +1,44 @@
 import { getApiToken, url } from "./fetchUrl"
+import { Subject } from "../data/Types"
 
-export async function getSubjectList(callBackFunction = (data) => { }) {
+export const getSubjectsList = async (
+    onSuccess: (data: string[]) => void = () => { },
+    onFailed: (data: string[]) => void = () => { }
+): Promise<string[]> => {
     try {
         let apiToken = await getApiToken()
-        let response = await fetch(`${url}io/subjects`, {
+        let response = await fetch(`${url}io/subjects/codes`, {
             headers: {
                 'Api-Token': apiToken
             }
         })
-        let listArray = [];
+        let listArray: string[] = [];
         if (response.status === 200) {
             try {
-                listArray = await response.json()
-                listArray = Object.keys(listArray)
+                listArray = await response.json();
             } catch (error) {
-                console.log("%cSubject List Data is invaild", "color: orange;", await response.text())
+                const text = await response.text()
+                console.log("%cSubject List Data is invaild", "color: orange;", text)
             }
-            callBackFunction(listArray);
+            onSuccess(listArray);
+            return listArray
         } else {
-            callBackFunction(listArray)
-            console.log(apiToken)
-            console.log("%cError in getting subject list", "color: orange;", await response.text())
+            const text = await response.text()
+            onFailed(listArray)
+            console.log("%cError in getting subject list", "color: orange;", text)
+            return []
         }
     } catch (error) {
         console.log("Unable to Fetch Data of Subject List")
+        throw error
     }
 }
 
-export async function getSubjects(callBackFunction = (data) => { }, setSubjectsList) {
+export type SubjectsDetailsList = {
+    [subjectName: string]: Subject
+}
+
+export const getSubjectsDetailsList = async (onSuccess: (data: SubjectsDetailsList) => void = () => { }): Promise<SubjectsDetailsList[]> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/subjects`, {
@@ -42,16 +53,19 @@ export async function getSubjects(callBackFunction = (data) => { }, setSubjectsL
             } catch (error) {
                 console.log("%cSubjects Data is invaild", "color: orange;", await response.text())
             }
-            callBackFunction(listArray);
+            onSuccess(listArray);
+            return listArray;
         } else {
             console.log("%cError in getting subjects details", "color: orange;", await response.text())
+            return []
         }
     } catch (error) {
         console.log("Unable to Fetch Data of subjects")
+        throw error
     }
 }
 
-export async function getSubjectDetails(subjectName, callBackFunction = (data) => { }) {
+export const getSubject = async (subjectName: string, onSuccess: (data: Subject) => void = () => { }): Promise<Subject | null> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/subjects/${subjectName}`, {
@@ -66,40 +80,54 @@ export async function getSubjectDetails(subjectName, callBackFunction = (data) =
             } catch (error) {
                 console.log("%cSubject Details Data is invaild", "color: red;", await response.text())
             }
-            callBackFunction(data);
+            onSuccess(data);
+            return data
         } else {
             console.log(`Request URL: %c${url}io/subjects/${subjectName} \n%cError in getting subject details data`, "color: blue;", "color: orange;", await response.text())
+            return null
         }
-    } catch {
+    } catch (error) {
         console.log("Unable to Fetch Data of subject")
+        throw error
     }
 }
 
-export async function saveSubject(data, callBackFunction = () => { }, callBackIfFailed = () => { }) {
+export const saveSubject = async (
+    subjectName: string,
+    subjectDetails: Subject,
+    onSuccess: () => void = () => { },
+    onFailed: () => void = () => { }
+): Promise<string | null> => {
     try {
-        let subjectData = JSON.stringify(data)
         let apiToken = await getApiToken()
-        let response = await fetch(url + "io/subjects", {
+        let response = await fetch(url + `io/subjects/${subjectName}`, {
             method: "PUT",
             headers: {
                 'content-type': 'application/json',
                 'Api-Token': apiToken
             },
-            body: subjectData
+            body: JSON.stringify(subjectDetails)
         })
-        if (response.status === 200)
-            callBackFunction();
-        else {
+        if (response.status === 200) {
+            onSuccess();
+            return subjectName
+        } else {
             alert("Something went wrong");
             console.log("%cError in Saveing Subject Details", "color: orange;", await response.text())
-            callBackIfFailed()
+            onFailed()
+            return null
         }
     } catch (error) {
-        console.log("%cData is invaild of the Subject details or %cUnable to use Fetch call", "color: red;", "color: orange;", data)
+        console.log("%cData is invaild of the Subject details or %cUnable to use Fetch call", "color: red;", "color: orange;", subjectDetails)
+        throw error
     }
 }
 
-export async function deleteSubject(subjectName, callBackFunction = () => { }, callBackIfFailed = () => { }) {
+export const deleteSubject = async (
+    subjectName: string,
+    onSuccess: () => void = () => { },
+    onFailed: () => void = () => { }
+): Promise<string | null> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(url + "io/subjects/" + subjectName, {
@@ -108,14 +136,17 @@ export async function deleteSubject(subjectName, callBackFunction = () => { }, c
                 'Api-Token': apiToken
             }
         })
-        if (response.status === 200)
-            callBackFunction()
-        else {
+        if (response.status === 200) {
+            onSuccess()
+            return subjectName
+        } else {
             alert("Something went wrong");
             console.log("%cError in Deleteing Subject", "color: red;", subjectName, await response.text())
-            callBackIfFailed()
+            onFailed()
+            return null
         }
     } catch (error) {
         console.log("unable to send request of delete subject")
+        throw error
     }
 }

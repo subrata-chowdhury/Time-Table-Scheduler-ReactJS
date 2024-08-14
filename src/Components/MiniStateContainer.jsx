@@ -1,50 +1,37 @@
-import { memo, useCallback, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { getCurrentFileName, getSaveFileList, loadSaveFile } from "../Script/FilesDataFetchers";
 import "../Style/Mini-state-container.css";
 import { checkCurrentStateIsSavedBeforeClose } from "../Script/commonJS";
-
-function MiniStateContainer({ callBackAfterStateUpdate = () => { }, forceReRenderer = false }) {
-    const [states, setStates] = useState([])
-    const fileSelector = useRef()
+const MiniStateContainer = ({ onChange = () => { }, forceReRenderer = false }) => {
+    const [files, setFiles] = useState([]);
+    const selectInput = useRef(null);
     useEffect(() => {
-        getSaveFileList((data) => { // api call
-            setStates(data)
-            getCurrentFileName((currentFileName) => { // api call
-                let options = fileSelector.current.querySelectorAll("option");
-                for (let index = 0; index < options.length; index++) {
-                    if (options[index].value === currentFileName.toLowerCase()) {
-                        options[index].selected = 'selected';
-                        break;
+        getSaveFileList(files => {
+            setFiles(files);
+            getCurrentFileName(currentFileName => {
+                selectInput.current?.querySelectorAll("option").forEach((option) => {
+                    if (option.value === currentFileName.toLowerCase()) {
+                        option.selected = true;
                     }
-                }
+                });
             });
         });
-    }, [forceReRenderer])
-
+    }, [forceReRenderer]);
     const onChangeStateHandler = useCallback((event) => {
-        checkCurrentStateIsSavedBeforeClose(changeTheState) // api calls present in the function
-        function changeTheState() {
-            loadSaveFile(event.target.value, callBackAfterStateUpdate); // api call
-        }
-    }, [])
-    let options = [];
-    for (let index = 0; index < states.length; index++) {
-        options.push(<Option value={states[index]} key={index}></Option>)
-    }
-    return (
-        <div className="mini-states-container">
+        checkCurrentStateIsSavedBeforeClose(() => {
+            loadSaveFile(event.target.value, () => {
+                onChange();
+            }); // api call
+        }); // api calls present in the function
+    }, []);
+    return (<div className="mini-states-container">
             <label>Current File:</label>
-            <select className="state-selector" onChange={event => { onChangeStateHandler(event) }} ref={fileSelector}>
-                {options}
+            <select className="state-selector" onChange={onChangeStateHandler} ref={selectInput}>
+                {files && files.length > 0 && files.map((file, index) => (<Option value={file} key={index}></Option>))}
             </select>
-        </div>
-    )
-}
-
-function Option({ value }) {
-    return (
-        <option value={value.toLowerCase()}>{value}</option>
-    )
-}
-
-export default memo(MiniStateContainer)
+        </div>);
+};
+const Option = ({ value }) => {
+    return (<option value={value.toLowerCase()}>{value}</option>);
+};
+export default memo(MiniStateContainer);

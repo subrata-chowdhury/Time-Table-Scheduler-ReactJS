@@ -1,54 +1,48 @@
-import { memo, useCallback, useRef } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import Cross from "../Icons/Cross";
 import Search from "../Icons/Search";
-import "../Style/SearchBar.css"
-
+import "../Style/SearchBar.css";
 export function match(list, key) {
-    let res = []
+    let res = [];
     for (let i = 0; i < list.length; i++) {
         if (list[i].toLowerCase().indexOf(key.toLowerCase()) !== -1) {
-            res.push(i)
+            res.push(i);
         }
     }
-    return res
+    return res;
 }
-
-function SearchBar() {
-    const searchInputBox = useRef();
-    const searchInputContainer = useRef();
-    const dataCards = useRef();
-    const searchInputHandler = useCallback(() => {
-        let list = [];
-        if (!dataCards.current)
-            dataCards.current = document.querySelector(".cards-container").querySelectorAll(".card.data");
-        dataCards.current.forEach((e) => {
-            list.push(e.title);
-            e.style.cssText = "display: none;";
-        })
-        let result = match(list, searchInputBox.current.value.trim());
-        result.forEach((e) => {
-            dataCards.current[e].style.cssText = "display: grid;";
-        })
-    }, [])
-
+const SearchBar = ({ array = [], onChange = () => { } }) => {
+    const [active, setActive] = useState(false);
+    const [searchKey, setSearchKey] = useState("");
+    const searchInputBox = useRef(null);
+    const searchChangeHandler = useCallback((e) => {
+        let searchKey = e.target.value.toUpperCase();
+        setSearchKey(searchKey);
+        if (searchKey.length === 0) {
+            onChange(array);
+        }
+        else {
+            onChange(array.filter((item) => item.toUpperCase().indexOf(searchKey) !== -1));
+        }
+    }, [array, onChange]);
     const searchIconClickHandler = useCallback(() => {
-        searchInputContainer.current.classList.add("active");
-        searchInputBox.current.focus()
-    }, [])
-
+        if (searchInputBox.current != null) {
+            setActive(true);
+            searchInputBox.current.focus();
+        }
+    }, [searchInputBox, setActive]);
     const crossIconClickHandler = useCallback(() => {
-        searchInputBox.current.value = "";
-        searchInputContainer.current.classList.remove("active");
-        searchInputHandler()
-    }, [])
-
-    return (
-        <div className="search-container" ref={searchInputContainer}>
-            <Search searchIconClickHandler={searchIconClickHandler} />
-            <input className="search-input" placeholder="Search Name" onInput={searchInputHandler} ref={searchInputBox}></input>
-            <Cross crossIconClickHandler={crossIconClickHandler} />
-        </div>
-    )
-}
-
-export default memo(SearchBar)
+        setSearchKey("");
+        onChange(array);
+        setActive(false);
+    }, [array, onChange]);
+    useEffect(() => {
+        onChange(array);
+    }, [array]);
+    return (<div className={"search-container" + (active ? " active" : "")}>
+            <Search searchIconClickHandler={searchIconClickHandler}/>
+            <input className="search-input" placeholder="Search Name" value={searchKey} onChange={searchChangeHandler} ref={searchInputBox}></input>
+            <Cross crossIconClickHandler={crossIconClickHandler}/>
+        </div>);
+};
+export default memo(SearchBar);

@@ -5,13 +5,13 @@
 }
 
 .left-sub-container {
-    display: grid;
-    grid-auto-flow: row;
+    display: flex;
+    flex-direction: column;
 }
 
 .tools-container {
-    display: grid;
-    grid-auto-flow: column;
+    display: flex;
+    flex-direction: row;
     justify-content: space-between;
     padding: 0 35px;
     padding-left: 0;
@@ -19,15 +19,16 @@
 
 .details-container {
     background: var(--background);
-    border-radius: 15px;
-    padding: 25px;
-    padding-right: 10px;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-sizing: border-box;
     height: 92%;
-    width: 92%;
+    width: 100%;
     display: grid;
     grid-auto-flow: row;
     gap: 15px;
     align-content: start;
+    margin: 0;
 }
 
 .details-container .inputs-container-heading {
@@ -38,23 +39,26 @@
 .time-table-container {
     display: grid;
     grid-auto-flow: row;
+    width: 100%;
 }
 
 .time-selector {
-    width: 98%;
+    width: 100%;
 }
 
 .periods-container {
     display: grid;
     grid-auto-flow: column;
+    gap: 0.5rem;
 }
 
 .period {
     display: grid;
     justify-content: center;
     align-items: center;
-    width: 30px;
-    height: 30px;
+    width: 100%;
+    height: 100%;
+    min-height: 30px;
     border-radius: 5px;
     background: rgba(0, 0, 0, 0.1);
     cursor: pointer;
@@ -64,16 +68,15 @@
     transition: 0.3s;
 }
 
-@media (max-width: 1150px) {
-    .period {
-        width: 20px;
-        height: 20px;
-    }
-}
-
 .period.selected {
     color: #fff;
     background: dodgerblue;
+}
+
+@media (max-width: 960px) {
+    .details-container {
+        padding: 1.1rem;
+    }
 }
 
 @media (max-width: 680px) {
@@ -101,7 +104,7 @@
         grid-template-rows: 40% auto;
     }
 
-    .left-sub-container {
+    .teachers .left-sub-container {
         grid-template-rows: 15% auto;
     }
 

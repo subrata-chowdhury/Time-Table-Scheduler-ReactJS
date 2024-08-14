@@ -3,7 +3,8 @@
     position: relative;
     border-radius: 5px;
     padding: 5px;
-    width: 92%;
+    width: 100%;
+    box-sizing: border-box;
     overflow-y: scroll;
     max-height: 70px;
     scrollbar-width: none;

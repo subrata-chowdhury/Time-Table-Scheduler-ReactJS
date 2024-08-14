@@ -1,246 +1,218 @@
-import MiniStateContainer from '../Components/MiniStateContainer'
-import Menubar from '../Components/Menubar'
-import "../Style/Dashboard.css"
-import WorkingHourBarChat from '../Components/WorkingHourBarChat'
-import { HorizentalCardsContainer } from '../Components/Cards'
-import TimeTable from '../Components/TimeTable'
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { getTeacher, getTeacherList, getTeacherSchedule } from '../Script/TeachersDataFetcher'
-import { getSubjects } from '../Script/SubjectsDataFetcher'
-import "../Script/commonJS"
-import OwnerFooter from '../Components/OwnerFooter'
-
-function DashboardPage() {
-    return (
-        <>
-            <Menubar activeMenuIndex={2} />
+import MiniStateContainer from '../Components/MiniStateContainer';
+import Menubar from '../Components/Menubar';
+import "../Style/Dashboard.css";
+import WorkingHourBarChat from '../Components/WorkingHourBarChat';
+import { HorizentalCardsContainer } from '../Components/Cards';
+import TimeTable from '../Components/TimeTable';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { getTeacher, getTeachersList, getTeacherSchedule } from '../Script/TeachersDataFetcher';
+import { getSubjectsDetailsList } from '../Script/SubjectsDataFetcher';
+import "../Script/commonJS";
+import OwnerFooter from '../Components/OwnerFooter';
+const DashboardPage = () => {
+    return (<>
+            <Menubar activeMenuIndex={2}/>
             <div className='main-container dashboard'>
                 <MainComponents />
                 <OwnerFooter />
             </div>
-        </>
-    )
-}
-
+        </>);
+};
 function MainComponents() {
-    const [perDayValue, setPerDayValue] = useState([0, 0, 0, 0, 0])
-    const [fileChange, setFileChange] = useState(false)
-
+    const [teachersList, setTeahersList] = useState([]);
+    const [perDayValue, setPerDayValue] = useState([0, 0, 0, 0, 0]);
     const [basicDetails, setBasicDetails] = useState({
         subjectsCount: 0,
         teachersCount: 0,
         practicalSubjects: 0,
         theroySubjects: 0,
         freeSubjects: 0
-    })
-
-    const startUpFunction = useCallback(() => {
-        setFileChange(val => !val)
-        setPerDayValue([0, 0, 0, 0, 0])
-    }, [setFileChange, setPerDayValue])
-
-    return (
-        <div className='top-sub-container'>
+    });
+    const subjectsDetails = useRef({});
+    const calculatePerDayValue = useCallback((teacherTimeTableDetails, subjectsDetails) => {
+        let newPerDayValue = [];
+        for (let index = 0; index < teacherTimeTableDetails.length; index++) {
+            let valueForThatDay = 0;
+            for (let innerIndex = 0; innerIndex < teacherTimeTableDetails[index].length; innerIndex++) {
+                const period = teacherTimeTableDetails[index][innerIndex];
+                if (period !== null && period !== undefined) {
+                    if (subjectsDetails[period[1]].isPractical === true) {
+                        valueForThatDay += 3;
+                        innerIndex += 3;
+                    }
+                    else
+                        valueForThatDay++;
+                }
+            }
+            newPerDayValue.push(valueForThatDay);
+        }
+        setPerDayValue(newPerDayValue);
+    }, []);
+    const startUpFunction = () => {
+        setPerDayValue([0, 0, 0, 0, 0]);
+        getTeachersList((data) => {
+            setTeahersList(data);
+            setBasicDetails(val => {
+                return { ...val, teachersCount: data.length };
+            });
+        });
+        getSubjectsDetailsList(data => {
+            subjectsDetails.current = data;
+            setBasicDetails(val => {
+                let practicalSubjects = 0;
+                let theroySubjects = 0;
+                let freeSubjects = 0;
+                for (let key in data) {
+                    if (data[key].isPractical)
+                        practicalSubjects++;
+                    else
+                        theroySubjects++;
+                    if (data[key].isFree)
+                        freeSubjects++;
+                }
+                return { ...val, subjectsCount: Object.keys(data).length, practicalSubjects, theroySubjects, freeSubjects };
+            });
+        });
+    };
+    useEffect(() => {
+        startUpFunction();
+    }, []);
+    return (<div className='top-sub-container'>
             <div className='left-sub-container'>
-                <MiniStateContainer callBackAfterStateUpdate={startUpFunction} />
-                <BasicDetails basicDetails={basicDetails} />
-                <WorkingHourBarChat perDayValue={perDayValue} />
+                <MiniStateContainer onChange={startUpFunction}/>
+                <BasicDetails basicDetails={basicDetails}/>
+                <WorkingHourBarChat perDayValue={perDayValue}/>
             </div>
             <div className='right-sub-container'>
-                <TeachersDetailsContainer setPerDayValue={setPerDayValue} fileChange={fileChange} setBasicDetails={setBasicDetails} />
+                <TeachersDetailsContainer onCardClick={(timeTable) => {
+            calculatePerDayValue(timeTable, subjectsDetails.current);
+        }} teachersList={teachersList} subjectsDetailsList={subjectsDetails.current}/>
             </div>
-        </div>
-    )
+        </div>);
 }
-
 const BasicDetails = memo(({ basicDetails }) => {
-    return (
-        <div className='basic-details'>
+    return (<div className='basic-details'>
             <div className='basic-details-container'>
                 <div className='container'>
-                    <Container lable="Subjects" value={basicDetails.subjectsCount} />
-                    <Container lable="Teachers" value={basicDetails.teachersCount} />
+                    <Container label="Subjects" value={basicDetails.subjectsCount}/>
+                    <Container label="Teachers" value={basicDetails.teachersCount}/>
                 </div>
                 <div className='container'>
-                    <Container lable="Practical Subjects" value={basicDetails.practicalSubjects} />
-                    <Container lable="Theory Subjects" value={basicDetails.theroySubjects} />
+                    <Container label="Practical Subjects" value={basicDetails.practicalSubjects}/>
+                    <Container label="Theory Subjects" value={basicDetails.theroySubjects}/>
                 </div>
             </div>
             <div className='basic-details-container' style={{ gridTemplateColumns: "auto" }}>
                 <div className='container'>
-                    <Container lable="Subjects (Not Taken by Teacher)" value={basicDetails.freeSubjects} />
-                    <Container lable="Subjects (Taken by Teacher)" value={basicDetails.subjectsCount - basicDetails.freeSubjects} />
+                    <Container label="Subjects (Not Taken by Teacher)" value={basicDetails.freeSubjects}/>
+                    <Container label="Subjects (Taken by Teacher)" value={basicDetails.subjectsCount - basicDetails.freeSubjects}/>
                 </div>
             </div>
-        </div>)
-})
-
-const Container = memo(({ lable = "Demo", value = 0 }) => {
-    return (
-        <div className='sub-container'>
-            <div className='title'>{lable}</div>
+        </div>);
+});
+const Container = memo(({ label = "Demo", value = 0 }) => {
+    return (<div className='sub-container'>
+            <div className='title'>{label}</div>
             <div className='value'>{value}</div>
-        </div>
-    )
-})
-
-function TeachersDetailsContainer({ setPerDayValue, fileChange, setBasicDetails }) {
-    const [teachersList, setTeahersList] = useState([])
-    useEffect(() => {
-        let basicDetails = {
-            subjectsCount: 0,
-            teachersCount: 0,
-            practicalSubjects: 0,
-            theroySubjects: 0
-        }
-        getTeacherList((data) => { // api call
-            setTeahersList(data)
-            basicDetails.teachersCount = data.length;
-            setBasicDetails(val => ({ ...val, ["teachersCount"]: basicDetails.teachersCount }))
-        });
-        getSubjects(data => { // api call
-            subjectsDetails.current = data;
-            let subjects = Object.keys(data)
-            basicDetails.subjectsCount = subjects.length;
-            let practicalSubjects = 0
-            let freeSubjects = 0
-            for (let index = 0; index < subjects.length; index++) {
-                if (data[subjects[index]].isPractical) practicalSubjects += 1
-                if (data[subjects[index]].isFree) freeSubjects += 1
-            }
-            basicDetails.practicalSubjects = practicalSubjects;
-            basicDetails.theroySubjects = basicDetails.subjectsCount - practicalSubjects;
-            basicDetails.freeSubjects = freeSubjects
-            setBasicDetails(basicDetails)
-        });
-        teacherTimeTableDetails.current = []
-        teacherDetails.current = {
-            freeTime: [],
-            subjects: [],
-        }
-        semestersRef.current = []
-    }, [fileChange])
-
-    const teacherTimeTableDetails = useRef()
-    const subjectsDetails = useRef()
-    const semestersRef = useRef([])
-    const teacherDetails = useRef({
+        </div>);
+});
+const TeachersDetailsContainer = ({ onCardClick = () => { }, teachersList = [], subjectsDetailsList }) => {
+    const [teacherTimeTableDetails, setTeacherTimeTableDetails] = useState([]);
+    const [semesters, setSemesters] = useState([]);
+    const [teacherDetails, setTeahersDetails] = useState({
         freeTime: [],
         subjects: [],
-    })
-    const teacherCardClickHandler = useCallback((event) => {
-        getTeacher(event.target.title, updateValues) // api call
-        function updateValues(data) {
-            teacherDetails.current = data
+    });
+    const [teachersNameList, setTeahersNameList] = useState([]);
+    useEffect(() => {
+        setTeahersNameList(teachersList);
+        setSemesters([]);
+        setTeahersDetails(val => { return { ...val, subjects: [] }; });
+    }, [teachersList]);
+    const teacherCardClickHandler = useCallback((name) => {
+        getTeacher(name, (data) => {
+            setTeahersDetails(data);
+            if (subjectsDetailsList === null || !subjectsDetailsList) {
+                console.log("Subjects Details is not available");
+                return;
+            }
             let semesters = [];
             for (let index = 0; index < data.subjects.length; index++) {
-                findAndPushSem(subjectsDetails.current[data.subjects[index]])
+                findAndPushSem(data.subjects[index]);
             }
-            function findAndPushSem(subjectData) {
-                if (semesters.indexOf(subjectData.sem) === -1) semesters.push(subjectData.sem)
-                semestersRef.current = semesters
+            function findAndPushSem(subjectName) {
+                if (!subjectsDetailsList)
+                    return;
+                if (semesters.indexOf(subjectsDetailsList[subjectName].sem) === -1)
+                    semesters.push(subjectsDetailsList[subjectName].sem);
             }
-            getTeacherSchedule(event.target.title, data => { // api call
+            setSemesters([...semesters]);
+            getTeacherSchedule(name, data => {
                 for (let index = 0; index < data.length; index++) {
                     for (let innerIndex = 0; innerIndex < data[index].length; innerIndex++) {
-                        if (!data[index][innerIndex]) continue
-                        data[index][innerIndex] = [
-                            `Sem ${data[index][innerIndex][0]} - ${String.fromCharCode(65 + parseInt(data[index][innerIndex][1]))}`,
-                            data[index][innerIndex][2],
-                            data[index][innerIndex][3]
-                        ]
+                        if (!data[index][innerIndex])
+                            continue;
+                        const innerData = data[index][innerIndex];
+                        if (innerData) {
+                            data[index][innerIndex] = [
+                                `Sem ${innerData[0]} - ${String.fromCharCode(65 + parseInt(innerData[1]))}`,
+                                innerData[2],
+                                innerData[3]
+                            ];
+                        }
                     }
                 }
-                teacherTimeTableDetails.current = data
-                calculatePerDayValue(data, subjectsDetails.current)
-            })
-        }
-    }, [])
-    const calculatePerDayValue = useCallback((teacherTimeTableDetails, subjectsDetails) => {
-        if (teacherTimeTableDetails === null || !teacherTimeTableDetails) return
-        let newPerDayValue = []
-        for (let index = 0; index < teacherTimeTableDetails.length; index++) {
-            let valueForThatDay = 0;
-            for (let innerIndex = 0; innerIndex < teacherTimeTableDetails[index].length; innerIndex++) {
-                if (teacherTimeTableDetails[index][innerIndex] || teacherTimeTableDetails[index][innerIndex] !== null) {
-                    if (subjectsDetails[teacherTimeTableDetails[index][innerIndex][1]].isPractical === true) {
-                        valueForThatDay += 3;
-                        innerIndex += 3
-                    }
-                    else valueForThatDay++;
-                }
-            }
-            newPerDayValue.push(valueForThatDay)
-        }
-        setPerDayValue(newPerDayValue);
-    }, [])
-    return (
-        <div className='teachers-details-container'>
-            <HorizentalCardsContainer
-                cardClassName={"teacher-card"}
-                cardData={teachersList}
-                cardClickHandler={teacherCardClickHandler}
-                showEditBtn={true}
-                editBtnClickHandler={(details) => {
-                    window.location.href = window.location.origin + "/Teachers?click=" + details
-                }} />
-            <TeachersTimeTableContainer
-                teacherTimeTableDetails={teacherTimeTableDetails.current}
-                subjectsDetails={subjectsDetails.current} />
+                setTeacherTimeTableDetails(data);
+                if (subjectsDetailsList === null || !subjectsDetailsList)
+                    return;
+                onCardClick(data);
+            });
+        });
+    }, [subjectsDetailsList]);
+    return (<div className='teachers-details-container'>
+            <HorizentalCardsContainer cardList={teachersNameList} onCardClick={(name) => {
+            teacherCardClickHandler(name);
+        }} showEditBtn={true} onEditBtnClick={(details) => {
+            window.location.href = window.location.origin + "/Teachers?click=" + details;
+        }}/>
+            <TeachersTimeTableContainer teacherTimeTableDetails={teacherTimeTableDetails} subjectsDetails={subjectsDetailsList}/>
             <div className='sem-and-subject-container'>
-                <SemesterContainer semList={semestersRef.current} />
-                <SubjectContainer subList={teacherDetails.current.subjects} />
+                <SemesterContainer semList={semesters}/>
+                <SubjectContainer subList={teacherDetails.subjects}/>
             </div>
-        </div>
-    )
-}
-
+        </div>);
+};
 const TeachersTimeTableContainer = memo(({ teacherTimeTableDetails, subjectsDetails = null }) => {
     let sir = "Sir";
-    return (
-        <div className='time-table-wrapper'>
+    return (<div className='time-table-wrapper'>
             <div className='heading'>Time Table for {sir}</div>
-            {subjectsDetails && teacherTimeTableDetails &&
-                <TimeTable
-                    className='teacher-time-table'
-                    timeTableWidthInPercent={92}
-                    details={teacherTimeTableDetails}
-                    subjectsDetails={subjectsDetails} />}
-        </div>
-    )
-})
-
+            {subjectsDetails && teacherTimeTableDetails.length > 0 &&
+            <TimeTable className='teacher-time-table' timeTableWidthInPercent={92} details={teacherTimeTableDetails} subjectsDetails={subjectsDetails}/>}
+            {teacherTimeTableDetails.length <= 0 && <div className='time-table-error-text'>Click a Card</div>}
+        </div>);
+});
 const SemesterContainer = memo(({ semList = [] }) => {
-    let sems = [];
-    for (let index = 0; index < semList.length; index++) {
-        sems.push(<div className='sem' key={semList[index]}>{semList[index]}</div>)
-    }
-    return (
-        <div className='sem-container'>
+    return (<div className='sem-container'>
             <div className='heading'>Semesters</div>
             <div className='sub-sem-container'>
-                {sems}
+                {semList && semList.length > 0 && semList.map((sem) => {
+            return (<div className='sem' key={sem}>
+                            {sem}
+                        </div>);
+        })}
             </div>
-        </div>
-    )
-})
-
+        </div>);
+});
 const SubjectContainer = memo(({ subList = [] }) => {
-    let subs = [];
-    for (let index = 0; index < subList.length; index++) {
-        subs.push(
-            <div className='subject' key={subList[index]}>
-                {subList[index].toUpperCase()}
-            </div>
-        )
-    }
-    return (
-        <div className='subject-container'>
+    return (<div className='subject-container'>
             <div className='heading'>Subjects</div>
             <div className='sub-subject-container'>
-                {subs}
+                {subList && subList.length > 0 && subList.map((subject) => {
+            return (<div className='subject' key={subject}>
+                            {subject.toUpperCase()}
+                        </div>);
+        })}
             </div>
-        </div>
-    )
-})
-export default memo(DashboardPage)
+        </div>);
+});
+export default memo(DashboardPage);
