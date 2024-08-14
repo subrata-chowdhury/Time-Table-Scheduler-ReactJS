@@ -1,7 +1,6 @@
 .dashboard .top-sub-container {
-    width: 100%;
     display: grid;
-    grid-template-columns: 32% auto;
+    grid-template-columns: 30% auto;
     gap: .7rem;
     box-sizing: border-box;
     overflow: unset;
@@ -150,9 +149,9 @@
     }
 
     .dashboard .top-sub-container {
-        grid-template-columns: none;
-        grid-template-rows: 30% 67%;
-        gap: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
     }
 
     .dashboard .left-sub-container {
@@ -179,6 +178,7 @@
 }
 
 @media (max-width: 600px) {
+
     .teacher-time-table .period-times-container,
     .teacher-time-table .day-name,
     .teacher-time-table .period-details-container {

@@ -1,7 +1,6 @@
-export const verifySubjectInputs = (subjectName: string, subjectDetails: any) => {
-    let data = { ...subjectDetails }
-    let newSubjectName = subjectName.trim().toUpperCase() // string
-
+export const verifySubjectInputs = (subjectName, subjectDetails) => {
+    let data = { ...subjectDetails };
+    let newSubjectName = subjectName.trim().toUpperCase(); // string
     // name must not contain any special character
     if (newSubjectName.length > 100) {
         alert("Length of the name must be less than 100");
@@ -18,7 +17,6 @@ export const verifySubjectInputs = (subjectName: string, subjectDetails: any) =>
     //     alert("Only Character, Number & Space is allowed")
     //     return false
     // }
-
     // sem value can't be empty
     if (data.sem.length === 0) {
         alert("Please Enter a Number in semester");
@@ -27,7 +25,8 @@ export const verifySubjectInputs = (subjectName: string, subjectDetails: any) =>
     // sem value must be a number
     if (typeof parseInt(data.sem) === "number") {
         data.sem = parseInt(data.sem);
-    } else {
+    }
+    else {
         alert("Please Enter a number in semester");
         return false;
     }
@@ -38,10 +37,9 @@ export const verifySubjectInputs = (subjectName: string, subjectDetails: any) =>
     }
     // sem value must be an integer value
     if (!Number.isInteger(data.sem)) {
-        alert("Value must be an integer")
-        return false
+        alert("Value must be an integer");
+        return false;
     }
-
     // lecture count can't be empty or 0
     if (data.lectureCount === 0 || data.lectureCount === "") {
         data.lectureCount = 4; // default value
@@ -49,7 +47,8 @@ export const verifySubjectInputs = (subjectName: string, subjectDetails: any) =>
     // lecture count must be a number
     if (typeof parseInt(data.lectureCount) === 'number') {
         data.lectureCount = parseInt(data.lectureCount);
-    } else {
+    }
+    else {
         alert("Please Enter a number in lecture count per week");
         return false;
     }
@@ -60,14 +59,13 @@ export const verifySubjectInputs = (subjectName: string, subjectDetails: any) =>
     }
     // lecture count value can't be a float number
     if (!Number.isInteger(data.lectureCount)) {
-        alert("Value must be an integer")
-        return false
+        alert("Value must be an integer");
+        return false;
     }
-
     // room code can't be empty
     if (data.roomCodes.length <= 0) {
         alert("Please Press Enter After Entering Room Code");
-        return false
+        return false;
     }
-    return { newSubjectName, data }
-}
+    return { newSubjectName, data };
+};

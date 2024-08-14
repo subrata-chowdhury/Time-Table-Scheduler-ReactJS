@@ -25,11 +25,11 @@ const MiniStateContainer = ({ onChange = () => { }, forceReRenderer = false }) =
         }); // api calls present in the function
     }, []);
     return (<div className="mini-states-container">
-            <label>Current File:</label>
-            <select className="state-selector" onChange={onChangeStateHandler} ref={selectInput}>
-                {files && files.length > 0 && files.map((file, index) => (<Option value={file} key={index}></Option>))}
-            </select>
-        </div>);
+        <label>Current File:</label>
+        <select className="state-selector" onChange={onChangeStateHandler} ref={selectInput}>
+            {files && files.length > 0 && files.map((file, index) => (<Option value={file} key={index}></Option>))}
+        </select>
+    </div>);
 };
 const Option = ({ value }) => {
     return (<option value={value.toLowerCase()}>{value}</option>);

@@ -1,0 +1,53 @@
+import MiniStateContainer from '../../Components/MiniStateContainer';
+import SearchBar from '../../Components/SearchBar';
+import Cards from '../../Components/Cards';
+import "../../Style/Pages/Subjects.css";
+import { useEffect, useState, memo, useCallback } from 'react';
+import { getSubjectsList } from '../../Script/SubjectsDataFetcher';
+import "../../Script/commonJS";
+import Loader from '../../Components/Loader';
+import DetailsSection from './DetailsSection';
+function SubjectsPage() {
+    return (<>
+        <div className='page subjects'>
+            <MainComponents />
+        </div>
+    </>);
+}
+function MainComponents() {
+    const [subjectsList, setSubjectsList] = useState([]);
+    const [activeSubjectName, setActiveSubjectName] = useState("");
+    const [displayLoader, setDisplayLoader] = useState(false);
+    const [filterdSubjectList, setFilterdSubjectList] = useState(subjectsList);
+    const [showDetailsPopup, setShowDetailsPopup] = useState(false);
+    useEffect(() => {
+        startUpFunction();
+    }, []);
+    const startUpFunction = useCallback(() => {
+        getSubjectsList(setSubjectsList); // api call
+        setDisplayLoader(false);
+        setActiveSubjectName("");
+    }, []);
+    return (<>
+        <div className='top-sub-container'>
+            <div className='left-sub-container'>
+                <div className='tools-container'>
+                    <MiniStateContainer onChange={startUpFunction} />
+                    <SearchBar array={subjectsList} onChange={setFilterdSubjectList} />
+                </div>
+                <Cards cardList={filterdSubjectList} cardClassName={"subject-card"} onCardClick={(name) => {
+                    setActiveSubjectName(name);
+                    setShowDetailsPopup(true);
+                }} onAddBtnClick={() => {
+                    setActiveSubjectName("");
+                    setShowDetailsPopup(true);
+                }} />
+            </div>
+            <div className='right-sub-container'>
+                <DetailsSection active={showDetailsPopup} activeSubjectName={activeSubjectName} subjectsList={subjectsList} onSubmitCallBack={startUpFunction} setDisplayLoader={setDisplayLoader} onClose={() => setShowDetailsPopup(false)} />
+            </div>
+        </div>
+        {displayLoader && <Loader />}
+    </>);
+}
+export default memo(SubjectsPage);

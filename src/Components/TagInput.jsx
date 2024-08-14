@@ -30,22 +30,22 @@ const TagInput = ({ tagList = [], validTags = [], onChange = () => { } }) => {
         setTag("");
     }, [tag, tagList, onChange]);
     return (<div className='tag-input-container'>
-            <div className='tags-container'>
-                {tagsList.map((tag, index) => (<Tag key={index} value={tag} onDeleteBtnClick={() => {
+        <div className='tags-container'>
+            {tagsList.map((tag, index) => (<Tag key={index} value={tag} onDeleteBtnClick={() => {
                 onChange(tagList.filter(tagValue => tagValue !== tag));
-            }}/>))}</div>
-            <input type="text" value={tag} onChange={tagChangeHandler} onKeyDown={e => {
+            }} />))}</div>
+        <input type="text" value={tag} onChange={tagChangeHandler} onKeyDown={e => {
             if (e.key === "Enter") {
                 e.preventDefault();
                 addTag();
             }
         }}></input>
-        </div>);
+    </div>);
 };
 const Tag = ({ value, onDeleteBtnClick = () => { } }) => {
     return (<div className="tag">
-            <div>{value}</div>
-            <button className="delete-tag-btn" onClick={onDeleteBtnClick}>+</button>
-        </div>);
+        <div>{value}</div>
+        <button className="delete-tag-btn" onClick={onDeleteBtnClick}>+</button>
+    </div>);
 };
 export default memo(TagInput);

@@ -1,0 +1,90 @@
+import MiniStateContainer from '../../Components/MiniStateContainer';
+import Cards from '../../Components/Cards';
+import "../../Style/Pages/Teachers.css";
+import { memo, useCallback, useEffect, useState } from 'react';
+import SearchBar from '../../Components/SearchBar';
+import { getTeachersList } from '../../Script/TeachersDataFetcher';
+import "../../Script/commonJS";
+import Loader from '../../Components/Loader';
+import DetailsSection from './DetailsSection';
+function TeachersPage() {
+    return (<>
+        <div className='page teachers'>
+            <MainComponents />
+        </div>
+    </>);
+}
+function MainComponents() {
+    const [teachersList, setTeahersList] = useState([]);
+    const [teacherName, setTeacherName] = useState("");
+    const [displayLoader, setDisplayLoader] = useState(false);
+    const [filteredTeacherList, setFilteredTeacherList] = useState([]);
+    const [showDetailsPopup, setShowDetailsPopup] = useState(false);
+    useEffect(() => {
+        startUpFunction();
+    }, []);
+    const startUpFunction = useCallback(() => {
+        getTeachersList(setTeahersList); // api call
+        setTeacherName("");
+        setDisplayLoader(false);
+        try {
+            let paramString = window.location.href.split('?')[1];
+            let queryString = new URLSearchParams(paramString);
+            let urlData = ["", ""];
+            for (let pair of queryString.entries()) {
+                urlData = [pair[0], pair[1].split("#")[0]];
+                break;
+            }
+            if (urlData[0] === "click") {
+                let clicked = false;
+                let loop = 0;
+                let interval = setInterval(() => {
+                    const cardsContainer = document.querySelector(".cards-container");
+                    let card = cardsContainer?.querySelector(".card.data[title=" + urlData[1] + "]");
+                    if (!clicked) {
+                        try {
+                            if (card !== undefined && card !== null) {
+                                card.click();
+                                clicked = true;
+                            }
+                        }
+                        catch (err) {
+                            clicked = false;
+                        }
+                    }
+                    else {
+                        clearInterval(interval);
+                    }
+                    if (loop++ == 50) {
+                        clearInterval(interval);
+                    }
+                }, 100);
+            }
+        }
+        catch (err) {
+            console.log("%cNo Click Query Found", "color: green");
+        }
+    }, []);
+    return (<>
+        <div className='top-sub-container'>
+            <div className='left-sub-container'>
+                <div className='tools-container'>
+                    <MiniStateContainer onChange={startUpFunction} />
+                    <SearchBar array={teachersList} onChange={setFilteredTeacherList} />
+                </div>
+                <Cards cardList={filteredTeacherList} cardClassName={"teacher-card"} onCardClick={name => {
+                    setTeacherName(name);
+                    setShowDetailsPopup(true);
+                }} onAddBtnClick={() => {
+                    setTeacherName("");
+                    setShowDetailsPopup(true);
+                }} />
+            </div>
+            <div className='right-sub-container'>
+                <DetailsSection active={showDetailsPopup} activeTeacherName={teacherName} teachersList={teachersList} onSubmitCallBack={startUpFunction} setDisplayLoader={setDisplayLoader} onClose={() => setShowDetailsPopup(false)} />
+            </div>
+        </div>
+        {displayLoader && <Loader />}
+    </>);
+}
+export default memo(TeachersPage);

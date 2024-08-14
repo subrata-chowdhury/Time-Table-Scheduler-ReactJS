@@ -99,8 +99,19 @@
     background: orange;
 }
 
+.save-btn-container .close-btn {
+    display: none;
+}
+
+@media (max-width: 680px) {
+    .save-btn-container .close-btn {
+        display: block;
+    }
+}
+
+/* 
 @media (max-width: 620px) {
     .input-box {
         padding: 5px;
     }
-}
+} */

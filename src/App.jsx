@@ -1,14 +1,16 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import DashboardPage from './Pages/DashboardPage';
-import SubjectsPage from './Pages/SubjectsPage';
-import TeachersPage from './Pages/TeachersPage';
-import TimeTablesPage from './Pages/TimeTablesPage';
-import TimeTableStructurePage from './Pages/TimeTableStructurePage';
-import FilesPage from './Pages/FilesPage';
+import DashboardPage from './Pages/Dashboard/DashboardPage';
+import SubjectsPage from './Pages/Subjects/SubjectsPage';
+import TeachersPage from './Pages/Teachers/TeachersPage';
+import TimeTablesPage from './Pages/TimeTables/TimeTablesPage';
+import TimeTableStructurePage from './Pages/TimeTableStructure/TimeTableStructurePage';
+import FilesPage from './Pages/Files/FilesPage';
 import "./Style/BasicComponents.css";
-import ContactUs from './Pages/ContactUs';
+import ContactUs from './Pages/ContactUs/ContactUs';
 import { useEffect, useRef } from 'react';
+import Menubar from './Components/Menubar';
+import OwnerFooter from './Components/OwnerFooter';
 function App() {
     const app = useRef(null);
     function autoToggleInResize() {
@@ -28,18 +30,22 @@ function App() {
         };
     }, []);
     return (<BrowserRouter>
-			<div className='app' ref={app}>
-				<Routes>
-					<Route path="/" element={<DashboardPage />}/>
-					<Route path="/Subjects" element={<SubjectsPage />}/>
-					<Route path="/Teachers" element={<TeachersPage />}/>
-					<Route path="/TimeTables" element={<TimeTablesPage />}/>
-					<Route path="/TimeTableStructure" element={<TimeTableStructurePage />}/>
-					<Route path="/Files" element={<FilesPage />}/>
-					<Route path="/ContactUs" element={<ContactUs />}/>
-				</Routes>
-			</div>
-		</BrowserRouter>);
+        <div className='app' ref={app}>
+            <Menubar />
+            <div className='main-container'>
+                <Routes>
+                    <Route path="/" element={<DashboardPage />} />
+                    <Route path="/Subjects" element={<SubjectsPage />} />
+                    <Route path="/Teachers" element={<TeachersPage />} />
+                    <Route path="/TimeTables" element={<TimeTablesPage />} />
+                    <Route path="/TimeTableStructure" element={<TimeTableStructurePage />} />
+                    <Route path="/Files" element={<FilesPage />} />
+                    <Route path="/ContactUs" element={<ContactUs />} />
+                </Routes>
+                <OwnerFooter />
+            </div>
+        </div>
+    </BrowserRouter>);
 }
 // Remote typescript branch tracking test 2
 export default App;

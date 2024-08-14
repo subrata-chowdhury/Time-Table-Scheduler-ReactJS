@@ -40,9 +40,9 @@ const SearchBar = ({ array = [], onChange = () => { } }) => {
         onChange(array);
     }, [array]);
     return (<div className={"search-container" + (active ? " active" : "")}>
-            <Search searchIconClickHandler={searchIconClickHandler}/>
-            <input className="search-input" placeholder="Search Name" value={searchKey} onChange={searchChangeHandler} ref={searchInputBox}></input>
-            <Cross crossIconClickHandler={crossIconClickHandler}/>
-        </div>);
+        <Search searchIconClickHandler={searchIconClickHandler} />
+        <input className="search-input" placeholder="Search Name" value={searchKey} onChange={searchChangeHandler} ref={searchInputBox}></input>
+        <Cross crossIconClickHandler={crossIconClickHandler} />
+    </div>);
 };
 export default memo(SearchBar);
