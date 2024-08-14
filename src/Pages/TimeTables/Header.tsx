@@ -10,8 +10,8 @@ const ButtonsContainer: React.FC<ButtonsContainerProps> = memo(({ onAutoFillBtnC
     const btnContainer = useRef<HTMLDivElement>(null)
     return (
         <div className='buttons-container' ref={btnContainer}>
-            <Card details='Auto Fill Using AI' className='btn' compressText={false} onClick={onAutoFillBtnClick}></Card>
-            <Card details='Fill Manually' className='btn' compressText={false} onClick={onFillManuallyBtnClick}></Card>
+            <Card details='Auto Fill Using AI' className='btn' onClick={onAutoFillBtnClick}></Card>
+            <Card details='Fill Manually' className='btn' onClick={onFillManuallyBtnClick}></Card>
         </div>
     )
 })
@@ -30,16 +30,13 @@ const SectionsBtnContainer: React.FC<SectionsBtnContainerProps> = memo(({ noOfSe
 
     let sectionBtns = [];
     for (let index = 0; index < noOfSections; index++) {
-        let selectedClass = "";
-        if (index === currentOpenSection)
-            selectedClass = 'active';
         let char = String.fromCharCode(65 + index);
         sectionBtns.push(
             <Card
                 details={char}
                 key={index}
-                className={'section-btn ' + selectedClass}
-                active={selectedClass === 'active'}
+                className={'section-btn'}
+                active={index === currentOpenSection}
                 onClick={sectionBtnsClickHandler}
             />
         )

@@ -1,4 +1,4 @@
-import "../../Style/ContactUs.css"
+import "../../Style/Pages/ContactUs.css"
 import subrata from "../../assets/Subrata.png"
 import srideep from "../../assets/Srideep.jpg"
 import GitHub from "../../Icons/github";

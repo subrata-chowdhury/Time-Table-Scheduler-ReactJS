@@ -1,7 +1,7 @@
 import MiniStateContainer from '../../Components/MiniStateContainer'
 import SearchBar from '../../Components/SearchBar'
 import Cards from '../../Components/Cards'
-import "../../Style/Subjects.css"
+import "../../Style/Pages/Subjects.css"
 import { useEffect, useState, memo, useCallback } from 'react'
 import { getSubjectsList } from '../../Script/SubjectsDataFetcher'
 import "../../Script/commonJS"

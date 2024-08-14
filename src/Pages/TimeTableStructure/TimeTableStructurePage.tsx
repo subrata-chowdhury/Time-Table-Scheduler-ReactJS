@@ -1,5 +1,5 @@
 import MiniStateContainer from '../../Components/MiniStateContainer'
-import "../../Style/TimeTableStructure.css"
+import "../../Style/Pages/TimeTableStructure.css"
 import React, { FormEvent, memo, useCallback, useEffect, useState } from 'react'
 import { getTimeTableStructure, saveTimeTableStructure } from '../../Script/TimeTableDataFetcher'
 import "../../Script/commonJS"

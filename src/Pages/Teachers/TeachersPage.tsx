@@ -1,6 +1,6 @@
 import MiniStateContainer from '../../Components/MiniStateContainer'
 import Cards from '../../Components/Cards'
-import "../../Style/Teachers.css"
+import "../../Style/Pages/Teachers.css"
 import { memo, useCallback, useEffect, useState } from 'react'
 import SearchBar from '../../Components/SearchBar'
 import { getTeachersList } from '../../Script/TeachersDataFetcher'

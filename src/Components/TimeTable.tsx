@@ -4,11 +4,11 @@ import "../Style/TimeTable.css"
 import { TimeTable as TimeTableType, Subject, TeacherSchedule, Day, TeacherScheduleDay, Period, TeacherSchedulePeriod } from "../data/Types";
 
 export let emptyTimeTableDetails: TimeTableType = [
-    [["FirstTeacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
-    [["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
-    [["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
-    [["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]],
-    [["Teacher", "Lab", "roomCode"], ["Teacher", "Lab", "roomCode"], ["Teacher", "Lab", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"], ["Teacherlast", "Subject", "roomCode"], ["Teacher", "Subject", "roomCode"]]
+    [[null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null]],
+    [[null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null]],
+    [[null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null]],
+    [[null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null]],
+    [[null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null]]
 ]
 
 interface TimeTableProps {
@@ -143,8 +143,8 @@ const DaysRow: React.FC<DaysRowProps> = ({
                     onClick={() => { }} />)
             } else if (periodDetails !== null && periodDetails && periodDetails[subjectIndexAtPeriodElementInDetails]) {
                 const isLab = (periodDetails[subjectIndexAtPeriodElementInDetails].toUpperCase() === "Subject".toUpperCase())
-                    || (periodDetails[subjectIndexAtPeriodElementInDetails].toUpperCase() === "Lab".toUpperCase()) 
-                    || subjectsDetails[periodDetails[subjectIndexAtPeriodElementInDetails]] === undefined?
+                    || (periodDetails[subjectIndexAtPeriodElementInDetails].toUpperCase() === "Lab".toUpperCase())
+                    || subjectsDetails[periodDetails[subjectIndexAtPeriodElementInDetails]] === undefined ?
                     false
                     : subjectsDetails[periodDetails[subjectIndexAtPeriodElementInDetails]].isPractical
                 DayElements.push(<PeriodComp
@@ -154,7 +154,7 @@ const DaysRow: React.FC<DaysRowProps> = ({
                     periodIndex={timeTableDataInteratorIndex}
                     isLab={isLab}
                     onClick={periodClickHandler} />)
-                if (isLab) { 
+                if (isLab) {
                     timeTableDataInteratorIndex += 2;
                     periodCompIndex += 2;
                 } //+2 beacause in outer block it will increament which will cause +3

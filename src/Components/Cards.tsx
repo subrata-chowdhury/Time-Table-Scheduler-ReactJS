@@ -65,7 +65,7 @@ const Cards: React.FC<CardsProps> = ({
                         defaultCardClickHandler(card)
                         onCardClick(card)
                     }}
-                    compressText={true}
+                    compressText={false}
                     showEditBtn={showEditBtn}
                     onEditBtnClick={onEditBtnClick}
                 />
@@ -99,7 +99,7 @@ export const Card: React.FC<CardProps> = memo(({
 }) => {
     const innerCard = (
         <div className={"card data " + className + (active ? ' active' : '')} onClick={() => onClick(details)} title={details}>
-            {compressText ? (details) : details}
+            {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
         </div>
     )
     return (

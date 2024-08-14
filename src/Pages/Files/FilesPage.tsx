@@ -1,5 +1,5 @@
 import MiniStateContainer from '../../Components/MiniStateContainer'
-import "../../Style/Files.css"
+import "../../Style/Pages/Files.css"
 import Cards from '../../Components/Cards'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { getSaveFileList } from '../../Script/FilesDataFetchers'

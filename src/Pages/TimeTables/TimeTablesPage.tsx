@@ -1,6 +1,6 @@
 import MiniStateContainer from '../../Components/MiniStateContainer'
 import TimeTable from '../../Components/TimeTable'
-import "../../Style/TimeTablesPage.css"
+import "../../Style/Pages/TimeTablesPage.css"
 import { HorizentalCardsContainer } from '../../Components/Cards'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getSubjectsDetailsList, SubjectsDetailsList } from '../../Script/SubjectsDataFetcher'
@@ -130,10 +130,7 @@ function MainComponents() {
 
                 {/* Year btns */}
                 <HorizentalCardsContainer
-                    // className='sem-cards-container'
-                    // cardClassName={"semester-card"}
                     cardList={sems}
-                    compressText={false}
                     onCardClick={semCardClickHandler} />
 
                 {subjectsDetails && timeTableStructure && <TimeTable
