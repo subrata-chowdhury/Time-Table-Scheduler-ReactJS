@@ -8,11 +8,10 @@ import TimeTableStructure from "../Icons/TimeTableStructure"
 import Arrow from "../Icons/Arrow"
 
 import React, { memo } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import Contact from "../Icons/ContactIcon"
 
 interface MenubarProps {
-    activeMenuIndex: number,
     onMenuToggleClick?: (e: React.MouseEvent<HTMLOrSVGElement>) => void
 }
 
@@ -54,7 +53,9 @@ const menus = [
     }
 ]
 
-const Menubar: React.FC<MenubarProps> = ({ activeMenuIndex, onMenuToggleClick = () => { } }) => {
+const Menubar: React.FC<MenubarProps> = ({ onMenuToggleClick = () => { } }) => {
+    const route = useLocation()
+
     function toggleMenubar() {
         let activeApp = document.querySelector(".app.active");
         let app = document.querySelector(".app")
@@ -74,8 +75,8 @@ const Menubar: React.FC<MenubarProps> = ({ activeMenuIndex, onMenuToggleClick = 
                 <p>Time Table <br />Designer</p>
             </div>
 
-            {menus.map((menu, index) => (
-                <Link to={menu.link} className="menu-container" id={activeMenuIndex === index ? "active" : ""}>
+            {menus.map((menu) => (
+                <Link to={menu.link} className="menu-container" id={route.pathname === menu.link ? "active" : ""}>
                     {menu.icon}
                     <div>{menu.name}</div>
                 </Link>

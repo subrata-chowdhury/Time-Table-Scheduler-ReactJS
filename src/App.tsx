@@ -9,28 +9,32 @@ import FilesPage from './Pages/FilesPage';
 import "./Style/BasicComponents.css"
 import ContactUs from './Pages/ContactUs';
 import { useEffect, useRef } from 'react';
+import Menubar from './Components/Menubar';
 
 function App() {
 	const app = useRef<HTMLDivElement | null>(null)
 
 	function autoToggleInResize() {
-		if(window.innerWidth <= 1250) {
-			if(app.current)
+		if (window.innerWidth <= 1250) {
+			if (app.current)
 				app.current.classList.add("active");
 		} else {
-			if(app.current)
+			if (app.current)
 				app.current.classList.remove("active");
 		}
 	}
+
 	useEffect(() => {
 		autoToggleInResize();
 		window.onresize = () => {
 			autoToggleInResize()
 		}
 	}, [])
+	
 	return (
 		<BrowserRouter>
 			<div className='app' ref={app}>
+				<Menubar />
 				<Routes>
 					<Route path="/" element={<DashboardPage />} />
 					<Route path="/Subjects" element={<SubjectsPage />} />

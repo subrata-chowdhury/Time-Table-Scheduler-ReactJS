@@ -1,5 +1,4 @@
 import MiniStateContainer from '../Components/MiniStateContainer'
-import Menubar from '../Components/Menubar'
 import "../Style/Dashboard.css"
 import WorkingHourBarChat from '../Components/WorkingHourBarChat'
 import { HorizentalCardsContainer } from '../Components/Cards'
@@ -14,7 +13,6 @@ import { Teacher, TeacherSchedule } from '../data/Types'
 const DashboardPage: React.FC = (): JSX.Element => {
     return (
         <>
-            <Menubar activeMenuIndex={2} />
             <div className='main-container dashboard'>
                 <MainComponents />
                 <OwnerFooter />
@@ -34,7 +32,6 @@ type BasicDetails = {
 function MainComponents() {
     const [teachersList, setTeahersList] = useState<string[]>([])
     const [perDayValue, setPerDayValue] = useState<number[]>([0, 0, 0, 0, 0])
-
     const [basicDetails, setBasicDetails] = useState<BasicDetails>({
         subjectsCount: 0,
         teachersCount: 0,
@@ -182,8 +179,8 @@ const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
     }, [teachersList])
 
 
-    const teacherCardClickHandler = useCallback((name: string) => {
-        getTeacher(name, (data: Teacher) => {
+    const teacherCardClickHandler = useCallback(async (name: string) => {
+        getTeacher(name, async (data: Teacher) => {
             setTeahersDetails(data)
 
             if (subjectsDetailsList === null || !subjectsDetailsList) {
@@ -201,7 +198,7 @@ const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
             }
             setSemesters([...semesters])
 
-            getTeacherSchedule(name, data => { // api call
+            getTeacherSchedule(name, async data => { // api call
                 for (let index = 0; index < data.length; index++) {
                     for (let innerIndex = 0; innerIndex < data[index].length; innerIndex++) {
                         if (!data[index][innerIndex]) continue
@@ -221,6 +218,7 @@ const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
             })
         })
     }, [subjectsDetailsList])
+
     return (
         <div className='teachers-details-container'>
             <HorizentalCardsContainer

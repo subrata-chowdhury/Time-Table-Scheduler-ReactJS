@@ -1,5 +1,4 @@
 import MiniStateContainer from '../Components/MiniStateContainer'
-import Menubar from '../Components/Menubar'
 import "../Style/Files.css"
 import Cards from '../Components/Cards'
 import { FormEvent, memo, useCallback, useEffect, useState } from 'react'
@@ -12,7 +11,6 @@ import { hasElement } from '../Script/util'
 function FilesPage() {
     return (
         <>
-            <Menubar activeMenuIndex={5} />
             <div className='main-container files'>
                 <MainComponents />
                 <OwnerFooter />
@@ -26,6 +24,8 @@ function MainComponents() {
     const [filteredFiles, setFilteredFiles] = useState<string[]>([]);
     const [fileName, setFileName] = useState<string>("")
     const [forceReRenderer, setForceReRenderer] = useState(false)
+
+    const [showDetailsPopup, setShowDetailsPopup] = useState<boolean>(false)
 
     useEffect(() => {
         startUp();
@@ -46,16 +46,24 @@ function MainComponents() {
                 <Cards
                     cardList={filteredFiles}
                     cardClassName={"file-card"}
-                    onCardClick={fileName => setFileName(fileName)}
-                    onAddBtnClick={() => setFileName("")}
+                    onCardClick={fileName => {
+                        setFileName(fileName)
+                        setShowDetailsPopup(true)
+                    }}
+                    onAddBtnClick={() => {
+                        setFileName("")
+                        setShowDetailsPopup(true)
+                    }}
                 />
             </div>
             <div className='right-sub-container'>
                 <DetailsContainer
+                    active={showDetailsPopup}
                     activeFileName={fileName}
                     files={files}
                     startUp={startUp}
                     setForceReRenderer={setForceReRenderer}
+                    onClose={() => setShowDetailsPopup(false)}
                 />
             </div>
         </div>
@@ -63,17 +71,21 @@ function MainComponents() {
 }
 
 interface DetailsContainerProps {
+    active?: boolean,
     activeFileName: string,
     files: string[],
     startUp: () => void,
-    setForceReRenderer: React.Dispatch<React.SetStateAction<boolean>>
+    setForceReRenderer: React.Dispatch<React.SetStateAction<boolean>>,
+    onClose?: () => void
 }
 
 const DetailsContainer: React.FC<DetailsContainerProps> = ({
+    active = false,
     activeFileName = "",
     files,
     startUp,
-    setForceReRenderer
+    setForceReRenderer,
+    onClose = () => { }
 }) => {
     const [fileName, setFileName] = useState<string>(activeFileName)
     const [inEditState, setInEditState] = useState<boolean>(false)
@@ -134,7 +146,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     }, [files, fileName])
 
     return (
-        <form className='details-container' onSubmit={fileFormOnSubmitHandler}>
+        <form className={'details-container' + (active ? " active" : "")} onSubmit={fileFormOnSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>
             <div className="input-container">
                 <div className="input-box-heading">File Name</div>
@@ -153,6 +165,10 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                 <button className='file-save-btn' type='submit'>Copy Current State</button>
                 {inEditState && <button className='file-delete-btn' onClick={deleteFileBtnClickHandler}>Delete</button>}
                 {!inEditState && <button className='file-create-btn' onClick={createNewBtnClickHandler}>Create New</button>}
+                <button className='file close-btn' onClick={e => {
+                    e.preventDefault()
+                    onClose()
+                }}>Close</button>
             </div>
         </form>
     )

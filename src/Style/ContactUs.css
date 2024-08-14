@@ -1,23 +1,25 @@
 .developers-container {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-content: center;
     gap: 30px;
     height: 90vh;
     width: 90%;
     position: relative;
     left: 5%;
-    overflow-y: scroll;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    box-sizing: border-box;
 }
 
 .developer {
     background: #fff;
     border-radius: 10px;
-    display: grid;
-    grid-auto-flow: row;
     align-items: start;
-    padding: 20px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+    gap: 1rem;
 }
 
 .profile-picture-container {
@@ -85,15 +87,14 @@
     .developer-details-container .basic-details .field.email .value {
         font-size: 16px;
     }
-
-    .developer {
-        padding: 10px 30px;
-    }
 }
 
 @media (max-width: 940px) {
     .developers-container {
         grid-template-columns: none;
         grid-auto-flow: row;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
     }
 }

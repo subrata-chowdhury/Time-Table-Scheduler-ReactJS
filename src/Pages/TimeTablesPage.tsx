@@ -1,5 +1,4 @@
 import MiniStateContainer from '../Components/MiniStateContainer'
-import Menubar from '../Components/Menubar'
 import TimeTable from '../Components/TimeTable'
 import "../Style/TimeTablesPage.css"
 import Cards, { Card, HorizentalCardsContainer } from '../Components/Cards'
@@ -16,7 +15,6 @@ import { FullTimeTable, TimeTable as TimeTableType, TimeTableStructure } from '.
 function TimeTablesPage() {
     return (
         <>
-            <Menubar activeMenuIndex={3} />
             <div className='main-container time-table'>
                 <MainComponents />
                 <OwnerFooter />

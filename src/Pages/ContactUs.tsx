@@ -1,4 +1,3 @@
-import Menubar from "../Components/Menubar";
 import OwnerFooter from "../Components/OwnerFooter";
 import "../Style/ContactUs.css"
 import subrata from "../assets/Subrata.png"
@@ -10,7 +9,6 @@ import Gmail from "../Icons/Gmail";
 export default function ContactUs() {
     return (
         <>
-            <Menubar activeMenuIndex={6} />
             <div className='main-container contactus'>
                 <MainComponents />
                 <OwnerFooter />

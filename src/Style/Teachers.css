@@ -80,6 +80,21 @@
 }
 
 @media (max-width: 680px) {
+    .details-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 20px 100px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        height: 90%;
+        width: 90%;
+        display: none;
+    }
+
+    .details-container.active {
+        display: grid;
+    }
 
     .main-container.teachers,
     .main-container.subjects,
@@ -98,10 +113,6 @@
     .files .top-sub-container {
         grid-template-columns: none !important;
         gap: 10px;
-    }
-
-    .teachers .top-sub-container {
-        grid-template-rows: 40% auto;
     }
 
     .teachers .left-sub-container {

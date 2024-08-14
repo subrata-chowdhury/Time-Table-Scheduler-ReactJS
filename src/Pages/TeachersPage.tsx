@@ -1,5 +1,4 @@
 import MiniStateContainer from '../Components/MiniStateContainer'
-import Menubar from '../Components/Menubar'
 import Cards from '../Components/Cards'
 import "../Style/Teachers.css"
 import { FormEvent, memo, useCallback, useEffect, useRef, useState } from 'react'
@@ -18,7 +17,6 @@ import { Teacher } from '../data/Types'
 function TeachersPage() {
     return (
         <>
-            <Menubar activeMenuIndex={1} />
             <div className='main-container teachers'>
                 <MainComponents />
                 <OwnerFooter />
@@ -33,9 +31,12 @@ function MainComponents() {
     const [displayLoader, setDisplayLoader] = useState<boolean>(false);
     const [filteredTeacherList, setFilteredTeacherList] = useState<string[]>([])
 
+    const [showDetailsPopup, setShowDetailsPopup] = useState<boolean>(false)
+
     useEffect(() => {
         startUpFunction()
     }, [])
+
     const startUpFunction = useCallback(() => {
         getTeachersList(setTeahersList); // api call
         setTeacherName("");
@@ -60,7 +61,7 @@ function MainComponents() {
                                 card.click()
                                 clicked = true
                             }
-                        } catch (err) { 
+                        } catch (err) {
                             clicked = false
                         }
                     } else {
@@ -75,6 +76,7 @@ function MainComponents() {
             console.log("%cNo Click Query Found", "color: green");
         }
     }, [])
+
     return (
         <>
             <div className='top-sub-container'>
@@ -86,19 +88,25 @@ function MainComponents() {
                     <Cards
                         cardList={filteredTeacherList}
                         cardClassName={"teacher-card"}
-                        onCardClick={name => setTeacherName(name)}
+                        onCardClick={name => {
+                            setTeacherName(name);
+                            setShowDetailsPopup(true)
+                        }}
                         onAddBtnClick={() => {
-                            setTeacherName("")
+                            setTeacherName("");
+                            setShowDetailsPopup(true)
                         }}
                     />
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer
+                        active={showDetailsPopup}
                         activeTeacherName={teacherName}
                         teachersList={teachersList}
                         onSubmitCallBack={startUpFunction}
 
                         setDisplayLoader={setDisplayLoader}
+                        onClose={() => setShowDetailsPopup(false)}
                     />
                 </div>
             </div>
@@ -108,19 +116,23 @@ function MainComponents() {
 }
 
 interface DetailsContainerProps {
+    active?: boolean,
     activeTeacherName: string,
     teachersList: string[],
     onSubmitCallBack: () => void,
 
     setDisplayLoader: React.Dispatch<React.SetStateAction<boolean>>
+    onClose?: () => void
 }
 
 const DetailsContainer: React.FC<DetailsContainerProps> = ({
+    active = false,
     activeTeacherName = "",
     teachersList,
     onSubmitCallBack,
 
-    setDisplayLoader
+    setDisplayLoader,
+    onClose = () => { }
 }) => {
     const [teacherName, setTeacherName] = useState<string>(activeTeacherName);
     const [teacherDetails, setTeacherDetails] = useState<Teacher>({
@@ -214,7 +226,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     }, [teacherName])
 
     return (
-        <form className='details-container' onSubmit={teacherFormSubmitHandler}>
+        <form className={'details-container' + (active ? ' active' : '')} onSubmit={teacherFormSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>
             <div className="input-container">
                 <div className="input-box-heading">Teacher Name</div>
@@ -249,6 +261,10 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
             <div className='save-btn-container'>
                 <button className='teacher-save-btn' type='submit' disabled={disabled} >Save</button>
                 {inEditState && <button className='teacher-delete-btn' onClick={deleteTeacherBtnClickHandler}>Delete</button>}
+                <button className='teacher close-btn' onClick={e => {
+                    e.preventDefault()
+                    onClose()
+                }}>Close</button>
             </div>
         </form>
     )

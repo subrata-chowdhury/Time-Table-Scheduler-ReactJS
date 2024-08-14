@@ -16,6 +16,10 @@
     flex-grow: 1;
 }
 
+.card.data {
+    word-break: break-all;
+}
+
 @media (max-width: 1495px) {
     .cards-container {
         grid-template-columns: repeat(5, 1fr);
@@ -49,6 +53,7 @@
     align-items: center;
     transition: 0.3s;
     cursor: pointer;
+    padding: 0 1rem;
 }
 
 .card:hover {
@@ -99,7 +104,7 @@
     display: grid;
     grid-auto-flow: column;
     gap: 10px;
-    padding: 15px;
+    padding: 1.2rem;
     height: 90%;
     overflow-x: scroll;
     scrollbar-width: none;
@@ -109,7 +114,7 @@
 
 .sub-horizental-cards-container .card {
     height: 100%;
-    min-width: 100px;
+    min-width: 4.5rem;
 }
 
 .sub-horizental-cards-container::-webkit-scrollbar {
@@ -138,6 +143,6 @@
     }
 
     .card {
-        height: 50px;
+        height: 7rem;
     }
 }

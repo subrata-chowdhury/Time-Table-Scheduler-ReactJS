@@ -1,5 +1,4 @@
 import MiniStateContainer from '../Components/MiniStateContainer'
-import Menubar from '../Components/Menubar'
 import SearchBar from '../Components/SearchBar'
 import Cards from '../Components/Cards'
 import "../Style/Subjects.css"
@@ -16,7 +15,6 @@ import { Subject } from '../data/Types'
 function SubjectsPage() {
     return (
         <>
-            <Menubar activeMenuIndex={0} />
             <div className='main-container subjects'>
                 <MainComponents />
                 <OwnerFooter />
@@ -31,14 +29,18 @@ function MainComponents() {
     const [displayLoader, setDisplayLoader] = useState(false);
     const [filterdSubjectList, setFilterdSubjectList] = useState<string[]>(subjectsList)
 
+    const [showDetailsPopup, setShowDetailsPopup] = useState<boolean>(false)
+
     useEffect(() => {
         startUpFunction()
     }, [])
+
     const startUpFunction = useCallback(() => {
         getSubjectsList(setSubjectsList) // api call
         setDisplayLoader(false)
         setActiveSubjectName("")
     }, [])
+
     return (
         <>
             <div className='top-sub-container'>
@@ -52,18 +54,22 @@ function MainComponents() {
                         cardClassName={"subject-card"}
                         onCardClick={(name) => {
                             setActiveSubjectName(name)
+                            setShowDetailsPopup(true)
                         }}
                         onAddBtnClick={() => {
                             setActiveSubjectName("")
+                            setShowDetailsPopup(true)
                         }}
                     />
                 </div>
                 <div className='right-sub-container'>
                     <DetailsContainer
+                        active={showDetailsPopup}
                         activeSubjectName={activeSubjectName}
                         subjectsList={subjectsList}
                         onSubmitCallBack={startUpFunction}
                         setDisplayLoader={setDisplayLoader}
+                        onClose={() => setShowDetailsPopup(false)}
                     />
                 </div>
             </div>
@@ -73,10 +79,12 @@ function MainComponents() {
 }
 
 interface DetailsContainerProps {
+    active?: boolean,
     activeSubjectName: string,
     subjectsList: string[],
     onSubmitCallBack: () => void,
-    setDisplayLoader: (value: boolean) => void
+    setDisplayLoader: (value: boolean) => void,
+    onClose?: () => void
 }
 
 type SubjectInput = {
@@ -88,10 +96,12 @@ type SubjectInput = {
 }
 
 const DetailsContainer: React.FC<DetailsContainerProps> = ({
+    active = false,
     activeSubjectName = "",
     subjectsList,
     onSubmitCallBack,
-    setDisplayLoader
+    setDisplayLoader,
+    onClose = () => { }
 }) => {
     const [subjectName, setSubjectName] = useState<string>(activeSubjectName)
     const [subjectDetails, setSubjectDetails] = useState<Subject | SubjectInput>({
@@ -169,7 +179,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     }, [subjectName])
 
     return (
-        <form className='details-container' onSubmit={subjectFormSubmitHandler}>
+        <form className={'details-container' + (active ? " active" : "")} onSubmit={subjectFormSubmitHandler}>
             <div className='inputs-container-heading'>Details</div>
             <div className="input-container">
                 <div className="input-box-heading">Subject Name</div>
@@ -233,6 +243,10 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
             <div className='save-btn-container'>
                 <button className='subject-save-btn' type='submit' disabled={disabled}>Save</button>
                 {inEditState && <button className='subject-delete-btn' onClick={deleteSubjectBtnClickHandler}>Delete</button>}
+                <button className='subject close-btn' onClick={e => {
+                    e.preventDefault()
+                    onClose()
+                }}>Close</button>
             </div>
         </form>
     )

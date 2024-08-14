@@ -1,5 +1,4 @@
 import MiniStateContainer from '../Components/MiniStateContainer'
-import Menubar from '../Components/Menubar'
 import "../Style/TimeTableStructure.css"
 import React, { FormEvent, memo, useCallback, useEffect, useState } from 'react'
 import { getTimeTableStructure, saveTimeTableStructure } from '../Script/TimeTableDataFetcher'
@@ -11,7 +10,6 @@ import { TimeTableStructure } from '../data/Types'
 function TimeTableStructurePage() {
     return (
         <>
-            <Menubar activeMenuIndex={4} />
             <div className='main-container time-table-structure'>
                 <MainComponents />
                 <OwnerFooter />

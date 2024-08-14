@@ -93,13 +93,13 @@ export const Card: React.FC<CardProps> = memo(({
 
     active = false,
     onClick = () => { },
-    compressText = true,
+    compressText = false,
     showEditBtn = false,
     onEditBtnClick = () => { }
 }) => {
     const innerCard = (
         <div className={"card data " + className + (active ? ' active' : '')} onClick={() => onClick(details)} title={details}>
-            {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
+            {compressText ? (details) : details}
         </div>
     )
     return (
@@ -140,12 +140,10 @@ export const HorizentalCardsContainer: React.FC<HorizentalCardsContainerProps> =
     const [activeCards, setActiveCards] = useState<string[]>([])
 
     useEffect(() => {
-        setTimeout(() => {
-            if (cardList.length > 0) {
-                setActiveCards([cardList[0]])
-                onCardClick(cardList[0])
-            }
-        }, 500)
+        if (cardList.length > 0) {
+            setActiveCards([cardList[0]])
+            onCardClick(cardList[0])
+        }
     }, [cardList])
 
     const defaultCardClickHandler = useCallback((card: string) => {
