@@ -1,82 +1,10 @@
-import MiniStateContainer from '../Components/MiniStateContainer'
-import SearchBar from '../Components/SearchBar'
-import Cards from '../Components/Cards'
-import "../Style/Subjects.css"
-import { useEffect, useState, memo, useCallback, FormEvent } from 'react'
-import { deleteSubject, getSubject, getSubjectsList, saveSubject } from '../Script/SubjectsDataFetcher'
-import "../Script/commonJS"
-import { hasElement } from '../Script/util'
-import TagInput from '../Components/TagInput'
-import OwnerFooter from '../Components/OwnerFooter'
-import Loader from '../Components/Loader'
-import { verifySubjectInputs } from '../Script/InputVerifiers/SubjectFormVerifier'
-import { Subject } from '../data/Types'
-
-function SubjectsPage() {
-    return (
-        <>
-            <div className='main-container subjects'>
-                <MainComponents />
-                <OwnerFooter />
-            </div>
-        </>
-    )
-}
-
-function MainComponents() {
-    const [subjectsList, setSubjectsList] = useState<string[]>([])
-    const [activeSubjectName, setActiveSubjectName] = useState<string>("")
-    const [displayLoader, setDisplayLoader] = useState(false);
-    const [filterdSubjectList, setFilterdSubjectList] = useState<string[]>(subjectsList)
-
-    const [showDetailsPopup, setShowDetailsPopup] = useState<boolean>(false)
-
-    useEffect(() => {
-        startUpFunction()
-    }, [])
-
-    const startUpFunction = useCallback(() => {
-        getSubjectsList(setSubjectsList) // api call
-        setDisplayLoader(false)
-        setActiveSubjectName("")
-    }, [])
-
-    return (
-        <>
-            <div className='top-sub-container'>
-                <div className='left-sub-container'>
-                    <div className='tools-container'>
-                        <MiniStateContainer onChange={startUpFunction} />
-                        <SearchBar array={subjectsList} onChange={setFilterdSubjectList} />
-                    </div>
-                    <Cards
-                        cardList={filterdSubjectList}
-                        cardClassName={"subject-card"}
-                        onCardClick={(name) => {
-                            setActiveSubjectName(name)
-                            setShowDetailsPopup(true)
-                        }}
-                        onAddBtnClick={() => {
-                            setActiveSubjectName("")
-                            setShowDetailsPopup(true)
-                        }}
-                    />
-                </div>
-                <div className='right-sub-container'>
-                    <DetailsContainer
-                        active={showDetailsPopup}
-                        activeSubjectName={activeSubjectName}
-                        subjectsList={subjectsList}
-                        onSubmitCallBack={startUpFunction}
-                        setDisplayLoader={setDisplayLoader}
-                        onClose={() => setShowDetailsPopup(false)}
-                    />
-                </div>
-            </div>
-            {displayLoader && <Loader />}
-        </>
-    )
-}
+import { memo } from "react";
+import React, { useState, useEffect, useCallback, FormEvent } from "react";
+import { getSubject, saveSubject, deleteSubject } from "../../Script/SubjectsDataFetcher";
+import TagInput from "../../Components/TagInput";
+import { hasElement } from "../../Script/util";
+import { verifySubjectInputs } from "../../Script/InputVerifiers/SubjectFormVerifier";
+import { Subject } from "../../data/Types";
 
 interface DetailsContainerProps {
     active?: boolean,
@@ -252,4 +180,4 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     )
 }
 
-export default memo(SubjectsPage)
+export default memo(DetailsContainer)

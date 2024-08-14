@@ -1,10 +1,10 @@
-import OwnerFooter from "../Components/OwnerFooter";
-import "../Style/ContactUs.css"
-import subrata from "../assets/Subrata.png"
-import srideep from "../assets/Srideep.jpg"
-import GitHub from "../Icons/github";
-import LinkedIn from "../Icons/linkedin";
-import Gmail from "../Icons/Gmail";
+import OwnerFooter from "../../Components/OwnerFooter";
+import "../../Style/ContactUs.css"
+import subrata from "../../assets/Subrata.png"
+import srideep from "../../assets/Srideep.jpg"
+import GitHub from "../../Icons/github";
+import LinkedIn from "../../Icons/linkedin";
+import Gmail from "../../Icons/Gmail";
 
 export default function ContactUs() {
     return (

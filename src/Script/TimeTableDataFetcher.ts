@@ -71,7 +71,7 @@ export const saveSchedule = async (
 ): Promise<TimeTable | null> => {
     try {
         let apiToken = await getApiToken()
-        let response = await fetch(`${url}io/schedule?sem=${sem}&sec=${sec}`, {
+        let response = await fetch(`${url}io/schedule?year=${sem}&sec=${sec}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

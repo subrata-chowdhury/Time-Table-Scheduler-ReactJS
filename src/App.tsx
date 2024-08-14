@@ -1,13 +1,13 @@
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import DashboardPage from './Pages/DashboardPage'
-import SubjectsPage from './Pages/SubjectsPage';
-import TeachersPage from './Pages/TeachersPage';
-import TimeTablesPage from './Pages/TimeTablesPage';
-import TimeTableStructurePage from './Pages/TimeTableStructurePage';
-import FilesPage from './Pages/FilesPage';
+import DashboardPage from './Pages/Dashboard/DashboardPage'
+import SubjectsPage from './Pages/Subjects/SubjectsPage';
+import TeachersPage from './Pages/Teachers/TeachersPage';
+import TimeTablesPage from './Pages/TimeTables/TimeTablesPage';
+import TimeTableStructurePage from './Pages/TimeTableStructure/TimeTableStructurePage';
+import FilesPage from './Pages/Files/FilesPage';
 import "./Style/BasicComponents.css"
-import ContactUs from './Pages/ContactUs';
+import ContactUs from './Pages/ContactUs/ContactUs';
 import { useEffect, useRef } from 'react';
 import Menubar from './Components/Menubar';
 
@@ -30,7 +30,7 @@ function App() {
 			autoToggleInResize()
 		}
 	}, [])
-	
+
 	return (
 		<BrowserRouter>
 			<div className='app' ref={app}>

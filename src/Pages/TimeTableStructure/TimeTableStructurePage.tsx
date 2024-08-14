@@ -1,11 +1,11 @@
-import MiniStateContainer from '../Components/MiniStateContainer'
-import "../Style/TimeTableStructure.css"
+import MiniStateContainer from '../../Components/MiniStateContainer'
+import "../../Style/TimeTableStructure.css"
 import React, { FormEvent, memo, useCallback, useEffect, useState } from 'react'
-import { getTimeTableStructure, saveTimeTableStructure } from '../Script/TimeTableDataFetcher'
-import "../Script/commonJS"
-import OwnerFooter from '../Components/OwnerFooter'
-import verifyTimeTableStructureInputs from '../Script/InputVerifiers/TimeTableStructureVerifier'
-import { TimeTableStructure } from '../data/Types'
+import { getTimeTableStructure, saveTimeTableStructure } from '../../Script/TimeTableDataFetcher'
+import "../../Script/commonJS"
+import OwnerFooter from '../../Components/OwnerFooter'
+import verifyTimeTableStructureInputs from '../../Script/InputVerifiers/TimeTableStructureVerifier'
+import { TimeTableStructure } from '../../data/Types'
 
 function TimeTableStructurePage() {
     return (
