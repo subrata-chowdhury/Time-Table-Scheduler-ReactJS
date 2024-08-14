@@ -51,7 +51,8 @@ const TagInput: React.FC<TagInputProps> = ({
                     <Tag
                         key={index}
                         value={tag}
-                        onDeleteBtnClick={() => {
+                        onDeleteBtnClick={(e) => {
+                            e.preventDefault()
                             onChange(tagList.filter(tagValue => tagValue !== tag))
                         }}
                     />

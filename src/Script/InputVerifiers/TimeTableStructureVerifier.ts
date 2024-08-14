@@ -34,7 +34,7 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
     }
     let sectionsPerSemester
     try {
-        sectionsPerSemester = JSON.parse(`[${timeTableStructureFieldValues.sectionsPerSemester}]`)
+        sectionsPerSemester = timeTableStructureFieldValues.sectionsPerSemester
     } catch (error) {
         sectionsPerSemester = ""
         alert("Please enter sections per year in correct format")
@@ -60,7 +60,7 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
     }
     let breaksPerSemester
     try {
-        breaksPerSemester = JSON.parse(`[${timeTableStructureFieldValues.breaksPerSemester}]`)
+        breaksPerSemester = timeTableStructureFieldValues.breaksPerSemester
     } catch (error) {
         breaksPerSemester = ""
         alert("Please enter break locations per year in correct format")
@@ -75,6 +75,7 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
             )
     ))) {
         alert("Please enter break locations per year in correct format")
+        console.log(timeTableStructure)
         return false
     }
     if (breaksPerSemester.length !== timeTableStructure.semesterCount) {

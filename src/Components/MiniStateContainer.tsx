@@ -18,7 +18,7 @@ const MiniStateContainer: React.FC<MiniStateContainerProps> = ({ onChange = () =
             setFiles(files)
             getCurrentFileName(currentFileName => { // api call
                 selectInput.current?.querySelectorAll("option").forEach((option) => {
-                    if (option.value === currentFileName.toLowerCase()) {
+                    if (option.value.toLowerCase() === currentFileName.toLowerCase()) {
                         option.selected = true
                     }
                 })

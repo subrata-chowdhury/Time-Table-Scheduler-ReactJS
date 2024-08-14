@@ -70,7 +70,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                     setForceReRenderer(val => !val)
                 })
             }
-    }, [files])
+    }, [files, fileName])
 
     const checkIfAlreadyExist = useCallback((fileName: string) => {
         if (hasElement(files, fileName)) setInEditState(true)

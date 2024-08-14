@@ -91,17 +91,15 @@ function MainComponents() {
                         }}
                     />
                 </div>
-                <div className='right-sub-container'>
-                    <DetailsSection
-                        active={showDetailsPopup}
-                        activeTeacherName={teacherName}
-                        teachersList={teachersList}
-                        onSubmitCallBack={startUpFunction}
+                <DetailsSection
+                    active={showDetailsPopup}
+                    activeTeacherName={teacherName}
+                    teachersList={teachersList}
+                    onSubmitCallBack={startUpFunction}
 
-                        setDisplayLoader={setDisplayLoader}
-                        onClose={() => setShowDetailsPopup(false)}
-                    />
-                </div>
+                    setDisplayLoader={setDisplayLoader}
+                    onClose={() => setShowDetailsPopup(false)}
+                />
             </div>
             {displayLoader && <Loader />}
         </>

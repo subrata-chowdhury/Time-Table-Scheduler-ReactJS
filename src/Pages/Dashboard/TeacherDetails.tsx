@@ -30,6 +30,7 @@ const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
         setTeahersNameList(teachersList)
         setSemesters([])
         setTeahersDetails(val => { return { ...val, subjects: [] } })
+        setTeacherTimeTableDetails([])
     }, [teachersList])
 
 
@@ -44,9 +45,9 @@ const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
 
             let semesters: number[] = [];
             for (let index = 0; index < data.subjects.length; index++) {
-                findAndPushSem(data.subjects[index])
+                await findAndPushSem(data.subjects[index])
             }
-            function findAndPushSem(subjectName: string) {
+            async function findAndPushSem(subjectName: string) {
                 if (!subjectsDetailsList) return
                 if (semesters.indexOf(subjectsDetailsList[subjectName].sem) === -1) semesters.push(subjectsDetailsList[subjectName].sem)
             }

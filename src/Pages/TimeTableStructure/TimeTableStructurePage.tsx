@@ -5,6 +5,7 @@ import { getTimeTableStructure, saveTimeTableStructure } from '../../Script/Time
 import "../../Script/commonJS"
 import verifyTimeTableStructureInputs from '../../Script/InputVerifiers/TimeTableStructureVerifier'
 import { TimeTableStructure } from '../../data/Types'
+import TagInput from '../../Components/TagInput'
 
 function TimeTableStructurePage() {
     return (
@@ -90,20 +91,23 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
     let breaksPerSemester = []
     for (let index = 0; index < timeTableStructureFieldValues.semesterCount; index++) {
         breaksPerSemester.push(
-            <input
-                key={index}
-                type='text'
-                className='input-box'
-                name='breaksPerSemester'
-                value={timeTableStructureFieldValues.breaksPerSemester[index]?.toString() || 2}
-                onChange={(e) => {
+            <div className='sub-input-grp' key={index}>
+                <TagInput tagList={timeTableStructureFieldValues.breaksPerSemester[index].map(val => String(val))} onChange={newVal => {
                     setTimeTableStructureFieldValues(prev => {
-                        let temp = [...prev.breaksPerSemester]
-                        temp[index] = e.target.value.split(',').map(val => Number(val))
-                        temp[index] = temp[index].filter(val => val !== 0)
-                        return { ...prev, breaksPerSemester: temp }
+                        let newBreaksPerSemester = [...prev.breaksPerSemester]
+                        newBreaksPerSemester[index] = newVal.map((value) => Number(value)).filter((value) => value > 0)
+                        return { ...prev, breaksPerSemester: newBreaksPerSemester }
                     })
                 }} />
+                <button className='add-btn' onClick={(e) => {
+                    e.preventDefault()
+                    setTimeTableStructureFieldValues(prev => {
+                        let temp = [...prev.breaksPerSemester]
+                        temp[index].push(2)
+                        return { ...prev, breaksPerSemester: temp }
+                    })
+                }}>+</button>
+            </div>
         )
     }
 
