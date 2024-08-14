@@ -5,16 +5,14 @@ import "../../Style/Subjects.css"
 import { useEffect, useState, memo, useCallback } from 'react'
 import { getSubjectsList } from '../../Script/SubjectsDataFetcher'
 import "../../Script/commonJS"
-import OwnerFooter from '../../Components/OwnerFooter'
 import Loader from '../../Components/Loader'
 import DetailsSection from './DetailsSection'
 
 function SubjectsPage() {
     return (
         <>
-            <div className='main-container subjects'>
+            <div className='page subjects'>
                 <MainComponents />
-                <OwnerFooter />
             </div>
         </>
     )

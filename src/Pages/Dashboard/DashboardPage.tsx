@@ -5,7 +5,6 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getTeachersList } from '../../Script/TeachersDataFetcher'
 import { getSubjectsDetailsList, SubjectsDetailsList } from '../../Script/SubjectsDataFetcher'
 import "../../Script/commonJS"
-import OwnerFooter from '../../Components/OwnerFooter'
 import { TeacherSchedule } from '../../data/Types'
 import BasicDetails from './BasicDetails'
 import TeachersDetailsContainer from './TeacherDetails'
@@ -13,9 +12,8 @@ import TeachersDetailsContainer from './TeacherDetails'
 const DashboardPage: React.FC = (): JSX.Element => {
     return (
         <>
-            <div className='main-container dashboard'>
+            <div className='page dashboard'>
                 <MainComponents />
-                <OwnerFooter />
             </div>
         </>
     )

@@ -1,5 +1,4 @@
 .dashboard .top-sub-container {
-    width: 100%;
     display: grid;
     grid-template-columns: 30% auto;
     gap: .7rem;

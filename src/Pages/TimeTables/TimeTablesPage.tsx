@@ -7,7 +7,6 @@ import { getSubjectsDetailsList, SubjectsDetailsList } from '../../Script/Subjec
 import { generateTimeTable, getSchedule, getTimeTableStructure, saveSchedule } from '../../Script/TimeTableDataFetcher'
 import { emptyTimeTableDetails } from '../../Components/TimeTable'
 import "../../Script/commonJS"
-import OwnerFooter from '../../Components/OwnerFooter'
 import Loader from '../../Components/Loader'
 import { FullTimeTable, TimeTable as TimeTableType, TimeTableStructure } from '../../data/Types'
 import TeacherAndSubjectSelector from './TeacherAndSubjectSelector'
@@ -16,9 +15,8 @@ import { ButtonsContainer, SectionsBtnContainer } from './Header'
 function TimeTablesPage() {
     return (
         <>
-            <div className='main-container time-table'>
+            <div className='page time-table'>
                 <MainComponents />
-                <OwnerFooter />
             </div>
         </>
     )

@@ -3,16 +3,14 @@ import "../../Style/TimeTableStructure.css"
 import React, { FormEvent, memo, useCallback, useEffect, useState } from 'react'
 import { getTimeTableStructure, saveTimeTableStructure } from '../../Script/TimeTableDataFetcher'
 import "../../Script/commonJS"
-import OwnerFooter from '../../Components/OwnerFooter'
 import verifyTimeTableStructureInputs from '../../Script/InputVerifiers/TimeTableStructureVerifier'
 import { TimeTableStructure } from '../../data/Types'
 
 function TimeTableStructurePage() {
     return (
         <>
-            <div className='main-container time-table-structure'>
+            <div className='page time-table-structure'>
                 <MainComponents />
-                <OwnerFooter />
             </div>
         </>
     )

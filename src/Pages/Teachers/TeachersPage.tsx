@@ -5,16 +5,14 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import SearchBar from '../../Components/SearchBar'
 import { getTeachersList } from '../../Script/TeachersDataFetcher'
 import "../../Script/commonJS"
-import OwnerFooter from '../../Components/OwnerFooter'
 import Loader from '../../Components/Loader'
 import DetailsSection from './DetailsSection'
 
 function TeachersPage() {
     return (
         <>
-            <div className='main-container teachers'>
+            <div className='page teachers'>
                 <MainComponents />
-                <OwnerFooter />
             </div>
         </>
     )

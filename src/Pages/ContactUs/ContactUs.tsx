@@ -1,4 +1,3 @@
-import OwnerFooter from "../../Components/OwnerFooter";
 import "../../Style/ContactUs.css"
 import subrata from "../../assets/Subrata.png"
 import srideep from "../../assets/Srideep.jpg"
@@ -9,9 +8,8 @@ import Gmail from "../../Icons/Gmail";
 export default function ContactUs() {
     return (
         <>
-            <div className='main-container contactus'>
+            <div className='page contactus'>
                 <MainComponents />
-                <OwnerFooter />
             </div>
         </>
     )

@@ -5,15 +5,13 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { getSaveFileList } from '../../Script/FilesDataFetchers'
 import SearchBar from '../../Components/SearchBar'
 import "../../Script/commonJS"
-import OwnerFooter from '../../Components/OwnerFooter'
 import DetailsSection from './DetailsSection'
 
 function FilesPage() {
     return (
         <>
-            <div className='main-container files'>
+            <div className='page files'>
                 <MainComponents />
-                <OwnerFooter />
             </div>
         </>
     )
