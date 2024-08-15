@@ -11,6 +11,7 @@ import ContactUs from './Pages/ContactUs/ContactUs';
 import { useEffect, useRef } from 'react';
 import Menubar from './Components/Menubar';
 import OwnerFooter from './Components/OwnerFooter';
+import { addWindowCloseEventHandler } from './Script/commonJS';
 
 function App() {
 	const app = useRef<HTMLDivElement | null>(null)
@@ -30,6 +31,7 @@ function App() {
 		window.onresize = () => {
 			autoToggleInResize()
 		}
+		addWindowCloseEventHandler()
 	}, [])
 
 	return (

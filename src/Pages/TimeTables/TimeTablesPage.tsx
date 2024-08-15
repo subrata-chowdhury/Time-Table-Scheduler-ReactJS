@@ -6,7 +6,6 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getSubjectsDetailsList, SubjectsDetailsList } from '../../Script/SubjectsDataFetcher'
 import { generateTimeTable, getSchedule, getTimeTableStructure, saveSchedule } from '../../Script/TimeTableDataFetcher'
 import { emptyTimeTableDetails } from '../../Components/TimeTable'
-import "../../Script/commonJS"
 import Loader from '../../Components/Loader'
 import { FullTimeTable, TimeTable as TimeTableType, TimeTableStructure } from '../../data/Types'
 import TeacherAndSubjectSelector from './TeacherAndSubjectSelector'

@@ -4,7 +4,6 @@ import WorkingHourBarChat from '../../Components/WorkingHourBarChat'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getTeachersList } from '../../Script/TeachersDataFetcher'
 import { getSubjectsDetailsList, SubjectsDetailsList } from '../../Script/SubjectsDataFetcher'
-import "../../Script/commonJS"
 import { TeacherSchedule } from '../../data/Types'
 import BasicDetails from './BasicDetails'
 import TeachersDetailsContainer from './TeacherDetails'

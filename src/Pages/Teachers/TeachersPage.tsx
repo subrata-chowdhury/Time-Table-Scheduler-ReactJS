@@ -4,7 +4,6 @@ import "../../Style/Pages/Teachers.css"
 import { memo, useCallback, useEffect, useState } from 'react'
 import SearchBar from '../../Components/SearchBar'
 import { getTeachersList } from '../../Script/TeachersDataFetcher'
-import "../../Script/commonJS"
 import Loader from '../../Components/Loader'
 import DetailsSection from './DetailsSection'
 

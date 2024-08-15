@@ -4,7 +4,6 @@ import Cards from '../../Components/Cards'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { getSaveFileList } from '../../Script/FilesDataFetchers'
 import SearchBar from '../../Components/SearchBar'
-import "../../Script/commonJS"
 import DetailsSection from './DetailsSection'
 
 function FilesPage() {

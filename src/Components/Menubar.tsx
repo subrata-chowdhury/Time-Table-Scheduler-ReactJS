@@ -72,7 +72,7 @@ const Menubar: React.FC<MenubarProps> = ({ onMenuToggleClick = () => { } }) => {
                 onMenuToggleClick(e);
             }} className={"toggle-menubar-icon"} />
             <div className="title">
-                <p>Time Table <br />Designer</p>
+                <p>Time Table <br />Scheduler</p>
             </div>
 
             {menus.map((menu) => (
