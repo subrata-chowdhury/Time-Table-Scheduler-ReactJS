@@ -108,6 +108,7 @@ const TeachersTimeTableContainer: React.FC<TeachersTimeTableContainerProps> = me
                     className='teacher-time-table'
                     timeTableWidthInPercent={92}
                     details={teacherTimeTableDetails}
+                    breakTimeIndexs={[5]}
                     subjectsDetails={subjectsDetails} />}
             {teacherTimeTableDetails.length <= 0 && <div className='time-table-error-text'>Click a Card</div>}
         </div>

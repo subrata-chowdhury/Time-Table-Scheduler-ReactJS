@@ -99,14 +99,6 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
                         return { ...prev, breaksPerSemester: newBreaksPerSemester }
                     })
                 }} />
-                <button className='add-btn' onClick={(e) => {
-                    e.preventDefault()
-                    setTimeTableStructureFieldValues(prev => {
-                        let temp = [...prev.breaksPerSemester]
-                        temp[index].push(2)
-                        return { ...prev, breaksPerSemester: temp }
-                    })
-                }}>+</button>
             </div>
         )
     }
