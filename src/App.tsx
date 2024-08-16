@@ -11,7 +11,7 @@ import ContactUs from './Pages/ContactUs/ContactUs';
 import { useEffect, useRef } from 'react';
 import Menubar from './Components/Menubar';
 import OwnerFooter from './Components/OwnerFooter';
-import { addWindowCloseEventHandler } from './Script/commonJS';
+import { addWindowCloseEventHandler, removeWindowCloseEventHandler } from './Script/commonJS';
 
 function App() {
 	const app = useRef<HTMLDivElement | null>(null)
@@ -28,10 +28,16 @@ function App() {
 
 	useEffect(() => {
 		autoToggleInResize();
-		window.onresize = () => {
+		window.addEventListener("resize", () => {
 			autoToggleInResize()
-		}
+		})
 		addWindowCloseEventHandler()
+		return () => {
+			window.removeEventListener("resize", () => {
+				autoToggleInResize()
+			})
+			removeWindowCloseEventHandler()
+		}
 	}, [])
 
 	return (
