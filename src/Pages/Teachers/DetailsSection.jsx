@@ -5,7 +5,15 @@ import { hasElement } from "../../Script/util";
 import { verifyTeacherInputs } from "../../Script/InputVerifiers/TeacherFormVerifier";
 import TagInput from "../../Components/TagInput";
 import TimeSelector from "./TimeSelector";
-const DetailsContainer = ({ active = false, activeTeacherName = "", teachersList, onSubmitCallBack, setDisplayLoader, onClose = () => { } }) => {
+
+const DetailsContainer = ({
+    active = false,
+    activeTeacherName = "",
+    teachersList,
+    onSubmitCallBack,
+    setDisplayLoader,
+    onClose = () => { }
+}) => {
     const [teacherName, setTeacherName] = useState(activeTeacherName);
     const [teacherDetails, setTeacherDetails] = useState({
         freeTime: [],
@@ -13,7 +21,9 @@ const DetailsContainer = ({ active = false, activeTeacherName = "", teachersList
     });
     const [disabled, setDisabled] = useState(false);
     const [inEditState, setInEditState] = useState(false);
+
     const subjectList = useRef();
+
     useEffect(() => {
         setTeacherName(activeTeacherName);
         if (activeTeacherName === "") {
@@ -26,9 +36,11 @@ const DetailsContainer = ({ active = false, activeTeacherName = "", teachersList
         }
         ;
     }, [activeTeacherName]);
+
     useEffect(() => {
         getSubjectsList(data => subjectList.current = data); // api call
     }, []);
+
     const updateTeacherFreeTimeDetails = useCallback((time, active) => {
         let newDetails = { ...teacherDetails };
         if (active) {
@@ -46,18 +58,21 @@ const DetailsContainer = ({ active = false, activeTeacherName = "", teachersList
         }
         setTeacherDetails(newDetails);
     }, [teacherDetails]);
+
     const inputOnChangeHandler = useCallback((event) => {
         if (event.target.name === 'teacherName')
             setTeacherName(event.target.value.toUpperCase());
         else
             setTeacherDetails(value => ({ ...value, [event.target.name]: event.target.value }));
     }, []);
+
     const checkIfAlreadyExist = useCallback((teacherName) => {
         if (hasElement(teachersList, teacherName))
             setInEditState(true); // if teacher exist show delete btn
         else
             setInEditState(false); // if not teacher exist show delete btn
     }, [teachersList]);
+
     const teacherFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
         //verification of inputs
@@ -70,6 +85,7 @@ const DetailsContainer = ({ active = false, activeTeacherName = "", teachersList
             else
                 saveData(verifiedData.newTeacherName, verifiedData.teacherData);
     }, [teacherName, teacherDetails, teachersList]);
+
     const saveData = useCallback((teacherName, teacherData) => {
         setDisplayLoader(true);
         setDisabled(true);
@@ -84,6 +100,7 @@ const DetailsContainer = ({ active = false, activeTeacherName = "", teachersList
             setDisabled(false);
         });
     }, []);
+
     const deleteTeacherBtnClickHandler = useCallback((event) => {
         event.preventDefault();
         if (hasElement(teachersList, teacherName)) // checking if the teacher exsist or not
@@ -95,34 +112,37 @@ const DetailsContainer = ({ active = false, activeTeacherName = "", teachersList
                 });
             }
     }, [teacherName]);
-    return (<form className={'details-container' + (active ? ' active' : '')} onSubmit={teacherFormSubmitHandler}>
-        <div className='inputs-container-heading'>Details</div>
-        <div className="input-container">
-            <div className="input-box-heading">Teacher Name</div>
-            <input type="text" className="input-box" name='teacherName' value={teacherName} placeholder='Ex. ABC' onChange={event => {
-                checkIfAlreadyExist(event.target.value.toUpperCase());
-                inputOnChangeHandler(event);
-            }}></input>
-        </div>
-        <div className="input-container">
-            <div className="input-box-heading">Subject Names</div>
-            {subjectList.current && <TagInput validTags={subjectList.current} tagList={teacherDetails.subjects} onChange={(data) => {
-                let newTeacherDetails = { ...teacherDetails, subject: data };
-                setTeacherDetails(newTeacherDetails);
-            }} />}
-        </div>
-        <div className='input-container'>
-            <div>Available Times</div>
-            <TimeSelector onChange={updateTeacherFreeTimeDetails} selectedValues={teacherDetails.freeTime} />
-        </div>
-        <div className='save-btn-container'>
-            <button className='teacher-save-btn' type='submit' disabled={disabled}>Save</button>
-            {inEditState && <button className='teacher-delete-btn' onClick={deleteTeacherBtnClickHandler}>Delete</button>}
-            <button className='teacher close-btn' onClick={e => {
-                e.preventDefault();
-                onClose();
-            }}>Close</button>
-        </div>
-    </form>);
+
+    return (
+        <form className={'details-container' + (active ? ' active' : '')} onSubmit={teacherFormSubmitHandler}>
+            <div className='inputs-container-heading'>Details</div>
+            <div className="input-container">
+                <div className="input-box-heading">Teacher Name</div>
+                <input type="text" className="input-box" name='teacherName' value={teacherName} placeholder='Ex. ABC' onChange={event => {
+                    checkIfAlreadyExist(event.target.value.toUpperCase());
+                    inputOnChangeHandler(event);
+                }}></input>
+            </div>
+            <div className="input-container">
+                <div className="input-box-heading">Subject Names</div>
+                {subjectList.current && <TagInput validTags={subjectList.current} tagList={teacherDetails.subjects} onChange={(data) => {
+                    let newTeacherDetails = { ...teacherDetails, subject: data };
+                    setTeacherDetails(newTeacherDetails);
+                }} />}
+            </div>
+            <div className='input-container'>
+                <div>Available Times</div>
+                <TimeSelector onChange={updateTeacherFreeTimeDetails} selectedValues={teacherDetails.freeTime} />
+            </div>
+            <div className='save-btn-container'>
+                <button className='teacher-save-btn' type='submit' disabled={disabled}>Save</button>
+                {inEditState && <button className='teacher-delete-btn' onClick={deleteTeacherBtnClickHandler}>Delete</button>}
+                <button className='teacher close-btn' onClick={e => {
+                    e.preventDefault();
+                    onClose();
+                }}>Close</button>
+            </div>
+        </form>
+    );
 };
 export default memo(DetailsContainer);

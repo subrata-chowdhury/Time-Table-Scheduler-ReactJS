@@ -6,12 +6,15 @@ import { getTeachersList } from '../../Script/TeachersDataFetcher';
 import { getSubjectsDetailsList } from '../../Script/SubjectsDataFetcher';
 import BasicDetails from './BasicDetails';
 import TeachersDetailsContainer from './TeacherDetails';
+
 const DashboardPage = () => {
-    return (<>
-        <div className='page dashboard'>
-            <MainComponents />
-        </div>
-    </>);
+    return (
+        <>
+            <div className='page dashboard'>
+                <MainComponents />
+            </div>
+        </>
+    );
 };
 function MainComponents() {
     const [teachersList, setTeahersList] = useState([]);
@@ -23,7 +26,9 @@ function MainComponents() {
         theroySubjects: 0,
         freeSubjects: 0
     });
+
     const subjectsDetails = useRef({});
+
     const calculatePerDayValue = useCallback((teacherTimeTableDetails, subjectsDetails) => {
         let newPerDayValue = [];
         for (let index = 0; index < teacherTimeTableDetails.length; index++) {
@@ -43,6 +48,7 @@ function MainComponents() {
         }
         setPerDayValue(newPerDayValue);
     }, []);
+
     const startUpFunction = () => {
         setPerDayValue([0, 0, 0, 0, 0]);
         getTeachersList((data) => {
@@ -69,18 +75,23 @@ function MainComponents() {
             });
         });
     };
+
     useEffect(() => {
         startUpFunction();
     }, []);
-    return (<div className='top-sub-container'>
-        <div className='left-sub-container'>
-            <MiniStateContainer onChange={startUpFunction} />
-            <BasicDetails basicDetails={basicDetails} />
-            <WorkingHourBarChat perDayValue={perDayValue} />
+
+    return (
+        <div className='top-sub-container'>
+            <div className='left-sub-container'>
+                <MiniStateContainer onChange={startUpFunction} />
+                <BasicDetails basicDetails={basicDetails} />
+                <WorkingHourBarChat perDayValue={perDayValue} />
+            </div>
+            <TeachersDetailsContainer onCardClick={(timeTable) => {
+                calculatePerDayValue(timeTable, subjectsDetails.current);
+            }} teachersList={teachersList} subjectsDetailsList={subjectsDetails.current} />
         </div>
-        <TeachersDetailsContainer onCardClick={(timeTable) => {
-            calculatePerDayValue(timeTable, subjectsDetails.current);
-        }} teachersList={teachersList} subjectsDetailsList={subjectsDetails.current} />
-    </div>);
+    );
 }
+
 export default memo(DashboardPage);

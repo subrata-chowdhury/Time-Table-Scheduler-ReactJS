@@ -9,13 +9,17 @@ import { emptyTimeTableDetails } from '../../Components/TimeTable';
 import Loader from '../../Components/Loader';
 import TeacherAndSubjectSelector from './TeacherAndSubjectSelector';
 import { ButtonsContainer, SectionsBtnContainer } from './Header';
+
 function TimeTablesPage() {
-    return (<>
-        <div className='page time-table'>
-            <MainComponents />
-        </div>
-    </>);
+    return (
+        <>
+            <div className='page time-table'>
+                <MainComponents />
+            </div>
+        </>
+    );
 }
+
 function MainComponents() {
     const [sems, setSems] = useState([]);
     const [subjectsDetails, setSubjectsDetails] = useState();
@@ -32,7 +36,9 @@ function MainComponents() {
         semesterCount: 3
     });
     const [showPopUp, setShowPopUp] = useState(false);
+
     const fillManually = useRef(true);
+
     useEffect(() => {
         getSubjectsDetailsList(setSubjectsDetails); // api call
         getTimeTableStructure((data) => {
@@ -46,6 +52,7 @@ function MainComponents() {
             }
         });
     }, []);
+
     const startUpFunction = useCallback(() => {
         try {
             if (allTimeTables)
@@ -58,18 +65,22 @@ function MainComponents() {
             console.log("%cError in selecting time table", "color: green");
         }
     }, [currentOpenSem, currentOpenSection, allTimeTables]);
+
     useEffect(() => {
         startUpFunction();
     }, [currentOpenSem, currentOpenSection, allTimeTables, startUpFunction]);
+
     useEffect(() => {
         getSchedule(data => {
             setAllTimeTables(data);
         });
     }, []);
+
     const semCardClickHandler = useCallback((value) => {
         let year = parseInt(value.slice(5));
         setCurrentOpenSem(year - 1);
     }, []);
+
     const setBtnClickHandler = useCallback((activeTeacherName, activeSubjectName) => {
         if (activeSubjectName.length > 0 && activeTeacherName.length > 0 && periodDetailsIndex) {
             let [dayIndex, periodIndex] = periodDetailsIndex;
@@ -86,45 +97,61 @@ function MainComponents() {
             saveSchedule(currentOpenSem + 1, currentOpenSection + 1, newTimeTable, () => setShowPopUp(false)); // api call
         }
     }, [subjectsDetails, periodDetailsIndex, timeTable]);
-    return (<>
-        <div className='top-sub-container'>
-            <div className='menubar'>
-                <MiniStateContainer onChange={() => {
-                    startUpFunction();
-                    getSchedule(data => {
-                        setAllTimeTables(data);
-                    });
-                }} />
-                <div className='main-btn-container'>
-                    <ButtonsContainer onAutoFillBtnClick={() => {
-                        setDisplayLoader(true);
-                        generateTimeTable((data) => {
+
+    return (
+        <>
+            <div className='top-sub-container'>
+                <div className='menubar'>
+                    <MiniStateContainer onChange={() => {
+                        startUpFunction();
+                        getSchedule(data => {
                             setAllTimeTables(data);
-                            setDisplayLoader(false);
-                        }, () => { setDisplayLoader(false); });
-                    }} onFillManuallyBtnClick={() => {
-                        fillManually.current = true;
+                        });
                     }} />
-                    {timeTableStructure && <SectionsBtnContainer currentOpenSection={currentOpenSection} setCurrentOpenSection={setCurrentOpenSection} noOfSections={timeTableStructure.sectionsPerSemester[currentOpenSem]} />}
+                    <div className='main-btn-container'>
+                        <ButtonsContainer onAutoFillBtnClick={() => {
+                            setDisplayLoader(true);
+                            generateTimeTable((data) => {
+                                setAllTimeTables(data);
+                                setDisplayLoader(false);
+                            }, () => { setDisplayLoader(false); });
+                        }} onFillManuallyBtnClick={() => {
+                            fillManually.current = true;
+                        }} />
+                        {timeTableStructure && <SectionsBtnContainer
+                            currentOpenSection={currentOpenSection}
+                            setCurrentOpenSection={setCurrentOpenSection}
+                            noOfSections={timeTableStructure.sectionsPerSemester[currentOpenSem]} />}
+                    </div>
                 </div>
+
+                {/* Year btns */}
+                <HorizentalCardsContainer cardList={sems} onCardClick={semCardClickHandler} />
+
+                {subjectsDetails && timeTableStructure && <TimeTable
+                    className='class-time-table'
+                    subjectsDetails={subjectsDetails}
+                    details={timeTable}
+                    periodClickHandler={(dayIndex, periodIndex) => {
+                        if (!fillManually.current)
+                            return;
+                        setPeriodDetailsIndex([dayIndex, periodIndex]);
+                        setShowPopUp(true);
+                    }}
+                    breakTimeIndexs={timeTableStructure.breaksPerSemester[currentOpenSem]}
+                    noOfPeriods={Number(timeTableStructure.periodCount)} />}
+                {!timeTable &&
+                    (<div style={{ display: 'grid', justifyContent: 'center', alignItems: 'center' }}>
+                        No Time Table Found for Year {currentOpenSem + 1} Sec {String.fromCharCode(65 + currentOpenSection)}
+                    </div>)}
             </div>
-
-            {/* Year btns */}
-            <HorizentalCardsContainer cardList={sems} onCardClick={semCardClickHandler} />
-
-            {subjectsDetails && timeTableStructure && <TimeTable className='class-time-table' subjectsDetails={subjectsDetails} details={timeTable} periodClickHandler={(dayIndex, periodIndex) => {
-                if (!fillManually.current)
-                    return;
-                setPeriodDetailsIndex([dayIndex, periodIndex]);
-                setShowPopUp(true);
-            }} breakTimeIndexs={timeTableStructure.breaksPerSemester[currentOpenSem]} noOfPeriods={Number(timeTableStructure.periodCount)} />}
-            {!timeTable &&
-                (<div style={{ display: 'grid', justifyContent: 'center', alignItems: 'center' }}>
-                    No Time Table Found for Year {currentOpenSem + 1} Sec {String.fromCharCode(65 + currentOpenSection)}
-                </div>)}
-        </div>
-        {subjectsDetails && <TeacherAndSubjectSelector active={showPopUp} onSetBtnClick={setBtnClickHandler} onCancelBtnClick={() => setShowPopUp(false)} />}
-        {displayLoader && <Loader />}
-    </>);
+            {subjectsDetails && <TeacherAndSubjectSelector
+                active={showPopUp}
+                onSetBtnClick={setBtnClickHandler}
+                onCancelBtnClick={() => setShowPopUp(false)} />}
+            {displayLoader && <Loader />}
+        </>
+    );
 }
+
 export default memo(TimeTablesPage);

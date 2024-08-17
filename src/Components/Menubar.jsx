@@ -1,3 +1,5 @@
+import React, { memo } from "react";
+import { Link, useLocation } from "react-router-dom";
 import "../Style/Menubar.css";
 import Dashboard from "../Icons/Dashboard";
 import EditSubjects from "../Icons/EditSubjects";
@@ -6,9 +8,8 @@ import Files from "../Icons/Files";
 import TimeTables from "../Icons/TimeTables";
 import TimeTableStructure from "../Icons/TimeTableStructure";
 import Arrow from "../Icons/Arrow";
-import React, { memo } from "react";
-import { Link, useLocation } from "react-router-dom";
 import Contact from "../Icons/ContactIcon";
+
 const menus = [
     {
         name: "Subjects",
@@ -48,6 +49,7 @@ const menus = [
 ];
 const Menubar = ({ onMenuToggleClick = () => { } }) => {
     const route = useLocation();
+
     function toggleMenubar() {
         let activeApp = document.querySelector(".app.active");
         let app = document.querySelector(".app");
@@ -56,19 +58,23 @@ const Menubar = ({ onMenuToggleClick = () => { } }) => {
         else if (app)
             app.classList.add("active");
     }
-    return (<div className="menubar-container">
-        <Arrow arrowIconClickHandler={e => {
-            toggleMenubar();
-            onMenuToggleClick(e);
-        }} className={"toggle-menubar-icon"} />
-        <div className="title">
-            <p>Time Table <br />Scheduler</p>
-        </div>
 
-        {menus.map((menu) => (<Link to={menu.link} className="menu-container" id={route.pathname === menu.link ? "active" : ""}>
-            {menu.icon}
-            <div>{menu.name}</div>
-        </Link>))}
-    </div>);
+    return (
+        <div className="menubar-container">
+            <Arrow arrowIconClickHandler={e => {
+                toggleMenubar();
+                onMenuToggleClick(e);
+            }} className={"toggle-menubar-icon"} />
+            <div className="title">
+                <p>Time Table <br />Scheduler</p>
+            </div>
+
+            {menus.map((menu) => (<Link to={menu.link} className="menu-container" id={route.pathname === menu.link ? "active" : ""}>
+                {menu.icon}
+                <div>{menu.name}</div>
+            </Link>))}
+        </div>
+    );
 };
+
 export default memo(Menubar);

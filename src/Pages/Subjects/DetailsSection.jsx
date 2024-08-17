@@ -4,7 +4,15 @@ import { getSubject, saveSubject, deleteSubject } from "../../Script/SubjectsDat
 import TagInput from "../../Components/TagInput";
 import { hasElement } from "../../Script/util";
 import { verifySubjectInputs } from "../../Script/InputVerifiers/SubjectFormVerifier";
-const DetailsContainer = ({ active = false, activeSubjectName = "", subjectsList, onSubmitCallBack, setDisplayLoader, onClose = () => { } }) => {
+
+const DetailsContainer = ({
+    active = false,
+    activeSubjectName = "",
+    subjectsList,
+    onSubmitCallBack,
+    setDisplayLoader,
+    onClose = () => { }
+}) => {
     const [subjectName, setSubjectName] = useState(activeSubjectName);
     const [subjectDetails, setSubjectDetails] = useState({
         isPractical: false,
@@ -15,6 +23,7 @@ const DetailsContainer = ({ active = false, activeSubjectName = "", subjectsList
     });
     const [disabled, setDisabled] = useState(false);
     const [inEditState, setInEditState] = useState(false);
+
     useEffect(() => {
         setSubjectName(activeSubjectName);
         if (activeSubjectName !== "") {
@@ -32,18 +41,21 @@ const DetailsContainer = ({ active = false, activeSubjectName = "", subjectsList
             setInEditState(false);
         }
     }, [activeSubjectName]);
+
     const inputOnChangeHandler = useCallback((event) => {
         if (event.target.name === 'subjectName')
             setSubjectName(event.target.value.toUpperCase());
         else
             setSubjectDetails(value => ({ ...value, [event.target.name]: event.target.value }));
     }, []);
+
     const checkIfAlreadyExist = useCallback((subjectName) => {
         if (hasElement(subjectsList, subjectName))
             setInEditState(true); // if subject exist show delete btn
         else
             setInEditState(false); // if not subject exist show delete btn
     }, [subjectsList]);
+
     const subjectFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
         let verifiedData = verifySubjectInputs(subjectName, subjectDetails);
@@ -55,6 +67,7 @@ const DetailsContainer = ({ active = false, activeSubjectName = "", subjectsList
             else
                 saveData(verifiedData.newSubjectName, verifiedData.data);
     }, [subjectName, subjectDetails, subjectsList]);
+
     const saveData = useCallback((subjectName, subjectData) => {
         setDisplayLoader(true);
         setDisabled(true);
@@ -69,6 +82,7 @@ const DetailsContainer = ({ active = false, activeSubjectName = "", subjectsList
             setDisabled(true);
         });
     }, []);
+
     const deleteSubjectBtnClickHandler = useCallback((event) => {
         event.preventDefault();
         if (hasElement(subjectsList, subjectName)) // checking if the subject exsist or not
@@ -79,52 +93,56 @@ const DetailsContainer = ({ active = false, activeSubjectName = "", subjectsList
                     setDisplayLoader(false); // if failed only hide loader
                 });
     }, [subjectName]);
-    return (<form className={'details-container' + (active ? " active" : "")} onSubmit={subjectFormSubmitHandler}>
-        <div className='inputs-container-heading'>Details</div>
-        <div className="input-container">
-            <div className="input-box-heading">Subject Name</div>
-            <input type="text" className="input-box" name='subjectName' value={subjectName} placeholder='Ex. ABC' onChange={event => {
-                checkIfAlreadyExist(event.target.value.toUpperCase());
-                inputOnChangeHandler(event);
-            }}></input>
-        </div>
-        <div className="input-container">
-            <div className="input-box-heading">Semester</div>
-            <input type="number" className="input-box" name='sem' value={subjectDetails.sem} placeholder='Ex. 8' onChange={inputOnChangeHandler}></input>
-        </div>
-        <div className="input-container">
-            <div className="input-box-heading">Lecture Count per Week (Value: {subjectDetails.lectureCount})</div>
-            <input type="range" className="input-box" name='lectureCount' max={40} min={1} value={subjectDetails.lectureCount} title={subjectDetails.lectureCount.toString()} onChange={inputOnChangeHandler}></input>
-        </div>
-        <div className="input-container">
-            <div className="input-box-heading">Classroom</div>
-            <TagInput tagList={subjectDetails.roomCodes} onChange={(data) => {
-                let newSubjectDetails = { ...subjectDetails, roomCodes: data };
-                setSubjectDetails(newSubjectDetails);
-            }} />
-        </div>
-        <div className="input-container">
-            <div className="input-box-heading">Subject Type</div>
-            <div className={'box'} onClick={() => setSubjectDetails(value => ({ ...value, isPractical: !value["isPractical"] }))}>
-                <div className={'option' + (!subjectDetails.isPractical ? " active" : "")}>Theory</div>
-                <div className={'option' + (subjectDetails.isPractical ? " active" : "")}>Practical</div>
+
+    return (
+        <form className={'details-container' + (active ? " active" : "")} onSubmit={subjectFormSubmitHandler}>
+            <div className='inputs-container-heading'>Details</div>
+            <div className="input-container">
+                <div className="input-box-heading">Subject Name</div>
+                <input type="text" className="input-box" name='subjectName' value={subjectName} placeholder='Ex. ABC' onChange={event => {
+                    checkIfAlreadyExist(event.target.value.toUpperCase());
+                    inputOnChangeHandler(event);
+                }}></input>
             </div>
-        </div>
-        <div className="input-container">
-            <div className="input-box-heading">Should be Taken by<br /> Teacher or Not</div>
-            <div className={'box'} onClick={() => setSubjectDetails(value => ({ ...value, isFree: !value["isFree"] }))}>
-                <div className={'option' + (subjectDetails.isFree ? " active" : "")}>No</div>
-                <div className={'option' + (!subjectDetails.isFree ? " active" : "")}>Yes</div>
+            <div className="input-container">
+                <div className="input-box-heading">Semester</div>
+                <input type="number" className="input-box" name='sem' value={subjectDetails.sem} placeholder='Ex. 8' onChange={inputOnChangeHandler}></input>
             </div>
-        </div>
-        <div className='save-btn-container'>
-            <button className='subject-save-btn' type='submit' disabled={disabled}>Save</button>
-            {inEditState && <button className='subject-delete-btn' onClick={deleteSubjectBtnClickHandler}>Delete</button>}
-            <button className='subject close-btn' onClick={e => {
-                e.preventDefault();
-                onClose();
-            }}>Close</button>
-        </div>
-    </form>);
+            <div className="input-container">
+                <div className="input-box-heading">Lecture Count per Week (Value: {subjectDetails.lectureCount})</div>
+                <input type="range" className="input-box" name='lectureCount' max={40} min={1} value={subjectDetails.lectureCount} title={subjectDetails.lectureCount.toString()} onChange={inputOnChangeHandler}></input>
+            </div>
+            <div className="input-container">
+                <div className="input-box-heading">Classroom</div>
+                <TagInput tagList={subjectDetails.roomCodes} onChange={(data) => {
+                    let newSubjectDetails = { ...subjectDetails, roomCodes: data };
+                    setSubjectDetails(newSubjectDetails);
+                }} />
+            </div>
+            <div className="input-container">
+                <div className="input-box-heading">Subject Type</div>
+                <div className={'box'} onClick={() => setSubjectDetails(value => ({ ...value, isPractical: !value["isPractical"] }))}>
+                    <div className={'option' + (!subjectDetails.isPractical ? " active" : "")}>Theory</div>
+                    <div className={'option' + (subjectDetails.isPractical ? " active" : "")}>Practical</div>
+                </div>
+            </div>
+            <div className="input-container">
+                <div className="input-box-heading">Should be Taken by<br /> Teacher or Not</div>
+                <div className={'box'} onClick={() => setSubjectDetails(value => ({ ...value, isFree: !value["isFree"] }))}>
+                    <div className={'option' + (subjectDetails.isFree ? " active" : "")}>No</div>
+                    <div className={'option' + (!subjectDetails.isFree ? " active" : "")}>Yes</div>
+                </div>
+            </div>
+            <div className='save-btn-container'>
+                <button className='subject-save-btn' type='submit' disabled={disabled}>Save</button>
+                {inEditState && <button className='subject-delete-btn' onClick={deleteSubjectBtnClickHandler}>Delete</button>}
+                <button className='subject close-btn' onClick={e => {
+                    e.preventDefault();
+                    onClose();
+                }}>Close</button>
+            </div>
+        </form>
+    );
 };
+
 export default memo(DetailsContainer);

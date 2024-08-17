@@ -6,12 +6,15 @@ import SearchBar from '../../Components/SearchBar';
 import { getTeachersList } from '../../Script/TeachersDataFetcher';
 import Loader from '../../Components/Loader';
 import DetailsSection from './DetailsSection';
+
 function TeachersPage() {
-    return (<>
-        <div className='page teachers'>
-            <MainComponents />
-        </div>
-    </>);
+    return (
+        <>
+            <div className='page teachers'>
+                <MainComponents />
+            </div>
+        </>
+    );
 }
 function MainComponents() {
     const [teachersList, setTeahersList] = useState([]);
@@ -19,9 +22,11 @@ function MainComponents() {
     const [displayLoader, setDisplayLoader] = useState(false);
     const [filteredTeacherList, setFilteredTeacherList] = useState([]);
     const [showDetailsPopup, setShowDetailsPopup] = useState(false);
+
     useEffect(() => {
         startUpFunction();
     }, []);
+
     const startUpFunction = useCallback(() => {
         getTeachersList(setTeahersList); // api call
         setTeacherName("");
@@ -64,24 +69,33 @@ function MainComponents() {
             console.log("%cNo Click Query Found", "color: green");
         }
     }, []);
-    return (<>
-        <div className='top-sub-container'>
-            <div className='left-sub-container'>
-                <div className='tools-container'>
-                    <MiniStateContainer onChange={startUpFunction} />
-                    <SearchBar array={teachersList} onChange={setFilteredTeacherList} />
+
+    return (
+        <>
+            <div className='top-sub-container'>
+                <div className='left-sub-container'>
+                    <div className='tools-container'>
+                        <MiniStateContainer onChange={startUpFunction} />
+                        <SearchBar array={teachersList} onChange={setFilteredTeacherList} />
+                    </div>
+                    <Cards cardList={filteredTeacherList} cardClassName={"teacher-card"} onCardClick={name => {
+                        setTeacherName(name);
+                        setShowDetailsPopup(true);
+                    }} onAddBtnClick={() => {
+                        setTeacherName("");
+                        setShowDetailsPopup(true);
+                    }} />
                 </div>
-                <Cards cardList={filteredTeacherList} cardClassName={"teacher-card"} onCardClick={name => {
-                    setTeacherName(name);
-                    setShowDetailsPopup(true);
-                }} onAddBtnClick={() => {
-                    setTeacherName("");
-                    setShowDetailsPopup(true);
-                }} />
+                <DetailsSection
+                    active={showDetailsPopup}
+                    activeTeacherName={teacherName}
+                    teachersList={teachersList}
+                    onSubmitCallBack={startUpFunction}
+                    setDisplayLoader={setDisplayLoader}
+                    onClose={() => setShowDetailsPopup(false)} />
             </div>
-            <DetailsSection active={showDetailsPopup} activeTeacherName={teacherName} teachersList={teachersList} onSubmitCallBack={startUpFunction} setDisplayLoader={setDisplayLoader} onClose={() => setShowDetailsPopup(false)} />
-        </div>
-        {displayLoader && <Loader />}
-    </>);
+            {displayLoader && <Loader />}
+        </>
+    );
 }
 export default memo(TeachersPage);
