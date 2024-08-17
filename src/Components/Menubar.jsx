@@ -62,7 +62,7 @@ const Menubar = ({ onMenuToggleClick = () => { } }) => {
             onMenuToggleClick(e);
         }} className={"toggle-menubar-icon"} />
         <div className="title">
-            <p>Time Table <br />Designer</p>
+            <p>Time Table <br />Scheduler</p>
         </div>
 
         {menus.map((menu) => (<Link to={menu.link} className="menu-container" id={route.pathname === menu.link ? "active" : ""}>

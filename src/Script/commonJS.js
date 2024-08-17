@@ -1,22 +1,19 @@
 import { getCurrentFileIsSaved, getCurrentFileName, saveCurrentState } from './FilesDataFetchers';
-function windowcloseEventHandler() {
+export function addWindowCloseEventHandler() {
     window.addEventListener("windowclose", () => {
-        checkCurrentStateIsSavedBeforeClose(closeTheWindow);
+        checkForSave(closeTheWindow);
     });
 }
-windowcloseEventHandler();
-export function checkCurrentStateIsSavedBeforeClose(callBackIfIsSavedOrCanceledOrAfterSaved = () => { }) {
-    getCurrentFileIsSaved((isSaved) => {
+export function removeWindowCloseEventHandler() {
+    window.removeEventListener("windowclose", () => { });
+}
+export function checkForSave(callBack = () => { }) {
+    getCurrentFileIsSaved(async (isSaved) => {
         if (!isSaved)
             if (window.confirm("You did't save the current state, Want to Save it now?")) { // if yes then save the current state
-                getCurrentFileName((fileName) => {
-                    saveCurrentState(fileName, callBackIfIsSavedOrCanceledOrAfterSaved); // api call
-                });
+                await getCurrentFileName(async (fileName) => saveCurrentState(fileName)); // api call
             }
-            else
-                callBackIfIsSavedOrCanceledOrAfterSaved(); // if cancel then close the window
-        else
-            callBackIfIsSavedOrCanceledOrAfterSaved(); // if it's already saved the close the window
+        callBack();
     });
 }
 function closeTheWindow() {

@@ -4,7 +4,6 @@ import Cards from '../../Components/Cards';
 import "../../Style/Pages/Subjects.css";
 import { useEffect, useState, memo, useCallback } from 'react';
 import { getSubjectsList } from '../../Script/SubjectsDataFetcher';
-import "../../Script/commonJS";
 import Loader from '../../Components/Loader';
 import DetailsSection from './DetailsSection';
 function SubjectsPage() {

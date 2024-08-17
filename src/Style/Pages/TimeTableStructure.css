@@ -13,6 +13,7 @@
     gap: 1rem;
     grid-template-rows: auto auto auto auto;
     align-content: space-around;
+    overflow-x: auto;
 }
 
 .add-btn {
@@ -23,17 +24,6 @@
     height: 100%;
     border-top-right-radius: 0.2rem;
     border-bottom-right-radius: 0.2rem;
-}
-
-.sub-input-grp {
-    display: flex;
-    flex-direction: row;
-}
-
-.sub-input-grp input {
-    flex-grow: 1;
-    border-top-right-radius: 0rem;
-    border-bottom-right-radius: 0rem;
 }
 
 @media (max-width: 550px) {

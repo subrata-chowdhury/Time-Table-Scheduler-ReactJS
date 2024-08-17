@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { getCurrentFileName, getSaveFileList, loadSaveFile } from "../Script/FilesDataFetchers";
 import "../Style/Mini-state-container.css";
-import { checkCurrentStateIsSavedBeforeClose } from "../Script/commonJS";
+import { checkForSave } from "../Script/commonJS";
 const MiniStateContainer = ({ onChange = () => { }, forceReRenderer = false }) => {
     const [files, setFiles] = useState([]);
     const selectInput = useRef(null);
@@ -18,7 +18,7 @@ const MiniStateContainer = ({ onChange = () => { }, forceReRenderer = false }) =
         });
     }, [forceReRenderer]);
     const onChangeStateHandler = useCallback((event) => {
-        checkCurrentStateIsSavedBeforeClose(() => {
+        checkForSave(() => {
             loadSaveFile(event.target.value, () => {
                 onChange();
             }); // api call

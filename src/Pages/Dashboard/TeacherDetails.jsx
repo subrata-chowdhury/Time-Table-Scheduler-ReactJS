@@ -72,7 +72,7 @@ const TeachersTimeTableContainer = memo(({ teacherTimeTableDetails, subjectsDeta
     return (<div className='time-table-wrapper'>
         <div className='heading'>Time Table for {sir}</div>
         {subjectsDetails && teacherTimeTableDetails.length > 0 &&
-            <TimeTable className='teacher-time-table' timeTableWidthInPercent={92} details={teacherTimeTableDetails} subjectsDetails={subjectsDetails} />}
+            <TimeTable className='teacher-time-table' timeTableWidthInPercent={92} details={teacherTimeTableDetails} breakTimeIndexs={[5]} subjectsDetails={subjectsDetails} />}
         {teacherTimeTableDetails.length <= 0 && <div className='time-table-error-text'>Click a Card</div>}
     </div>);
 });

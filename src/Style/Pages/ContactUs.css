@@ -9,6 +9,13 @@
     position: relative;
     left: 5%;
     box-sizing: border-box;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.developers-container::-webkit-scrollbar {
+    display: none;
 }
 
 .developer {

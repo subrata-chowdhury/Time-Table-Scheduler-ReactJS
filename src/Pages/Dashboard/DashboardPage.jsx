@@ -4,7 +4,6 @@ import WorkingHourBarChat from '../../Components/WorkingHourBarChat';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { getTeachersList } from '../../Script/TeachersDataFetcher';
 import { getSubjectsDetailsList } from '../../Script/SubjectsDataFetcher';
-import "../../Script/commonJS";
 import BasicDetails from './BasicDetails';
 import TeachersDetailsContainer from './TeacherDetails';
 const DashboardPage = () => {
