@@ -31,7 +31,6 @@ interface TimeTableStructureInputContainerProps {
 }
 
 const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContainerProps> = ({ fileChange }) => {
-
     const [timeTableStructureFieldValues, setTimeTableStructureFieldValues] = useState<TimeTableStructure>({
         breaksPerSemester: [[0], [0], [4, 5], [4]],
         periodCount: 9,
@@ -47,7 +46,25 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
         switch (event.target.name) {
             case 'semesterCount':
                 if (event.target.value === '' || Number(event.target.value) < 1) event.target.value = '1'
-                setTimeTableStructureFieldValues(value => ({ ...value, semesterCount: Number(event.target.value) }))
+                setTimeTableStructureFieldValues(value => {
+                    let newBreaksPerSemester = [...value.breaksPerSemester]
+                    let newSectionsPerSemester = [...value.sectionsPerSemester]
+                    if (Number(event.target.value) < value.semesterCount) {
+                        newBreaksPerSemester = newBreaksPerSemester.slice(0, Number(event.target.value))
+                        newSectionsPerSemester = newSectionsPerSemester.slice(0, Number(event.target.value))
+                    }
+                    if (Number(event.target.value) > value.semesterCount)
+                        for (let index = value.semesterCount; index < Number(event.target.value); index++) {
+                            newBreaksPerSemester[index] = [2]
+                            newSectionsPerSemester[index] = 0
+                        }
+                    return {
+                        ...value,
+                        semesterCount: Number(event.target.value),
+                        breaksPerSemester: newBreaksPerSemester,
+                        sectionsPerSemester: newSectionsPerSemester
+                    }
+                })
                 break
             case 'periodCount':
                 if (event.target.value === '' || Number(event.target.value) < 4) event.target.value = '4'
@@ -66,41 +83,6 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
             })
         }
     }, [timeTableStructureFieldValues])
-
-    let sectionsPerSemester = []
-    for (let index = 0; index < timeTableStructureFieldValues.semesterCount; index++) {
-        sectionsPerSemester.push(
-            <input
-                key={index}
-                type='number'
-                className='input-box'
-                min={0}
-                name='sectionsPerSemester'
-                value={timeTableStructureFieldValues.sectionsPerSemester[index]?.toString() || 0}
-                onChange={(e) => {
-                    setTimeTableStructureFieldValues(prev => {
-                        let temp = [...prev.sectionsPerSemester]
-                        temp[index] = Number(e.target.value)
-                        return { ...prev, sectionsPerSemester: temp }
-                    })
-                }} />
-        )
-    }
-
-    let breaksPerSemester = []
-    for (let index = 0; index < timeTableStructureFieldValues.semesterCount; index++) {
-        breaksPerSemester.push(
-            <div className='sub-input-grp' key={index}>
-                <TagInput tagList={timeTableStructureFieldValues.breaksPerSemester[index].map(val => String(val))} onChange={newVal => {
-                    setTimeTableStructureFieldValues(prev => {
-                        let newBreaksPerSemester = [...prev.breaksPerSemester]
-                        newBreaksPerSemester[index] = newVal.map((value) => Number(value)).filter((value) => value > 0)
-                        return { ...prev, breaksPerSemester: newBreaksPerSemester }
-                    })
-                }} />
-            </div>
-        )
-    }
 
     return (
         <form className='time-table-structure-inputs-container' onSubmit={timeTableStructureOnSubmitHandler}>
@@ -130,7 +112,22 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
                 <div className="input-container">
                     <div className="input-box-heading">Number of Sections per Year</div>
                     <div className='input-grp'>
-                        {sectionsPerSemester}
+                        {timeTableStructureFieldValues.sectionsPerSemester.length > 0 && timeTableStructureFieldValues.sectionsPerSemester.map((value, index) => (
+                            <input
+                                key={index}
+                                type='number'
+                                className='input-box'
+                                min={0}
+                                name='sectionsPerSemester'
+                                value={value.toString() || 0}
+                                onChange={(e) => {
+                                    setTimeTableStructureFieldValues(prev => {
+                                        let temp = [...prev.sectionsPerSemester]
+                                        temp[index] = Number(e.target.value)
+                                        return { ...prev, sectionsPerSemester: temp }
+                                    })
+                                }} />
+                        ))}
                     </div>
                 </div>
             </div>
@@ -138,7 +135,17 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
                 <div className="input-container">
                     <div className="input-box-heading">Break Times per Year</div>
                     <div className='input-grp'>
-                        {breaksPerSemester}
+                        {timeTableStructureFieldValues.breaksPerSemester.length > 0 && timeTableStructureFieldValues.breaksPerSemester.map((value, index) => (
+                            <div className='sub-input-grp' key={index}>
+                                <TagInput tagList={value.map(val => String(val))} onChange={newVal => {
+                                    setTimeTableStructureFieldValues(prev => {
+                                        let newBreaksPerSemester = [...prev.breaksPerSemester]
+                                        newBreaksPerSemester[index] = newVal.map((value) => Number(value)).filter((value) => value > 0)
+                                        return { ...prev, breaksPerSemester: newBreaksPerSemester }
+                                    })
+                                }} />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
