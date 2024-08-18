@@ -19,16 +19,13 @@ function TimeTablesPage() {
         </>
     );
 }
-
 function MainComponents() {
-    const [sems, setSems] = useState([]);
-    const [subjectsDetails, setSubjectsDetails] = useState();
+    const [sems, setSems] = useState();
     const [allTimeTables, setAllTimeTables] = useState();
     const [timeTable, setTimeTable] = useState(emptyTimeTableDetails);
     const [currentOpenSem, setCurrentOpenSem] = useState(0);
     const [currentOpenSection, setCurrentOpenSection] = useState(0);
     const [displayLoader, setDisplayLoader] = useState(false);
-    const [periodDetailsIndex, setPeriodDetailsIndex] = useState();
     const [timeTableStructure, setTimeTableStructure] = useState({
         breaksPerSemester: [[4, 5], [5], [5], [5]],
         periodCount: 9,
@@ -37,18 +34,20 @@ function MainComponents() {
     });
     const [showPopUp, setShowPopUp] = useState(false);
 
+    const subjectsDetails = useRef();
+    const periodDetailsIndex = useRef();
     const fillManually = useRef(true);
 
     useEffect(() => {
-        getSubjectsDetailsList(setSubjectsDetails); // api call
+        getSubjectsDetailsList(data => subjectsDetails.current = data); // api call
         getTimeTableStructure((data) => {
             if (data) {
                 setTimeTableStructure(data);
-                let sem = [];
+                let sems = [];
                 for (let index = 1; index <= data.semesterCount; index++) {
-                    sem.push("Year " + index);
+                    sems.push("Year " + index);
                 }
-                setSems(sem);
+                setSems(sems);
             }
         });
     }, []);
@@ -82,21 +81,23 @@ function MainComponents() {
     }, []);
 
     const setBtnClickHandler = useCallback((activeTeacherName, activeSubjectName) => {
-        if (activeSubjectName.length > 0 && activeTeacherName.length > 0 && periodDetailsIndex) {
-            let [dayIndex, periodIndex] = periodDetailsIndex;
+        if (activeSubjectName.length > 0 && activeTeacherName.length > 0 && periodDetailsIndex.current) {
+            let [dayIndex, periodIndex] = periodDetailsIndex.current;
             let newTimeTable = [...timeTable];
             if (newTimeTable[dayIndex] === null)
                 return;
             newTimeTable[dayIndex][periodIndex] = [
                 activeTeacherName.join("+"),
                 activeSubjectName[0],
-                (subjectsDetails && subjectsDetails[activeSubjectName[0]]) ?
-                    subjectsDetails[activeSubjectName[0]].roomCodes[0] : ""
+                (subjectsDetails.current && subjectsDetails.current[activeSubjectName[0]]) ?
+                    subjectsDetails.current[activeSubjectName[0]].roomCodes[0] : ""
             ];
-            newTimeTable ? setTimeTable(newTimeTable) : "";
-            saveSchedule(currentOpenSem + 1, currentOpenSection + 1, newTimeTable, () => setShowPopUp(false)); // api call
+            saveSchedule(currentOpenSem + 1, currentOpenSection + 1, newTimeTable, () => {
+                newTimeTable ? setTimeTable(newTimeTable) : "";
+                setShowPopUp(false);
+            }); // api call
         }
-    }, [subjectsDetails, periodDetailsIndex, timeTable]);
+    }, [subjectsDetails.current, periodDetailsIndex.current, timeTable]);
 
     return (
         <>
@@ -128,14 +129,14 @@ function MainComponents() {
                 {/* Year btns */}
                 <HorizentalCardsContainer cardList={sems} onCardClick={semCardClickHandler} />
 
-                {subjectsDetails && timeTableStructure && <TimeTable
+                {subjectsDetails.current && timeTableStructure && <TimeTable
                     className='class-time-table'
-                    subjectsDetails={subjectsDetails}
+                    subjectsDetails={subjectsDetails.current}
                     details={timeTable}
                     periodClickHandler={(dayIndex, periodIndex) => {
                         if (!fillManually.current)
                             return;
-                        setPeriodDetailsIndex([dayIndex, periodIndex]);
+                        periodDetailsIndex.current = [dayIndex, periodIndex];
                         setShowPopUp(true);
                     }}
                     breakTimeIndexs={timeTableStructure.breaksPerSemester[currentOpenSem]}
@@ -145,7 +146,7 @@ function MainComponents() {
                         No Time Table Found for Year {currentOpenSem + 1} Sec {String.fromCharCode(65 + currentOpenSection)}
                     </div>)}
             </div>
-            {subjectsDetails && <TeacherAndSubjectSelector
+            {subjectsDetails.current && <TeacherAndSubjectSelector
                 active={showPopUp}
                 onSetBtnClick={setBtnClickHandler}
                 onCancelBtnClick={() => setShowPopUp(false)} />}
