@@ -22,14 +22,12 @@ function TimeTablesPage() {
 }
 
 function MainComponents() {
-    const [sems, setSems] = useState<string[]>([])
-    const [subjectsDetails, setSubjectsDetails] = useState<SubjectsDetailsList>()
+    const [sems, setSems] = useState<string[]>()
     const [allTimeTables, setAllTimeTables] = useState<FullTimeTable>()
     const [timeTable, setTimeTable] = useState<TimeTableType>(emptyTimeTableDetails)
     const [currentOpenSem, setCurrentOpenSem] = useState<number>(0)
     const [currentOpenSection, setCurrentOpenSection] = useState<number>(0)
     const [displayLoader, setDisplayLoader] = useState<boolean>(false)
-    const [periodDetailsIndex, setPeriodDetailsIndex] = useState<[number, number]>()
     const [timeTableStructure, setTimeTableStructure] = useState<TimeTableStructure>({
         breaksPerSemester: [[4, 5], [5], [5], [5]],
         periodCount: 9,
@@ -38,18 +36,20 @@ function MainComponents() {
     })
     const [showPopUp, setShowPopUp] = useState<boolean>(false)
 
+    const subjectsDetails = useRef<SubjectsDetailsList>()
+    const periodDetailsIndex = useRef<[number, number]>()
     const fillManually = useRef<boolean>(true)
 
     useEffect(() => {
-        getSubjectsDetailsList(setSubjectsDetails) // api call
+        getSubjectsDetailsList(data => subjectsDetails.current = data) // api call
         getTimeTableStructure((data: TimeTableStructure) => { // api call
             if (data) {
                 setTimeTableStructure(data)
-                let sem = []
+                let sems = []
                 for (let index = 1; index <= data.semesterCount; index++) {
-                    sem.push("Year " + index);
+                    sems.push("Year " + index);
                 }
-                setSems(sem);
+                setSems(sems)
             }
         })
     }, [])
@@ -81,21 +81,23 @@ function MainComponents() {
     }, [])
 
     const setBtnClickHandler = useCallback((activeTeacherName: string[], activeSubjectName: string[]) => {
-        if (activeSubjectName.length > 0 && activeTeacherName.length > 0 && periodDetailsIndex) {
-            let [dayIndex, periodIndex]: [number, number] = periodDetailsIndex
+        if (activeSubjectName.length > 0 && activeTeacherName.length > 0 && periodDetailsIndex.current) {
+            let [dayIndex, periodIndex]: [number, number] = periodDetailsIndex.current
             let newTimeTable: TimeTableType = [...timeTable]
             if (newTimeTable[dayIndex] === null) return
             newTimeTable[dayIndex][periodIndex] = [
                 activeTeacherName.join("+"),
                 activeSubjectName[0],
-                (subjectsDetails && subjectsDetails[activeSubjectName[0]]) ?
-                    subjectsDetails[activeSubjectName[0]].roomCodes[0] : ""
+                (subjectsDetails.current && subjectsDetails.current[activeSubjectName[0]]) ?
+                    subjectsDetails.current[activeSubjectName[0]].roomCodes[0] : ""
             ]
 
-            newTimeTable ? setTimeTable(newTimeTable) : ""
-            saveSchedule(currentOpenSem + 1, currentOpenSection + 1, newTimeTable, () => setShowPopUp(false)) // api call
+            saveSchedule(currentOpenSem + 1, currentOpenSection + 1, newTimeTable, () => {
+                newTimeTable ? setTimeTable(newTimeTable) : ""
+                setShowPopUp(false)
+            }) // api call
         }
-    }, [subjectsDetails, periodDetailsIndex, timeTable])
+    }, [subjectsDetails.current, periodDetailsIndex.current, timeTable])
 
     return (
         <>
@@ -132,13 +134,13 @@ function MainComponents() {
                     cardList={sems}
                     onCardClick={semCardClickHandler} />
 
-                {subjectsDetails && timeTableStructure && <TimeTable
+                {subjectsDetails.current && timeTableStructure && <TimeTable
                     className='class-time-table'
-                    subjectsDetails={subjectsDetails}
+                    subjectsDetails={subjectsDetails.current}
                     details={timeTable}
                     periodClickHandler={(dayIndex: number, periodIndex: number) => {
                         if (!fillManually.current) return
-                        setPeriodDetailsIndex([dayIndex, periodIndex]);
+                        periodDetailsIndex.current = [dayIndex, periodIndex];
                         setShowPopUp(true)
                     }}
                     breakTimeIndexs={timeTableStructure.breaksPerSemester[currentOpenSem]}
@@ -148,7 +150,7 @@ function MainComponents() {
                         No Time Table Found for Year {currentOpenSem + 1} Sec {String.fromCharCode(65 + currentOpenSection)}
                     </div>)}
             </div>
-            {subjectsDetails && <TeacherAndSubjectSelector
+            {subjectsDetails.current && <TeacherAndSubjectSelector
                 active={showPopUp}
                 onSetBtnClick={setBtnClickHandler}
                 onCancelBtnClick={() => setShowPopUp(false)}
