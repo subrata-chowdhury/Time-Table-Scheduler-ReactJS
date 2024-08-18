@@ -3,7 +3,7 @@
     height: 100%;
     max-height: 87vh;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
     overflow-y: scroll;
     gap: 1.5rem;
     scrollbar-width: none;
@@ -19,24 +19,6 @@
 .card.data {
     word-break: break-all;
     text-align: center;
-}
-
-@media (max-width: 1495px) {
-    .cards-container {
-        grid-template-columns: repeat(5, 1fr);
-    }
-}
-
-@media (max-width: 1225px) {
-    .cards-container {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-@media (max-width: 1000px) {
-    .cards-container {
-        grid-template-columns: repeat(3, 1fr);
-    }
 }
 
 .cards-container::-webkit-scrollbar {
@@ -138,7 +120,6 @@
 
 @media (max-width: 680px) {
     .cards-container {
-        grid-template-columns: repeat(4, 1fr);
         height: 90%;
         gap: 15px;
     }

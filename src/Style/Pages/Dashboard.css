@@ -31,6 +31,7 @@
     display: grid;
     grid-template-columns: auto auto;
     gap: 10px;
+    flex-grow: 1;
 }
 
 .dashboard .basic-details .basic-details-container .container {
@@ -47,7 +48,7 @@
 }
 
 .dashboard .basic-details .basic-details-container .container .value {
-    font-size: 22px;
+    font-size: 1.5rem;
     font-weight: bold;
     padding: 0 10px;
     padding-bottom: 5px;
@@ -151,7 +152,7 @@
     .dashboard .top-sub-container {
         display: flex;
         flex-direction: column;
-        gap: 2rem;
+        gap: 1rem;
     }
 
     .dashboard .left-sub-container {
@@ -175,9 +176,19 @@
     .sem-and-subject-container {
         display: none;
     }
+
+    .dashboard .basic-details .basic-details-container .container .value {
+        font-size: 1.2rem;
+    }
+
+    .dashboard .basic-details .basic-details-container .container .title {
+        font-size: 0.9rem;
+    }
+
 }
 
 @media (max-width: 600px) {
+
     .teacher-time-table .period-times-container,
     .teacher-time-table .day-name,
     .teacher-time-table .period-details-container {
