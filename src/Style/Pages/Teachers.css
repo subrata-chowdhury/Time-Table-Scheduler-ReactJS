@@ -117,8 +117,4 @@
     .teachers .left-sub-container {
         grid-template-rows: 15% auto;
     }
-
-    .teachers .right-sub-container {
-        height: 94%;
-    }
 }

@@ -31,6 +31,7 @@
     display: grid;
     grid-template-columns: auto auto;
     gap: 10px;
+    flex-grow: 1;
 }
 
 .dashboard .basic-details .basic-details-container .container {
@@ -47,7 +48,7 @@
 }
 
 .dashboard .basic-details .basic-details-container .container .value {
-    font-size: 22px;
+    font-size: 1.5rem;
     font-weight: bold;
     padding: 0 10px;
     padding-bottom: 5px;
@@ -57,11 +58,6 @@
 .dashboard .basic-details .basic-details-container .container .title {
     padding: 0 10px;
     padding-bottom: 0;
-}
-
-.dashboard .right-sub-container {
-    display: grid;
-    grid-auto-flow: row;
 }
 
 .dashboard .mini-states-container {
@@ -151,7 +147,7 @@
     .dashboard .top-sub-container {
         display: flex;
         flex-direction: column;
-        gap: 2rem;
+        gap: 1rem;
     }
 
     .dashboard .left-sub-container {
@@ -160,7 +156,7 @@
         margin-right: 1rem;
     }
 
-    .dashboard .top-sub-container .right-sub-container {
+    .dashboard .top-sub-container .teachers-details-container {
         flex-grow: 1;
     }
 
@@ -175,6 +171,15 @@
     .sem-and-subject-container {
         display: none;
     }
+
+    .dashboard .basic-details .basic-details-container .container .value {
+        font-size: 1.2rem;
+    }
+
+    .dashboard .basic-details .basic-details-container .container .title {
+        font-size: 0.9rem;
+    }
+
 }
 
 @media (max-width: 600px) {
