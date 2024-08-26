@@ -60,11 +60,6 @@
     padding-bottom: 0;
 }
 
-.dashboard .right-sub-container {
-    display: grid;
-    grid-auto-flow: row;
-}
-
 .dashboard .mini-states-container {
     margin-left: 0;
 }
@@ -161,7 +156,7 @@
         margin-right: 1rem;
     }
 
-    .dashboard .top-sub-container .right-sub-container {
+    .dashboard .top-sub-container .teachers-details-container {
         flex-grow: 1;
     }
 

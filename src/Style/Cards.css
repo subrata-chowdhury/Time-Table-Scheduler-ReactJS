@@ -6,8 +6,6 @@
     grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
     overflow-y: scroll;
     gap: 1.5rem;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
     justify-content: stretch;
     align-content: start;
     padding: 15px 10px;
@@ -19,10 +17,6 @@
 .card.data {
     word-break: break-all;
     text-align: center;
-}
-
-.cards-container::-webkit-scrollbar {
-    display: none;
 }
 
 .card {
@@ -90,18 +84,12 @@
     padding: 1.2rem;
     height: 90%;
     overflow-x: scroll;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
     scroll-behavior: smooth;
 }
 
 .sub-horizental-cards-container .card {
     height: 100%;
     min-width: 4.5rem;
-}
-
-.sub-horizental-cards-container::-webkit-scrollbar {
-    display: none;
 }
 
 .arrow-for-scroll {

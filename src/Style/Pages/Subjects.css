@@ -7,10 +7,3 @@
 .subjects .save-btn-container button {
     margin-top: 20px;
 }
-
-@media (max-width: 680px) {
-
-    .subjects .right-sub-container {
-        height: 95%;
-    }
-}
