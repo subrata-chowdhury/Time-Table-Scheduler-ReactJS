@@ -5,6 +5,7 @@ import { getTimeTableStructure, saveTimeTableStructure } from '../../Script/Time
 import verifyTimeTableStructureInputs from '../../Script/InputVerifiers/TimeTableStructureVerifier'
 import { TimeTableStructure } from '../../data/Types'
 import TagInput from '../../Components/TagInput'
+import { useAlert } from '../../Components/AlertContextProvider'
 
 function TimeTableStructurePage() {
     return (
@@ -37,6 +38,8 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
         sectionsPerSemester: [0, 0, 3, 0],
         semesterCount: 4
     })
+
+    const { showWarning, showSuccess } = useAlert()
 
     useEffect(() => {
         getTimeTableStructure(setTimeTableStructureFieldValues) // api call
@@ -76,10 +79,10 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
     const timeTableStructureOnSubmitHandler = useCallback((event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        let timeTableStructure = verifyTimeTableStructureInputs(timeTableStructureFieldValues)
+        let timeTableStructure = verifyTimeTableStructureInputs(timeTableStructureFieldValues, showWarning)
         if (timeTableStructure) {
             saveTimeTableStructure(timeTableStructure, () => { // api call
-                alert(JSON.stringify(timeTableStructure) + "----------- is saved")
+                showSuccess(JSON.stringify(timeTableStructure) + "----------- is saved")
             })
         }
     }, [timeTableStructureFieldValues])

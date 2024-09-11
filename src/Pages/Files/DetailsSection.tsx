@@ -1,6 +1,8 @@
 import { FormEvent, memo, useCallback, useEffect, useState } from "react"
 import { hasElement } from "../../Script/util"
 import { createNewFile, deleteFile, saveCurrentState } from "../../Script/FilesDataFetchers"
+import { useAlert } from "../../Components/AlertContextProvider"
+import { useConfirm } from "../../Components/ConfirmContextProvider"
 
 interface DetailsContainerProps {
     active?: boolean,
@@ -22,6 +24,8 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     const [fileName, setFileName] = useState<string>(activeFileName)
     const [inEditState, setInEditState] = useState<boolean>(false)
 
+    const { showWarning } = useAlert()
+    const { showWarningConfirm } = useConfirm()
 
     useEffect(() => {
         setFileName(activeFileName)
@@ -33,14 +37,15 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
         event.preventDefault();
         const file = fileName.trim().toUpperCase()
         if (file === "") {
-            alert("File Name can't be Empty");
+            showWarning("File Name can't be Empty");
             return;
         }
         if (hasElement(files, file)) {
             saveCurrentState(file, startUp); // api call
         } else {
-            if (window.confirm("Are you want to save the current state into " + file + "?"))
-                saveCurrentState(file, startUp); // api call
+            showWarningConfirm("Are you want to save the current state into " + file + "?",
+                () => saveCurrentState(file, startUp) // api call
+            )
         }
     }, [fileName, files])
     const createNewBtnClickHandler = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -49,11 +54,11 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
         //verifing data
         const file = fileName.trim().toUpperCase();
         if (file === "") {
-            alert("File Name can't be Empty");
+            showWarning("File Name can't be Empty");
             return;
         }
         if (hasElement(files, file)) {
-            alert("File already exist with same name")
+            showWarning("File already exist with same name")
             return
         } else {
             createNewFile(file, startUp); // api call
@@ -64,12 +69,14 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     const deleteFileBtnClickHandler = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         if (hasElement(files, fileName)) // checking if the file exsist or not
-            if (window.confirm("Are You Sure? Want to delete " + fileName + "?")) { // if exist show a confirmation box
-                deleteFile(fileName, () => { // if yes then delete else do nothing  // api call
-                    startUp();
-                    setForceReRenderer(val => !val)
-                })
-            }
+            showWarningConfirm("Are you want to delete " + fileName + "?", // if exist show a confirmation box
+                () => { // if yes then delete else do nothing
+                    deleteFile(fileName, () => { // api call
+                        startUp();
+                        setForceReRenderer(val => !val)
+                    })
+                }
+            )
     }, [files, fileName])
 
     const checkIfAlreadyExist = useCallback((fileName: string) => {

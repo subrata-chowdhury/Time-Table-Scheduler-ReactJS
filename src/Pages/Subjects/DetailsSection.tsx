@@ -5,6 +5,8 @@ import TagInput from "../../Components/TagInput";
 import { hasElement } from "../../Script/util";
 import { verifySubjectInputs } from "../../Script/InputVerifiers/SubjectFormVerifier";
 import { Subject } from "../../data/Types";
+import { useAlert } from "../../Components/AlertContextProvider";
+import { useConfirm } from "../../Components/ConfirmContextProvider";
 
 interface DetailsContainerProps {
     active?: boolean,
@@ -42,6 +44,9 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     const [disabled, setDisabled] = useState<boolean>(false)
     const [inEditState, setInEditState] = useState<boolean>(false)
 
+    const { showWarning, showSuccess } = useAlert()
+    const { showWarningConfirm } = useConfirm()
+
     useEffect(() => {
         setSubjectName(activeSubjectName)
         if (activeSubjectName !== "") {
@@ -72,11 +77,12 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     const subjectFormSubmitHandler = useCallback((event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        let verifiedData = verifySubjectInputs(subjectName, subjectDetails)
+        let verifiedData = verifySubjectInputs(subjectName, subjectDetails, showWarning)
         if (verifiedData)
             if (hasElement(subjectsList, verifiedData.newSubjectName)) {
-                if (window.confirm("Are you want to overwrite " + verifiedData.newSubjectName))
-                    saveData(verifiedData.newSubjectName, verifiedData.data);
+                showWarningConfirm("Are you want to overwrite " + verifiedData.newSubjectName,
+                    () => saveData(verifiedData.newSubjectName, verifiedData.data)
+                )
             } else saveData(verifiedData.newSubjectName, verifiedData.data);
     }, [subjectName, subjectDetails, subjectsList])
 
@@ -84,7 +90,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
         setDisplayLoader(true)
         setDisabled(true)
         saveSubject(subjectName, subjectData, () => { // api call
-            alert(JSON.stringify({ subjectName, subjectData }) + "---------- is added");
+            showSuccess(JSON.stringify({ subjectName, subjectData }) + "---------- is added");
             onSubmitCallBack();
         }).then(() => {
             setDisplayLoader(false)
@@ -98,12 +104,13 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     const deleteSubjectBtnClickHandler = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         if (hasElement(subjectsList, subjectName)) // checking if the subject exsist or not
-            if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?")) // if exist show a confirmation box
-                deleteSubject(subjectName, () => { // api call
+            showWarningConfirm("Are You Sure? Want to Delete " + subjectName + " ?", // if exist show a confirmation box
+                () => deleteSubject(subjectName, () => { // api call
                     onSubmitCallBack(); // referenced to start up function
                 }, () => {
                     setDisplayLoader(false) // if failed only hide loader
                 })
+            )
     }, [subjectName])
 
     return (

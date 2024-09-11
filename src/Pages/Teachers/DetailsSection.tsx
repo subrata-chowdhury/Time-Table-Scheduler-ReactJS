@@ -6,6 +6,8 @@ import { hasElement } from "../../Script/util";
 import { verifyTeacherInputs } from "../../Script/InputVerifiers/TeacherFormVerifier";
 import TagInput from "../../Components/TagInput";
 import TimeSelector from "./TimeSelector";
+import { useAlert } from "../../Components/AlertContextProvider";
+import { useConfirm } from "../../Components/ConfirmContextProvider";
 
 interface DetailsContainerProps {
     active?: boolean,
@@ -35,6 +37,9 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     const [inEditState, setInEditState] = useState<boolean>(false)
 
     const subjectList = useRef<string[] | undefined>();
+
+    const { showWarning } = useAlert();
+    const { showWarningConfirm } = useConfirm()
 
     useEffect(() => {
         setTeacherName(activeTeacherName)
@@ -82,11 +87,12 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     const teacherFormSubmitHandler = useCallback((event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         //verification of inputs
-        let verifiedData = verifyTeacherInputs(teacherName, teacherDetails, subjectList)
+        let verifiedData = verifyTeacherInputs(teacherName, teacherDetails, subjectList, showWarning)
         if (verifiedData)
             if (hasElement(teachersList, verifiedData.newTeacherName)) { // checking if the teacher exsist or not
-                if (window.confirm("Are you want to overwrite " + teacherName)) // if exist show a confirmation box
-                    saveData(verifiedData.newTeacherName, verifiedData.teacherData); // if yes then save else do nothing
+                showWarningConfirm("Are you want to overwrite " + teacherName, // if exist show a confirmation box
+                    () => saveData(verifiedData.newTeacherName, verifiedData.teacherData) // if yes then save else do nothing
+                )
             } else saveData(verifiedData.newTeacherName, verifiedData.teacherData);
     }, [teacherName, teacherDetails, teachersList])
 
@@ -108,13 +114,15 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     const deleteTeacherBtnClickHandler = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         if (hasElement(teachersList, teacherName)) // checking if the teacher exsist or not
-            if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) { // if exist show a confirmation box
-                deleteTeacher(teacherName, () => { // api call
-                    onSubmitCallBack();  // referenced to start up function
-                }, () => {
-                    setDisplayLoader(false) // if failed only hide loader
-                });
-            }
+            showWarningConfirm("Are you sure? Want to Delete " + teacherName + " ?",
+                () => { // if exist show a confirmation box
+                    deleteTeacher(teacherName, () => { // api call
+                        onSubmitCallBack(); // referenced to start up function
+                    }, () => {
+                        setDisplayLoader(false) // if failed only hide loader
+                    });
+                }
+            )
     }, [teacherName])
 
     return (

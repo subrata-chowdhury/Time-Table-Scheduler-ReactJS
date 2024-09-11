@@ -132,7 +132,7 @@ export const loadSaveFile = async (name: string, onSuccess: () => void = () => {
             }
         })
         if (response.status === 200) {
-            alert("Opend Sucessfully")
+            // alert("Opend Sucessfully")
             onSuccess();
         } else {
             console.log(`Request URL: %c${url}io/saves/load?name=${name} \n%cError in loading state`, "color: blue;", "color: red;", await response.text())

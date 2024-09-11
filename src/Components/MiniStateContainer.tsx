@@ -2,6 +2,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react"
 import { getCurrentFileName, getSaveFileList, loadSaveFile } from "../Script/FilesDataFetchers";
 import "../Style/Mini-state-container.css";
 import { checkForSave } from "../Script/commonJS";
+import { useAlert } from "./AlertContextProvider";
 
 interface MiniStateContainerProps {
     onChange?: () => void,
@@ -12,6 +13,8 @@ const MiniStateContainer: React.FC<MiniStateContainerProps> = ({ onChange = () =
     const [files, setFiles] = useState<string[]>([])
 
     const selectInput = useRef<HTMLSelectElement>(null)
+
+    const { showSuccess } = useAlert();
 
     useEffect(() => {
         getSaveFileList(files => { // api call
@@ -29,6 +32,7 @@ const MiniStateContainer: React.FC<MiniStateContainerProps> = ({ onChange = () =
     const onChangeStateHandler = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
         checkForSave(() => {
             loadSaveFile(event.target.value, () => {
+                showSuccess("File Loaded Successfully")
                 onChange()
             }) // api call
         }) // api calls present in the function
