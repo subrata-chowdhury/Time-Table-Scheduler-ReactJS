@@ -3,7 +3,8 @@ import { getApiToken, url } from "./fetchUrl"
 
 export const generateTimeTable = async (
     onSuccess: (data: FullTimeTable) => void = () => { },
-    onFailed: () => void = () => { }
+    onFailed: () => void = () => { },
+    showAlert: (msg: string) => void = () => { }
 ): Promise<FullTimeTable | []> => {
     try {
         let apiToken = await getApiToken()
@@ -24,7 +25,8 @@ export const generateTimeTable = async (
             }
         }
         else {
-            alert("Failed to generate beacause: " + await response.text());
+            // alert("Failed to generate beacause: " + await response.text());
+            showAlert("Failed to generate beacause: " + await response.text());
             onFailed()
             console.log("%cError in generating Time Table", "color: orange;", await response.text())
             return []

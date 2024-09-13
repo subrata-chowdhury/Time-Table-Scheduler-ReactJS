@@ -11,14 +11,28 @@ import ContactUs from './Pages/ContactUs/ContactUs';
 import { useEffect, useRef } from 'react';
 import Menubar from './Components/Menubar';
 import OwnerFooter from './Components/OwnerFooter';
-import { addWindowCloseEventHandler, removeWindowCloseEventHandler } from './Script/commonJS';
 import { AlertProvider } from './Components/AlertContextProvider';
 import Alert from './Components/Alert';
-import { ConfirmProvider } from './Components/ConfirmContextProvider';
+import { ConfirmProvider, useConfirm } from './Components/ConfirmContextProvider';
 import Confirm from './Components/Confirm';
+import { addWindowCloseEventHandler, removeWindowCloseEventHandler } from './Script/commonJS';
 
 function App() {
+	return (
+		<AlertProvider>
+			<ConfirmProvider>
+				<BrowserRouter>
+					<MainApp />
+				</BrowserRouter>
+			</ConfirmProvider>
+		</AlertProvider>
+	)
+}
+
+function MainApp() {
 	const app = useRef<HTMLDivElement | null>(null)
+
+	const { showWarningConfirm } = useConfirm()
 
 	function autoToggleInResize() {
 		if (window.innerWidth <= 1250) {
@@ -35,7 +49,7 @@ function App() {
 		window.addEventListener("resize", () => {
 			autoToggleInResize()
 		})
-		addWindowCloseEventHandler()
+		addWindowCloseEventHandler(showWarningConfirm)
 		return () => {
 			window.removeEventListener("resize", () => {
 				autoToggleInResize()
@@ -45,31 +59,24 @@ function App() {
 	}, [])
 
 	return (
-		<AlertProvider>
-			<ConfirmProvider>
-				<BrowserRouter>
-					<div className='app' ref={app}>
+		<div className='app' ref={app}>
+			<Alert />
+			<Confirm />
+			<Menubar />
 
-						<Alert />
-						<Confirm />
-						<Menubar />
-
-						<div className='main-container'>
-							<Routes>
-								<Route path="/" element={<DashboardPage />} />
-								<Route path="/Subjects" element={<SubjectsPage />} />
-								<Route path="/Teachers" element={<TeachersPage />} />
-								<Route path="/TimeTables" element={<TimeTablesPage />} />
-								<Route path="/TimeTableStructure" element={<TimeTableStructurePage />} />
-								<Route path="/Files" element={<FilesPage />} />
-								<Route path="/ContactUs" element={<ContactUs />} />
-							</Routes>
-							<OwnerFooter />
-						</div>
-					</div>
-				</BrowserRouter>
-			</ConfirmProvider>
-		</AlertProvider>
+			<div className='main-container'>
+				<Routes>
+					<Route path="/" element={<DashboardPage />} />
+					<Route path="/Subjects" element={<SubjectsPage />} />
+					<Route path="/Teachers" element={<TeachersPage />} />
+					<Route path="/TimeTables" element={<TimeTablesPage />} />
+					<Route path="/TimeTableStructure" element={<TimeTableStructurePage />} />
+					<Route path="/Files" element={<FilesPage />} />
+					<Route path="/ContactUs" element={<ContactUs />} />
+				</Routes>
+				<OwnerFooter />
+			</div>
+		</div>
 	)
 }
 

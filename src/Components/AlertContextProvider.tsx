@@ -59,7 +59,6 @@ export const AlertProvider: React.FC<AlertProviderProps> = ({ children }) => {
         hideAlert();
     }, 5000), []);
 
-
     return (
         <AlertContext.Provider value={{ alert, showAlert, hideAlert, showWarning, showSuccess, showError }}>
             {children}

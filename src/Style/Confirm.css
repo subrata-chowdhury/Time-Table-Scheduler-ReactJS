@@ -11,6 +11,8 @@
     transition: 0.3s;
     border-width: 1px;
     border-style: solid;
+    background: #fff;
+    color: #000;
 }
 
 .confirm-background {

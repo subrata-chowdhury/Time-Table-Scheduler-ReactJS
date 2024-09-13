@@ -46,7 +46,7 @@ export const getCurrentFileIsSaved = async (onSuccess: (data: boolean) => void =
     }
 }
 
-export const saveCurrentState = async (name: string, onSuccess: () => void = () => { }): Promise<string> => {
+export const saveCurrentState = async (name: string, onSuccess: () => void = () => { }, showAlert: (msg: string) => void = () => { }): Promise<string> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/save?name=${name}`, {
@@ -55,7 +55,8 @@ export const saveCurrentState = async (name: string, onSuccess: () => void = () 
             }
         })
         if (response.status === 200) {
-            alert(`Current State is Saved in ${name.toUpperCase()}`);
+            // alert(`Current State is Saved in ${name.toUpperCase()}`);
+            showAlert(`Current State is Saved in ${name.toUpperCase()}`);
             onSuccess();
         } else {
             alert("Someting went wrong")
@@ -68,7 +69,7 @@ export const saveCurrentState = async (name: string, onSuccess: () => void = () 
     }
 }
 
-export const createNewFile = async (name: string, onSuccess: () => void = () => { }): Promise<string> => {
+export const createNewFile = async (name: string, onSuccess: () => void = () => { }, showAlert: (msg: string) => void = () => { }): Promise<string> => {
     try {
         let apiToken = await getApiToken()
         let response = await fetch(`${url}io/saves/newEmpty?name=${name}`, {
@@ -78,7 +79,8 @@ export const createNewFile = async (name: string, onSuccess: () => void = () => 
             }
         })
         if (response.status === 200) {
-            alert(`Created a new file called ${name.toUpperCase()}`);
+            // alert(`Created a new file called ${name.toUpperCase()}`);
+            showAlert(`Created a new file called ${name.toUpperCase()}`);
             onSuccess();
         } else {
             console.log(`Request URL: %c${url}io/Saves/newEmpty?name=${name} \n%cError in creating a new file: `, "color: blue;", "color: orange;", await response.text())

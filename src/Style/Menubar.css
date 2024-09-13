@@ -101,6 +101,10 @@
 }
 
 @media (max-width: 800px) {
+    .menubar-container .title {
+        font-size: 1.5rem;
+    }
+
     .menubar-container {
         position: fixed;
         top: 0;

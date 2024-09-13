@@ -10,6 +10,7 @@ import Loader from '../../Components/Loader'
 import { FullTimeTable, TimeTable as TimeTableType, TimeTableStructure } from '../../data/Types'
 import TeacherAndSubjectSelector from './TeacherAndSubjectSelector'
 import { ButtonsContainer, SectionsBtnContainer } from './Header'
+import { useAlert } from '../../Components/AlertContextProvider'
 
 function TimeTablesPage() {
     return (
@@ -39,6 +40,8 @@ function MainComponents() {
     const subjectsDetails = useRef<SubjectsDetailsList>()
     const periodDetailsIndex = useRef<[number, number]>()
     const fillManually = useRef<boolean>(true)
+
+    const { showError } = useAlert()
 
     useEffect(() => {
         getSubjectsDetailsList(data => subjectsDetails.current = data) // api call
@@ -116,7 +119,7 @@ function MainComponents() {
                                 generateTimeTable((data) => { // api call
                                     setAllTimeTables(data);
                                     setDisplayLoader(false)
-                                }, () => { setDisplayLoader(false) })
+                                }, () => setDisplayLoader(false), showError)
                             }}
                             onFillManuallyBtnClick={() => {
                                 fillManually.current = true;

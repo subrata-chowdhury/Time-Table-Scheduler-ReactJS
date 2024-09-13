@@ -24,7 +24,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     const [fileName, setFileName] = useState<string>(activeFileName)
     const [inEditState, setInEditState] = useState<boolean>(false)
 
-    const { showWarning } = useAlert()
+    const { showWarning, showSuccess } = useAlert()
     const { showWarningConfirm } = useConfirm()
 
     useEffect(() => {
@@ -41,13 +41,14 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
             return;
         }
         if (hasElement(files, file)) {
-            saveCurrentState(file, startUp); // api call
+            saveCurrentState(file, startUp, showSuccess); // api call
         } else {
             showWarningConfirm("Are you want to save the current state into " + file + "?",
-                () => saveCurrentState(file, startUp) // api call
+                () => saveCurrentState(file, startUp, showSuccess) // api call
             )
         }
     }, [fileName, files])
+
     const createNewBtnClickHandler = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
 
@@ -61,7 +62,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
             showWarning("File already exist with same name")
             return
         } else {
-            createNewFile(file, startUp); // api call
+            createNewFile(file, startUp, showSuccess); // api call
             setForceReRenderer(val => !val)
         }
     }, [fileName, files])

@@ -3,6 +3,7 @@ import { getCurrentFileName, getSaveFileList, loadSaveFile } from "../Script/Fil
 import "../Style/Mini-state-container.css";
 import { checkForSave } from "../Script/commonJS";
 import { useAlert } from "./AlertContextProvider";
+import { useConfirm } from "./ConfirmContextProvider";
 
 interface MiniStateContainerProps {
     onChange?: () => void,
@@ -15,6 +16,8 @@ const MiniStateContainer: React.FC<MiniStateContainerProps> = ({ onChange = () =
     const selectInput = useRef<HTMLSelectElement>(null)
 
     const { showSuccess } = useAlert();
+
+    const { showWarningConfirm } = useConfirm()
 
     useEffect(() => {
         getSaveFileList(files => { // api call
@@ -35,7 +38,7 @@ const MiniStateContainer: React.FC<MiniStateContainerProps> = ({ onChange = () =
                 showSuccess("File Loaded Successfully")
                 onChange()
             }) // api call
-        }) // api calls present in the function
+        }, showWarningConfirm) // api calls present in the function
     }, [])
 
     return (
