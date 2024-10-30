@@ -7,7 +7,12 @@ interface ConfirmProviderProps {
 
 const ConfirmContext = createContext({
     confirm: { message: '', type: 'warning', show: false, onApprove: () => { }, onDecline: () => { } },
-    showConfirm: (message: string, type: string, onApprove?: () => void, onDecline?: () => void) => { message; type; onApprove; onDecline },
+    showConfirm: (message: string, type: string, onApprove?: () => void, onDecline?: () => void) => { 
+        message; 
+        type; 
+        onApprove;
+        onDecline 
+    },
     hideConfirm: () => { },
     showWarningConfirm: (message: string, onApprove?: () => void, onDecline?: () => void) => { message; onApprove; onDecline },
     showSuccessConfirm: (message: string, onApprove?: () => void, onDecline?: () => void) => { message; onApprove; onDecline },
