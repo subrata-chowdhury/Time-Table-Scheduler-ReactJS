@@ -16,12 +16,16 @@ import Alert from './Components/Alert';
 import { ConfirmProvider, useConfirm } from './Components/ConfirmContextProvider';
 import Confirm from './Components/Confirm';
 import { addWindowCloseEventHandler, removeWindowCloseEventHandler } from './Script/commonJS';
+import NotFound from './Pages/NotFound/NotFound';
 
 function App() {
 	return (
 		<AlertProvider>
 			<ConfirmProvider>
-				<BrowserRouter>
+				<BrowserRouter future={{
+					v7_startTransition: true,
+					v7_relativeSplatPath: true,
+				}}>
 					<MainApp />
 				</BrowserRouter>
 			</ConfirmProvider>
@@ -73,6 +77,7 @@ function MainApp() {
 					<Route path="/TimeTableStructure" element={<TimeTableStructurePage />} />
 					<Route path="/Files" element={<FilesPage />} />
 					<Route path="/ContactUs" element={<ContactUs />} />
+					<Route path="*" element={<NotFound />} />
 				</Routes>
 				<OwnerFooter />
 			</div>

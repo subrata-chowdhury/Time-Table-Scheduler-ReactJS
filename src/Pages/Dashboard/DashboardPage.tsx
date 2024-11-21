@@ -1,6 +1,6 @@
 import MiniStateContainer from '../../Components/MiniStateContainer'
 import "../../Style/Pages/Dashboard.css"
-import WorkingHourBarChat from '../../Components/WorkingHourBarChat'
+import WorkingHourBarChat from './WorkingHourBarChat'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getTeachersList } from '../../Script/TeachersDataFetcher'
 import { getSubjectsDetailsList, SubjectsDetailsList } from '../../Script/SubjectsDataFetcher'

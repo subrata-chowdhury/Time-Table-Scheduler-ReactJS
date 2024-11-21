@@ -1,15 +1,49 @@
 .mini-states-container {
     margin-left: 1.8rem;
+    position: relative;
 }
 
 .mini-states-container .state-selector {
     outline: none;
     font-size: 15px;
     margin-left: 10px;
+    position: absolute;
+    top: 0;
+    left: 5rem;
+    width: 18rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.mini-states-container .state-selector .state {
+    background: #f0f7ff;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid #00000007;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.mini-states-container .state-selector .state:hover {
+    background: #d9ebff;
+}
+
+.mini-states-container .state-selector .state.active {
+    background: #1479FF;
+    color: #fff;
 }
 
 @media (max-width: 800px) {
     .mini-states-container .state-selector {
-        width: 90%;
+        left: 0;
+        top: 2rem;
     }
 }

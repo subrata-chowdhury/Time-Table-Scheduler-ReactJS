@@ -66,7 +66,7 @@ const Menubar: React.FC<MenubarProps> = ({ onMenuToggleClick = () => { } }) => {
     }
 
     return (
-        <div className="menubar-container">
+        <nav className="menubar-container">
             <Arrow arrowIconClickHandler={e => {
                 toggleMenubar();
                 onMenuToggleClick(e);
@@ -74,14 +74,15 @@ const Menubar: React.FC<MenubarProps> = ({ onMenuToggleClick = () => { } }) => {
             <div className="title">
                 <p>Time Table <br />Scheduler</p>
             </div>
-
-            {menus.map((menu) => (
-                <Link to={menu.link} className="menu-container" id={route.pathname === menu.link ? "active" : ""}>
-                    {menu.icon}
-                    <div>{menu.name}</div>
-                </Link>
-            ))}
-        </div>
+            <ul className="menus-container">
+                {menus.map((menu) => (
+                    <Link to={menu.link} className="menu-container" id={route.pathname === menu.link ? "active" : ""} key={menu.name as string}>
+                        {menu.icon}
+                        <li>{menu.name}</li>
+                    </Link>
+                ))}
+            </ul>
+        </nav>
     )
 }
 

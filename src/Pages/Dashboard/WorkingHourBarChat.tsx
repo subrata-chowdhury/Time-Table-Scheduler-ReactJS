@@ -1,5 +1,5 @@
 import { memo } from "react";
-import "../Style/WorkingHourBarChat.css"
+import "../../Style/WorkingHourBarChat.css"
 
 interface WorkingHourBarChatProps {
     dayNames?: string[],

@@ -121,8 +121,8 @@ function MainComponents() {
                                     setDisplayLoader(false)
                                 }, () => setDisplayLoader(false), showError)
                             }}
-                            onFillManuallyBtnClick={() => {
-                                fillManually.current = true;
+                            onFillManuallyBtnClick={(value) => {
+                                fillManually.current = value;
                             }}
                         />
                         {timeTableStructure && <SectionsBtnContainer

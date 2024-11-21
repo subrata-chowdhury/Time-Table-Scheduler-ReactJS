@@ -4,16 +4,22 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
     background: #fff;
+    z-index: 5;
 }
 
 .app.active {
     grid-template-columns: 10% auto;
 }
 
-.app.active .menubar-container {
-    gap: 13px;
+.menus-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+    list-style: none;
+    padding: 0;
 }
 
 .menubar-container .title {
@@ -21,6 +27,7 @@
     color: #1479FF;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
+    margin: 0 auto;
 }
 
 .menubar-container .toggle-menubar-icon {
