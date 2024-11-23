@@ -38,8 +38,8 @@ export const verifySubjectInputs = (subjectName: string, subjectDetails: any, on
     }
     // sem value must be an integer value
     if (!Number.isInteger(data.sem)) {
-        onError("Value must be an integer")
-        return false
+        onError("Value must be an integer");
+        return false;
     }
 
     // lecture count can't be empty or 0
@@ -60,14 +60,14 @@ export const verifySubjectInputs = (subjectName: string, subjectDetails: any, on
     }
     // lecture count value can't be a float number
     if (!Number.isInteger(data.lectureCount)) {
-        onError("Value must be an integer")
-        return false
+        onError("Value must be an integer");
+        return false;
     }
 
     // room code can't be empty
     if (data.roomCodes.length <= 0) {
         onError("Please Press Enter After Entering Room Code");
-        return false
+        return false;
     }
-    return { newSubjectName, data }
+    return { newSubjectName, data };
 }

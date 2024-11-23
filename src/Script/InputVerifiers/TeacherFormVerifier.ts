@@ -12,8 +12,8 @@ export const verifyTeacherInputs = (teacherName: string, teacherDetails: Teacher
     // name must not contain any special character
     const regExp = /[^\w\s]/ // reg exp for containing special character
     if (regExp.test(newTeacherName)) {
-        onError("Only Character, Number & Space is allowed")
-        return false
+        onError("Only Character, Number & Space is allowed");
+        return false;
     }
     // name must not contain greater then 100 characters
     if (newTeacherName.length > 100) {
@@ -24,7 +24,7 @@ export const verifyTeacherInputs = (teacherName: string, teacherDetails: Teacher
 
     // aleast one subject is need to present
     if (teacherData.subjects.length <= 0) {
-        onError("Please Press Enter After Entering A Subject Name")
+        onError("Please Press Enter After Entering A Subject Name");
         return false;
     }
     // subject need to be present in subjects tab (already verified in per user input)
@@ -40,31 +40,31 @@ export const verifyTeacherInputs = (teacherName: string, teacherDetails: Teacher
         teacherData.freeTime = [];
     } else { // free time must ne an array which will contain elements with length 2 with only 2 positive numbers
         if (!Array.isArray(teacherData.freeTime)) {
-            onError("free time must be an array")
-            return false
+            onError("free time must be an array");
+            return false;
         }
         for (let index = 0; index < teacherData.freeTime.length; index++) {
             if (!Array.isArray(teacherData.freeTime[index])) {
-                onError("Each element of free time must be an array")
-                return false
+                onError("Each element of free time must be an array");
+                return false;
             }
             if (teacherData.freeTime[index].length !== 2) {
-                onError("Length of each element must be 2")
-                return false
+                onError("Length of each element must be 2");
+                return false;
             }
             if (typeof teacherData.freeTime[index][0] !== 'number' && typeof teacherData.freeTime[index][1] !== 'number') {
-                onError("day & week index must be a number")
-                return false
+                onError("day & week index must be a number");
+                return false;
             }
             if (teacherData.freeTime[index][0] < 0 && teacherData.freeTime[index][1] < 0) {
-                onError("day & week index value must be positive or zero")
-                return false
+                onError("day & week index value must be positive or zero");
+                return false;
             }
             if (!Number.isInteger(teacherData.freeTime[index][0]) && !Number.isInteger(teacherData.freeTime[index][1])) {
-                onError("day & week index values must be an integer")
-                return false
+                onError("day & week index values must be an integer");
+                return false;
             }
         }
     }
-    return { newTeacherName, teacherData }
+    return { newTeacherName, teacherData };
 }

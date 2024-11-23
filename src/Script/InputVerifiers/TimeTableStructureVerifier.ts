@@ -1,72 +1,70 @@
 export default function verifyTimeTableStructureInputs(timeTableStructureFieldValues: any, onError: (msg: string) => void = () => { }) {
-    let timeTableStructure = Object()
+    let timeTableStructure = Object();
 
     //Validating year count
     if (!timeTableStructureFieldValues.semesterCount) {
-        onError("semester count can't be empty")
-        return false
+        onError("semester count can't be empty");
+        return false;
     }
     // must be an positive integer number
     let semesterCount = timeTableStructureFieldValues.semesterCount
     if (!isPositiveWholeNumber(semesterCount)) {
-        onError("Please enter a valid year count")
-        return false
+        onError("Please enter a valid year count");
+        return false;
     }
-    timeTableStructure.semesterCount = semesterCount
+    timeTableStructure.semesterCount = semesterCount;
 
     //Validating period count
     if (!timeTableStructureFieldValues.periodCount) {
-        onError("period count can't be empty")
-        return false
+        onError("period count can't be empty");
+        return false;
     }
     // must be an positive integer number
-    let periodCount = timeTableStructureFieldValues.periodCount
+    let periodCount = timeTableStructureFieldValues.periodCount;
     if (!isPositiveWholeNumber(periodCount)) {
-        onError("Please enter a valid period count")
-        return false
+        onError("Please enter a valid period count");
+        return false;
     }
-    timeTableStructure.periodCount = periodCount
+    timeTableStructure.periodCount = periodCount;
 
     //Validating sections per year
     if (!timeTableStructureFieldValues.sectionsPerSemester) {
-        onError("period count can't be empty")
-        return false
+        onError("period count can't be empty");
+        return false;
     }
-    let sectionsPerSemester
+    let sectionsPerSemester;
     try {
-        sectionsPerSemester = timeTableStructureFieldValues.sectionsPerSemester
+        sectionsPerSemester = timeTableStructureFieldValues.sectionsPerSemester;
     } catch (error) {
-        sectionsPerSemester = ""
-        onError("Please enter sections per year in correct format")
-        return false
+        sectionsPerSemester = "";
+        onError("Please enter sections per year in correct format");
+        return false;
     }
-    if (!sectionsPerSemester) return false
-    if (!((sectionsPerSemester instanceof Array) && sectionsPerSemester.every(
-        (value) => isPositiveWholeNumber(value)
-    ))) {
-        onError("Please enter sections per year in correct format")
-        return false
+    if (!sectionsPerSemester) return false;
+    if (!((sectionsPerSemester instanceof Array) && sectionsPerSemester.every((value) => isPositiveWholeNumber(value)))) {
+        onError("Please enter sections per year in correct format");
+        return false;
     }
     if (sectionsPerSemester.length !== timeTableStructure.semesterCount) {
-        onError("Number of year in sections per year must be equal to year count")
-        return false
+        onError("Number of year in sections per year must be equal to year count");
+        return false;
     }
-    timeTableStructure.sectionsPerSemester = sectionsPerSemester
+    timeTableStructure.sectionsPerSemester = sectionsPerSemester;
 
     //Validating breaks per year
     if (!timeTableStructureFieldValues.breaksPerSemester) {
-        onError("period count can't be empty")
-        return false
+        onError("period count can't be empty");
+        return false;
     }
-    let breaksPerSemester
+    let breaksPerSemester;
     try {
-        breaksPerSemester = timeTableStructureFieldValues.breaksPerSemester
+        breaksPerSemester = timeTableStructureFieldValues.breaksPerSemester;
     } catch (error) {
-        breaksPerSemester = ""
-        onError("Please enter break locations per year in correct format")
-        return false
+        breaksPerSemester = "";
+        onError("Please enter break locations per year in correct format");
+        return false;
     }
-    if (!breaksPerSemester) return false
+    if (!breaksPerSemester) return false;
     if (!((breaksPerSemester instanceof Array) && breaksPerSemester.every(
         (subarr) =>
             (subarr instanceof Array) &&
@@ -74,13 +72,13 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
                 (value) => isPositiveWholeNumber(value)
             )
     ))) {
-        onError("Please enter break locations per year in correct format")
-        console.log(timeTableStructure)
-        return false
+        onError("Please enter break locations per year in correct format");
+        console.log(timeTableStructure);
+        return false;
     }
     if (breaksPerSemester.length !== timeTableStructure.semesterCount) {
-        onError("Number of semesters in break locations per year must be equal to year count")
-        return false
+        onError("Number of semesters in break locations per year must be equal to year count");
+        return false;
     }
     if (
         !((breaksPerSemester instanceof Array) && breaksPerSemester.every(
@@ -91,14 +89,14 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
                 )
         ))
     ) {
-        onError("Break locations must be lesser than or equal to period count")
-        return false
+        onError("Break locations must be lesser than or equal to period count");
+        return false;
     }
-    timeTableStructure.breaksPerSemester = breaksPerSemester
-    return timeTableStructure
+    timeTableStructure.breaksPerSemester = breaksPerSemester;
+    return timeTableStructure;
 }
 
 const isPositiveWholeNumber = (num: number) => {
-    if (!Number.isInteger(num) || num < 0 || Number.isNaN(num)) return false
-    else return true
+    if (!Number.isInteger(num) || num < 0 || Number.isNaN(num)) return false;
+    else return true;
 }
