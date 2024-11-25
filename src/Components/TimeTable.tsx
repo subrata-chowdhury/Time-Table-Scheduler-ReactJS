@@ -193,6 +193,12 @@ interface PeriodProps {
 }
 
 const PeriodComp: React.FC<PeriodProps> = ({ periodDetails = [], dayIndex, periodIndex, isLab = false, onClick = () => { } }) => {
+    if (periodDetails && periodDetails.length > 1) {
+        const temp = periodDetails[0];
+        periodDetails[0] = periodDetails[1];
+        periodDetails[1] = temp;
+    }
+
     return (
         <div className="period-details-container class" style={isLab ? { gridColumn: 'auto / span 3' } : {}} onClick={() => onClick(dayIndex, periodIndex)}>
             {periodDetails && periodDetails?.length > 0 && periodDetails.map((detail, index) => (
