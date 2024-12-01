@@ -193,15 +193,19 @@ interface PeriodProps {
 }
 
 const PeriodComp: React.FC<PeriodProps> = ({ periodDetails = [], dayIndex, periodIndex, isLab = false, onClick = () => { } }) => {
-    if (periodDetails && periodDetails.length > 1) {
-        const temp = periodDetails[0];
-        periodDetails[0] = periodDetails[1];
-        periodDetails[1] = temp;
+    let modifiedPeriodDetails;
+    if(periodDetails) {
+        modifiedPeriodDetails = [...periodDetails]; // copying the values because original value modification causeing issue
+        if (modifiedPeriodDetails && modifiedPeriodDetails.length > 1) {
+            const temp = modifiedPeriodDetails[0];
+            modifiedPeriodDetails[0] = modifiedPeriodDetails[1];
+            modifiedPeriodDetails[1] = temp;
+        }
     }
 
     return (
         <div className="period-details-container class" style={isLab ? { gridColumn: 'auto / span 3' } : {}} onClick={() => onClick(dayIndex, periodIndex)}>
-            {periodDetails && periodDetails?.length > 0 && periodDetails.map((detail, index) => (
+            {modifiedPeriodDetails && modifiedPeriodDetails?.length > 0 && modifiedPeriodDetails.map((detail, index) => (
                 <div key={index}>{detail}</div>
             ))}
             {!periodDetails && <>
