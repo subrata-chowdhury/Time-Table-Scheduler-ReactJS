@@ -44,7 +44,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     const [disabled, setDisabled] = useState<boolean>(false)
     const [inEditState, setInEditState] = useState<boolean>(false)
 
-    const { showWarning, showSuccess } = useAlert()
+    const { showWarning, showSuccess, showError } = useAlert()
     const { showWarningConfirm } = useConfirm()
 
     useEffect(() => {
@@ -92,7 +92,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
         saveSubject(subjectName, subjectData, () => { // api call
             showSuccess(JSON.stringify({ subjectName, subjectData }) + "---------- is added");
             onSubmitCallBack();
-        }).then(() => {
+        }, () => showError("Someting went Wrong!")).then(() => {
             setDisplayLoader(false)
             setDisabled(false)
         }).catch(() => {
@@ -108,6 +108,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                 () => deleteSubject(subjectName, () => { // api call
                     onSubmitCallBack(); // referenced to start up function
                 }, () => {
+                    showError("Someting went Wrong!")
                     setDisplayLoader(false) // if failed only hide loader
                 })
             )

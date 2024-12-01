@@ -15,7 +15,7 @@ const MiniStateContainer: React.FC<MiniStateContainerProps> = ({ onChange = () =
     const [currentFileName, setCurrentFileName] = useState<string>("")
     const [showStateSelector, setShowStateSelector] = useState<boolean>(false)
 
-    const { showSuccess } = useAlert();
+    const { showSuccess, showError } = useAlert();
 
     const { showWarningConfirm } = useConfirm()
 
@@ -33,7 +33,7 @@ const MiniStateContainer: React.FC<MiniStateContainerProps> = ({ onChange = () =
                 onChange()
                 setCurrentFileName(fileName)
             }) // api call
-        }, showWarningConfirm) // api calls present in the function
+        }, showWarningConfirm, showError) // api calls present in the function
     }, [])
 
     return (

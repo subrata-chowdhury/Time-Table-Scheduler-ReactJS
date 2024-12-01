@@ -108,7 +108,6 @@ export const saveSubject = async (
             onSuccess();
             return subjectName;
         } else {
-            alert("Something went wrong");
             console.log("%cError in Saveing Subject Details", "color: orange;", await response.text());
             onFailed();
             return null;
@@ -135,7 +134,6 @@ export const deleteSubject = async (
             onSuccess();
             return subjectName;
         } else {
-            alert("Something went wrong");
             console.log("%cError in Deleteing Subject", "color: red;", subjectName, await response.text());
             onFailed();
             return null;

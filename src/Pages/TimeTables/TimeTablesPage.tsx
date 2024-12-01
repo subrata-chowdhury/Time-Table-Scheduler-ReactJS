@@ -98,7 +98,7 @@ function MainComponents() {
             saveSchedule(currentOpenSem + 1, currentOpenSection + 1, newTimeTable, () => {
                 newTimeTable ? setTimeTable(newTimeTable) : ""
                 setShowPopUp(false)
-            }) // api call
+            }, () => showError("Someting went Wrong!")) // api call
         }
     }, [subjectsDetails.current, periodDetailsIndex.current, timeTable])
 

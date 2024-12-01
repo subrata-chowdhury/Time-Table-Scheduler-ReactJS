@@ -11,7 +11,7 @@ import ContactUs from './Pages/ContactUs/ContactUs';
 import { useEffect, useRef } from 'react';
 import Menubar from './Components/Menubar';
 import OwnerFooter from './Components/OwnerFooter';
-import { AlertProvider } from './Components/AlertContextProvider';
+import { AlertProvider, useAlert } from './Components/AlertContextProvider';
 import Alert from './Components/Alert';
 import { ConfirmProvider, useConfirm } from './Components/ConfirmContextProvider';
 import Confirm from './Components/Confirm';
@@ -37,6 +37,7 @@ function MainApp() {
 	const app = useRef<HTMLDivElement | null>(null)
 
 	const { showWarningConfirm } = useConfirm()
+	const { showError } = useAlert()
 
 	function autoToggleInResize() {
 		if (window.innerWidth <= 1250) {
@@ -53,7 +54,7 @@ function MainApp() {
 		window.addEventListener("resize", () => {
 			autoToggleInResize()
 		})
-		addWindowCloseEventHandler(showWarningConfirm)
+		addWindowCloseEventHandler(showWarningConfirm, showError)
 		return () => {
 			window.removeEventListener("resize", () => {
 				autoToggleInResize()

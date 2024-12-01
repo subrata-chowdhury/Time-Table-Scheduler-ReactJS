@@ -88,7 +88,9 @@ function MainComponents() {
     return (
         <div className='top-sub-container'>
             <div className='left-sub-container'>
-                <MiniStateContainer onChange={startUpFunction} />
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <MiniStateContainer onChange={startUpFunction} />
+                </div>
                 <BasicDetails basicDetails={basicDetails} />
                 <WorkingHourBarChat perDayValue={perDayValue} />
             </div>

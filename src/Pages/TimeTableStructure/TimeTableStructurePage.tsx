@@ -39,7 +39,7 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
         semesterCount: 4
     })
 
-    const { showWarning, showSuccess } = useAlert()
+    const { showWarning, showSuccess, showError } = useAlert()
 
     useEffect(() => {
         getTimeTableStructure(setTimeTableStructureFieldValues) // api call
@@ -83,7 +83,7 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
         if (timeTableStructure) {
             saveTimeTableStructure(timeTableStructure, () => { // api call
                 showSuccess(JSON.stringify(timeTableStructure) + "----------- is saved")
-            })
+            }, () => showError("Someting went Wrong!"))
         }
     }, [timeTableStructureFieldValues])
 

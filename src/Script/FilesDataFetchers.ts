@@ -22,7 +22,7 @@ export const getCurrentFileName = async (onSuccess: (data: string) => void = () 
     }
 }
 
-export const getCurrentFileIsSaved = async (onSuccess: (data: boolean) => void = () => { }): Promise<boolean> => {
+export const getCurrentFileIsSaved = async (onSuccess: (data: boolean) => void = () => { }, onFailed: () => void): Promise<boolean> => {
     try {
         const response = await fetch(`${url}io/saves/isSaved`, {
             headers: {
@@ -32,19 +32,19 @@ export const getCurrentFileIsSaved = async (onSuccess: (data: boolean) => void =
         const data: boolean = await response.json();
         if (response.status !== 200) {
             console.log("%cError in getting current state is saved or not:", "color: red;", await response.text());
-            window.close();
+            onFailed();
         } else if (response.ok) {
             onSuccess(data);
         }
         return data;
     } catch (error) {
         console.log("Unable to Fetch Data of Current File Save State");
-        window.close();
+        onFailed();
         throw error;
     }
 }
 
-export const saveCurrentState = async (name: string, onSuccess: () => void = () => { }, showAlert: (msg: string) => void = () => { }): Promise<string> => {
+export const saveCurrentState = async (name: string, onSuccess: () => void = () => { }, onFailed: (msg: string) => void ): Promise<string> => {
     try {
         const response = await fetch(`${url}io/saves/save?name=${name}`, {
             headers: {
@@ -52,11 +52,9 @@ export const saveCurrentState = async (name: string, onSuccess: () => void = () 
             }
         });
         if (response.status === 200) {
-            // alert(`Current State is Saved in ${name.toUpperCase()}`);
-            showAlert(`Current State is Saved in ${name.toUpperCase()}`);
             onSuccess();
         } else {
-            alert("Someting went wrong");
+            onFailed("Someting went wrong");
             console.log("%cError in saving current state in new file:", "color: orange;", await response.text());
         }
         return await response.text();
@@ -75,7 +73,6 @@ export const createNewFile = async (name: string, onSuccess: () => void = () => 
             }
         });
         if (response.status === 200) {
-            // alert(`Created a new file called ${name.toUpperCase()}`);
             showAlert(`Created a new file called ${name.toUpperCase()}`);
             onSuccess();
         } else {
@@ -128,7 +125,6 @@ export const loadSaveFile = async (name: string, onSuccess: () => void = () => {
             }
         });
         if (response.status === 200) {
-            // alert("Opend Sucessfully")
             onSuccess();
         } else {
             console.log(`Request URL: %c${url}io/saves/load?name=${name} \n%cError in loading state`, "color: blue;", "color: red;", await response.text());
@@ -140,7 +136,7 @@ export const loadSaveFile = async (name: string, onSuccess: () => void = () => {
     }
 }
 
-export const deleteFile = async (name: string, onSuccess: () => void = () => { }): Promise<string> => {
+export const deleteFile = async (name: string, onSuccess: () => void = () => { }, showAlert: (msg: string) => void = () => { }): Promise<string> => {
     try {
         const response = await fetch(url + "io/saves/delete?name=" + name, {
             method: "DELETE",
@@ -151,7 +147,7 @@ export const deleteFile = async (name: string, onSuccess: () => void = () => { }
         if (response.status === 200) {
             onSuccess();
         } else {
-            alert("Something went wrong");
+            showAlert("Something went wrong");
             console.log(`Request URL: %c${url}io/saves/delete?name=${name} %cError in Deleteing file`, "color: blue;", "color: yelow;", await response.text());
         }
         return await response.text();

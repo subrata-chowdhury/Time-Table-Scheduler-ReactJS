@@ -137,7 +137,6 @@ export const saveTeacher = async (
             onSuccess();
             return await response.text();
         } else {
-            alert("Something went wrong");
             console.log("%cError in Saving teacher details", "color: orange;", await response.text());
             onFailed();
             return null;
@@ -167,7 +166,6 @@ export const deleteTeacher = async (
             return await response.text()
         }
         else {
-            alert("Something went wrong");
             console.log(`Request URL: %c${url}io/teachers/${teacherName} %cUnable to delete teacher`, "color: blue;", "color: orange;", await response.text());
             onFailed();
             return null;

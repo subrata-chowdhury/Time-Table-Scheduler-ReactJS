@@ -9,7 +9,6 @@ interface DetailsContainerProps {
     activeFileName: string,
     files: string[],
     startUp: () => void,
-    setForceReRenderer: React.Dispatch<React.SetStateAction<boolean>>,
     onClose?: () => void
 }
 
@@ -18,13 +17,12 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     activeFileName = "",
     files,
     startUp,
-    setForceReRenderer,
     onClose = () => { }
 }) => {
     const [fileName, setFileName] = useState<string>(activeFileName)
     const [inEditState, setInEditState] = useState<boolean>(false)
 
-    const { showWarning, showSuccess } = useAlert()
+    const { showWarning, showSuccess, showError } = useAlert()
     const { showWarningConfirm } = useConfirm()
 
     useEffect(() => {
@@ -41,10 +39,16 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
             return;
         }
         if (hasElement(files, file)) {
-            saveCurrentState(file, startUp, showSuccess); // api call
+            saveCurrentState(file, () => {
+                startUp();
+                showSuccess(`Current State is Saved in ${file.toUpperCase()}`);
+            }, showError); // api call
         } else {
             showWarningConfirm("Are you want to save the current state into " + file + "?",
-                () => saveCurrentState(file, startUp, showSuccess) // api call
+                () => saveCurrentState(file, () => {
+                    startUp();
+                    showSuccess(`Current State is Saved in ${file.toUpperCase()}`);
+                }, showError) // api call
             )
         }
     }, [fileName, files])
@@ -62,8 +66,9 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
             showWarning("File already exist with same name")
             return
         } else {
-            createNewFile(file, startUp, showSuccess); // api call
-            setForceReRenderer(val => !val)
+            createNewFile(file, () => {
+                startUp();
+            }, showSuccess); // api call
         }
     }, [fileName, files])
 
@@ -74,8 +79,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                 () => { // if yes then delete else do nothing
                     deleteFile(fileName, () => { // api call
                         startUp();
-                        setForceReRenderer(val => !val)
-                    })
+                    }, () => showError("Someting went Wrong!"))
                 }
             )
     }, [files, fileName])

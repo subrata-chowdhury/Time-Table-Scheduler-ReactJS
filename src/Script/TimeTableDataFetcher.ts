@@ -24,7 +24,6 @@ export const generateTimeTable = async (
             }
         }
         else {
-            // alert("Failed to generate beacause: " + await response.text());
             showAlert("Failed to generate beacause: " + await response.text());
             onFailed();
             console.log("%cError in generating Time Table", "color: orange;", await response.text());
@@ -82,7 +81,6 @@ export const saveSchedule = async (
             onSuccess(timeTableData);
             return timeTableData;
         } else {
-            alert("Something went wrong");
             console.log("%cError in saving schedule data", "color: orange;", await response.text());
             console.log(timeTableData);
             onFailed();
@@ -120,7 +118,7 @@ export const getTimeTableStructure = async (onSuccess: (data: TimeTableStructure
     }
 }
 
-export const saveTimeTableStructure = async (timeTableStructure: TimeTableStructure, onSuccess: () => void = () => { }): Promise<string> => {
+export const saveTimeTableStructure = async (timeTableStructure: TimeTableStructure, onSuccess: () => void = () => { }, onFailed: () => void = () => { }): Promise<string> => {
     try {
         const response = await fetch(`${url}io/schedule/structure`, {
             method: 'PUT',
@@ -133,8 +131,8 @@ export const saveTimeTableStructure = async (timeTableStructure: TimeTableStruct
         if (response.status === 200) {
             onSuccess();
         } else {
-            alert("Something went wrong");
             console.log("%cError in saving time table structure data", "color: orange;", await response.text());
+            onFailed();
         }
         return await response.text();
     } catch (error) {
