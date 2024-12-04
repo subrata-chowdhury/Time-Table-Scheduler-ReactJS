@@ -18,8 +18,8 @@ const ButtonsContainer: React.FC<ButtonsContainerProps> = memo(({ onAutoFillBtnC
                     setFillManually(value => !value)
                     onFillManuallyBtnClick(!fillManually)
                 }}>
-                    <div className={'option' + (!fillManually ? " active" : "")}>Off</div>
                     <div className={'option' + (fillManually ? " active" : "")}>On</div>
+                    <div className={'option' + (!fillManually ? " active" : "")}>Off</div>
                 </div>
             </div>
         </div>

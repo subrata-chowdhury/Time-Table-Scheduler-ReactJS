@@ -41,7 +41,8 @@ const MiniStateContainer: React.FC<MiniStateContainerProps> = ({ onChange = () =
             <label style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 Current File:
                 <div
-                    style={{ marginLeft: '0.6rem', cursor: 'pointer', background: '#fff', padding: '0.2rem 0.4rem', borderRadius: '0.2rem', border: '2px solid #0000001a' }}
+                    title={currentFileName}
+                    style={{ maxWidth: '220px', boxSizing: 'border-box', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', marginLeft: '0.6rem', cursor: 'pointer', background: '#fff', padding: '0.2rem 0.4rem', borderRadius: '0.2rem', border: '2px solid #0000001a' }}
                     onClick={() => setShowStateSelector(val => !val)}>{currentFileName}</div>
             </label>
             {showStateSelector && <div className="state-selector">

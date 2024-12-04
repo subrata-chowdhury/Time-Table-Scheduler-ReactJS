@@ -34,7 +34,7 @@ const TeacherAndSubjectSelector: React.FC<TeacherAndSubjectSelectorProps> = memo
                 </div>
                 <div className='teacher-subject-selector-btns-container'>
                     <button onClick={() => onSetBtnClick(teacherList.current, subjectList.current)}>SET</button>
-                    <button onClick={() => onCancelBtnClick()}>Cancel</button>
+                    <button style={{ color: "dodgerblue" }} onClick={() => onCancelBtnClick()}>Cancel</button>
                 </div>
             </div >
             <div className={'teacher-subject-selector-container-bg' + (active ? " active" : " ")}></div>

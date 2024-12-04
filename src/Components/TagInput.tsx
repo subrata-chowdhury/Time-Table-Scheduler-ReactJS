@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { hasElement } from "../Script/util";
 import "../Style/Tags.css"
 
@@ -15,6 +15,8 @@ const TagInput: React.FC<TagInputProps> = ({
 }) => {
     const [tag, setTag] = useState<string>("")
     const [tagsList, setTagsList] = useState<string[]>(tagList)
+
+    const inputElem = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
         setTagsList(tagList)
@@ -46,7 +48,10 @@ const TagInput: React.FC<TagInputProps> = ({
 
     return (
         <div className='tag-input-container'>
-            <div className='tags-container'>
+            <div className='tags-container' onClick={event => {
+                event.stopPropagation();
+                inputElem.current?.focus();
+            }}>
                 {tagsList.map((tag, index) => (
                     <Tag
                         key={index}
@@ -56,8 +61,10 @@ const TagInput: React.FC<TagInputProps> = ({
                             onChange(tagList.filter(tagValue => tagValue !== tag))
                         }}
                     />
-                ))}</div>
+                ))}
+            </div>
             <input
+                ref={inputElem}
                 type="text"
                 value={tag}
                 onChange={tagChangeHandler}
@@ -67,7 +74,7 @@ const TagInput: React.FC<TagInputProps> = ({
                         addTag()
                     }
                 }}
-            ></input>
+            />
         </div>
     )
 }
@@ -80,7 +87,7 @@ interface TagProps {
 const Tag: React.FC<TagProps> = ({ value, onDeleteBtnClick = () => { } }) => {
     return (
         <div className="tag">
-            <div>{value}</div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', lineHeight: 1 }}>{value}</div>
             <button className="delete-tag-btn" onClick={onDeleteBtnClick}>+</button>
         </div>
     )
