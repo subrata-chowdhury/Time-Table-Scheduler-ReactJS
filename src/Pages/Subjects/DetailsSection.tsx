@@ -107,6 +107,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
             showWarningConfirm("Are You Sure? Want to Delete " + subjectName + " ?", // if exist show a confirmation box
                 () => deleteSubject(subjectName, () => { // api call
                     onSubmitCallBack(); // referenced to start up function
+                    showSuccess(subjectName + " is deleted")
                 }, () => {
                     showError("Someting went Wrong!")
                     setDisplayLoader(false) // if failed only hide loader

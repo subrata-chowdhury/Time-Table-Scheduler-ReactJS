@@ -38,7 +38,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
 
     const subjectList = useRef<string[] | undefined>();
 
-    const { showWarning, showError } = useAlert();
+    const { showWarning, showError, showSuccess } = useAlert();
     const { showWarningConfirm } = useConfirm()
 
     useEffect(() => {
@@ -100,7 +100,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
         setDisplayLoader(true)
         setDisabled(true)
         saveTeacher(teacherName, teacherData, () => { // api call
-            alert(JSON.stringify({ teacherName, teacherData }) + "---------- is added")
+            showSuccess(JSON.stringify({ teacherName, teacherData }) + "---------- is added")
             onSubmitCallBack(); // referenced to start up function
         }, () => showError("Someting went Wrong!")).then(() => {
             setDisplayLoader(false)
@@ -118,6 +118,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                 () => { // if exist show a confirmation box
                     deleteTeacher(teacherName, () => { // api call
                         onSubmitCallBack(); // referenced to start up function
+                        showSuccess(teacherName + " is deleted")
                     }, () => {
                         showError("Someting went Wrong!")
                         setDisplayLoader(false) // if failed only hide loader
@@ -148,7 +149,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                     validTags={subjectList.current}
                     tagList={teacherDetails.subjects}
                     onChange={(data) => {
-                        let newTeacherDetails = { ...teacherDetails, subject: data }
+                        let newTeacherDetails = { ...teacherDetails, subjects: data }
                         setTeacherDetails(newTeacherDetails)
                     }}
                 />}

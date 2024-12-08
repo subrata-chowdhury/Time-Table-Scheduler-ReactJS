@@ -41,10 +41,10 @@ const TagInput: React.FC<TagInputProps> = ({
             alert("Value already exists")
             return
         }
-        setTagsList([...tagList, tag])
         onChange([...tagList, tag])
+        setTagsList([...tagList, tag])
         setTag("")
-    }, [tag, tagList, onChange])
+    }, [tag, tagList, validTags, onChange])
 
     return (
         <div className='tag-input-container'>
@@ -58,6 +58,7 @@ const TagInput: React.FC<TagInputProps> = ({
                         value={tag}
                         onDeleteBtnClick={(e) => {
                             e.preventDefault()
+                            console.log(tagList.filter(tagValue => tagValue !== tag))
                             onChange(tagList.filter(tagValue => tagValue !== tag))
                         }}
                     />
