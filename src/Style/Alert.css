@@ -1,0 +1,60 @@
+.alert {
+    padding: 1rem;
+    border-radius: 0.4rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    position: fixed;
+    top: -10rem;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: 0.3s;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.alert.active {
+    top: 1rem;
+    z-index: 1000;
+}
+
+.alert.success {
+    background: #d4edda;
+    color: #155724;
+    border-color: #155724;
+}
+
+.alert.warning {
+    background: #fff3cd;
+    color: #856404;
+    border-color: #856404;
+}
+
+.alert.error {
+    background: #f8d7da;
+    color: #721c24;
+    border-color: #721c24;
+}
+
+.alert p {
+    margin: 0;
+}
+
+.alert .close {
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+    align-self: center;
+}
+
+.alert.success .close svg path {
+    stroke: #155724;
+}
+
+.alert.warning .close svg path {
+    stroke: #856404;
+}
+
+.alert.error .close svg path {
+    stroke: #721c24;
+}

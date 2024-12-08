@@ -16,6 +16,7 @@ function SubjectsPage() {
         </>
     );
 }
+
 function MainComponents() {
     const [subjectsList, setSubjectsList] = useState([]);
     const [activeSubjectName, setActiveSubjectName] = useState("");
@@ -41,15 +42,25 @@ function MainComponents() {
                         <MiniStateContainer onChange={startUpFunction} />
                         <SearchBar array={subjectsList} onChange={setFilterdSubjectList} />
                     </div>
-                    <Cards cardList={filterdSubjectList} cardClassName={"subject-card"} onCardClick={(name) => {
-                        setActiveSubjectName(name);
-                        setShowDetailsPopup(true);
-                    }} onAddBtnClick={() => {
-                        setActiveSubjectName("");
-                        setShowDetailsPopup(true);
-                    }} />
+                    <Cards
+                        cardList={filterdSubjectList}
+                        cardClassName={"subject-card"}
+                        onCardClick={(name) => {
+                            setActiveSubjectName(name);
+                            setShowDetailsPopup(true);
+                        }}
+                        onAddBtnClick={() => {
+                            setActiveSubjectName("");
+                            setShowDetailsPopup(true);
+                        }} />
                 </div>
-                <DetailsSection active={showDetailsPopup} activeSubjectName={activeSubjectName} subjectsList={subjectsList} onSubmitCallBack={startUpFunction} setDisplayLoader={setDisplayLoader} onClose={() => setShowDetailsPopup(false)} />
+                <DetailsSection
+                    active={showDetailsPopup}
+                    activeSubjectName={activeSubjectName}
+                    subjectsList={subjectsList}
+                    onSubmitCallBack={startUpFunction}
+                    setDisplayLoader={setDisplayLoader}
+                    onClose={() => setShowDetailsPopup(false)} />
             </div>
             {displayLoader && <Loader />}
         </>

@@ -5,7 +5,9 @@
     align-items: center;
     padding: 6px 8px;
     border-radius: 20px;
+    max-height: 35px;
     transition: 0.3s;
+    box-sizing: border-box;
 }
 
 .search-container.active {

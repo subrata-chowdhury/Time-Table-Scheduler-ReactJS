@@ -18,6 +18,7 @@
     display: grid;
     grid-template-columns: 35% auto;
     align-items: center;
+    gap: 0.5rem;
 }
 
 .horizental-cards-container.sem-cards-container {
@@ -96,6 +97,7 @@
 
 .teacher-subject-selector-container-bg.active {
     scale: 1;
+    z-index: 9;
 }
 
 .teacher-subject-card-container {
@@ -110,22 +112,8 @@
 .teacher-subject-card-container .cards-container {
     background: #f0f7ff;
     height: 75.5vh;
-    ;
-    grid-template-columns: repeat(5, auto);
     border-radius: 10px;
     gap: 15px;
-}
-
-@media (max-width: 1495px) {
-    .teacher-subject-card-container .cards-container {
-        grid-template-columns: repeat(4, auto);
-    }
-}
-
-@media (max-width: 1180px) {
-    .teacher-subject-card-container .cards-container {
-        grid-template-columns: repeat(3, auto);
-    }
 }
 
 .teacher-subject-selector-btns-container {

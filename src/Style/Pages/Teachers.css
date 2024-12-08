@@ -13,6 +13,8 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
     padding: 0 35px;
     padding-left: 0;
 }
@@ -70,6 +72,14 @@
 .period.selected {
     color: #fff;
     background: dodgerblue;
+}
+
+@media (max-width: 1170px) {
+    .tools-container {
+        flex-direction: column;
+        justify-content: center;
+        padding-right: 0;
+    }
 }
 
 @media (max-width: 960px) {

@@ -78,6 +78,12 @@
     text-align: center;
 }
 
+@media (max-width: 800px) {
+    .working-hour-barchat-container-wrapper {
+        min-height: 250px;
+    }
+}
+
 @media (max-width: 480) {
     .working-hour-barchat-container {
         width: 94%;

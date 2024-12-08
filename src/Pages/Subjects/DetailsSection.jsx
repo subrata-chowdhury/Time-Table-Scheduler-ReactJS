@@ -4,6 +4,8 @@ import { getSubject, saveSubject, deleteSubject } from "../../Script/SubjectsDat
 import TagInput from "../../Components/TagInput";
 import { hasElement } from "../../Script/util";
 import { verifySubjectInputs } from "../../Script/InputVerifiers/SubjectFormVerifier";
+import { useAlert } from "../../Components/AlertContextProvider";
+import { useConfirm } from "../../Components/ConfirmContextProvider";
 
 const DetailsContainer = ({
     active = false,
@@ -23,6 +25,9 @@ const DetailsContainer = ({
     });
     const [disabled, setDisabled] = useState(false);
     const [inEditState, setInEditState] = useState(false);
+
+    const { showWarning, showSuccess, showError } = useAlert();
+    const { showWarningConfirm } = useConfirm();
 
     useEffect(() => {
         setSubjectName(activeSubjectName);
@@ -58,11 +63,10 @@ const DetailsContainer = ({
 
     const subjectFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
-        let verifiedData = verifySubjectInputs(subjectName, subjectDetails);
+        let verifiedData = verifySubjectInputs(subjectName, subjectDetails, showWarning);
         if (verifiedData)
             if (hasElement(subjectsList, verifiedData.newSubjectName)) {
-                if (window.confirm("Are you want to overwrite " + verifiedData.newSubjectName))
-                    saveData(verifiedData.newSubjectName, verifiedData.data);
+                showWarningConfirm("Are you want to overwrite " + verifiedData.newSubjectName, () => saveData(verifiedData.newSubjectName, verifiedData.data));
             }
             else
                 saveData(verifiedData.newSubjectName, verifiedData.data);
@@ -72,9 +76,9 @@ const DetailsContainer = ({
         setDisplayLoader(true);
         setDisabled(true);
         saveSubject(subjectName, subjectData, () => {
-            alert(JSON.stringify({ subjectName, subjectData }) + "---------- is added");
+            showSuccess(JSON.stringify({ subjectName, subjectData }) + "---------- is added");
             onSubmitCallBack();
-        }).then(() => {
+        }, () => showError("Someting went Wrong!")).then(() => {
             setDisplayLoader(false);
             setDisabled(false);
         }).catch(() => {
@@ -86,12 +90,14 @@ const DetailsContainer = ({
     const deleteSubjectBtnClickHandler = useCallback((event) => {
         event.preventDefault();
         if (hasElement(subjectsList, subjectName)) // checking if the subject exsist or not
-            if (window.confirm("Are You Sure? Want to Delete " + subjectName + " ?")) // if exist show a confirmation box
-                deleteSubject(subjectName, () => {
+            showWarningConfirm("Are You Sure? Want to Delete " + subjectName + " ?", // if exist show a confirmation box
+                () => deleteSubject(subjectName, () => {
                     onSubmitCallBack(); // referenced to start up function
+                    showSuccess(subjectName + " is deleted");
                 }, () => {
+                    showError("Someting went Wrong!");
                     setDisplayLoader(false); // if failed only hide loader
-                });
+                }));
     }, [subjectName]);
 
     return (
@@ -99,10 +105,16 @@ const DetailsContainer = ({
             <div className='inputs-container-heading'>Details</div>
             <div className="input-container">
                 <div className="input-box-heading">Subject Name</div>
-                <input type="text" className="input-box" name='subjectName' value={subjectName} placeholder='Ex. ABC' onChange={event => {
-                    checkIfAlreadyExist(event.target.value.toUpperCase());
-                    inputOnChangeHandler(event);
-                }}></input>
+                <input
+                    type="text"
+                    className="input-box"
+                    name='subjectName'
+                    value={subjectName}
+                    placeholder='Ex. ABC'
+                    onChange={event => {
+                        checkIfAlreadyExist(event.target.value.toUpperCase());
+                        inputOnChangeHandler(event);
+                    }}></input>
             </div>
             <div className="input-container">
                 <div className="input-box-heading">Semester</div>

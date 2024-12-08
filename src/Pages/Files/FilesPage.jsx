@@ -30,6 +30,7 @@ function MainComponents() {
     const startUp = useCallback(() => {
         getSaveFileList(setFiles); // api call
         setFileName("");
+        setForceReRenderer(val => !val);
     }, []);
 
     return (
@@ -52,7 +53,6 @@ function MainComponents() {
                 activeFileName={fileName}
                 files={files}
                 startUp={startUp}
-                setForceReRenderer={setForceReRenderer}
                 onClose={() => setShowDetailsPopup(false)} />
         </div>
     );

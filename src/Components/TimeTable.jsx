@@ -142,7 +142,6 @@ const DaysRow = ({
             DayElements.push(<div>Error In Data</div>);
         }
     }
-
     return (
         <div className="day-container" style={{ gridTemplateColumns: `repeat(${noOfPeriods + 1},1fr)` }}>
             <div className="day-name">{dayName}</div>
@@ -151,22 +150,25 @@ const DaysRow = ({
     );
 };
 
-const PeriodComp = ({
-    periodDetails = [],
-    dayIndex,
-    periodIndex,
-    isLab = false,
-    onClick = () => { }
-}) => {
+const PeriodComp = ({ periodDetails = [], dayIndex, periodIndex, isLab = false, onClick = () => { } }) => {
+    let modifiedPeriodDetails;
+    if (periodDetails) {
+        modifiedPeriodDetails = [...periodDetails]; // copying the values because original value modification causeing issue
+        if (modifiedPeriodDetails && modifiedPeriodDetails.length > 1) {
+            const temp = modifiedPeriodDetails[0];
+            modifiedPeriodDetails[0] = modifiedPeriodDetails[1];
+            modifiedPeriodDetails[1] = temp;
+        }
+    }
+
     return (
         <div className="period-details-container class" style={isLab ? { gridColumn: 'auto / span 3' } : {}} onClick={() => onClick(dayIndex, periodIndex)}>
-            {periodDetails && periodDetails?.length > 0 && periodDetails.map((detail, index) => (<div key={index}>{detail}</div>))}
-            {!periodDetails &&
-                <>
-                    <div>&nbsp;</div>
-                    <div>&nbsp;</div>
-                    <div>&nbsp;</div>
-                </>}
+            {modifiedPeriodDetails && modifiedPeriodDetails?.length > 0 && modifiedPeriodDetails.map((detail, index) => (<div key={index}>{detail}</div>))}
+            {!periodDetails && <>
+                <div>&nbsp;</div>
+                <div>&nbsp;</div>
+                <div>&nbsp;</div>
+            </>}
         </div>
     );
 };

@@ -1,17 +1,21 @@
 import { memo, useCallback, useEffect, useState } from "react";
 import { hasElement } from "../../Script/util";
 import { createNewFile, deleteFile, saveCurrentState } from "../../Script/FilesDataFetchers";
+import { useAlert } from "../../Components/AlertContextProvider";
+import { useConfirm } from "../../Components/ConfirmContextProvider";
 
 const DetailsContainer = ({
     active = false,
     activeFileName = "",
     files,
     startUp,
-    setForceReRenderer,
     onClose = () => { }
 }) => {
     const [fileName, setFileName] = useState(activeFileName);
     const [inEditState, setInEditState] = useState(false);
+
+    const { showWarning, showSuccess, showError } = useAlert();
+    const { showWarningConfirm } = useConfirm();
 
     useEffect(() => {
         setFileName(activeFileName);
@@ -25,15 +29,21 @@ const DetailsContainer = ({
         event.preventDefault();
         const file = fileName.trim().toUpperCase();
         if (file === "") {
-            alert("File Name can't be Empty");
+            showWarning("File Name can't be Empty");
             return;
         }
         if (hasElement(files, file)) {
-            saveCurrentState(file, startUp); // api call
+            saveCurrentState(file, () => {
+                startUp();
+                showSuccess(`Current State is Saved in ${file.toUpperCase()}`);
+            }, showError); // api call
         }
         else {
-            if (window.confirm("Are you want to save the current state into " + file + "?"))
-                saveCurrentState(file, startUp); // api call
+            showWarningConfirm("Are you want to save the current state into " + file + "?", () => saveCurrentState(file, () => {
+                startUp();
+                showSuccess(`Current State is Saved in ${file.toUpperCase()}`);
+            }, showError) // api call
+            );
         }
     }, [fileName, files]);
 
@@ -42,28 +52,29 @@ const DetailsContainer = ({
         //verifing data
         const file = fileName.trim().toUpperCase();
         if (file === "") {
-            alert("File Name can't be Empty");
+            showWarning("File Name can't be Empty");
             return;
         }
         if (hasElement(files, file)) {
-            alert("File already exist with same name");
+            showWarning("File already exist with same name");
             return;
         }
         else {
-            createNewFile(file, startUp); // api call
-            setForceReRenderer(val => !val);
+            createNewFile(file, () => {
+                startUp();
+            }, showSuccess); // api call
         }
     }, [fileName, files]);
 
     const deleteFileBtnClickHandler = useCallback((event) => {
         event.preventDefault();
         if (hasElement(files, fileName)) // checking if the file exsist or not
-            if (window.confirm("Are You Sure? Want to delete " + fileName + "?")) { // if exist show a confirmation box
-                deleteFile(fileName, () => {
-                    startUp();
-                    setForceReRenderer(val => !val);
+            showWarningConfirm("Are you want to delete " + fileName + "?", // if exist show a confirmation box
+                () => {
+                    deleteFile(fileName, () => {
+                        startUp();
+                    }, () => showError("Someting went Wrong!"));
                 });
-            }
     }, [files, fileName]);
 
     const checkIfAlreadyExist = useCallback((fileName) => {

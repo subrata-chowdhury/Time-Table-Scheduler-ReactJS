@@ -1,10 +1,9 @@
 import { getApiToken, url } from "./fetchUrl";
-export const generateTimeTable = async (onSuccess = () => { }, onFailed = () => { }) => {
+export const generateTimeTable = async (onSuccess = () => { }, onFailed = () => { }, showAlert = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/schedule?generateNew=True`, {
+        const response = await fetch(`${url}io/schedule?generateNew=True`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
@@ -20,7 +19,7 @@ export const generateTimeTable = async (onSuccess = () => { }, onFailed = () => 
             }
         }
         else {
-            alert("Failed to generate beacause: " + await response.text());
+            showAlert("Failed to generate beacause: " + await response.text());
             onFailed();
             console.log("%cError in generating Time Table", "color: orange;", await response.text());
             return [];
@@ -33,10 +32,9 @@ export const generateTimeTable = async (onSuccess = () => { }, onFailed = () => 
 };
 export const getSchedule = async (onSuccess = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/schedule`, {
+        const response = await fetch(`${url}io/schedule`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
@@ -62,21 +60,19 @@ export const getSchedule = async (onSuccess = () => { }) => {
 };
 export const saveSchedule = async (sem, sec, timeTableData, onSuccess = () => { }, onFailed = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/schedule?year=${sem}&sec=${sec}`, {
+        const response = await fetch(`${url}io/schedule?year=${sem}&sec=${sec}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             },
-            body: JSON.stringify(timeTableData),
+            body: JSON.stringify(timeTableData)
         });
         if (response.status === 200) {
             onSuccess(timeTableData);
             return timeTableData;
         }
         else {
-            alert("Something went wrong");
             console.log("%cError in saving schedule data", "color: orange;", await response.text());
             console.log(timeTableData);
             onFailed();
@@ -90,10 +86,9 @@ export const saveSchedule = async (sem, sec, timeTableData, onSuccess = () => { 
 };
 export const getTimeTableStructure = async (onSuccess = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/schedule/structure`, {
+        const response = await fetch(`${url}io/schedule/structure`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
@@ -117,23 +112,22 @@ export const getTimeTableStructure = async (onSuccess = () => { }) => {
         throw error;
     }
 };
-export const saveTimeTableStructure = async (timeTableStructure, onSuccess = () => { }) => {
+export const saveTimeTableStructure = async (timeTableStructure, onSuccess = () => { }, onFailed = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/schedule/structure`, {
+        const response = await fetch(`${url}io/schedule/structure`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             },
-            body: JSON.stringify(timeTableStructure),
+            body: JSON.stringify(timeTableStructure)
         });
         if (response.status === 200) {
             onSuccess();
         }
         else {
-            alert("Something went wrong");
             console.log("%cError in saving time table structure data", "color: orange;", await response.text());
+            onFailed();
         }
         return await response.text();
     }

@@ -1,6 +1,6 @@
 import MiniStateContainer from '../../Components/MiniStateContainer';
 import "../../Style/Pages/Dashboard.css";
-import WorkingHourBarChat from '../../Components/WorkingHourBarChat';
+import WorkingHourBarChat from './WorkingHourBarChat';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { getTeachersList } from '../../Script/TeachersDataFetcher';
 import { getSubjectsDetailsList } from '../../Script/SubjectsDataFetcher';
@@ -16,6 +16,7 @@ const DashboardPage = () => {
         </>
     );
 };
+
 function MainComponents() {
     const [teachersList, setTeahersList] = useState([]);
     const [perDayValue, setPerDayValue] = useState([0, 0, 0, 0, 0]);
@@ -83,7 +84,9 @@ function MainComponents() {
     return (
         <div className='top-sub-container'>
             <div className='left-sub-container'>
-                <MiniStateContainer onChange={startUpFunction} />
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <MiniStateContainer onChange={startUpFunction} />
+                </div>
                 <BasicDetails basicDetails={basicDetails} />
                 <WorkingHourBarChat perDayValue={perDayValue} />
             </div>

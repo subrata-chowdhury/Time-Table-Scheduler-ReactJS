@@ -1,10 +1,9 @@
 import { getApiToken, url } from "./fetchUrl";
 export const getTeachersList = async (onSuccess = () => { }, onFailed = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/teachers/names`, {
+        const response = await fetch(`${url}io/teachers/names`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         let listArray = [];
@@ -31,10 +30,9 @@ export const getTeachersList = async (onSuccess = () => { }, onFailed = () => { 
 };
 export const getTeachersDetailsList = async (onSuccess = () => { }, onFailed = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/teachers`, {
+        const response = await fetch(`${url}io/teachers`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         let listArray = [];
@@ -61,10 +59,9 @@ export const getTeachersDetailsList = async (onSuccess = () => { }, onFailed = (
 };
 export const getTeacher = async (sirName, onSuccess = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/teachers/${sirName}`, {
+        const response = await fetch(`${url}io/teachers/${sirName}`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
@@ -90,10 +87,9 @@ export const getTeacher = async (sirName, onSuccess = () => { }) => {
 };
 export const getTeacherSchedule = async (sirName, onSuccess = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/schedule/teacher/${sirName}`, {
+        const response = await fetch(`${url}io/schedule/teacher/${sirName}`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
@@ -119,12 +115,11 @@ export const getTeacherSchedule = async (sirName, onSuccess = () => { }) => {
 };
 export const saveTeacher = async (teacherName, teacherData, onSuccess = () => { }, onFailed = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(url + `io/teachers/${teacherName}`, {
+        const response = await fetch(url + `io/teachers/${teacherName}`, {
             method: "PUT",
             headers: {
                 'content-type': 'application/json',
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             },
             body: JSON.stringify(teacherData)
         });
@@ -133,7 +128,6 @@ export const saveTeacher = async (teacherName, teacherData, onSuccess = () => { 
             return await response.text();
         }
         else {
-            alert("Something went wrong");
             console.log("%cError in Saving teacher details", "color: orange;", await response.text());
             onFailed();
             return null;
@@ -146,11 +140,10 @@ export const saveTeacher = async (teacherName, teacherData, onSuccess = () => { 
 };
 export const deleteTeacher = async (teacherName, onSuccess = () => { }, onFailed = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(url + "io/teachers/" + teacherName, {
+        const response = await fetch(url + "io/teachers/" + teacherName, {
             method: "DELETE",
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
@@ -158,7 +151,6 @@ export const deleteTeacher = async (teacherName, onSuccess = () => { }, onFailed
             return await response.text();
         }
         else {
-            alert("Something went wrong");
             console.log(`Request URL: %c${url}io/teachers/${teacherName} %cUnable to delete teacher`, "color: blue;", "color: orange;", await response.text());
             onFailed();
             return null;

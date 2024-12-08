@@ -1,9 +1,9 @@
-import React from "react";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
-import "../Style/Cards.css";
 import Plus from "../Icons/Plus";
+import "../Style/Cards.css";
 import Arrow from '../Icons/Arrow';
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import EditIcon from "../Icons/Edit";
+import React from "react";
 
 const Cards = ({
     cardList = [],
@@ -46,20 +46,10 @@ const Cards = ({
             }}>
                 <Plus />
             </div>
-            {cardList && cardList.length > 0 && cardList.map((card) => (
-                <Card
-                    details={card}
-                    key={card}
-                    className={cardClassName}
-                    active={activeCards.includes(card)}
-                    onClick={(card) => {
-                        defaultCardClickHandler(card);
-                        onCardClick(card);
-                    }}
-                    compressText={false}
-                    showEditBtn={showEditBtn}
-                    onEditBtnClick={onEditBtnClick} />))
-            }
+            {cardList && cardList.length > 0 && cardList.map((card) => (<Card details={card} key={card} className={cardClassName} active={activeCards.includes(card)} onClick={(card) => {
+                defaultCardClickHandler(card);
+                onCardClick(card);
+            }} compressText={false} showEditBtn={showEditBtn} onEditBtnClick={onEditBtnClick} />))}
         </div>
     );
 };
@@ -78,7 +68,8 @@ export const Card = memo(({
     const innerCard = (
         <div className={"card data " + className + (active ? ' active' : '')} onClick={() => onClick(details)} title={details}>
             {compressText ? (details.length > 6 ? details.slice(0, 5) + ".." : details) : details}
-        </div>);
+        </div>
+    );
 
     return (
         (showEditBtn ? (<div className="card-wrapper">

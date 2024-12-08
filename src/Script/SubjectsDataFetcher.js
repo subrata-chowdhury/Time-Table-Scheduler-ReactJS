@@ -1,10 +1,9 @@
 import { getApiToken, url } from "./fetchUrl";
 export const getSubjectsList = async (onSuccess = () => { }, onFailed = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/subjects/codes`, {
+        const response = await fetch(`${url}io/subjects/codes`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         let listArray = [];
@@ -33,10 +32,9 @@ export const getSubjectsList = async (onSuccess = () => { }, onFailed = () => { 
 };
 export const getSubjectsDetailsList = async (onSuccess = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/subjects`, {
+        const response = await fetch(`${url}io/subjects`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
@@ -62,10 +60,9 @@ export const getSubjectsDetailsList = async (onSuccess = () => { }) => {
 };
 export const getSubject = async (subjectName, onSuccess = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/subjects/${subjectName}`, {
+        const response = await fetch(`${url}io/subjects/${subjectName}`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
@@ -91,12 +88,11 @@ export const getSubject = async (subjectName, onSuccess = () => { }) => {
 };
 export const saveSubject = async (subjectName, subjectDetails, onSuccess = () => { }, onFailed = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(url + `io/subjects/${subjectName}`, {
+        const response = await fetch(url + `io/subjects/${subjectName}`, {
             method: "PUT",
             headers: {
                 'content-type': 'application/json',
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             },
             body: JSON.stringify(subjectDetails)
         });
@@ -105,7 +101,6 @@ export const saveSubject = async (subjectName, subjectDetails, onSuccess = () =>
             return subjectName;
         }
         else {
-            alert("Something went wrong");
             console.log("%cError in Saveing Subject Details", "color: orange;", await response.text());
             onFailed();
             return null;
@@ -118,11 +113,10 @@ export const saveSubject = async (subjectName, subjectDetails, onSuccess = () =>
 };
 export const deleteSubject = async (subjectName, onSuccess = () => { }, onFailed = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(url + "io/subjects/" + subjectName, {
+        const response = await fetch(url + "io/subjects/" + subjectName, {
             method: "DELETE",
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
@@ -130,7 +124,6 @@ export const deleteSubject = async (subjectName, onSuccess = () => { }, onFailed
             return subjectName;
         }
         else {
-            alert("Something went wrong");
             console.log("%cError in Deleteing Subject", "color: red;", subjectName, await response.text());
             onFailed();
             return null;

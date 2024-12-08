@@ -4,6 +4,7 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import { getTimeTableStructure, saveTimeTableStructure } from '../../Script/TimeTableDataFetcher';
 import verifyTimeTableStructureInputs from '../../Script/InputVerifiers/TimeTableStructureVerifier';
 import TagInput from '../../Components/TagInput';
+import { useAlert } from '../../Components/AlertContextProvider';
 
 function TimeTableStructurePage() {
     return (
@@ -33,6 +34,8 @@ const TimeTableStructureInputContainer = ({ fileChange }) => {
         sectionsPerSemester: [0, 0, 3, 0],
         semesterCount: 4
     });
+
+    const { showWarning, showSuccess, showError } = useAlert();
 
     useEffect(() => {
         getTimeTableStructure(setTimeTableStructureFieldValues); // api call
@@ -73,11 +76,11 @@ const TimeTableStructureInputContainer = ({ fileChange }) => {
 
     const timeTableStructureOnSubmitHandler = useCallback((event) => {
         event.preventDefault();
-        let timeTableStructure = verifyTimeTableStructureInputs(timeTableStructureFieldValues);
+        let timeTableStructure = verifyTimeTableStructureInputs(timeTableStructureFieldValues, showWarning);
         if (timeTableStructure) {
             saveTimeTableStructure(timeTableStructure, () => {
-                alert(JSON.stringify(timeTableStructure) + "----------- is saved");
-            });
+                showSuccess(JSON.stringify(timeTableStructure) + "----------- is saved");
+            }, () => showError("Someting went Wrong!"));
         }
     }, [timeTableStructureFieldValues]);
 
@@ -86,21 +89,11 @@ const TimeTableStructureInputContainer = ({ fileChange }) => {
             <div className='top-input-container input-grp'>
                 <div className="input-container">
                     <div className="input-box-heading">Number of Year</div>
-                    <input
-                        type='number'
-                        className='input-box'
-                        min={1} name='semesterCount'
-                        value={timeTableStructureFieldValues.semesterCount}
-                        onChange={inputOnChangeHandler} />
+                    <input type='number' className='input-box' min={1} name='semesterCount' value={timeTableStructureFieldValues.semesterCount} onChange={inputOnChangeHandler} />
                 </div>
                 <div className="input-container">
                     <div className="input-box-heading">Number of Periods per Day</div>
-                    <input
-                        type='number'
-                        className='input-box'
-                        min={4} name='periodCount'
-                        value={timeTableStructureFieldValues.periodCount}
-                        onChange={inputOnChangeHandler} />
+                    <input type='number' className='input-box' min={4} name='periodCount' value={timeTableStructureFieldValues.periodCount} onChange={inputOnChangeHandler} />
                 </div>
             </div>
 
@@ -122,7 +115,8 @@ const TimeTableStructureInputContainer = ({ fileChange }) => {
                                         temp[index] = Number(e.target.value);
                                         return { ...prev, sectionsPerSemester: temp };
                                     });
-                                }} />))}
+                                }}
+                            />))}
                     </div>
                 </div>
             </div>

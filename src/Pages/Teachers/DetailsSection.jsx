@@ -5,6 +5,8 @@ import { hasElement } from "../../Script/util";
 import { verifyTeacherInputs } from "../../Script/InputVerifiers/TeacherFormVerifier";
 import TagInput from "../../Components/TagInput";
 import TimeSelector from "./TimeSelector";
+import { useAlert } from "../../Components/AlertContextProvider";
+import { useConfirm } from "../../Components/ConfirmContextProvider";
 
 const DetailsContainer = ({
     active = false,
@@ -23,6 +25,9 @@ const DetailsContainer = ({
     const [inEditState, setInEditState] = useState(false);
 
     const subjectList = useRef();
+
+    const { showWarning, showError, showSuccess } = useAlert();
+    const { showWarningConfirm } = useConfirm();
 
     useEffect(() => {
         setTeacherName(activeTeacherName);
@@ -76,11 +81,12 @@ const DetailsContainer = ({
     const teacherFormSubmitHandler = useCallback((event) => {
         event.preventDefault();
         //verification of inputs
-        let verifiedData = verifyTeacherInputs(teacherName, teacherDetails, subjectList);
+        let verifiedData = verifyTeacherInputs(teacherName, teacherDetails, subjectList, showWarning);
         if (verifiedData)
             if (hasElement(teachersList, verifiedData.newTeacherName)) { // checking if the teacher exsist or not
-                if (window.confirm("Are you want to overwrite " + teacherName)) // if exist show a confirmation box
-                    saveData(verifiedData.newTeacherName, verifiedData.teacherData); // if yes then save else do nothing
+                showWarningConfirm("Are you want to overwrite " + teacherName, // if exist show a confirmation box
+                    () => saveData(verifiedData.newTeacherName, verifiedData.teacherData) // if yes then save else do nothing
+                );
             }
             else
                 saveData(verifiedData.newTeacherName, verifiedData.teacherData);
@@ -90,9 +96,9 @@ const DetailsContainer = ({
         setDisplayLoader(true);
         setDisabled(true);
         saveTeacher(teacherName, teacherData, () => {
-            alert(JSON.stringify({ teacherName, teacherData }) + "---------- is added");
+            showSuccess(JSON.stringify({ teacherName, teacherData }) + "---------- is added");
             onSubmitCallBack(); // referenced to start up function
-        }).then(() => {
+        }, () => showError("Someting went Wrong!")).then(() => {
             setDisplayLoader(false);
             setDisabled(false);
         }).catch(() => {
@@ -104,13 +110,15 @@ const DetailsContainer = ({
     const deleteTeacherBtnClickHandler = useCallback((event) => {
         event.preventDefault();
         if (hasElement(teachersList, teacherName)) // checking if the teacher exsist or not
-            if (window.confirm("Are you sure? Want to Delete " + teacherName + " ?")) { // if exist show a confirmation box
+            showWarningConfirm("Are you sure? Want to Delete " + teacherName + " ?", () => {
                 deleteTeacher(teacherName, () => {
                     onSubmitCallBack(); // referenced to start up function
+                    showSuccess(teacherName + " is deleted");
                 }, () => {
+                    showError("Someting went Wrong!");
                     setDisplayLoader(false); // if failed only hide loader
                 });
-            }
+            });
     }, [teacherName]);
 
     return (
@@ -126,7 +134,7 @@ const DetailsContainer = ({
             <div className="input-container">
                 <div className="input-box-heading">Subject Names</div>
                 {subjectList.current && <TagInput validTags={subjectList.current} tagList={teacherDetails.subjects} onChange={(data) => {
-                    let newTeacherDetails = { ...teacherDetails, subject: data };
+                    let newTeacherDetails = { ...teacherDetails, subjects: data };
                     setTeacherDetails(newTeacherDetails);
                 }} />}
             </div>
@@ -145,4 +153,5 @@ const DetailsContainer = ({
         </form>
     );
 };
+
 export default memo(DetailsContainer);

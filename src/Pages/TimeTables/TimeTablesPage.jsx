@@ -9,6 +9,7 @@ import { emptyTimeTableDetails } from '../../Components/TimeTable';
 import Loader from '../../Components/Loader';
 import TeacherAndSubjectSelector from './TeacherAndSubjectSelector';
 import { ButtonsContainer, SectionsBtnContainer } from './Header';
+import { useAlert } from '../../Components/AlertContextProvider';
 
 function TimeTablesPage() {
     return (
@@ -19,6 +20,7 @@ function TimeTablesPage() {
         </>
     );
 }
+
 function MainComponents() {
     const [sems, setSems] = useState();
     const [allTimeTables, setAllTimeTables] = useState();
@@ -37,6 +39,8 @@ function MainComponents() {
     const subjectsDetails = useRef();
     const periodDetailsIndex = useRef();
     const fillManually = useRef(true);
+
+    const { showError } = useAlert();
 
     useEffect(() => {
         getSubjectsDetailsList(data => subjectsDetails.current = data); // api call
@@ -95,7 +99,7 @@ function MainComponents() {
             saveSchedule(currentOpenSem + 1, currentOpenSection + 1, newTimeTable, () => {
                 newTimeTable ? setTimeTable(newTimeTable) : "";
                 setShowPopUp(false);
-            }); // api call
+            }, () => showError("Someting went Wrong!")); // api call
         }
     }, [subjectsDetails.current, periodDetailsIndex.current, timeTable]);
 
@@ -115,9 +119,9 @@ function MainComponents() {
                             generateTimeTable((data) => {
                                 setAllTimeTables(data);
                                 setDisplayLoader(false);
-                            }, () => { setDisplayLoader(false); });
-                        }} onFillManuallyBtnClick={() => {
-                            fillManually.current = true;
+                            }, () => setDisplayLoader(false), showError);
+                        }} onFillManuallyBtnClick={(value) => {
+                            fillManually.current = value;
                         }} />
                         {timeTableStructure && <SectionsBtnContainer
                             currentOpenSection={currentOpenSection}

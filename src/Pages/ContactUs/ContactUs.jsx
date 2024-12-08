@@ -29,7 +29,8 @@ function Developer({
     developerName = "Name",
     gitHubLink = "https://github.com/Super7000",
     linkedInLink = "https://www.linkedin.com/in/srideep-banerjee-64b712251/",
-    email = "" }) {
+    email = ""
+}) {
     return (
         <div className="developer">
             <div className="heading role">{role} Developer</div>

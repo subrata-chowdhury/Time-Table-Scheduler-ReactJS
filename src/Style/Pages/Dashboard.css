@@ -1,3 +1,7 @@
+.dashboard.page {
+    overflow-y: auto;
+}
+
 .dashboard .top-sub-container {
     display: grid;
     grid-template-columns: 30% auto;
@@ -128,7 +132,7 @@
 
 .sem,
 .subject {
-    background: rgba(30, 144, 255, 0.6);
+    background: #1E90FF;
     border-radius: 5px;
     color: #fff;
     padding: 0 5px;
@@ -152,7 +156,6 @@
 
     .dashboard .left-sub-container {
         display: grid;
-        grid-template-columns: 50% 50%;
         margin-right: 1rem;
     }
 

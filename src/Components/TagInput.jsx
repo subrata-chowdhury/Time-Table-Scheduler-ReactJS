@@ -1,9 +1,12 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { hasElement } from "../Script/util";
 import "../Style/Tags.css";
+
 const TagInput = ({ tagList = [], validTags = [], onChange = () => { } }) => {
     const [tag, setTag] = useState("");
     const [tagsList, setTagsList] = useState(tagList);
+
+    const inputElem = useRef(null);
 
     useEffect(() => {
         setTagsList(tagList);
@@ -28,37 +31,42 @@ const TagInput = ({ tagList = [], validTags = [], onChange = () => { } }) => {
             alert("Value already exists");
             return;
         }
-        setTagsList([...tagList, tag]);
         onChange([...tagList, tag]);
+        setTagsList([...tagList, tag]);
         setTag("");
-    }, [tag, tagList, onChange]);
+    }, [tag, tagList, validTags, onChange]);
 
     return (
         <div className='tag-input-container'>
-            <div className='tags-container'>
-                {tagsList.map((tag, index) => (
-                    <Tag
-                        key={index}
-                        value={tag}
-                        onDeleteBtnClick={(e) => {
-                            e.preventDefault();
-                            onChange(tagList.filter(tagValue => tagValue !== tag));
-                        }} />))
-                }
-            </div>
-            <input type="text" value={tag} onChange={tagChangeHandler} onKeyDown={e => {
-                if (e.key === "Enter") {
+            <div className='tags-container' onClick={event => {
+                event.stopPropagation();
+                inputElem.current?.focus();
+            }}>
+                {tagsList.map((tag, index) => (<Tag key={index} value={tag} onDeleteBtnClick={(e) => {
                     e.preventDefault();
-                    addTag();
-                }
-            }}></input>
+                    console.log(tagList.filter(tagValue => tagValue !== tag));
+                    onChange(tagList.filter(tagValue => tagValue !== tag));
+                }} />))}
+            </div>
+            <input
+                ref={inputElem}
+                type="text"
+                value={tag}
+                onChange={tagChangeHandler}
+                onKeyDown={e => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        addTag();
+                    }
+                }} />
         </div>
     );
 };
+
 const Tag = ({ value, onDeleteBtnClick = () => { } }) => {
     return (
         <div className="tag">
-            <div>{value}</div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', lineHeight: 1 }}>{value}</div>
             <button className="delete-tag-btn" onClick={onDeleteBtnClick}>+</button>
         </div>
     );

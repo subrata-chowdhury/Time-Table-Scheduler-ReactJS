@@ -16,6 +16,7 @@ function TeachersPage() {
         </>
     );
 }
+
 function MainComponents() {
     const [teachersList, setTeahersList] = useState([]);
     const [teacherName, setTeacherName] = useState("");

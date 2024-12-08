@@ -1,13 +1,12 @@
 import { getApiToken, url } from "./fetchUrl";
 export const getCurrentFileName = async (onSuccess = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/saves/currentName`, {
+        const response = await fetch(`${url}io/saves/currentName`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
-        let textResponse = await response.text();
+        const textResponse = await response.text();
         let data = "";
         if (response.status !== 200) {
             console.log("%cError in getting current state name:", "color: red;", textResponse);
@@ -23,18 +22,17 @@ export const getCurrentFileName = async (onSuccess = () => { }) => {
         throw error;
     }
 };
-export const getCurrentFileIsSaved = async (onSuccess = () => { }) => {
+export const getCurrentFileIsSaved = async (onSuccess = () => { }, onFailed) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/saves/isSaved`, {
+        const response = await fetch(`${url}io/saves/isSaved`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         const data = await response.json();
         if (response.status !== 200) {
             console.log("%cError in getting current state is saved or not:", "color: red;", await response.text());
-            window.close();
+            onFailed();
         }
         else if (response.ok) {
             onSuccess(data);
@@ -43,24 +41,22 @@ export const getCurrentFileIsSaved = async (onSuccess = () => { }) => {
     }
     catch (error) {
         console.log("Unable to Fetch Data of Current File Save State");
-        window.close();
+        onFailed();
         throw error;
     }
 };
-export const saveCurrentState = async (name, onSuccess = () => { }) => {
+export const saveCurrentState = async (name, onSuccess = () => { }, onFailed) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/saves/save?name=${name}`, {
+        const response = await fetch(`${url}io/saves/save?name=${name}`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
-            alert(`Current State is Saved in ${name.toUpperCase()}`);
             onSuccess();
         }
         else {
-            alert("Someting went wrong");
+            onFailed("Someting went wrong");
             console.log("%cError in saving current state in new file:", "color: orange;", await response.text());
         }
         return await response.text();
@@ -70,17 +66,16 @@ export const saveCurrentState = async (name, onSuccess = () => { }) => {
         throw error;
     }
 };
-export const createNewFile = async (name, onSuccess = () => { }) => {
+export const createNewFile = async (name, onSuccess = () => { }, showAlert = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/saves/newEmpty?name=${name}`, {
+        const response = await fetch(`${url}io/saves/newEmpty?name=${name}`, {
             method: 'POST',
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
-            alert(`Created a new file called ${name.toUpperCase()}`);
+            showAlert(`Created a new file called ${name.toUpperCase()}`);
             onSuccess();
         }
         else {
@@ -95,10 +90,9 @@ export const createNewFile = async (name, onSuccess = () => { }) => {
 };
 export const getSaveFileList = async (onSuccess = () => { }, onFailed = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/saves/list`, {
+        const response = await fetch(`${url}io/saves/list`, {
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         let files = [];
@@ -126,15 +120,13 @@ export const getSaveFileList = async (onSuccess = () => { }, onFailed = () => { 
 };
 export const loadSaveFile = async (name, onSuccess = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(`${url}io/saves/load?name=${name}`, {
+        const response = await fetch(`${url}io/saves/load?name=${name}`, {
             method: 'POST',
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
-            alert("Opend Sucessfully");
             onSuccess();
         }
         else {
@@ -147,20 +139,19 @@ export const loadSaveFile = async (name, onSuccess = () => { }) => {
         throw error;
     }
 };
-export const deleteFile = async (name, onSuccess = () => { }) => {
+export const deleteFile = async (name, onSuccess = () => { }, showAlert = () => { }) => {
     try {
-        let apiToken = await getApiToken();
-        let response = await fetch(url + "io/saves/delete?name=" + name, {
+        const response = await fetch(url + "io/saves/delete?name=" + name, {
             method: "DELETE",
             headers: {
-                'Api-Token': apiToken
+                'Api-Token': await getApiToken()
             }
         });
         if (response.status === 200) {
             onSuccess();
         }
         else {
-            alert("Something went wrong");
+            showAlert("Something went wrong");
             console.log(`Request URL: %c${url}io/saves/delete?name=${name} %cError in Deleteing file`, "color: blue;", "color: yelow;", await response.text());
         }
         return await response.text();

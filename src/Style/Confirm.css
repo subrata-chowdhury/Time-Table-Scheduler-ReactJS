@@ -1,0 +1,79 @@
+.confirm {
+    padding: 1rem;
+    border-radius: 0.4rem;
+    display: none;
+    gap: 1rem;
+    justify-content: space-between;
+    position: fixed;
+    top: -10rem;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: 0.3s;
+    border-width: 1px;
+    border-style: solid;
+    background: #fff;
+    color: #000;
+}
+
+.confirm-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.confirm.active {
+    display: flex;
+    top: 50%;
+    z-index: 1000;
+}
+
+.confirm.success {
+    background: #d4edda;
+    color: #155724;
+    border-color: #155724;
+}
+
+.confirm.warning {
+    background: #fff3cd;
+    color: #856404;
+    border-color: #856404;
+}
+
+.confirm.error {
+    background: #f8d7da;
+    color: #721c24;
+    border-color: #721c24;
+}
+
+.confirm p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.confirm .btns-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.confirm .btns-container .approve {
+    background: dodgerblue;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+}
+
+.confirm .btns-container .decline {
+    background: orange;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+}

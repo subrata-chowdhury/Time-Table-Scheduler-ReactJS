@@ -11,9 +11,33 @@ import ContactUs from './Pages/ContactUs/ContactUs';
 import { useEffect, useRef } from 'react';
 import Menubar from './Components/Menubar';
 import OwnerFooter from './Components/OwnerFooter';
+import { AlertProvider, useAlert } from './Components/AlertContextProvider';
+import Alert from './Components/Alert';
+import { ConfirmProvider, useConfirm } from './Components/ConfirmContextProvider';
+import Confirm from './Components/Confirm';
 import { addWindowCloseEventHandler, removeWindowCloseEventHandler } from './Script/commonJS';
+import NotFound from './Pages/NotFound/NotFound';
+
 function App() {
+    return (
+        <AlertProvider>
+            <ConfirmProvider>
+                <BrowserRouter future={{
+                    v7_startTransition: true,
+                    v7_relativeSplatPath: true,
+                }}>
+                    <MainApp />
+                </BrowserRouter>
+            </ConfirmProvider>
+        </AlertProvider>
+    );
+}
+
+function MainApp() {
     const app = useRef(null);
+    const { showWarningConfirm } = useConfirm();
+    const { showError } = useAlert();
+
     function autoToggleInResize() {
         if (window.innerWidth <= 1250) {
             if (app.current)
@@ -24,12 +48,13 @@ function App() {
                 app.current.classList.remove("active");
         }
     }
+
     useEffect(() => {
         autoToggleInResize();
         window.addEventListener("resize", () => {
             autoToggleInResize();
         });
-        addWindowCloseEventHandler();
+        addWindowCloseEventHandler(showWarningConfirm, showError);
         return () => {
             window.removeEventListener("resize", () => {
                 autoToggleInResize();
@@ -37,9 +62,13 @@ function App() {
             removeWindowCloseEventHandler();
         };
     }, []);
-    return (<BrowserRouter>
+
+    return (
         <div className='app' ref={app}>
+            <Alert />
+            <Confirm />
             <Menubar />
+
             <div className='main-container'>
                 <Routes>
                     <Route path="/" element={<DashboardPage />} />
@@ -49,11 +78,13 @@ function App() {
                     <Route path="/TimeTableStructure" element={<TimeTableStructurePage />} />
                     <Route path="/Files" element={<FilesPage />} />
                     <Route path="/ContactUs" element={<ContactUs />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
                 <OwnerFooter />
             </div>
         </div>
-    </BrowserRouter>);
+    );
 }
+
 // Remote typescript branch tracking test 2
 export default App;

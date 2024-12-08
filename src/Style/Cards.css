@@ -3,7 +3,7 @@
     height: 100%;
     max-height: 87vh;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+    grid-template-columns: repeat(auto-fit, 6.5rem);
     overflow-y: scroll;
     gap: 1.5rem;
     justify-content: stretch;

@@ -1,5 +1,3 @@
-import React, { memo } from "react";
-import { Link, useLocation } from "react-router-dom";
 import "../Style/Menubar.css";
 import Dashboard from "../Icons/Dashboard";
 import EditSubjects from "../Icons/EditSubjects";
@@ -8,6 +6,8 @@ import Files from "../Icons/Files";
 import TimeTables from "../Icons/TimeTables";
 import TimeTableStructure from "../Icons/TimeTableStructure";
 import Arrow from "../Icons/Arrow";
+import React, { memo } from "react";
+import { Link, useLocation } from "react-router-dom";
 import Contact from "../Icons/ContactIcon";
 
 const menus = [
@@ -47,6 +47,7 @@ const menus = [
         link: "/ContactUs"
     }
 ];
+
 const Menubar = ({ onMenuToggleClick = () => { } }) => {
     const route = useLocation();
 
@@ -60,7 +61,7 @@ const Menubar = ({ onMenuToggleClick = () => { } }) => {
     }
 
     return (
-        <div className="menubar-container">
+        <nav className="menubar-container">
             <Arrow arrowIconClickHandler={e => {
                 toggleMenubar();
                 onMenuToggleClick(e);
@@ -68,12 +69,18 @@ const Menubar = ({ onMenuToggleClick = () => { } }) => {
             <div className="title">
                 <p>Time Table <br />Scheduler</p>
             </div>
-
-            {menus.map((menu) => (<Link to={menu.link} className="menu-container" id={route.pathname === menu.link ? "active" : ""}>
-                {menu.icon}
-                <div>{menu.name}</div>
-            </Link>))}
-        </div>
+            <ul className="menus-container">
+                {menus.map((menu) => (
+                    <Link
+                        to={menu.link}
+                        className="menu-container"
+                        id={route.pathname === menu.link ? "active" : ""}
+                        key={menu.name}>
+                        {menu.icon}
+                        <li>{menu.name}</li>
+                    </Link>))}
+            </ul>
+        </nav>
     );
 };
 
