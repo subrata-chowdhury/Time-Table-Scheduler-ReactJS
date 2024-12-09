@@ -93,7 +93,7 @@ export const saveSubject = async (
     subjectName: string,
     subjectDetails: Subject,
     onSuccess: () => void = () => { },
-    onFailed: () => void = () => { }
+    onFailed: (msg?: string) => void = () => { }
 ): Promise<string | null> => {
     try {
         const response = await fetch(url + `io/subjects/${subjectName}`, {
@@ -108,8 +108,9 @@ export const saveSubject = async (
             onSuccess();
             return subjectName;
         } else {
-            console.log("%cError in Saveing Subject Details", "color: orange;", await response.text());
-            onFailed();
+            const textResponse = await response.text();
+            console.log("%cError in Saveing Subject Details", "color: orange;", textResponse);
+            onFailed(textResponse);
             return null;
         }
     } catch (error) {
@@ -121,7 +122,7 @@ export const saveSubject = async (
 export const deleteSubject = async (
     subjectName: string,
     onSuccess: () => void = () => { },
-    onFailed: () => void = () => { }
+    onFailed: (msg?: string) => void = () => { }
 ): Promise<string | null> => {
     try {
         const response = await fetch(url + "io/subjects/" + subjectName, {
@@ -134,8 +135,9 @@ export const deleteSubject = async (
             onSuccess();
             return subjectName;
         } else {
-            console.log("%cError in Deleteing Subject", "color: red;", subjectName, await response.text());
-            onFailed();
+            const textResponse = await response.text();
+            console.log("%cError in Deleteing Subject", "color: red;", subjectName, textResponse);
+            onFailed(textResponse);
             return null;
         }
     } catch (error) {

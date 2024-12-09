@@ -92,7 +92,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
         saveSubject(subjectName, subjectData, () => { // api call
             showSuccess(JSON.stringify({ subjectName, subjectData }) + "---------- is added");
             onSubmitCallBack();
-        }, () => showError("Someting went Wrong!")).then(() => {
+        }, (msg) => showError(msg || "Someting went Wrong!")).then(() => {
             setDisplayLoader(false)
             setDisabled(false)
         }).catch(() => {
@@ -108,8 +108,8 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                 () => deleteSubject(subjectName, () => { // api call
                     onSubmitCallBack(); // referenced to start up function
                     showSuccess(subjectName + " is deleted")
-                }, () => {
-                    showError("Someting went Wrong!")
+                }, (msg) => {
+                    showError(msg || "Someting went Wrong!")
                     setDisplayLoader(false) // if failed only hide loader
                 })
             )

@@ -122,7 +122,7 @@ export const saveTeacher = async (
     teacherName: string,
     teacherData: Teacher,
     onSuccess: () => void = () => { },
-    onFailed: () => void = () => { }
+    onFailed: (msg?: string) => void = () => { }
 ): Promise<string | null> => {
     try {
         const response = await fetch(url + `io/teachers/${teacherName}`, {
@@ -137,8 +137,9 @@ export const saveTeacher = async (
             onSuccess();
             return await response.text();
         } else {
-            console.log("%cError in Saving teacher details", "color: orange;", await response.text());
-            onFailed();
+            const textResponse = await response.text();
+            console.log("%cError in Saving teacher details", "color: orange;", textResponse);
+            onFailed(textResponse);
             return null;
         }
     } catch (error) {
@@ -152,7 +153,7 @@ export const saveTeacher = async (
 export const deleteTeacher = async (
     teacherName: string,
     onSuccess: () => void = () => { },
-    onFailed: () => void = () => { }
+    onFailed: (msg?: string) => void = () => { }
 ): Promise<string | null> => {
     try {
         const response = await fetch(url + "io/teachers/" + teacherName, {
@@ -166,8 +167,9 @@ export const deleteTeacher = async (
             return await response.text()
         }
         else {
-            console.log(`Request URL: %c${url}io/teachers/${teacherName} %cUnable to delete teacher`, "color: blue;", "color: orange;", await response.text());
-            onFailed();
+            const textResponse = await response.text();
+            console.log(`Request URL: %c${url}io/teachers/${teacherName} %cUnable to delete teacher`, "color: blue;", "color: orange;", textResponse);
+            onFailed(textResponse);
             return null;
         }
     } catch (error) {

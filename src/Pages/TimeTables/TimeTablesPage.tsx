@@ -98,7 +98,7 @@ function MainComponents() {
             saveSchedule(currentOpenSem + 1, currentOpenSection + 1, newTimeTable, () => {
                 newTimeTable ? setTimeTable(newTimeTable) : ""
                 setShowPopUp(false)
-            }, () => showError("Someting went Wrong!")) // api call
+            }, (msg) => showError(msg || "Someting went Wrong!")) // api call
         }
     }, [subjectsDetails.current, periodDetailsIndex.current, timeTable])
 
@@ -119,7 +119,10 @@ function MainComponents() {
                                 generateTimeTable((data) => { // api call
                                     setAllTimeTables(data);
                                     setDisplayLoader(false)
-                                }, () => setDisplayLoader(false), showError)
+                                }, (msg) => {
+                                    setDisplayLoader(false)
+                                    showError(msg || "Someting went Wrong!")
+                                })
                             }}
                             onFillManuallyBtnClick={(value) => {
                                 fillManually.current = value;

@@ -83,7 +83,7 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
         if (timeTableStructure) {
             saveTimeTableStructure(timeTableStructure, () => { // api call
                 showSuccess(JSON.stringify(timeTableStructure) + "----------- is saved")
-            }, () => showError("Someting went Wrong!"))
+            }, (msg) => showError(msg || "Someting went Wrong!"))
         }
     }, [timeTableStructureFieldValues])
 

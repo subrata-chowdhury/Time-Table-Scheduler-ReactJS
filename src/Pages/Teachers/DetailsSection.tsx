@@ -102,7 +102,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
         saveTeacher(teacherName, teacherData, () => { // api call
             showSuccess(JSON.stringify({ teacherName, teacherData }) + "---------- is added")
             onSubmitCallBack(); // referenced to start up function
-        }, () => showError("Someting went Wrong!")).then(() => {
+        }, (msg) => showError(msg || "Someting went Wrong!")).then(() => {
             setDisplayLoader(false)
             setDisabled(false)
         }).catch(() => {
@@ -119,8 +119,8 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                     deleteTeacher(teacherName, () => { // api call
                         onSubmitCallBack(); // referenced to start up function
                         showSuccess(teacherName + " is deleted")
-                    }, () => {
-                        showError("Someting went Wrong!")
+                    }, (msg) => {
+                        showError(msg || "Someting went Wrong!")
                         setDisplayLoader(false) // if failed only hide loader
                     });
                 }

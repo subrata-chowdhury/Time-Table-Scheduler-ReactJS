@@ -3,8 +3,7 @@ import { getApiToken, url } from "./fetchUrl"
 
 export const generateTimeTable = async (
     onSuccess: (data: FullTimeTable) => void = () => { },
-    onFailed: () => void = () => { },
-    showAlert: (msg: string) => void = () => { }
+    onFailed: (msg?: string) => void = () => { }
 ): Promise<FullTimeTable | []> => {
     try {
         const response = await fetch(`${url}io/schedule?generateNew=True`, {
@@ -22,11 +21,10 @@ export const generateTimeTable = async (
                 console.log("%cInvalid Time Table Data", "color: orange", await response.text());
                 return [];
             }
-        }
-        else {
-            showAlert("Failed to generate beacause: " + await response.text());
-            onFailed();
-            console.log("%cError in generating Time Table", "color: orange;", await response.text());
+        } else {
+            const textResponse = await response.text();
+            onFailed("Failed to generate beacause: " + textResponse);
+            console.log("%cError in generating Time Table", "color: orange;", textResponse);
             return [];
         }
     } catch (error) {
@@ -66,7 +64,7 @@ export const saveSchedule = async (
     sec: number,
     timeTableData: TimeTable,
     onSuccess: (data: TimeTable) => void = () => { },
-    onFailed: () => void = () => { }
+    onFailed: (msg?: string) => void = () => { }
 ): Promise<TimeTable | null> => {
     try {
         const response = await fetch(`${url}io/schedule?year=${sem}&sec=${sec}`, {
@@ -81,9 +79,10 @@ export const saveSchedule = async (
             onSuccess(timeTableData);
             return timeTableData;
         } else {
-            console.log("%cError in saving schedule data", "color: orange;", await response.text());
+            const textResponse = await response.text();
+            console.log("%cError in saving schedule data", "color: orange;", textResponse);
             console.log(timeTableData);
-            onFailed();
+            onFailed(textResponse);
             return null;
         }
     } catch (error) {
@@ -118,7 +117,7 @@ export const getTimeTableStructure = async (onSuccess: (data: TimeTableStructure
     }
 }
 
-export const saveTimeTableStructure = async (timeTableStructure: TimeTableStructure, onSuccess: () => void = () => { }, onFailed: () => void = () => { }): Promise<string> => {
+export const saveTimeTableStructure = async (timeTableStructure: TimeTableStructure, onSuccess: () => void = () => { }, onFailed: (msg?: string) => void = () => { }): Promise<string> => {
     try {
         const response = await fetch(`${url}io/schedule/structure`, {
             method: 'PUT',
@@ -128,13 +127,14 @@ export const saveTimeTableStructure = async (timeTableStructure: TimeTableStruct
             },
             body: JSON.stringify(timeTableStructure)
         });
+        const textResponse = await response.text();
         if (response.status === 200) {
             onSuccess();
         } else {
-            console.log("%cError in saving time table structure data", "color: orange;", await response.text());
-            onFailed();
+            console.log("%cError in saving time table structure data", "color: orange;", textResponse);
+            onFailed(textResponse);
         }
-        return await response.text();
+        return textResponse;
     } catch (error) {
         console.log("%cTime table structure data is invaild or %cUnable to call Fetch", "color: red;", "color: orange;", timeTableStructure);
         throw error;

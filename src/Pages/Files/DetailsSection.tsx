@@ -68,7 +68,8 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
         } else {
             createNewFile(file, () => {
                 startUp();
-            }, showSuccess); // api call
+                showSuccess(`Created a new file called ${file.toUpperCase()}`);
+            }); // api call
         }
     }, [fileName, files])
 
@@ -79,7 +80,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                 () => { // if yes then delete else do nothing
                     deleteFile(fileName, () => { // api call
                         startUp();
-                    }, () => showError("Someting went Wrong!"))
+                    }, (msg) => showError(msg || "Someting went Wrong!"))
                 }
             )
     }, [files, fileName])
