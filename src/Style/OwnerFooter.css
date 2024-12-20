@@ -1,6 +1,7 @@
 .owner-text {
     padding-left: 20px;
     font-size: 12px;
+    color: var(--textColor);
 }
 
 @media (max-width: 550px) {

@@ -13,7 +13,7 @@
 }
 
 .developer {
-    background: #fff;
+    background: var(--containerColor);
     border-radius: 10px;
     align-items: start;
     display: flex;
@@ -21,6 +21,7 @@
     justify-content: center;
     padding: 2rem;
     gap: 1rem;
+    color: var(--textColor);
 }
 
 .profile-picture-container {

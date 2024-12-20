@@ -4,8 +4,12 @@
     align-items: start;
 }
 
+.time-table-structure-inputs-container input {
+    color: var(--textColor);
+}
+
 .time-table-structure-inputs-container {
-    background: #fff;
+    background: var(--containerColor);
     padding: 2rem;
     border-radius: 15px;
     margin-top: 20px;
@@ -14,6 +18,7 @@
     grid-template-rows: auto auto auto auto;
     align-content: space-around;
     overflow-x: auto;
+    color: var(--textColor);
 }
 
 .add-btn {

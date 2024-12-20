@@ -17,6 +17,7 @@ import { ConfirmProvider, useConfirm } from './Components/ConfirmContextProvider
 import Confirm from './Components/Confirm';
 import { addWindowCloseEventHandler, removeWindowCloseEventHandler } from './Script/commonJS';
 import NotFound from './Pages/NotFound/NotFound';
+import SettingsPage, { changeTheme } from './Pages/Settings/SettingsPage';
 
 function App() {
 	return (
@@ -55,6 +56,10 @@ function MainApp() {
 			autoToggleInResize()
 		})
 		addWindowCloseEventHandler(showWarningConfirm, showError)
+
+		const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+		if (prefersDarkScheme) changeTheme(true);
+
 		return () => {
 			window.removeEventListener("resize", () => {
 				autoToggleInResize()
@@ -78,6 +83,7 @@ function MainApp() {
 					<Route path="/TimeTableStructure" element={<TimeTableStructurePage />} />
 					<Route path="/Files" element={<FilesPage />} />
 					<Route path="/ContactUs" element={<ContactUs />} />
+					<Route path="/Settings" element={<SettingsPage />} />
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 				<OwnerFooter />

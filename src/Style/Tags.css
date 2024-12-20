@@ -8,7 +8,7 @@
     overflow-y: scroll;
     max-height: 7rem;
     border-bottom: 2px solid dodgerblue;
-    background: rgba(0, 0, 0, 0.10);
+    background: var(--borderColor);
 }
 
 .tag-input-container .tags-container {
@@ -19,8 +19,8 @@
 
 .tag-input-container .tag {
     display: inline-flex;
-    background-color: #fff;
-    color: #333;
+    background-color: var(--containerColor);
+    color: var(--textColor);
     border-radius: 20px;
     padding: 5px 10px;
     margin-right: 5px;
@@ -43,7 +43,7 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
-    color: rgba(0, 0, 0, 0.50);
+    color: var(--tagIconColor);
     background: rgba(0, 0, 0, 0.05);
     transform: rotate(45deg);
     margin-left: 5px;
@@ -57,5 +57,5 @@
 }
 
 .tag-input-container .delete-tag-btn:hover {
-    background: rgba(0, 0, 0, 0.10);
+    background: var(--borderColor);
 }

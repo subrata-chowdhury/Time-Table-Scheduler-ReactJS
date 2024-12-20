@@ -10,6 +10,7 @@ import Arrow from "../Icons/Arrow"
 import React, { memo } from "react"
 import { Link, useLocation } from "react-router-dom"
 import Contact from "../Icons/ContactIcon"
+import SettingIcon from "../Icons/Setting"
 
 interface MenubarProps {
     onMenuToggleClick?: (e: React.MouseEvent<HTMLOrSVGElement>) => void
@@ -50,6 +51,11 @@ const menus = [
         name: "Contact Us",
         icon: <Contact />,
         link: "/ContactUs"
+    },
+    {
+        name: "Settings",
+        icon: <SettingIcon />,
+        link: "/Settings"
     }
 ]
 

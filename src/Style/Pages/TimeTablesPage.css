@@ -9,9 +9,10 @@
 }
 
 .time-table .time-table-container {
-    background: #fff;
+    background: var(--containerColor);
     height: 95%;
     padding-bottom: 20px;
+    color: var(--textColor);
 }
 
 .time-table .menubar {

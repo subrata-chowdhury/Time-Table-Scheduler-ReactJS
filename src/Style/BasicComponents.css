@@ -1,5 +1,5 @@
 .input-box {
-    background: rgba(0, 0, 0, 0.10);
+    background: var(--borderColor);
     border: none;
     border-radius: 5px;
     border-bottom: 2px solid dodgerblue;
@@ -20,6 +20,10 @@
     gap: 1rem;
 }
 
+.input-container input::placeholder {
+    color: var(--inputPlaceholderColor);
+}
+
 .input-container input[type=checkbox] {
     appearance: none;
 }
@@ -35,7 +39,7 @@
     align-items: center;
     cursor: pointer;
     transition: 0.3s;
-    border: 2px solid rgba(0, 0, 0, 0.20);
+    border: 2px solid var(--borderColor);
     overflow: hidden;
 }
 
@@ -43,7 +47,7 @@
     width: 100%;
     height: 100%;
     transition: 0.3s;
-    background: #fff;
+    background: var(--containerColor);
     color: rgba(30, 144, 255, 0.8);
     display: grid;
     justify-content: center;

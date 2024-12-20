@@ -45,7 +45,8 @@
 }
 
 .dashboard .basic-details .container .sub-container {
-    background: #fff;
+    background: var(--containerColor);
+    color: var(--textColor);
     border-radius: 7px;
     display: grid;
     align-items: center;
@@ -71,7 +72,7 @@
 .teachers-details-container {
     display: grid;
     grid-template-rows: 19% 60% 11%;
-    background: #fff;
+    background: var(--containerColor);
     align-content: space-evenly;
     border-radius: 12px;
 }
@@ -87,7 +88,8 @@
 }
 
 .teacher-time-table {
-    background: #f0f7ff;
+    background: var(--foregroudColor);
+    color: var(--textColor);
     height: 85% !important;
     margin-top: 10px;
     padding: 10px 0;
@@ -115,9 +117,10 @@
 
 .sem-container,
 .subject-container {
-    background: rgba(240, 247, 255, 1);
+    background: var(--foregroudColor);
     padding: 10px 20px;
     border-radius: 12px;
+    color: var(--textColor);
 }
 
 .sub-sem-container,

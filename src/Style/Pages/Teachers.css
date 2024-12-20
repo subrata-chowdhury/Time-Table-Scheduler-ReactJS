@@ -20,7 +20,7 @@
 }
 
 .details-container {
-    background: var(--background);
+    background: var(--containerColor);
     padding: 2rem;
     border-radius: 1rem;
     box-sizing: border-box;
@@ -30,6 +30,11 @@
     gap: 15px;
     align-content: start;
     margin: 0;
+    color: var(--textColor);
+}
+
+.details-container input {
+    color: var(--textColor);
 }
 
 .details-container .inputs-container-heading {
@@ -61,7 +66,7 @@
     height: 100%;
     min-height: 30px;
     border-radius: 5px;
-    background: rgba(0, 0, 0, 0.1);
+    background: var(--borderColor);
     cursor: pointer;
     user-select: none;
     color: rgba(0, 0, 0, 0.4);

@@ -16,7 +16,8 @@
 }
 
 .working-hour-barchat-container {
-    background: #fff;
+    background: var(--containerColor);
+    color: var(--textColor);
     border-radius: 15px;
     display: grid;
     grid-template-columns: repeat(5, 1fr);

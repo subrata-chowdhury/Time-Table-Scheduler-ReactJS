@@ -102,7 +102,7 @@ const TeachersTimeTableContainer: React.FC<TeachersTimeTableContainerProps> = me
     let sir = "Sir";
     return (
         <div className='time-table-wrapper'>
-            <div className='heading'>Time Table for {sir}</div>
+            <div className='heading' style={{ color: 'var(--textColor)' }}>Time Table for {sir}</div>
             {subjectsDetails && teacherTimeTableDetails.length > 0 &&
                 <TimeTable
                     className='teacher-time-table'

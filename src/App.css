@@ -1,14 +1,19 @@
 html {
 	--background: #fff;
 	--textColor: #000;
-	--containerColor: rgba(235, 235, 235, 0.8);
+	--containerColor: #fff;
+	--foregroudColor: #f0f7ff;
+	--borderColor: rgba(0, 0, 0, 0.1);
+	--menubarIconContainerColor: #f0f7ff;
+	--inputPlaceholderColor: #0000007a;
+	--tagIconColor: rgba(0, 0, 0, 0.5);
 }
 
 .app {
 	display: grid;
 	height: 100vh;
 	width: 100%;
-	background: #f0f7ff;
+	background: var(--foregroudColor);
 	grid-template-columns: 16% auto;
 	transition: 0.3s;
 }
@@ -16,7 +21,7 @@ html {
 ::-webkit-scrollbar {
 	width: 0.3rem;
 	height: 0.3rem;
-	background-color: #f5f5f5;
+	background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {

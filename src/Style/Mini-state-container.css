@@ -1,6 +1,7 @@
 .mini-states-container {
     margin-left: 1.8rem;
     position: relative;
+    color: var(--textColor);
 }
 
 .mini-states-container .state-selector {
@@ -15,14 +16,15 @@
     flex-direction: column;
     gap: 0.5rem;
     padding: 0.8rem;
-    background: #fff;
+    background: var(--containerColor);
     border-radius: 0.5rem;
     box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.1);
     z-index: 10;
 }
 
 .mini-states-container .state-selector .state {
-    background: #f0f7ff;
+    /* background: #f0f7ff; */
+    background: var(--foregroudColor);
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
     cursor: pointer;
