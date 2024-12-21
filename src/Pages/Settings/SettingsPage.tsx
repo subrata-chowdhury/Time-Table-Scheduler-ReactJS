@@ -3,33 +3,44 @@ import Setting from './Setting'
 import '../../Style/Pages/Settings.css'
 
 const SettingsPage: React.FC = (): JSX.Element => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [theme, setTheme] = useState<string>('System');
 
     useEffect(() => {
-        changeTheme(isDarkMode);
-    }, [isDarkMode]);
+        setTheme(localStorage.getItem('theme') || 'System');
+    }, [])
 
-    const handleDarkModeChange = () => {
-        setIsDarkMode(prevMode => !prevMode);
+    const handleDarkModeChange = (value: string | boolean) => {
+        value = String(value)
+        if (value === 'System') {
+            const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            if (prefersDarkScheme) changeTheme('Dark');
+        } else {
+            changeTheme(value)
+        }
+        setTheme(value)
+        localStorage.setItem('theme', value)
     };
 
     return (
         <div style={{ padding: '0 0.5rem', flex: 1, overflowY: 'auto' }}>
             <h1 style={{ color: 'var(--textColor)' }}>Settings</h1>
-            <Setting
-                heading="Dark Mode"
-                description="Enable dark mode by-default it follows system settings"
-                type="checkbox"
-                value={isDarkMode}
-                onChange={handleDarkModeChange}
-            />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <Setting
+                    heading="Choose Theme"
+                    description="Enable dark mode, by-default it follows system settings"
+                    type="select"
+                    options={['System', 'Light', 'Dark']}
+                    value={theme}
+                    onChange={handleDarkModeChange}
+                />
+            </div>
         </div>
     )
 }
 
-export function changeTheme(isDarkMode: boolean) {    
+export function changeTheme(theme: string) {
     const root = document.documentElement;
-    if (isDarkMode) {
+    if (theme === 'Dark') {
         root.style.setProperty('--background', '#000');
         root.style.setProperty('--textColor', '#fff');
         root.style.setProperty('--containerColor', '#2C3B47');
@@ -38,6 +49,7 @@ export function changeTheme(isDarkMode: boolean) {
         root.style.setProperty('--menubarIconContainerColor', 'rgba(255, 255, 255, 0.1)');
         root.style.setProperty('--inputPlaceholderColor', 'rgba(255, 255, 255, 0.7)');
         root.style.setProperty('--tagIconColor', 'rgba(255, 255, 255, 0.5)');
+        root.style.setProperty('--accentColor', '#56aaff')
     } else {
         root.style.setProperty('--background', '#fff');
         root.style.setProperty('--textColor', '#000');
@@ -47,6 +59,7 @@ export function changeTheme(isDarkMode: boolean) {
         root.style.setProperty('--menubarIconContainerColor', '#f0f7ff');
         root.style.setProperty('--inputPlaceholderColor', '#0000007a');
         root.style.setProperty('--tagIconColor', 'rgba(0, 0, 0, 0.5)');
+        root.style.setProperty('--accentColor', '#1E90FF')
     }
 }
 

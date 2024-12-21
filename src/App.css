@@ -7,6 +7,8 @@ html {
 	--menubarIconContainerColor: #f0f7ff;
 	--inputPlaceholderColor: #0000007a;
 	--tagIconColor: rgba(0, 0, 0, 0.5);
+	--accentColor: #1E90FF;
+	/* Dodger Blue */
 }
 
 .app {

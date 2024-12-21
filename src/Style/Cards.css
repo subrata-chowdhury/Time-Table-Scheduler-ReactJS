@@ -40,7 +40,7 @@
 
 .card.active {
     box-shadow: 0 0 0px 3px var(--containerColor),
-        0 0 0px 6px dodgerblue;
+        0 0 0px 6px var(--accentColor);
 }
 
 .card-wrapper {

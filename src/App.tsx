@@ -56,9 +56,15 @@ function MainApp() {
 			autoToggleInResize()
 		})
 		addWindowCloseEventHandler(showWarningConfirm, showError)
-
-		const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
-		if (prefersDarkScheme) changeTheme(true);
+		const theme = localStorage.getItem('theme') || 'System';
+		if (theme === 'System') {
+			const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+			if (prefersDarkScheme) changeTheme('Dark');
+		} else if (theme === 'Dark') {
+			changeTheme('Dark')
+		} else {
+			changeTheme('Light')
+		}
 
 		return () => {
 			window.removeEventListener("resize", () => {

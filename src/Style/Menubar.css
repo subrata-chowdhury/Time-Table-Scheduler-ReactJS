@@ -77,7 +77,7 @@
     width: 25px;
     height: 25px;
     background: var(--menubarIconContainerColor);
-    fill: #1479FF;
+    fill: var(--accentColor);
     padding: 10px;
     border-radius: 10px;
     transition: 0.3s;

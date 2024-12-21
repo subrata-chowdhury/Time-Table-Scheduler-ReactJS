@@ -1,6 +1,6 @@
-.dashboard.page {
+/* .dashboard.page {
     overflow-y: auto;
-}
+} */
 
 .dashboard .top-sub-container {
     display: grid;
@@ -147,6 +147,10 @@
 }
 
 @media (max-width: 800px) {
+    .dashboard.page {
+        overflow-y: auto;
+    }
+
     .dashboard .mini-states-container {
         display: none;
     }

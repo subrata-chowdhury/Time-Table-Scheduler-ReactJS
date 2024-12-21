@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react'
 import '../../Style/Settings.css'
+import Arrow from '../../Icons/Arrow'
 
 interface SettingProps {
     heading: string,
@@ -8,7 +9,7 @@ interface SettingProps {
     type: 'checkbox' | 'text' | 'number' | 'select' | 'radio' | 'textarea',
     options?: Array<string>,
     value: string | number | boolean,
-    onChange: (value: boolean) => void,
+    onChange: (value: string | boolean) => void,
     onBlur?: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void,
     disabled?: boolean,
     required?: boolean,
@@ -50,13 +51,29 @@ const Setting: React.FC<SettingProps> = ({
                         :
                         ""
                 }
+                {
+                    type === 'select' ?
+                        <Dropdown
+                            value={value as string}
+                            options={options}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            disabled={disabled}
+                            required={required}
+                            placeholder={placeholder}
+                            className={className}
+                            error={error}
+                        />
+                        :
+                        ""
+                }
             </div>
             {description && <div className='footer description'>{description}</div>}
         </div>
     )
 }
 
-interface CheckboxProps {
+interface CheckboxProps extends commonInputProps {
     value?: boolean,
     onChange: (value: boolean) => void,
     onBlur: (e: React.FocusEvent<HTMLInputElement>) => void,
@@ -92,6 +109,93 @@ const Checkbox: React.FC<CheckboxProps> = ({
     return (
         <div className={`setting-checkbox ${disabled ? 'disabled' : ''}`} onClick={handleChange}>
             <div className={`circle ${isChecked ? 'checked' : ''}`}></div>
+        </div>
+    )
+}
+
+interface DropdownProps {
+    value: string,
+    options: Array<string>,
+    onChange: (value: string) => void,
+    onBlur: (e: React.FocusEvent<HTMLSelectElement>) => void,
+    disabled?: boolean,
+    required?: boolean,
+    placeholder?: string,
+    className?: string,
+    error?: string
+}
+
+const Dropdown: React.FC<DropdownProps> = ({
+    value,
+    options,
+    onChange = () => { },
+    onBlur = () => { },
+    disabled,
+    required,
+    placeholder,
+    className,
+    error
+}): JSX.Element => {
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    return (
+        <div
+            className='setting-dropdown'
+            style={{
+                position: 'relative',
+                cursor: 'pointer',
+                border: '2px solid var(--borderColor)',
+                borderRadius: 5,
+                padding: '0.4rem 0.7rem'
+            }}>
+            <div
+                className='dropdown-header'
+                style={{
+                    display: 'flex',
+                    gap: '0.4rem',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+                onClick={() => setShowDropdown(!showDropdown)}>
+                <div className='selected'>{options.includes(value) ? value : "Select a Option"}</div>
+                <Arrow arrowStyle={{
+                    transform: showDropdown ? 'rotate(-90deg)' : 'rotate(90deg)',
+                    width: '1rem',
+                    height: '1rem',
+                    transition: '0.3s',
+                    fill: 'var(--textColor)'
+                }} />
+            </div>
+            {showDropdown && <div
+                className='dropdown-list'
+                style={{
+                    position: 'absolute',
+                    background: 'var(--containerColor)',
+                    width: '100%',
+                    left: 0,
+                    boxSizing: 'border-box',
+                    zIndex: 2,
+                    borderRadius: 5,
+                    transform: 'translateY(10px)',
+                    boxShadow: '5px 5px 20px rgba(0, 0, 0, 0.2)',
+                    paddingTop: '0.1rem',
+                    paddingBottom: '0.4rem'
+                }}>
+                {
+                    options.map((option, index) => (
+                        <div
+                            key={index}
+                            className='dropdown-item'
+                            style={{
+                                padding: '0.3rem 0.7rem',
+                            }}
+                            onClick={() => {
+                                onChange(option);
+                                setShowDropdown(false);
+                            }}>{option}</div>
+                    ))
+                }
+            </div>}
         </div>
     )
 }
