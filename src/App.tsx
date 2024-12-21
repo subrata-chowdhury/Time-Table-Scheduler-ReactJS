@@ -68,7 +68,7 @@ function MainApp() {
 		}
 
 		window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', (e) => {
-			if (theme !== 'System') return;
+			if (localStorage.getItem('theme') !== 'System') return; // used localstorage directly here to get the latest value theme var only updated it's value on page reload
 			const newColorScheme = e.matches ? "Dark" : "Light";
 			changeTheme(newColorScheme);
 		});
