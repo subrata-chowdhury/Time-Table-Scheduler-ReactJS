@@ -128,7 +128,7 @@ const DaysRow: React.FC<DaysRowProps> = ({
     while (periodCompIndex <= noOfPeriods && timeTableDataInteratorIndex < details.length && infiniteLoopPreventerIndex < 50) {
         let periodDetails: Period | TeacherSchedulePeriod = details[timeTableDataInteratorIndex]
         if (hasElement(breakTimeIndexs, periodCompIndex)) {
-            DayElements.push(<div className="period-details-container break">
+            DayElements.push(<div key={`break-${periodCompIndex}`} className="period-details-container break">
                 <div> </div>
                 <div> {breakWord} </div>
                 <div> </div>
@@ -172,7 +172,7 @@ const DaysRow: React.FC<DaysRowProps> = ({
         if (infiniteLoopPreventerIndex === 49) {
             DayElements = []
             DayElements.push(
-                <div>Error In Data</div>
+                <div key={`error-count-${infiniteLoopPreventerIndex}`}>Error In Data</div>
             )
         }
     }

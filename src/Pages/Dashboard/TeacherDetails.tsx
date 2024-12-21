@@ -48,7 +48,7 @@ const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
                 await findAndPushSem(data.subjects[index])
             }
             async function findAndPushSem(subjectName: string) {
-                if (!subjectsDetailsList) return
+                if (!subjectsDetailsList || Object.keys(subjectsDetailsList).length === 0) return
                 if (semesters.indexOf(subjectsDetailsList[subjectName].sem) === -1) semesters.push(subjectsDetailsList[subjectName].sem)
             }
             setSemesters([...semesters])

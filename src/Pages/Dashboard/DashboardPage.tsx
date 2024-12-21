@@ -94,12 +94,12 @@ function MainComponents() {
                 <BasicDetails basicDetails={basicDetails} />
                 <WorkingHourBarChat perDayValue={perDayValue} />
             </div>
-            <TeachersDetailsContainer
+            {subjectsDetails.current && <TeachersDetailsContainer
                 onCardClick={(timeTable) => {
                     calculatePerDayValue(timeTable, subjectsDetails.current)
                 }}
                 teachersList={teachersList}
-                subjectsDetailsList={subjectsDetails.current} />
+                subjectsDetailsList={subjectsDetails.current} />}
         </div>
     )
 }

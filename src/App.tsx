@@ -56,6 +56,7 @@ function MainApp() {
 			autoToggleInResize()
 		})
 		addWindowCloseEventHandler(showWarningConfirm, showError)
+
 		const theme = localStorage.getItem('theme') || 'System';
 		if (theme === 'System') {
 			const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -65,6 +66,12 @@ function MainApp() {
 		} else {
 			changeTheme('Light')
 		}
+
+		window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', (e) => {
+			if (theme !== 'System') return;
+			const newColorScheme = e.matches ? "Dark" : "Light";
+			changeTheme(newColorScheme);
+		});
 
 		return () => {
 			window.removeEventListener("resize", () => {
