@@ -18,6 +18,9 @@ import Confirm from './Components/Confirm';
 import { addWindowCloseEventHandler, removeWindowCloseEventHandler } from './Script/commonJS';
 import NotFound from './Pages/NotFound/NotFound';
 import SettingsPage, { changeTheme } from './Pages/Settings/SettingsPage';
+import StudentsPage from './Pages/Students/StudentsPage';
+import StudentDetailsPage from './Pages/StudentDetails/StudentDetailsPage';
+import { getConfig } from './Script/configFetchers';
 
 function App() {
 	return (
@@ -57,20 +60,26 @@ function MainApp() {
 		})
 		addWindowCloseEventHandler(showWarningConfirm, showError)
 
-		const theme = localStorage.getItem('theme') || 'System';
-		if (theme === 'System') {
-			const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
-			if (prefersDarkScheme) changeTheme('Dark');
-		} else if (theme === 'Dark') {
-			changeTheme('Dark')
-		} else {
-			changeTheme('Light')
+		getConfig('theme', (theme) => setTheme(theme), () => setTheme('System'))
+
+		function setTheme(theme: string | null) {
+			theme = theme || 'System';
+			if (theme === 'System') {
+				const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+				if (prefersDarkScheme) changeTheme('Dark');
+			} else if (theme === 'Dark') {
+				changeTheme('Dark')
+			} else {
+				changeTheme('Light')
+			}
 		}
 
-		window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', (e) => {
-			if (localStorage.getItem('theme') !== 'System') return; // used localstorage directly here to get the latest value theme var only updated it's value on page reload
+		window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', async (e) => {
 			const newColorScheme = e.matches ? "Dark" : "Light";
-			changeTheme(newColorScheme);
+			await getConfig('theme', (theme) => {
+				if (theme !== 'System') return; // used directly here to get the latest value theme var only updated it's value on page reload
+				changeTheme(newColorScheme);
+			}, () => changeTheme(newColorScheme))
 		});
 
 		return () => {
@@ -92,6 +101,8 @@ function MainApp() {
 					<Route path="/" element={<DashboardPage />} />
 					<Route path="/Subjects" element={<SubjectsPage />} />
 					<Route path="/Teachers" element={<TeachersPage />} />
+					<Route path="/Students" element={<StudentsPage />} />
+					<Route path="/Students/:id" element={<StudentDetailsPage />} />
 					<Route path="/TimeTables" element={<TimeTablesPage />} />
 					<Route path="/TimeTableStructure" element={<TimeTableStructurePage />} />
 					<Route path="/Files" element={<FilesPage />} />

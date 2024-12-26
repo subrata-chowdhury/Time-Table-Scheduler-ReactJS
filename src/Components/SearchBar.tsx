@@ -15,10 +15,11 @@ export function match(list: string[], key: string) {
 
 interface SearchBarProps {
     array: string[],
-    onChange?: (filteredArray: string[]) => void
+    onChange?: (filteredArray: string[], searchedValue?: string) => void,
+    dontProcces?: boolean
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ array = [], onChange = () => { } }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ array = [], onChange = () => { }, dontProcces = false }) => {
     const [active, setActive] = useState(false);
     const [searchKey, setSearchKey] = useState("");
 
@@ -27,6 +28,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ array = [], onChange = () => { } 
     const searchChangeHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         let searchKey = e.target.value.toUpperCase();
         setSearchKey(searchKey);
+        if (dontProcces) {
+            onChange([], searchKey)
+            return
+        }
         if (searchKey.length === 0) {
             onChange(array)
         } else {

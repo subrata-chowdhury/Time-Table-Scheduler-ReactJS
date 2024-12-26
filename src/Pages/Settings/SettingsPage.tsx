@@ -1,12 +1,13 @@
 import React, { memo, useEffect, useState } from 'react'
 import Setting from './Setting'
 import '../../Style/Pages/Settings.css'
+import { getConfig, setConfig } from '../../Script/configFetchers';
 
 const SettingsPage: React.FC = (): JSX.Element => {
     const [theme, setTheme] = useState<string>('System');
 
     useEffect(() => {
-        setTheme(localStorage.getItem('theme') || 'System');
+        getConfig('theme', theme => setTheme(theme || 'System'), () => setTheme('System'))
     }, [])
 
     const handleDarkModeChange = (value: string | boolean) => {
@@ -14,11 +15,11 @@ const SettingsPage: React.FC = (): JSX.Element => {
         if (value === 'System') {
             const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
             if (prefersDarkScheme) changeTheme('Dark');
+            else changeTheme('Light');
         } else {
             changeTheme(value)
         }
-        setTheme(value)
-        localStorage.setItem('theme', value)
+        setConfig('theme', value, () => setTheme(value))
     };
 
     return (
@@ -50,6 +51,7 @@ export function changeTheme(theme: string) {
         root.style.setProperty('--inputPlaceholderColor', 'rgba(255, 255, 255, 0.7)');
         root.style.setProperty('--tagIconColor', 'rgba(255, 255, 255, 0.5)');
         root.style.setProperty('--accentColor', '#56aaff')
+        root.style.setProperty('--tableHeaderColor', 'rgba(255, 255, 255, 0.1)')
     } else {
         root.style.setProperty('--background', '#fff');
         root.style.setProperty('--textColor', '#000');
@@ -60,6 +62,7 @@ export function changeTheme(theme: string) {
         root.style.setProperty('--inputPlaceholderColor', '#0000007a');
         root.style.setProperty('--tagIconColor', 'rgba(0, 0, 0, 0.5)');
         root.style.setProperty('--accentColor', '#1E90FF')
+        root.style.setProperty('--tableHeaderColor', '#f5f5f5')
     }
 }
 

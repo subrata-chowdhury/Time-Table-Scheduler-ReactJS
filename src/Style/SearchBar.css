@@ -8,6 +8,7 @@
     max-height: 35px;
     transition: 0.3s;
     box-sizing: border-box;
+    color: var(--textColor);
 }
 
 .search-container.active {
@@ -28,10 +29,12 @@
     width: 20px;
     height: 20px;
     cursor: pointer;
+    fill: var(--textColor);
 }
 
 .search-container input {
     border: none;
     outline: none;
     background: transparent;
+    color: var(--textColor);
 }

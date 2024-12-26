@@ -62,7 +62,7 @@ function MainComponents() {
                     if (loop++ == 50) {
                         clearInterval(interval)
                     }
-                }, 100)
+                }, 100) // looping for 5 seconds to wait for the cards data to be fetched
             }
         } catch (err) {
             console.log("%cNo Click Query Found", "color: green");

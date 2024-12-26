@@ -33,3 +33,15 @@ export type TimeTable = Week
 
 export type YearTimeTable = Week[]
 export type FullTimeTable = YearTimeTable[]
+
+
+export type Student = {
+    name: string;
+    rollNo: string;
+    semester: number;
+    section: string;
+    email: string;
+    phoneNumbers: string;
+    address: string;
+    attandance: number
+}

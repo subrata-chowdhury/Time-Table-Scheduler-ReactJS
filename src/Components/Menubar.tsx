@@ -11,6 +11,7 @@ import React, { memo } from "react"
 import { Link, useLocation } from "react-router-dom"
 import Contact from "../Icons/ContactIcon"
 import SettingIcon from "../Icons/Setting"
+import StudentsIcon from "../Icons/Students"
 
 interface MenubarProps {
     onMenuToggleClick?: (e: React.MouseEvent<HTMLOrSVGElement>) => void
@@ -26,6 +27,11 @@ const menus = [
         name: "Teachers",
         icon: <EditTeachers />,
         link: "/Teachers"
+    },
+    {
+        name: "Students",
+        icon: <StudentsIcon />,
+        link: "/Students"
     },
     {
         name: "Dashboard",
