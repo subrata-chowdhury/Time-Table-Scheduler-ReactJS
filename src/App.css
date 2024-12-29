@@ -70,6 +70,18 @@ html {
 	text-overflow: ellipsis;
 }
 
+.col-2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 768px) {
+	.col-md-1 {
+		display: grid;
+		grid-template-columns: 1fr;
+	}
+}
+
 @media (max-width: 850px) {
 	:root {
 		font-size: 15px;

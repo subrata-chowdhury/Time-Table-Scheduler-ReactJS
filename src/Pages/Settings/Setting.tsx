@@ -6,7 +6,7 @@ import Arrow from '../../Icons/Arrow'
 interface SettingProps {
     heading: string,
     description: string,
-    type: 'checkbox' | 'text' | 'number' | 'select' | 'radio' | 'textarea',
+    type?: 'checkbox' | 'text' | 'number' | 'select' | 'radio' | 'textarea',
     options?: Array<string>,
     value: string | number | boolean,
     onChange: (value: string | boolean) => void,
@@ -16,12 +16,13 @@ interface SettingProps {
     placeholder?: string,
     className?: string,
     error?: string
+    component?: React.ReactNode
 }
 
 const Setting: React.FC<SettingProps> = ({
     heading = "",
     description = "",
-    type = 'checkbox',
+    type = '',
     options,
     value,
     onChange = () => { },
@@ -30,7 +31,8 @@ const Setting: React.FC<SettingProps> = ({
     required,
     placeholder,
     className,
-    error
+    error,
+    component
 }): JSX.Element => {
     return (
         <div className='setting'>
@@ -66,6 +68,9 @@ const Setting: React.FC<SettingProps> = ({
                         />
                         :
                         ""
+                }
+                {
+                    component ? component : ""
                 }
             </div>
             {description && <div className='footer description'>{description}</div>}

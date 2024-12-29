@@ -2,6 +2,8 @@ import React, { memo, useEffect, useState } from 'react'
 import Setting from './Setting'
 import '../../Style/Pages/Settings.css'
 import { getConfig, setConfig } from '../../Script/configFetchers';
+import ExcelArrayObjConverted from '../../Components/ExcelArrayObjConverted';
+import { studentsData } from '../../data/SampleData';
 
 const SettingsPage: React.FC = (): JSX.Element => {
     const [theme, setTheme] = useState<string>('System');
@@ -33,6 +35,15 @@ const SettingsPage: React.FC = (): JSX.Element => {
                     options={['System', 'Light', 'Dark']}
                     value={theme}
                     onChange={handleDarkModeChange}
+                />
+                <Setting
+                    heading='Import / Export Student Data'
+                    description='Import or export student data in Excel format'
+                    value=""
+                    onChange={() => { }}
+                    component={
+                        <ExcelArrayObjConverted exportDataGetter={() => studentsData} />
+                    }
                 />
             </div>
         </div>
