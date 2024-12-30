@@ -63,6 +63,8 @@ export function changeTheme(theme: string) {
         root.style.setProperty('--tagIconColor', 'rgba(255, 255, 255, 0.5)');
         root.style.setProperty('--accentColor', '#56aaff')
         root.style.setProperty('--tableHeaderColor', 'rgba(255, 255, 255, 0.1)')
+        root.style.setProperty('--greenText', '#00ff00');
+        root.style.setProperty('--redText', '#ff0000');
     } else {
         root.style.setProperty('--background', '#fff');
         root.style.setProperty('--textColor', '#000');
@@ -74,6 +76,8 @@ export function changeTheme(theme: string) {
         root.style.setProperty('--tagIconColor', 'rgba(0, 0, 0, 0.5)');
         root.style.setProperty('--accentColor', '#1E90FF')
         root.style.setProperty('--tableHeaderColor', '#f5f5f5')
+        root.style.setProperty('--greenText', 'green');
+        root.style.setProperty('--redText', '#ff0000');
     }
 }
 

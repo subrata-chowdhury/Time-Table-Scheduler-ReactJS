@@ -73,6 +73,10 @@
     gap: 5px;
 }
 
+.app.active .menu-container li {
+    display: none;
+}
+
 .menu-container .icon {
     width: 25px;
     height: 25px;
@@ -146,7 +150,7 @@
         justify-self: right;
     }
 
-    .menu-container div {
+    .menu-container li {
         margin-left: 25px;
     }
 }

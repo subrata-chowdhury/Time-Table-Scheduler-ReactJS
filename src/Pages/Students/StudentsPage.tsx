@@ -139,7 +139,7 @@ const StudentsPage: React.FC = (): JSX.Element => {
                             setShowDetailsPopup(true)
                         }}
                     /> */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', overflowY: 'scroll', maxHeight: '78vh', flexGrow: 1, marginTop: '1rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', overflowY: 'scroll', maxHeight: '76vh', flexGrow: 1, marginTop: '1rem' }}>
                         <Table
                             config={[{
                                 heading: "Name",
@@ -150,16 +150,19 @@ const StudentsPage: React.FC = (): JSX.Element => {
                             }, {
                                 heading: "Sem",
                                 selector: "semester",
+                                component: ({ data }) => <div>{data.semester} - {data.section}</div>
                             }, {
-                                heading: "Section",
-                                selector: "section",
-                            }, {
+                            //     heading: "Section",
+                            //     selector: "section",
+                            // }, {
                                 heading: "Email",
                                 selector: "email",
+                                hideAble: true
                             }, {
                                 heading: "Attandance",
                                 selector: "attandance",
-                                component: ({ data }) => <div style={{ fontWeight: 600, color: Number(data.attandance) >= 70 ? 'green' : 'red' }}>{data.attandance}%</div>
+                                hideAble: true,
+                                component: ({ data }) => <div style={{ fontWeight: 600, color: Number(data.attandance) >= 70 ? 'var(--greenText)' : 'var(--redText)' }}>{data.attandance}%</div>
                             }, {
                                 heading: 'Actions',
                                 selector: 'actions',

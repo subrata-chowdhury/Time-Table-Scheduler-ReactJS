@@ -2,8 +2,11 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { studentsData } from '../../data/SampleData'
 import { Student } from '../../data/Types'
+import Arrow from '../../Icons/Arrow'
+import { useNavigate } from 'react-router-dom'
 
 const StudentDetailsEditPage: React.FC = (): JSX.Element => {
+    const navigate = useNavigate();
     const { id } = useParams()
     const student = studentsData.find((student) => student.rollNo === id)
     const [formData, setFormData] = useState<Student>(student || {
@@ -35,7 +38,9 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
         <div className='student-edit' style={{ flexGrow: 1, color: 'var(--textColor)' }}>
             {student ? (
                 <form onSubmit={handleSubmit} style={{ padding: '2rem', border: '2px solid var(--borderColor)', borderRadius: '8px', margin: '0 auto', marginTop: '2rem', background: 'var(--containerColor)' }}>
-                    <h2 style={{ margin: 0, padding: 0, marginBottom: '1rem' }}>Edit Student Details</h2>
+                    <h2 style={{ margin: 0, padding: 0, marginBottom: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <Arrow arrowStyle={{ fill: 'var(--textColor)', width: 30, height: 30, transform: 'rotate(180deg)', cursor: 'pointer' }} arrowIconClickHandler={() => navigate(-1)} />Edit Student Details
+                    </h2>
                     <div className='col-2 col-md-1'>
                         <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                             <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Name:</label>
@@ -71,7 +76,7 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
                         </div>
                     </div>
                     <div className='save-btn-container' style={{ width: '100%', textAlign: 'center', marginTop: '0.5rem' }}>
-                    <button type="submit">Save</button>
+                        <button type="submit">Save</button>
                     </div>
                 </form>
             ) : (
