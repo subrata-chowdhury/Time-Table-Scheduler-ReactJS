@@ -21,6 +21,7 @@ import SettingsPage, { changeTheme } from './Pages/Settings/SettingsPage';
 import StudentsPage from './Pages/Students/StudentsPage';
 import StudentDetailsPage from './Pages/StudentDetails/StudentDetailsPage';
 import { getConfig } from './Script/configFetchers';
+import StudentDetailsEditPage from './Pages/StudentDetails/StudentDetailsEditPage';
 
 function App() {
 	return (
@@ -103,6 +104,7 @@ function MainApp() {
 					<Route path="/Teachers" element={<TeachersPage />} />
 					<Route path="/Students" element={<StudentsPage />} />
 					<Route path="/Students/:id" element={<StudentDetailsPage />} />
+					<Route path="/Students/edit/:id" element={<StudentDetailsEditPage />} />
 					<Route path="/TimeTables" element={<TimeTablesPage />} />
 					<Route path="/TimeTableStructure" element={<TimeTableStructurePage />} />
 					<Route path="/Files" element={<FilesPage />} />

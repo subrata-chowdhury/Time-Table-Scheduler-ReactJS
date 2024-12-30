@@ -8,14 +8,16 @@ import { Link } from 'react-router-dom'
 import { Student } from '../../data/Types'
 import { studentsData } from '../../data/SampleData'
 import Cross from '../../Icons/Cross'
+import { useConfirm } from '../../Components/ConfirmContextProvider'
 
 const StudentsPage: React.FC = (): JSX.Element => {
     const [displayLoader, setDisplayLoader] = useState(false);
-
     const [studentsList, setStudentsList] = useState<Student[]>(studentsData || [])
     const [filteredStudentList, setFilteredStudentList] = useState<Student[]>(studentsData || [])
     const [showShortPopup, setShowShortPopup] = useState(false)
     const [sortKeys, setSortKeys] = useState<(keyof Student)[]>([])
+
+    const { showWarningConfirm } = useConfirm()
 
     useEffect(() => {
         startUpFunction()
@@ -38,6 +40,16 @@ const StudentsPage: React.FC = (): JSX.Element => {
             setSortKeys(keys)
         }
     }
+
+    const deleteStudent = (rollNo: string | number) => {
+        // deleteStudent(rollNo) // api call
+        showWarningConfirm('Are you sure you want to delete this student?', () => {
+            const newList = studentsList.filter(student => student.rollNo !== rollNo)
+            setStudentsList(newList)
+            setFilteredStudentList(newList)
+        })
+    }
+
 
     return (
         <>
@@ -154,9 +166,9 @@ const StudentsPage: React.FC = (): JSX.Element => {
                                 component: ({ data }) => <div style={{ display: 'flex', gap: 5 }}>
                                     <Link to={'/Students/' + data.rollNo} style={{ cursor: 'pointer', color: 'var(--accentColor)', textDecoration: 'none' }}>Details</Link>
                                     <span>|</span>
-                                    <span style={{ cursor: 'pointer', color: 'orange', display: 'flex', alignItems: 'end' }}><Trash width={20} fill='red' /></span>
+                                    <span style={{ cursor: 'pointer', color: 'orange', display: 'flex', alignItems: 'end' }} onClick={() => deleteStudent(data.rollNo)} ><Trash width={20} fill='red' /></span>
                                     <span>|</span>
-                                    <span style={{ cursor: 'pointer', color: 'var(--accentColor)' }}>Edit</span>
+                                    <Link to={'/Students/edit/' + data.rollNo} style={{ cursor: 'pointer', color: 'var(--accentColor)', textDecoration: 'none' }}>Edit</Link>
                                 </div>
                             }]}
                             data={sortStudents(filteredStudentList, sortKeys)}

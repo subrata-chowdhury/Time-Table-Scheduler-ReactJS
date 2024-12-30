@@ -110,22 +110,26 @@ interface PopUpProps {
 
 const PopUp: React.FC<PopUpProps> = ({ data, show, yesBtnLabel = 'Download', onYesBtnClick, onCancelBtnClick }) => {
     return (
-        <div
-            style={{
-                width: '100%',
-                minHeight: '100vh',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                display: show ? 'flex' : 'none',
-                justifyContent: 'center',
-                zIndex: 100,
-                alignItems: 'center'
-            }}
-            onClick={() => onCancelBtnClick ? onCancelBtnClick() : ""}>
+        <>
+            <div
+                style={{
+                    width: '100%',
+                    minHeight: '100vh',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    display: show ? 'flex' : 'none',
+                    justifyContent: 'center',
+                    zIndex: 100,
+                    alignItems: 'center'
+                }}
+                onClick={() => onCancelBtnClick ? onCancelBtnClick() : ""}>
+            </div>
             {data && data?.length > 0 && <div
                 style={{
+                    display: show ? 'block' : 'none',
+                    zIndex: 101,
                     position: 'fixed',
                     top: '50%',
                     left: '50%',
@@ -176,9 +180,9 @@ const PopUp: React.FC<PopUpProps> = ({ data, show, yesBtnLabel = 'Download', onY
                 </div>
             </div>}
             {
-                (!data || data.length === 0) && <div style={{ padding: '1rem', backgroundColor: 'var(--containerColor)', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', color: 'var(--textColor)' }}>No data to export</div>
+                (!data || data.length === 0) && <div style={{ padding: '1rem', backgroundColor: 'var(--containerColor)', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', color: 'var(--textColor)', display: show ? 'flex' : 'none' }}>No data to export</div>
             }
-        </div>
+        </>
     );
 }
 

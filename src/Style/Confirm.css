@@ -60,20 +60,20 @@
     gap: 0.5rem;
 }
 
-.confirm .btns-container .approve {
-    background: dodgerblue;
+.confirm .btns-container .approve,
+.confirm .btns-container .decline {
     color: #fff;
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 0.4rem;
     cursor: pointer;
+    font-weight: 600;
+}
+
+.confirm .btns-container .approve {
+    background: dodgerblue;
 }
 
 .confirm .btns-container .decline {
     background: orange;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.4rem;
-    cursor: pointer;
 }

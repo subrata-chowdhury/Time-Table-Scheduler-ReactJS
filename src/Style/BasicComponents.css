@@ -8,6 +8,7 @@
     box-sizing: border-box;
     font-size: 1.05rem;
     padding: 10px;
+    color: var(--textColor);
 }
 
 .input-box[type=range] {
@@ -88,7 +89,7 @@
     outline: none;
     border-radius: 7px;
     color: #fff;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
     font-size: 18px;
 }
