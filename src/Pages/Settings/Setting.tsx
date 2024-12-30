@@ -122,7 +122,7 @@ interface DropdownProps {
     value: string,
     options: Array<string>,
     onChange: (value: string) => void,
-    onBlur: (e: React.FocusEvent<HTMLSelectElement>) => void,
+    onBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void,
     disabled?: boolean,
     required?: boolean,
     placeholder?: string,
@@ -130,7 +130,7 @@ interface DropdownProps {
     error?: string
 }
 
-const Dropdown: React.FC<DropdownProps> = ({
+export const Dropdown: React.FC<DropdownProps> = ({
     value,
     options,
     onChange = () => { },
@@ -151,7 +151,8 @@ const Dropdown: React.FC<DropdownProps> = ({
                 cursor: 'pointer',
                 border: '2px solid var(--borderColor)',
                 borderRadius: 5,
-                padding: '0.4rem 0.7rem'
+                padding: '0.4rem 0.7rem',
+                color: 'var(--textColor)',
             }}>
             <div
                 className='dropdown-header'
@@ -162,7 +163,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                     alignItems: 'center'
                 }}
                 onClick={() => setShowDropdown(!showDropdown)}>
-                <div className='selected'>{options.includes(value) ? value : "Select a Option"}</div>
+                <span className='selected'>{options.includes(value) ? value : "Select a Option"}</span>
                 <Arrow arrowStyle={{
                     transform: showDropdown ? 'rotate(-90deg)' : 'rotate(90deg)',
                     width: '1rem',

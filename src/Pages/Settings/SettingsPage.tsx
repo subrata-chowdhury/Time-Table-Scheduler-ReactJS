@@ -4,9 +4,12 @@ import '../../Style/Pages/Settings.css'
 import { getConfig, setConfig } from '../../Script/configFetchers';
 import ExcelArrayObjConverted from '../../Components/ExcelArrayObjConverted';
 import { studentsData } from '../../data/SampleData';
+import StudentFilter from '../../Components/StudentFilter';
+import EmailSender from '../../Components/EmailSenderBtn';
 
 const SettingsPage: React.FC = (): JSX.Element => {
     const [theme, setTheme] = useState<string>('System');
+    const [emails, setEmails] = useState<string[]>([]);
 
     useEffect(() => {
         getConfig('theme', theme => setTheme(theme || 'System'), () => setTheme('System'))
@@ -45,6 +48,19 @@ const SettingsPage: React.FC = (): JSX.Element => {
                         <ExcelArrayObjConverted exportDataGetter={async () => studentsData} />
                     }
                 />
+                <Setting
+                    heading='Send Bulk Email'
+                    description='Send bulk emails to students'
+                    value=""
+                    onChange={() => { }}
+                    component={
+                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
+                            <StudentFilter students={studentsData} onChange={students => { setEmails(students.map(student => student.email)) }} />
+                            <EmailSender emailList={emails} />
+                        </div>
+                    }
+                />
+
             </div>
         </div>
     )

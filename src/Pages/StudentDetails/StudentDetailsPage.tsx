@@ -11,9 +11,10 @@ const StudentDetailsPage: React.FC = (): JSX.Element => {
     return (
         <div style={{ flexGrow: 1, color: 'var(--textColor)' }}>
             {student.length > 0 ? (
-                <div style={{ padding: '2rem', border: '2px solid var(--borderColor)', borderRadius: '8px', margin: '0 auto', marginTop: '2rem', background: 'var(--containerColor)' }}>
+                <div style={{ padding: '2rem', border: '2px solid var(--borderColor)', borderRadius: '8px', margin: '0 auto', width: '90%', marginTop: '2rem', background: 'var(--containerColor)' }}>
                     <h2 style={{ margin: 0, padding: 0, marginBottom: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                        <Arrow arrowStyle={{ fill: 'var(--textColor)', width: 30, height: 30, transform: 'rotate(180deg)', cursor: 'pointer' }} arrowIconClickHandler={() => navigate(-1)} />Student Details
+                        <Arrow arrowStyle={{ fill: 'var(--textColor)', width: 30, height: 30, transform: 'rotate(180deg)', cursor: 'pointer' }} arrowIconClickHandler={() => navigate(-1)} />
+                        <span>Student Details</span>
                     </h2>
                     <div className='col-2 col-md-1'>
                         <div style={{ marginBottom: '1.2rem' }} ><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Name:</div> {student[0].name}</div>

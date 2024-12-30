@@ -9,6 +9,7 @@ import { Student } from '../../data/Types'
 import { studentsData } from '../../data/SampleData'
 import Cross from '../../Icons/Cross'
 import { useConfirm } from '../../Components/ConfirmContextProvider'
+import StudentFilter from '../../Components/StudentFilter'
 
 const StudentsPage: React.FC = (): JSX.Element => {
     const [displayLoader, setDisplayLoader] = useState(false);
@@ -124,7 +125,10 @@ const StudentsPage: React.FC = (): JSX.Element => {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2rem', marginTop: '1rem' }}>
                     <span style={{ display: 'flex', alignItems: 'center', marginLeft: '2rem', color: 'var(--textColor)' }}>Showing: &nbsp;<span style={{ fontWeight: 600, fontSize: '1.2rem' }}>{filteredStudentList.length}</span>&nbsp; Students</span>
-                    <div style={{ background: 'var(--containerColor)', padding: '.5rem 1rem', border: '2px solid var(--borderColor)', borderRadius: '100px', cursor: 'pointer', color: 'var(--textColor)' }} onClick={() => setShowShortPopup(true)}>Sort By</div>
+                    <div style={{ display: 'flex', gap: '1rem' }}>
+                        <StudentFilter students={studentsData} onChange={(students) => setFilteredStudentList(students)} />
+                        <div style={{ background: 'var(--containerColor)', padding: '.5rem 1rem', border: '2px solid var(--borderColor)', borderRadius: '100px', cursor: 'pointer', color: 'var(--textColor)' }} onClick={() => setShowShortPopup(true)}>Sort By</div>
+                    </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1 }}>
                     {/* <Cards
@@ -139,7 +143,7 @@ const StudentsPage: React.FC = (): JSX.Element => {
                             setShowDetailsPopup(true)
                         }}
                     /> */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', overflowY: 'scroll', maxHeight: '76vh', flexGrow: 1, marginTop: '1rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', overflowY: 'scroll', height: '76vh', flexGrow: 1, marginTop: '1rem' }}>
                         <Table
                             config={[{
                                 heading: "Name",
@@ -152,9 +156,9 @@ const StudentsPage: React.FC = (): JSX.Element => {
                                 selector: "semester",
                                 component: ({ data }) => <div>{data.semester} - {data.section}</div>
                             }, {
-                            //     heading: "Section",
-                            //     selector: "section",
-                            // }, {
+                                //     heading: "Section",
+                                //     selector: "section",
+                                // }, {
                                 heading: "Email",
                                 selector: "email",
                                 hideAble: true

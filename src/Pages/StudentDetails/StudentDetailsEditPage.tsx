@@ -37,9 +37,10 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
     return (
         <div className='student-edit' style={{ flexGrow: 1, color: 'var(--textColor)' }}>
             {student ? (
-                <form onSubmit={handleSubmit} style={{ padding: '2rem', border: '2px solid var(--borderColor)', borderRadius: '8px', margin: '0 auto', marginTop: '2rem', background: 'var(--containerColor)' }}>
+                <form onSubmit={handleSubmit} style={{ padding: '2rem', border: '2px solid var(--borderColor)', borderRadius: '8px', width: '90%', margin: '0 auto', marginTop: '2rem', background: 'var(--containerColor)' }}>
                     <h2 style={{ margin: 0, padding: 0, marginBottom: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                        <Arrow arrowStyle={{ fill: 'var(--textColor)', width: 30, height: 30, transform: 'rotate(180deg)', cursor: 'pointer' }} arrowIconClickHandler={() => navigate(-1)} />Edit Student Details
+                        <Arrow arrowStyle={{ fill: 'var(--textColor)', width: 30, height: 30, transform: 'rotate(180deg)', cursor: 'pointer' }} arrowIconClickHandler={() => navigate(-1)} />
+                        <span>Edit Student Details</span>
                     </h2>
                     <div className='col-2 col-md-1'>
                         <div className='input-container' style={{ marginBottom: '1.2rem' }}>
