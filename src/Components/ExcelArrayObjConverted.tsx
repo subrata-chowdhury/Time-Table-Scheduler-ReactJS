@@ -1,22 +1,21 @@
 import React, { useRef, useState } from "react";
-import Papa from "papaparse"; // For CSV parsing
-import * as XLSX from "xlsx"; // For Excel parsing
 import ArrowWithLine from "../Icons/ArrowWithLine";
 import Table from "./Table";
 
-interface ExcelArrayObjConverted {
+interface ExcelArrayObjConvertedProps {
     onImport?: (data: object[]) => void;
     onExport?: (data: object[]) => void;
-    exportDataGetter?: () => object[];
+    exportDataGetter?: () => Promise<object[]>;
 }
 
-const ExcelArrayObjConverted: React.FC<ExcelArrayObjConverted> = ({
+const ExcelArrayObjConverted: React.FC<ExcelArrayObjConvertedProps> = ({
     onExport = () => { },
-    exportDataGetter = () => [],
+    exportDataGetter = async () => [],
     onImport = () => { },
 }) => {
     const [data, setData] = useState<object[]>([]);
     const [show, setShow] = useState(false);
+    const [yesBtnLabel, setYesBtnLabel] = useState('Download');
     const fileInput = useRef<HTMLInputElement | null>(null);
 
     // Handle file change
@@ -28,97 +27,24 @@ const ExcelArrayObjConverted: React.FC<ExcelArrayObjConverted> = ({
         const fileExtension = file.name.split(".").pop()?.toLowerCase() || "";
 
         if (fileExtension === "csv") {
-            parseCSV(file);
+            parseCSV(file, (arryaOfObjects) => {
+                setData(arryaOfObjects);
+                onImport(arryaOfObjects);
+            });
             setShow(true);
+            setYesBtnLabel('Import');
         } else if (["xls", "xlsx"].includes(fileExtension)) {
-            parseExcel(file);
+            parseExcel(file, (arryaOfObjects) => {
+                setData(arryaOfObjects);
+                onImport(arryaOfObjects);
+            });
             setShow(true);
+            setYesBtnLabel('Import');
         } else {
             alert("Unsupported file type. Please upload a CSV or Excel file.");
         }
     };
 
-    // Parse CSV files
-    const parseCSV = (file: File) => {
-        Papa.parse(file, {
-            header: true,
-            skipEmptyLines: true,
-            complete: (result) => {
-                setData(result.data as object[]);
-                onImport(result.data as object[]);
-                // console.log("CSV Data:", result.data);
-            },
-            error: (error) => {
-                console.error("Error parsing CSV:", error);
-            },
-        });
-    };
-
-    // Parse Excel files
-    const parseExcel = (file: File) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            if (e.target && e.target.result) {
-                const data = new Uint8Array(e.target.result as ArrayBuffer);
-                const workbook = XLSX.read(data, { type: "array" });
-                const sheetName = workbook.SheetNames[0]; // Get the first sheet
-                const sheet = workbook.Sheets[sheetName];
-                const json = XLSX.utils.sheet_to_json(sheet);
-                setData(json as object[]);
-                onImport(json as object[]);
-                // console.log("Excel Data:", json);
-            }
-        };
-        reader.onerror = (error) => {
-            console.error("Error reading Excel file:", error);
-        };
-        reader.readAsArrayBuffer(file);
-    };
-
-
-
-    // export logic
-    // const [data, setData] = useState(null); // State to store the fetched data
-
-    // Function to fetch the data dynamically
-    const fetchData = async () => {
-        // Simulate fetching data from an API or database
-        const fetchedData = exportDataGetter();
-        setData(fetchedData);
-        return fetchedData;
-    };
-
-    // Save file using Anchor Tag and Blob URL
-    const saveFileUsingAnchorTag = (data: any, fileName: string, fileType: string) => {
-        const blob = new Blob([data], { type: fileType });
-        const url = URL.createObjectURL(blob); // Create Blob URL
-        const anchor = document.createElement("a"); // Create anchor tag
-        anchor.href = url;
-        anchor.download = fileName; // Set download file name
-        anchor.style.display = "none"; // Hide anchor
-        document.body.appendChild(anchor); // Append anchor to body
-        anchor.click(); // Trigger click event to download file
-        document.body.removeChild(anchor); // Remove anchor
-        URL.revokeObjectURL(url); // Release Blob URL
-    };
-
-    // Convert and save as CSV
-    // const downloadCSV = async () => {
-    //     const fetchedData = data; // Fetch data dynamically
-    //     const csv = Papa.unparse(fetchedData); // Convert JSON to CSV
-    //     saveFileUsingAnchorTag(csv, "data.csv", "text/csv;charset=utf-8;");
-    // };
-
-    // Convert and save as Excel
-    const downloadExcel = async () => {
-        const fetchedData = data; // Fetch data dynamically
-        const worksheet = XLSX.utils.json_to_sheet(fetchedData); // Create worksheet
-        const workbook = XLSX.utils.book_new(); // Create workbook
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1"); // Append sheet
-        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-        saveFileUsingAnchorTag(excelBuffer, "data.xlsx", "application/octet-stream");
-        onExport(fetchedData);
-    };
 
     return (
         <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -143,8 +69,10 @@ const ExcelArrayObjConverted: React.FC<ExcelArrayObjConverted> = ({
             </button>
             <button
                 onClick={async () => {
-                    await fetchData()
-                    setShow(true)
+                    const fetchedData = await exportDataGetter();
+                    setData(fetchedData);
+                    setShow(true);
+                    setYesBtnLabel('Download');
                 }}
                 style={{
                     fontSize: '0.9rem',
@@ -162,7 +90,12 @@ const ExcelArrayObjConverted: React.FC<ExcelArrayObjConverted> = ({
                 }}>
                 <ArrowWithLine rotate={180} />Export
             </button>
-            <PopUp data={data} show={show} onYesBtnClick={downloadExcel} onCancelBtnClick={() => setShow(false)} />
+            <PopUp
+                data={data}
+                show={show}
+                onYesBtnClick={() => downloadExcel(data, (arrayOfObject) => onExport(arrayOfObject))}
+                onCancelBtnClick={() => setShow(false)}
+                yesBtnLabel={yesBtnLabel} />
         </div>
     );
 };
@@ -170,11 +103,12 @@ const ExcelArrayObjConverted: React.FC<ExcelArrayObjConverted> = ({
 interface PopUpProps {
     data?: object[];
     show: boolean;
+    yesBtnLabel?: string;
     onYesBtnClick?: () => void;
     onCancelBtnClick?: () => void;
 }
 
-const PopUp: React.FC<PopUpProps> = ({ data, show, onYesBtnClick, onCancelBtnClick }) => {
+const PopUp: React.FC<PopUpProps> = ({ data, show, yesBtnLabel = 'Download', onYesBtnClick, onCancelBtnClick }) => {
     return (
         <div
             style={{
@@ -224,7 +158,7 @@ const PopUp: React.FC<PopUpProps> = ({ data, show, onYesBtnClick, onCancelBtnCli
                             cursor: 'pointer',
                             fontSize: '1rem',
                         }}>
-                        Download
+                        {yesBtnLabel}
                     </button>
                     <button
                         onClick={() => onCancelBtnClick ? onCancelBtnClick() : ""}
@@ -249,3 +183,72 @@ const PopUp: React.FC<PopUpProps> = ({ data, show, onYesBtnClick, onCancelBtnCli
 }
 
 export default ExcelArrayObjConverted;
+
+
+// Parse CSV files
+const parseCSV = (file: File, onComplete: (arryaOfObjects: object[]) => void) => {
+    import("papaparse").then(Papa => {
+        Papa.parse(file, {
+            header: true,
+            skipEmptyLines: true,
+            complete: (result) => {
+                onComplete(result.data as object[])
+                // console.log("CSV Data:", result.data);
+            },
+            error: (error) => {
+                console.error("Error parsing CSV:", error);
+            },
+        });
+    });
+};
+
+// Parse Excel files
+const parseExcel = (file: File, onComplete: (arryaOfObjects: object[]) => void) => {
+    import("xlsx").then(XLSX => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            if (e.target && e.target.result) {
+                const data = new Uint8Array(e.target.result as ArrayBuffer);
+                const workbook = XLSX.read(data, { type: "array" });
+                const sheetName = workbook.SheetNames[0]; // Get the first sheet
+                const sheet = workbook.Sheets[sheetName];
+                const json = XLSX.utils.sheet_to_json(sheet);
+                onComplete(json as object[]);
+                // console.log("Excel Data:", json);
+            }
+        };
+        reader.onerror = (error) => {
+            console.error("Error reading Excel file:", error);
+        };
+        reader.readAsArrayBuffer(file);
+    })
+};
+
+// Convert and save as Excel
+const downloadExcel = async (data: object[], onExport: (arrayOfObject: object[]) => void) => {
+    import("xlsx").then(XLSX => {
+        const fetchedData = data; // Fetch data dynamically
+        const worksheet = XLSX.utils.json_to_sheet(fetchedData); // Create worksheet
+        const workbook = XLSX.utils.book_new(); // Create workbook
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1"); // Append sheet
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        saveFileUsingAnchorTag(excelBuffer, "data.xlsx", "application/octet-stream");
+        onExport(fetchedData);
+    })
+};
+
+// Save file using Anchor Tag and Blob URL
+const saveFileUsingAnchorTag = (data: any, fileName: string, fileType: string) => {
+    const blob = new Blob([data], { type: fileType });
+    const url = URL.createObjectURL(blob); // Create Blob URL
+    const anchor = document.createElement("a"); // Create anchor tag
+    anchor.href = url;
+    anchor.download = fileName; // Set download file name
+    anchor.style.display = "none"; // Hide anchor
+    document.body.appendChild(anchor); // Append anchor to body
+    anchor.click(); // Trigger click event to download file
+    document.body.removeChild(anchor); // Remove anchor
+    URL.revokeObjectURL(url); // Release Blob URL
+};
+
+export { parseCSV, parseExcel, downloadExcel, saveFileUsingAnchorTag };

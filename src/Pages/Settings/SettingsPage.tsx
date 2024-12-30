@@ -42,7 +42,7 @@ const SettingsPage: React.FC = (): JSX.Element => {
                     value=""
                     onChange={() => { }}
                     component={
-                        <ExcelArrayObjConverted exportDataGetter={() => studentsData} />
+                        <ExcelArrayObjConverted exportDataGetter={async () => studentsData} />
                     }
                 />
             </div>

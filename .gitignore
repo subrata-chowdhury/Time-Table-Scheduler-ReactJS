@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
+/UI Demo Images
 tsconfig.js.json
 javaScriptVersionBuild
