@@ -19,6 +19,7 @@ const StudentsPage: React.FC = (): JSX.Element => {
     const [filteredStudentList, setFilteredStudentList] = useState<Student[]>(studentsData || [])
     const [showShortPopup, setShowShortPopup] = useState(false)
     const [sortKeys, setSortKeys] = useState<(keyof Student)[]>([])
+    const [showAddModel, setShowAddModel] = useState(false)
 
     const { showWarningConfirm } = useConfirm()
 
@@ -125,9 +126,28 @@ const StudentsPage: React.FC = (): JSX.Element => {
                         }}
                         dontProccess={true} />
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2rem', marginTop: '1rem' }}>
+                <div style={{ marginRight: '2rem', marginTop: '1rem' }} className='col-2 col-md-1'>
                     <span style={{ display: 'flex', alignItems: 'center', marginLeft: '2rem', color: 'var(--textColor)' }}>Showing: &nbsp;<span style={{ fontWeight: 600, fontSize: '1.2rem' }}>{filteredStudentList.length}</span>&nbsp; Students</span>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'end' }}>
+                        <div
+                            title='Add a New Student'
+                            style={{
+                                background: 'var(--containerColor)',
+                                padding: '.5rem 1rem',
+                                border: '2px solid var(--borderColor)',
+                                borderRadius: '100px',
+                                cursor: 'pointer',
+                                color: 'var(--textColor)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem'
+                            }}
+                            onClick={() => {
+                                setShowAddModel(true)
+                            }}>
+                            Add
+                        </div>
                         <div
                             title='Increment Semesters'
                             style={{
@@ -253,11 +273,92 @@ const StudentsPage: React.FC = (): JSX.Element => {
                 </div>
             </div>
             {displayLoader && <Loader />}
+            {showAddModel && <AddStudentModel onAdd={(student) => alert("Added: " + JSON.stringify(student, null, 2))} onClose={() => setShowAddModel(false)} />}
         </>
     )
 }
 
 export default StudentsPage
+
+interface AddStudentModelProps {
+    onClose: () => void
+    onAdd: (student: Student) => void
+}
+
+const AddStudentModel: React.FC<AddStudentModelProps> = ({ onAdd = () => { }, onClose = () => { } }) => {
+    const [formData, setFormData] = useState<Student>({
+        name: '',
+        rollNo: '',
+        semester: 1,
+        section: '',
+        email: '',
+        phoneNumbers: '',
+        address: '',
+        attendance: 0
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        // Update the student data logic here
+        console.log('Updated student data:', formData);
+    };
+
+    return (
+        <div className='student-edit' style={{ flexGrow: 1, color: 'var(--textColor)', position: 'fixed', top: 0, left: 0, width: '100%', minHeight: '100vh', zIndex: 100, background: 'rgba(0, 0, 0, 0.4)' }}>
+            <form onSubmit={handleSubmit} style={{ padding: '2rem', border: '2px solid var(--borderColor)', borderRadius: '8px', width: '80%', margin: '0 auto', marginTop: '0', background: 'var(--containerColor)', position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }}>
+                <h2 style={{ margin: 0, padding: 0, marginBottom: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <span>Add Student Details</span>
+                </h2>
+                <div className='col-2 col-md-1'>
+                    <div className='input-container' style={{ marginBottom: '1.2rem' }}>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Name:</label>
+                        <input className='input-box' type="text" name="name" value={formData.name} onChange={handleChange} />
+                    </div>
+                    <div className='input-container' style={{ marginBottom: '1.2rem' }}>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Roll No:</label>
+                        <input className='input-box' type="text" name="rollNo" value={formData.rollNo} onChange={handleChange} />
+                    </div>
+                    <div className='input-container' style={{ marginBottom: '1.2rem' }}>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Semester:</label>
+                        <input className='input-box' type="text" name="semester" value={formData.semester} onChange={handleChange} />
+                    </div>
+                    <div className='input-container' style={{ marginBottom: '1.2rem' }}>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Section:</label>
+                        <input className='input-box' type="text" name="section" value={formData.section} onChange={handleChange} />
+                    </div>
+                    <div className='input-container' style={{ marginBottom: '1.2rem' }}>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Email:</label>
+                        <input className='input-box' type="email" name="email" value={formData.email} onChange={handleChange} />
+                    </div>
+                    <div className='input-container' style={{ marginBottom: '1.2rem' }}>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Phone Numbers:</label>
+                        <input className='input-box' type="text" name="phoneNumbers" value={formData.phoneNumbers} onChange={handleChange} />
+                    </div>
+                    <div className='input-container' style={{ marginBottom: '1.2rem' }}>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Address:</label>
+                        <input className='input-box' type="text" name="address" value={formData.address} onChange={handleChange} />
+                    </div>
+                    <div className='input-container' style={{ marginBottom: '1.2rem' }}>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Attendance (%):</label>
+                        <input className='input-box' type="text" name="attendance" value={formData.attendance} onChange={handleChange} />
+                    </div>
+                </div>
+                <div className='save-btn-container'>
+                    <button type="submit" style={{ width: '100%', fontWeight: 600, border: '2px solid var(--accentColor)', background: 'var(--accentColor)', textAlign: 'center', marginTop: '0.5rem' }} onClick={() => onAdd(formData)}>Add</button>
+                    <button style={{ width: '100%', fontWeight: 600, border: '2px solid var(--borderColor)', background: 'var(--containerColor)', textAlign: 'center', marginTop: '0.5rem' }} onClick={onClose}>Close</button>
+                </div>
+            </form>
+        </div>
+    )
+}
 
 const sortStudents = (students: Student[], keys: (keyof Student)[] = []): Student[] => {
     return students.sort((a, b) => {
