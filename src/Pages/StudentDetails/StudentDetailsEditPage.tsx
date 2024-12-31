@@ -45,35 +45,35 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
                     <div className='col-2 col-md-1'>
                         <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                             <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Name:</label>
-                            <input className='input-box' type="text" name="name" value={formData.name} onChange={handleChange} />
+                            <input className='input-box' type="text" name="name" value={formData.name} onChange={handleChange} placeholder="e.g., John Doe" />
                         </div>
                         <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                             <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Roll No:</label>
-                            <input className='input-box' type="text" name="rollNo" value={formData.rollNo} onChange={handleChange} />
+                            <input className='input-box' type="text" name="rollNo" value={formData.rollNo} onChange={handleChange} placeholder="e.g., 12345" />
                         </div>
                         <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                             <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Semester:</label>
-                            <input className='input-box' type="text" name="semester" value={formData.semester} onChange={handleChange} />
+                            <input className='input-box' type="text" name="semester" value={formData.semester} onChange={handleChange} placeholder="e.g., 5" />
                         </div>
                         <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                             <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Section:</label>
-                            <input className='input-box' type="text" name="section" value={formData.section} onChange={handleChange} />
+                            <input className='input-box' type="text" name="section" value={formData.section} onChange={handleChange} placeholder="e.g., A" />
                         </div>
                         <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                             <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Email:</label>
-                            <input className='input-box' type="email" name="email" value={formData.email} onChange={handleChange} />
+                            <input className='input-box' type="email" name="email" value={formData.email} onChange={handleChange} placeholder="e.g., johndoe@example.com" />
                         </div>
                         <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                             <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Phone Numbers:</label>
-                            <input className='input-box' type="text" name="phoneNumbers" value={formData.phoneNumbers} onChange={handleChange} />
+                            <input className='input-box' type="text" name="phoneNumbers" value={formData.phoneNumbers} onChange={handleChange} placeholder="e.g., 1234567890" />
                         </div>
                         <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                             <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Address:</label>
-                            <input className='input-box' type="text" name="address" value={formData.address} onChange={handleChange} />
+                            <input className='input-box' type="text" name="address" value={formData.address} onChange={handleChange} placeholder="e.g., 123 Main St, City, Country" />
                         </div>
                         <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                             <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Attendance:</label>
-                            <input className='input-box' type="text" name="attendance" value={formData.attendance} onChange={handleChange} />
+                            <input className='input-box' type="text" name="attendance" value={formData.attendance} onChange={handleChange} placeholder="e.g., 85" />
                         </div>
                     </div>
                     <div className='save-btn-container' style={{ width: '100%', textAlign: 'center', marginTop: '0.5rem' }}>

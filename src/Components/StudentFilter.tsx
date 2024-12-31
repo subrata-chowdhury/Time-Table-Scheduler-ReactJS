@@ -59,7 +59,7 @@ const StudentFilter: React.FC<StudentFilterProps> = ({ students, hidePreView = f
     return (
         <>
             {showFilterPopup && <div style={{ color: 'var(--textColor)', position: 'fixed', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 100, background: 'rgba(0, 0, 0, 0.5)' }}>
-                <div className='col-2 col-md-1' style={{ width: '50%', background: 'var(--containerColor)', padding: '2rem', borderRadius: '1rem' }}>
+                <div className='col-2 col-md-1' style={{ width: '50%', background: 'var(--containerColor)', padding: '2rem', borderRadius: '1rem', borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}>
                     {/* <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                         <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Name:</label>
                         <input
@@ -160,7 +160,7 @@ const StudentFilter: React.FC<StudentFilterProps> = ({ students, hidePreView = f
                         </div>
                     </div>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', width: '50%', gap: '1rem', background: 'var(--containerColor)', padding: '2rem', paddingTop: 0, borderRadius: '1rem', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
                     <button
                         onClick={onApply}
                         style={{
@@ -236,10 +236,10 @@ const StudentFilter: React.FC<StudentFilterProps> = ({ students, hidePreView = f
                     />
                 </div>
             </div>}
-            <div onClick={() => setShowFilterPopup(val => !val)} style={{ cursor: 'pointer', border: '2px solid var(--borderColor)', borderRadius: 8, padding: '0.5rem', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto 0', background: 'var(--containerColor)' }}>
+            <div title="Filter Students Data" onClick={() => setShowFilterPopup(val => !val)} style={{ cursor: 'pointer', border: '2px solid var(--borderColor)', borderRadius: 8, padding: '0.5rem', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto 0', background: 'var(--containerColor)' }}>
                 <Filter size={18} />
             </div>
-            {!hidePreView && <div onClick={() => setShowViewPopup(val => !val)} style={{ cursor: 'pointer', border: '2px solid var(--borderColor)', borderRadius: 8, padding: '0.5rem', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto 0', background: 'var(--containerColor)' }}>
+            {!hidePreView && <div title="View Student Data" onClick={() => setShowViewPopup(val => !val)} style={{ cursor: 'pointer', border: '2px solid var(--borderColor)', borderRadius: 8, padding: '0.5rem', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto 0', background: 'var(--containerColor)' }}>
                 <Eye size={18} />
             </div>}
         </>
