@@ -63,15 +63,15 @@ function Developer({
                 </div>
                 <div className="contact-details-container">
                     <div className="heading">Contact Using</div>
-                    <div className="contact-links">
-                        <a href={gitHubLink} className="contact-link" target="_blank">
-                            <GitHub />
+                    <div className="contact-links" style={{ marginTop: "0.5rem" }}>
+                        <a href={gitHubLink} className="contact-link" target="_blank" style={{ paddingRight: "0.5rem" }}>
+                            <GitHub size={24} />
                         </a>
                         <a href={linkedInLink} className="contact-link" target="_blank">
-                            <LinkedIn />
+                            <LinkedIn size={25} />
                         </a>
                         <a href={"mailto:" + email} className="contact-link" target="_blank">
-                            <Gmail />
+                            <Gmail size={35} />
                         </a>
                     </div>
                 </div>

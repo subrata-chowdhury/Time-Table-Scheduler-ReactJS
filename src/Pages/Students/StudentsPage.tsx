@@ -12,6 +12,7 @@ import { useConfirm } from '../../Components/ConfirmContextProvider'
 import StudentFilter from '../../Components/StudentFilter'
 import ArrowFilled from '../../Icons/ArrowFilled'
 import Sort from '../../Icons/Sort'
+import Plus from '../../Icons/Plus'
 
 const StudentsPage: React.FC = (): JSX.Element => {
     const [displayLoader, setDisplayLoader] = useState(false);
@@ -147,6 +148,7 @@ const StudentsPage: React.FC = (): JSX.Element => {
                             onClick={() => {
                                 navigate('/Students/add')
                             }}>
+                            <Plus size={15} />
                             Add
                         </div>
                         <div

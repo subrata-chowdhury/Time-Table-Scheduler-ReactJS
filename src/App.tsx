@@ -1,28 +1,37 @@
-import './App.css'
+import { useEffect, useRef } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+// Components (Pages)
 import DashboardPage from './Pages/Dashboard/DashboardPage'
 import SubjectsPage from './Pages/Subjects/SubjectsPage';
 import TeachersPage from './Pages/Teachers/TeachersPage';
 import TimeTablesPage from './Pages/TimeTables/TimeTablesPage';
 import TimeTableStructurePage from './Pages/TimeTableStructure/TimeTableStructurePage';
 import FilesPage from './Pages/Files/FilesPage';
-import "./Style/BasicComponents.css"
 import ContactUs from './Pages/ContactUs/ContactUs';
-import { useEffect, useRef } from 'react';
 import Menubar from './Components/Menubar';
 import OwnerFooter from './Components/OwnerFooter';
-import { AlertProvider, useAlert } from './Components/AlertContextProvider';
 import Alert from './Components/Alert';
-import { ConfirmProvider, useConfirm } from './Components/ConfirmContextProvider';
 import Confirm from './Components/Confirm';
-import { addWindowCloseEventHandler, removeWindowCloseEventHandler } from './Script/commonJS';
 import NotFound from './Pages/NotFound/NotFound';
 import SettingsPage, { changeTheme } from './Pages/Settings/SettingsPage';
 import StudentsPage from './Pages/Students/StudentsPage';
 import StudentDetailsPage from './Pages/StudentDetails/StudentDetailsPage';
-import { getConfig } from './Script/configFetchers';
 import StudentDetailsEditPage from './Pages/StudentDetails/StudentDetailsEditPage';
 import AddStudentDetailsPage from './Pages/StudentDetails/AddStudentDetailsPage';
+
+// Styles
+import './App.css'
+import "./Style/BasicComponents.css"
+
+// Scripts
+import { getConfig } from './Script/configFetchers';
+import { addWindowCloseEventHandler, removeWindowCloseEventHandler } from './Script/commonJS';
+
+// Contexts
+import { AlertProvider, useAlert } from './Components/AlertContextProvider';
+import { ConfirmProvider, useConfirm } from './Components/ConfirmContextProvider';
+
 
 function App() {
 	return (

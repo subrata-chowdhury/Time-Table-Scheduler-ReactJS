@@ -1,6 +1,6 @@
-export default function Gmail() {
+const Gmail: React.FC<{ size?: number }> = ({ size = 32 }) => {
 	return (
-		<svg fill="none" viewBox="0 0 92 92" xmlns="http://www.w3.org/2000/svg">
+		<svg fill="none" viewBox="0 0 92 92" xmlns="http://www.w3.org/2000/svg" width={size} height={size}>
 			<path d="m21.6354 66h8.4828v-20.6008l-12.1182-9.0887v26.0541c0 2.0116 1.6299 3.6354 3.6354 3.6354z" fill="#4285f4" />
 			<path d="m59.2031 66h8.4827c2.0117 0 3.6355-1.6298 3.6355-3.6354v-26.0541l-12.1182 9.0887" fill="#34a853" />
 			<path d="m59.2031 29.6458v15.7536l12.1182-9.0886v-4.8473c0-4.4959-5.1321-7.0588-8.7251-4.3626" fill="#fbbc04" />
@@ -9,3 +9,5 @@ export default function Gmail() {
 		</svg>
 	)
 }
+
+export default Gmail

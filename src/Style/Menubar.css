@@ -9,7 +9,7 @@
 }
 
 .app.active {
-    grid-template-columns: 10% auto;
+    grid-template-columns: 5% auto;
 }
 
 .menus-container {
@@ -30,6 +30,10 @@
     margin: 0 auto;
 }
 
+.app.active .menubar-container .title {
+    display: none;
+}
+
 .menubar-container .toggle-menubar-icon {
     fill: #1479FF;
     background: var(--containerColor);
@@ -46,7 +50,7 @@
 
 .app.active .menubar-container .toggle-menubar-icon {
     transform: rotate(0);
-    left: 10%;
+    left: 5%;
     border-radius: 0 7px 7px 0;
 }
 

@@ -7,7 +7,7 @@ import TimeTables from "../Icons/TimeTables"
 import TimeTableStructure from "../Icons/TimeTableStructure"
 import Arrow from "../Icons/Arrow"
 
-import React, { memo } from "react"
+import React, { memo, ReactNode } from "react"
 import { Link, useLocation } from "react-router-dom"
 import Contact from "../Icons/ContactIcon"
 import SettingIcon from "../Icons/Setting"
@@ -17,7 +17,7 @@ interface MenubarProps {
     onMenuToggleClick?: (e: React.MouseEvent<HTMLOrSVGElement>) => void
 }
 
-const menus = [
+const menus: {name: string | JSX.Element, icon: ReactNode, link: string, title?: string}[] = [
     {
         name: "Subjects",
         icon: <EditSubjects />,
@@ -46,7 +46,8 @@ const menus = [
     {
         name: <span>Time Table <br />Structure</span>,
         icon: <TimeTableStructure />,
-        link: "/TimeTableStructure"
+        link: "/TimeTableStructure",
+        title: "Time Table Structure"
     },
     {
         name: "Files",
@@ -88,7 +89,7 @@ const Menubar: React.FC<MenubarProps> = ({ onMenuToggleClick = () => { } }) => {
             </div>
             <ul className="menus-container">
                 {menus.map((menu) => (
-                    <Link to={menu.link} className="menu-container" id={route.pathname === menu.link ? "active" : ""} key={menu.name as string}>
+                    <Link to={menu.link} title={typeof menu.name == "string" ? menu.name : menu.title } className="menu-container" id={route.pathname === menu.link ? "active" : ""} key={menu.name as string}>
                         {menu.icon}
                         <li>{menu.name}</li>
                     </Link>

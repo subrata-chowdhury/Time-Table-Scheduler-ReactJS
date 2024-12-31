@@ -45,10 +45,10 @@
 }
 
 .contact-links {
-    display: grid;
-    grid-auto-flow: column;
-    gap: 10px;
+    display: flex;
+    gap: 0.3rem;
     justify-content: start;
+    align-items: center;
 }
 
 .contact-links .contact-link {
@@ -74,7 +74,7 @@
 
 .developer-details-container .basic-details .value,
 .developer-details-container .basic-details .value a {
-    color: dodgerblue;
+    color: var(--accentColor);
 }
 
 .contact-details-container .heading {
