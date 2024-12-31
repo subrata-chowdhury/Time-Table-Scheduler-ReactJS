@@ -75,7 +75,7 @@
     transform: translate(-50%, -50%);
     display: grid;
     gap: 10px;
-    background: #fff;
+    background: var(--containerColor);
     z-index: 10;
     padding: 15px;
     transition: 0.3s;
@@ -111,7 +111,7 @@
 }
 
 .teacher-subject-card-container .cards-container {
-    background: #f0f7ff;
+    background: var(--foregroudColor);
     height: 75.5vh;
     border-radius: 10px;
     gap: 15px;

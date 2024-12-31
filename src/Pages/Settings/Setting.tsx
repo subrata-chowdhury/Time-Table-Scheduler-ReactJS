@@ -153,13 +153,14 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 borderRadius: 5,
                 padding: '0.4rem 0.7rem',
                 color: 'var(--textColor)',
+                backgroundColor: 'var(--containerColor)',
             }}>
             <div
                 className='dropdown-header'
                 style={{
                     display: 'flex',
                     gap: '0.4rem',
-                    justifyContent: 'center',
+                    justifyContent: 'space-between',
                     alignItems: 'center'
                 }}
                 onClick={() => setShowDropdown(!showDropdown)}>
@@ -191,9 +192,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     options.map((option, index) => (
                         <div
                             key={index}
-                            className='dropdown-item'
+                            className='dropdown-item hoverBgEffect'
                             style={{
-                                padding: '0.3rem 0.7rem',
+                                padding: '0.5rem 0.7rem',
                             }}
                             onClick={() => {
                                 onChange(option);

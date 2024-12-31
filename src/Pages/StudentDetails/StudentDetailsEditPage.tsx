@@ -17,7 +17,7 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
         email: '',
         phoneNumbers: '',
         address: '',
-        attandance: 0
+        attendance: 0
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +73,7 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
                         </div>
                         <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                             <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Attendance:</label>
-                            <input className='input-box' type="text" name="attandance" value={formData.attandance} onChange={handleChange} />
+                            <input className='input-box' type="text" name="attendance" value={formData.attendance} onChange={handleChange} />
                         </div>
                     </div>
                     <div className='save-btn-container' style={{ width: '100%', textAlign: 'center', marginTop: '0.5rem' }}>

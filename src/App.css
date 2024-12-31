@@ -78,6 +78,12 @@ html {
 	gap: 1rem;
 }
 
+
+.hoverBgEffect:hover {
+    background: var(--borderColor);
+}
+
+
 @media (max-width: 768px) {
 	.col-md-1 {
 		display: grid;

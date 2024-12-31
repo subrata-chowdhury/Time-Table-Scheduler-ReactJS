@@ -10,6 +10,8 @@ import { studentsData } from '../../data/SampleData'
 import Cross from '../../Icons/Cross'
 import { useConfirm } from '../../Components/ConfirmContextProvider'
 import StudentFilter from '../../Components/StudentFilter'
+import ArrowFilled from '../../Icons/ArrowFilled'
+import Sort from '../../Icons/Sort'
 
 const StudentsPage: React.FC = (): JSX.Element => {
     const [displayLoader, setDisplayLoader] = useState(false);
@@ -78,8 +80,8 @@ const StudentsPage: React.FC = (): JSX.Element => {
                                 id: 'email',
                                 label: 'Email'
                             }, {
-                                id: 'attandance',
-                                label: 'Attandance'
+                                id: 'attendance',
+                                label: 'Attendance'
                             }].map((obj, index) => (
                                 <div key={index} style={{ display: 'flex', gap: '1rem' }}>
                                     <div
@@ -121,13 +123,79 @@ const StudentsPage: React.FC = (): JSX.Element => {
                                 setFilteredStudentList(studentsList)
                             }
                         }}
-                        dontProcces={true} />
+                        dontProccess={true} />
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2rem', marginTop: '1rem' }}>
                     <span style={{ display: 'flex', alignItems: 'center', marginLeft: '2rem', color: 'var(--textColor)' }}>Showing: &nbsp;<span style={{ fontWeight: 600, fontSize: '1.2rem' }}>{filteredStudentList.length}</span>&nbsp; Students</span>
                     <div style={{ display: 'flex', gap: '1rem' }}>
-                        <StudentFilter students={studentsData} onChange={(students) => setFilteredStudentList(students)} />
-                        <div style={{ background: 'var(--containerColor)', padding: '.5rem 1rem', border: '2px solid var(--borderColor)', borderRadius: '100px', cursor: 'pointer', color: 'var(--textColor)' }} onClick={() => setShowShortPopup(true)}>Sort By</div>
+                        <div
+                            title='Increment Semesters'
+                            style={{
+                                background: 'var(--containerColor)',
+                                padding: '.5rem 1rem',
+                                border: '2px solid var(--borderColor)',
+                                borderRadius: '100px',
+                                cursor: 'pointer',
+                                color: 'var(--textColor)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem'
+                            }}
+                            onClick={() => {
+                                let newList = [...studentsList]
+                                newList.forEach(student => {
+                                    student.semester = Number(student.semester) + 1
+                                })
+                                setStudentsList(newList)
+                                setFilteredStudentList(newList)
+                            }}>
+                            <ArrowFilled size={18} rotate={180} style={{ position: 'relative', top: 5 }} />
+                            Sem
+                        </div>
+                        <div
+                            title='Decrement Semesters'
+                            style={{
+                                background: 'var(--containerColor)',
+                                padding: '.5rem 1rem',
+                                border: '2px solid var(--borderColor)',
+                                borderRadius: '100px',
+                                cursor: 'pointer',
+                                color: 'var(--textColor)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem'
+                            }}
+                            onClick={() => {
+                                let newList = [...studentsList]
+                                newList.forEach(student => {
+                                    student.semester = Number(student.semester) - 1
+                                })
+                                setStudentsList(newList)
+                                setFilteredStudentList(newList)
+                            }}>
+                            <ArrowFilled size={18} style={{ position: 'relative', bottom: 2 }} />
+                            Sem
+                        </div>
+                        <StudentFilter
+                            hidePreView={true}
+                            students={studentsData}
+                            onChange={(students) => setFilteredStudentList(students)} />
+                        <div
+                            style={{
+                                background: 'var(--containerColor)',
+                                padding: '.5rem 1rem',
+                                border: '2px solid var(--borderColor)',
+                                borderRadius: '100px',
+                                cursor: 'pointer',
+                                color: 'var(--textColor)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem'
+                            }}
+                            onClick={() => setShowShortPopup(true)}><Sort />Sort By</div>
                     </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1 }}>
@@ -163,10 +231,10 @@ const StudentsPage: React.FC = (): JSX.Element => {
                                 selector: "email",
                                 hideAble: true
                             }, {
-                                heading: "Attandance",
-                                selector: "attandance",
+                                heading: "Attendance",
+                                selector: "attendance",
                                 hideAble: true,
-                                component: ({ data }) => <div style={{ fontWeight: 600, color: Number(data.attandance) >= 70 ? 'var(--greenText)' : 'var(--redText)' }}>{data.attandance}%</div>
+                                component: ({ data }) => <div style={{ fontWeight: 600, color: Number(data.attendance) >= 70 ? 'var(--greenText)' : 'var(--redText)' }}>{data.attendance}%</div>
                             }, {
                                 heading: 'Actions',
                                 selector: 'actions',

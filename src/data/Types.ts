@@ -43,5 +43,5 @@ export type Student = {
     email: string;
     phoneNumbers: string;
     address: string;
-    attandance: number
+    attendance: number
 }

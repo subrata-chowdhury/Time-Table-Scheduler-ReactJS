@@ -24,7 +24,7 @@ const StudentDetailsPage: React.FC = (): JSX.Element => {
                         <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Email:</div> {student[0].email}</div>
                         <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Phone Numbers:</div> {student[0].phoneNumbers}</div>
                         <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Address:</div> {student[0].address}</div>
-                        <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Attendance:</div> <span style={{ fontWeight: 600, color: Number(student[0].attandance) >= 70 ? 'var(--greenText)' : 'var(--redText)' }}>{student[0].attandance}%</span></div>
+                        <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Attendance:</div> <span style={{ fontWeight: 600, color: Number(student[0].attendance) >= 70 ? 'var(--greenText)' : 'var(--redText)' }}>{student[0].attendance}%</span></div>
                     </div>
                 </div>
             ) : (
