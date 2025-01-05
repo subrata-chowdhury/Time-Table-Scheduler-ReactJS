@@ -13,11 +13,12 @@ import StudentFilter from '../../Components/StudentFilter'
 import ArrowFilled from '../../Icons/ArrowFilled'
 import Sort from '../../Icons/Sort'
 import Plus from '../../Icons/Plus'
+import { getStudents } from '../../Script/StudentDataFetcher'
 
 const StudentsPage: React.FC = (): JSX.Element => {
     const [displayLoader, setDisplayLoader] = useState(false);
-    const [studentsList, setStudentsList] = useState<Student[]>(studentsData || [])
-    const [filteredStudentList, setFilteredStudentList] = useState<Student[]>(studentsData || [])
+    const [studentsList, setStudentsList] = useState<Student[]>([])
+    const [filteredStudentList, setFilteredStudentList] = useState<Student[]>([])
     const [showShortPopup, setShowShortPopup] = useState(false)
     const [sortKeys, setSortKeys] = useState<(keyof Student)[]>([])
 
@@ -29,9 +30,13 @@ const StudentsPage: React.FC = (): JSX.Element => {
         startUpFunction()
     }, [])
 
-    const startUpFunction = useCallback(() => {
+    const startUpFunction = useCallback(async () => {
         // getStudentList(setStudentsList) // api call
-        setStudentsList(studentsData) // remove when api get implemented
+        setDisplayLoader(true)
+        await getStudents(() => {
+            setStudentsList(studentsData)
+            setFilteredStudentList(studentsData)
+        })
         setDisplayLoader(false)
     }, [])
 

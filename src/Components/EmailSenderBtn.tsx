@@ -2,29 +2,37 @@
 import emailjs from "emailjs-com";
 import { useState } from "react";
 import Loader from "./Loader";
+import { useConfirm } from "./ConfirmContextProvider";
+import { useAlert } from "./AlertContextProvider";
 
 const EmailSender: React.FC<{ emailList: string[], msg?: string }> = ({ emailList = [], msg = "" }) => {
     const [emailSent, setEmailSent] = useState(false);
     const [progress, setProgress] = useState(0);
     const [successCount, setSuccessCount] = useState(0);
+
+    const { showWarningConfirm } = useConfirm();
+    const { showWarning } = useAlert()
     // const emailList = ["subratachowdhury275@gmail.com", "banerjee.srideep@gmail.com"]; // Replace with your array of emails
     const totalEmails = emailList.length;
 
-    const sendBulkEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+    const sendBulkEmail = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        setProgress(0);
-        setSuccessCount(0);
+        if (totalEmails === 0) return showWarning("Please Filter the data before sending email");
+        showWarningConfirm(`Are You Sure you want to send ${totalEmails} emails.`, async () => {
+            setProgress(0);
+            setSuccessCount(0);
 
-        for (let index = 0; index < emailList.length; index++) {
-            await sendEmail(
-                emailList[index],
-                msg,
-                () => setSuccessCount(prev => prev + 1),
-                () => { },
-                () => setProgress(prev => prev + 1)
-            )
-        }
-        setEmailSent(true)
+            for (let index = 0; index < emailList.length; index++) {
+                await sendEmail(
+                    emailList[index],
+                    msg,
+                    () => setSuccessCount(prev => prev + 1),
+                    () => { },
+                    () => setProgress(prev => prev + 1)
+                )
+            }
+            setEmailSent(true)
+        })
     };
 
     const successRate = totalEmails ? (successCount / totalEmails) * 100 : 0;
@@ -43,9 +51,10 @@ const EmailSender: React.FC<{ emailList: string[], msg?: string }> = ({ emailLis
                 )
             }
             {emailSent ? "" : (
-                <form onSubmit={sendBulkEmail}>
+                <form>
                     <button
                         type="submit"
+                        onClick={sendBulkEmail}
                         style={{
                             fontSize: '0.9rem',
                             padding: '0.6rem 1rem',

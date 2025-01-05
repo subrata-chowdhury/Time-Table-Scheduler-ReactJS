@@ -1,13 +1,16 @@
 import { memo } from "react"
 
 interface BasicDetailsProps {
-    basicDetails: {
-        subjectsCount: number,
-        teachersCount: number,
-        practicalSubjects: number,
-        theroySubjects: number,
-        freeSubjects: number
-    }
+    basicDetails: BasicDetailsType
+}
+
+export type BasicDetailsType = {
+    subjectsCount: number,
+    teachersCount: number,
+    practicalSubjects: number,
+    theroySubjects: number,
+    freeSubjects: number
+    students: number
 }
 
 const BasicDetails: React.FC<BasicDetailsProps> = memo(({ basicDetails }) => {
@@ -25,7 +28,7 @@ const BasicDetails: React.FC<BasicDetailsProps> = memo(({ basicDetails }) => {
             </div>
             <div className='basic-details-container' style={{ gridTemplateColumns: "auto" }}>
                 <div className='container'>
-                    <Container label="Subjects (Not Taken by Teacher)" value={basicDetails.freeSubjects} />
+                    <Container label="Students" value={basicDetails.students} />
                     <Container label="Subjects (Taken by Teacher)" value={basicDetails.subjectsCount - basicDetails.freeSubjects} />
                 </div>
             </div>

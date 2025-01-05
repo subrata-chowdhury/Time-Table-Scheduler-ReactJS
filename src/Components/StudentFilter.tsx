@@ -70,7 +70,7 @@ const StudentFilter: React.FC<StudentFilterProps> = ({ students, hidePreView = f
                         />
                     </div> */}
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Roll No:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Roll No: <small>(Optional)</small></label>
                         <input
                             value={filters.rollNo || ''}
                             className='input-box'
@@ -80,7 +80,7 @@ const StudentFilter: React.FC<StudentFilterProps> = ({ students, hidePreView = f
                         />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Semester:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Semester: *</label>
                         <Dropdown
                             options={['All', 1, 2, 3, 4, 5, 6, 7, 8].map(String)}
                             value={String(filters.semester || "All")}
@@ -94,7 +94,7 @@ const StudentFilter: React.FC<StudentFilterProps> = ({ students, hidePreView = f
                         /> */}
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Section:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Section: <small>(Optional)</small></label>
                         <input
                             value={filters.section || ''}
                             className='input-box'
@@ -131,7 +131,7 @@ const StudentFilter: React.FC<StudentFilterProps> = ({ students, hidePreView = f
                         />
                     </div> */}
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Attendance:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Attendance: <small>(Optional)</small></label>
                         <div style={{ display: 'grid', gridAutoFlow: 'column', gap: '0.5rem' }}>
                             <Dropdown
                                 value={attendanceCondition === 'lt' ? "Less Than" : attendanceCondition === 'gt' ? "Greater Than" : "Equal To"}

@@ -154,7 +154,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 padding: '0.4rem 0.7rem',
                 color: 'var(--textColor)',
                 backgroundColor: 'var(--containerColor)',
-            }}>
+            }}
+            onClick={() => setShowDropdown(!showDropdown)}>
             <div
                 className='dropdown-header'
                 style={{
@@ -162,8 +163,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     gap: '0.4rem',
                     justifyContent: 'space-between',
                     alignItems: 'center'
-                }}
-                onClick={() => setShowDropdown(!showDropdown)}>
+                }}>
                 <span className='selected'>{options.includes(value) ? value : "Select a Option"}</span>
                 <Arrow arrowStyle={{
                     transform: showDropdown ? 'rotate(-90deg)' : 'rotate(90deg)',
@@ -198,7 +198,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
                             }}
                             onClick={() => {
                                 onChange(option);
-                                setShowDropdown(false);
                             }}>{option}</div>
                     ))
                 }

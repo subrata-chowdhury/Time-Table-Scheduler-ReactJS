@@ -140,13 +140,16 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
                     <div className='input-grp'>
                         {timeTableStructureFieldValues.breaksPerSemester.length > 0 && timeTableStructureFieldValues.breaksPerSemester.map((value, index) => (
                             <div className='sub-input-grp' key={index}>
-                                <TagInput tagList={value.map(val => String(val))} onChange={newVal => {
-                                    setTimeTableStructureFieldValues(prev => {
-                                        let newBreaksPerSemester = [...prev.breaksPerSemester]
-                                        newBreaksPerSemester[index] = newVal.map((value) => Number(value)).filter((value) => value > 0)
-                                        return { ...prev, breaksPerSemester: newBreaksPerSemester }
-                                    })
-                                }} />
+                                <TagInput
+                                    tagList={value.map(val => String(val))}
+                                    onChange={newVal => {
+                                        setTimeTableStructureFieldValues(prev => {
+                                            let newBreaksPerSemester = [...prev.breaksPerSemester]
+                                            newBreaksPerSemester[index] = newVal.map((value) => Number(value)).filter((value) => value > 0)
+                                            return { ...prev, breaksPerSemester: newBreaksPerSemester }
+                                        })
+                                    }}
+                                    validTags={timeTableStructureFieldValues.periodCount > 0 ? Array.from({ length: timeTableStructureFieldValues.periodCount }, (_, i) => (i + 1).toString()) : undefined} />
                             </div>
                         ))}
                     </div>

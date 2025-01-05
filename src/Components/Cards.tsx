@@ -28,10 +28,6 @@ const Cards: React.FC<CardsProps> = ({
 }) => {
     const [activeCards, setActiveCards] = useState<string[]>([])
 
-    useEffect(() => {
-        setActiveCards([])
-    }, [cardList])
-
     const defaultCardClickHandler = useCallback((card: string) => {
         let newActiveCards = [...activeCards]
         if (canStayActiveMultipleCards) {

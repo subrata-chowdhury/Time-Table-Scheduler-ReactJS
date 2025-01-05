@@ -17,7 +17,7 @@
     gap: 1rem;
     grid-template-rows: auto auto auto auto;
     align-content: space-around;
-    overflow-x: auto;
+    /* overflow-x: auto; */
     color: var(--textColor);
 }
 

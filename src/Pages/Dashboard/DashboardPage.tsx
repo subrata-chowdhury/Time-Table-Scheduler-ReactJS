@@ -5,8 +5,9 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { getTeachersList } from '../../Script/TeachersDataFetcher'
 import { getSubjectsDetailsList, SubjectsDetailsList } from '../../Script/SubjectsDataFetcher'
 import { TeacherSchedule } from '../../data/Types'
-import BasicDetails from './BasicDetails'
+import BasicDetails, { BasicDetailsType } from './BasicDetails'
 import TeachersDetailsContainer from './TeacherDetails'
+import { getStudents } from '../../Script/StudentDataFetcher'
 
 const DashboardPage: React.FC = (): JSX.Element => {
     return (
@@ -29,12 +30,13 @@ type BasicDetails = {
 function MainComponents() {
     const [teachersList, setTeahersList] = useState<string[]>([])
     const [perDayValue, setPerDayValue] = useState<number[]>([0, 0, 0, 0, 0])
-    const [basicDetails, setBasicDetails] = useState<BasicDetails>({
+    const [basicDetails, setBasicDetails] = useState<BasicDetailsType>({
         subjectsCount: 0,
         teachersCount: 0,
         practicalSubjects: 0,
         theroySubjects: 0,
-        freeSubjects: 0
+        freeSubjects: 0,
+        students: 0
     })
     const subjectsDetails = useRef<SubjectsDetailsList>({})
 
@@ -58,6 +60,9 @@ function MainComponents() {
     }, [])
 
     const startUpFunction = () => {
+        getStudents((students) => setBasicDetails(prev => {
+            return { ...prev, students: students.length }
+        }))
         setPerDayValue([0, 0, 0, 0, 0])
         getTeachersList((data) => { // api call
             setTeahersList(data)

@@ -1,5 +1,6 @@
 .menubar-container {
     width: 100%;
+    min-width: 65px;
     height: 100vh;
     display: flex;
     flex-direction: column;

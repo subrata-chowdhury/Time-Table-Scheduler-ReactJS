@@ -6,13 +6,17 @@ import ExcelArrayObjConverted from '../../Components/ExcelArrayObjConverted';
 import { studentsData } from '../../data/SampleData';
 import StudentFilter from '../../Components/StudentFilter';
 import EmailSender from '../../Components/EmailSenderBtn';
+import { getStudents } from '../../Script/StudentDataFetcher';
+import { Student } from '../../data/Types';
 
 const SettingsPage: React.FC = (): JSX.Element => {
     const [theme, setTheme] = useState<string>('System');
     const [emails, setEmails] = useState<string[]>([]);
+    const [students, setStudents] = useState<Student[]>([]);
 
     useEffect(() => {
         getConfig('theme', theme => setTheme(theme || 'System'), () => setTheme('System'))
+        getStudents(students => setStudents(students))
     }, [])
 
     const handleDarkModeChange = (value: string | boolean) => {
@@ -55,7 +59,7 @@ const SettingsPage: React.FC = (): JSX.Element => {
                     onChange={() => { }}
                     component={
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
-                            <StudentFilter students={studentsData} onChange={students => { setEmails(students.map(student => student.email)) }} />
+                            <StudentFilter students={students} onChange={students => { setEmails(students.map(student => student.email)) }} />
                             <EmailSender emailList={emails} />
                         </div>
                     }
