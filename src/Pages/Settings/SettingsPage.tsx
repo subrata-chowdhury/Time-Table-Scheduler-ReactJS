@@ -3,16 +3,20 @@ import Setting from './Setting'
 import '../../Style/Pages/Settings.css'
 import { getConfig, setConfig } from '../../Script/configFetchers';
 import ExcelArrayObjConverted from '../../Components/ExcelArrayObjConverted';
-import { studentsData } from '../../data/SampleData';
 import StudentFilter from '../../Components/StudentFilter';
 import EmailSender from '../../Components/EmailSenderBtn';
-import { getStudents } from '../../Script/StudentDataFetcher';
+import { deleteStudents, getStudents } from '../../Script/StudentDataFetcher';
 import { Student } from '../../data/Types';
+import { useConfirm } from '../../Components/ConfirmContextProvider';
+import { useAlert } from '../../Components/AlertContextProvider';
 
 const SettingsPage: React.FC = (): JSX.Element => {
     const [theme, setTheme] = useState<string>('System');
     const [emails, setEmails] = useState<string[]>([]);
     const [students, setStudents] = useState<Student[]>([]);
+
+    const { showErrorConfirm } = useConfirm();
+    const { showSuccess } = useAlert()
 
     useEffect(() => {
         getConfig('theme', theme => setTheme(theme || 'System'), () => setTheme('System'))
@@ -49,7 +53,7 @@ const SettingsPage: React.FC = (): JSX.Element => {
                     value=""
                     onChange={() => { }}
                     component={
-                        <ExcelArrayObjConverted exportDataGetter={async () => studentsData} />
+                        <ExcelArrayObjConverted exportDataGetter={getStudents} />
                     }
                 />
                 <Setting
@@ -64,40 +68,70 @@ const SettingsPage: React.FC = (): JSX.Element => {
                         </div>
                     }
                 />
-
+                <Setting
+                    heading='Bulk Delete'
+                    description='Delete Students and Teachers Data'
+                    value=""
+                    onChange={() => { }}
+                    component={
+                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
+                            <button
+                                style={{
+                                    fontSize: '0.9rem',
+                                    padding: '0.6rem 1rem',
+                                    paddingLeft: '1rem',
+                                    backgroundColor: 'rgb(255, 82, 43)',
+                                    border: '2px solid rgb(255, 82, 43)',
+                                    color: '#fff',
+                                    borderRadius: 5,
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    gap: '0.5rem',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                onClick={() => {
+                                    showErrorConfirm('Are you sure you want to delete all students?', () => {
+                                        deleteStudents(() => {
+                                            setStudents([]);
+                                            showSuccess('All Students data deleted successfully')
+                                        })
+                                    })
+                                }}>Delete Students</button>
+                            <button
+                                style={{
+                                    fontSize: '0.9rem',
+                                    padding: '0.6rem 1rem',
+                                    paddingLeft: '1rem',
+                                    backgroundColor: 'rgb(255, 82, 43)',
+                                    border: '2px solid rgb(255, 82, 43)',
+                                    color: '#fff',
+                                    borderRadius: 5,
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    gap: '0.5rem',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                onClick={() => {
+                                    showErrorConfirm('Are you sure you want to delete all teachers?', () => {
+                                        // add api call here
+                                    })
+                                }}>Delete Teachers</button>
+                        </div>
+                    }
+                />
             </div>
-        </div>
+        </div >
     )
 }
 
 export function changeTheme(theme: string) {
     const root = document.documentElement;
     if (theme === 'Dark') {
-        root.style.setProperty('--background', '#000');
-        root.style.setProperty('--textColor', '#fff');
-        root.style.setProperty('--containerColor', '#2C3B47');
-        root.style.setProperty('--foregroudColor', '#111111');
-        root.style.setProperty('--borderColor', '#616B75');
-        root.style.setProperty('--menubarIconContainerColor', 'rgba(255, 255, 255, 0.1)');
-        root.style.setProperty('--inputPlaceholderColor', 'rgba(255, 255, 255, 0.7)');
-        root.style.setProperty('--tagIconColor', 'rgba(255, 255, 255, 0.5)');
-        root.style.setProperty('--accentColor', '#56aaff')
-        root.style.setProperty('--tableHeaderColor', 'rgba(255, 255, 255, 0.1)')
-        root.style.setProperty('--greenText', '#00ff00');
-        root.style.setProperty('--redText', '#ff0000');
+        root.classList.add('dark');
     } else {
-        root.style.setProperty('--background', '#fff');
-        root.style.setProperty('--textColor', '#000');
-        root.style.setProperty('--containerColor', '#fff');
-        root.style.setProperty('--foregroudColor', '#f0f7ff');
-        root.style.setProperty('--borderColor', 'rgba(0, 0, 0, 0.1)');
-        root.style.setProperty('--menubarIconContainerColor', '#f0f7ff');
-        root.style.setProperty('--inputPlaceholderColor', '#0000007a');
-        root.style.setProperty('--tagIconColor', 'rgba(0, 0, 0, 0.5)');
-        root.style.setProperty('--accentColor', '#1E90FF')
-        root.style.setProperty('--tableHeaderColor', '#f5f5f5')
-        root.style.setProperty('--greenText', 'green');
-        root.style.setProperty('--redText', '#ff0000');
+        root.classList.remove('dark');
     }
 }
 

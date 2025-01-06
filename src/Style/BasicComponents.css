@@ -1,14 +1,19 @@
 .input-box {
-    background: var(--borderColor);
-    border: none;
+    background: rgba(0, 0, 0, 0.05);
+    border: 2px solid var(--borderColor);
+    /* border: none; */
     border-radius: 5px;
-    border-bottom: 2px solid dodgerblue;
+    /* border-bottom: 2px solid dodgerblue; */
     outline: none;
     width: 100%;
     box-sizing: border-box;
     font-size: 1.05rem;
     padding: 10px;
     color: var(--textColor);
+}
+
+.input-box:focus {
+    border-color: var(--accentColor);
 }
 
 .input-box[type=range] {
@@ -84,14 +89,14 @@
 
 .save-btn-container button,
 .save-btn-container .file-save-btn {
-    padding: 10px 15px;
+    padding: 0.6rem 1rem;
     border: none;
     outline: none;
-    border-radius: 7px;
+    border-radius: 5px;
     color: #fff;
     font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
-    font-size: 18px;
 }
 
 .save-btn-container button:nth-child(1),
@@ -101,7 +106,7 @@
 }
 
 .save-btn-container button:nth-child(2) {
-    background: orange;
+    background: rgb(255, 82, 43);
 }
 
 .save-btn-container .close-btn {

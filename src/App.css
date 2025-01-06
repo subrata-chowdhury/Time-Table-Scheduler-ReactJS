@@ -1,3 +1,19 @@
+html.dark {
+	--background: #000;
+	--textColor: #fff;
+	--containerColor: #2C3B47;
+	--foregroudColor: #111111;
+	--borderColor: #616B75;
+	--menubarIconContainerColor: rgba(255, 255, 255, 0.1);
+	--inputPlaceholderColor: rgba(255, 255, 255, 0.7);
+	--tagIconColor: rgba(255, 255, 255, 0.5);
+	--accentColor: #56aaff;
+
+	--tableHeaderColor: rgba(255, 255, 255, 0.1);
+	--greenText: #00ff00;
+	--tagBgColor: var(--borderColor);
+}
+
 html {
 	--background: #fff;
 	--textColor: #000;
@@ -8,11 +24,10 @@ html {
 	--inputPlaceholderColor: #0000007a;
 	--tagIconColor: rgba(0, 0, 0, 0.5);
 	--accentColor: #1E90FF;
-	/* Dodger Blue */
-
+	
 	--tableHeaderColor: #f5f5f5;
 	--greenText: green;
-	--redText: #ff0000;
+	--tagBgColor: var(--containerColor);
 }
 
 .app {

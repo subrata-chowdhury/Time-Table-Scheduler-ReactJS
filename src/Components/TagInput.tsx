@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { hasElement } from "../Script/util";
 import "../Style/Tags.css"
+import Cross from "../Icons/Cross";
 
 interface TagInputProps {
     tagList: string[]
@@ -120,14 +121,16 @@ const TagInput: React.FC<TagInputProps> = ({
 
 interface TagProps {
     value: string
-    onDeleteBtnClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
+    onDeleteBtnClick?: (event: React.MouseEvent<HTMLDivElement>) => void
 }
 
 const Tag: React.FC<TagProps> = ({ value, onDeleteBtnClick = () => { } }) => {
     return (
         <div className="tag">
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', lineHeight: 1 }}>{value}</div>
-            <button className="delete-tag-btn" onClick={onDeleteBtnClick}>+</button>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer' }} onClick={onDeleteBtnClick}>
+                <Cross size={15} fillColor="var(--textColor)" />
+            </div>
         </div>
     )
 }

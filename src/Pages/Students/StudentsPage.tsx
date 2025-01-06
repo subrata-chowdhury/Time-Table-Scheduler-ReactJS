@@ -13,7 +13,8 @@ import StudentFilter from '../../Components/StudentFilter'
 import ArrowFilled from '../../Icons/ArrowFilled'
 import Sort from '../../Icons/Sort'
 import Plus from '../../Icons/Plus'
-import { getStudents } from '../../Script/StudentDataFetcher'
+import { deleteStudent, getStudents } from '../../Script/StudentDataFetcher'
+import { useAlert } from '../../Components/AlertContextProvider'
 
 const StudentsPage: React.FC = (): JSX.Element => {
     const [displayLoader, setDisplayLoader] = useState(false);
@@ -25,6 +26,7 @@ const StudentsPage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
 
     const { showWarningConfirm } = useConfirm()
+    const { showSuccess, showError } = useAlert()
 
     useEffect(() => {
         startUpFunction()
@@ -52,12 +54,14 @@ const StudentsPage: React.FC = (): JSX.Element => {
         }
     }
 
-    const deleteStudent = (rollNo: string | number) => {
-        // deleteStudent(rollNo) // api call
+    const deleteStudentHandler = (rollNo: string | number) => {
         showWarningConfirm('Are you sure you want to delete this student?', () => {
-            const newList = studentsList.filter(student => student.rollNo !== rollNo)
-            setStudentsList(newList)
-            setFilteredStudentList(newList)
+            deleteStudent(rollNo, () => {
+                showSuccess(`Student with ID: ${rollNo} deleted Successfully`)
+                const newList = studentsList.filter(student => student.rollNo !== rollNo)
+                setStudentsList(newList)
+                setFilteredStudentList(newList)
+            }, () => showError('Unable to delete this student'))
         })
     }
 
@@ -262,14 +266,14 @@ const StudentsPage: React.FC = (): JSX.Element => {
                                 heading: "Attendance",
                                 selector: "attendance",
                                 hideAble: true,
-                                component: ({ data }) => <div style={{ fontWeight: 600, color: Number(data.attendance) >= 70 ? 'var(--greenText)' : 'var(--redText)' }}>{data.attendance}%</div>
+                                component: ({ data }) => <div style={{ fontWeight: 600, color: Number(data.attendance) >= 70 ? 'var(--greenText)' : 'rgb(255, 82, 43)' }}>{data.attendance}%</div>
                             }, {
                                 heading: 'Actions',
                                 selector: 'actions',
                                 component: ({ data }) => <div style={{ display: 'flex', gap: 5 }}>
                                     <Link to={'/Students/' + data.rollNo} style={{ cursor: 'pointer', color: 'var(--accentColor)', textDecoration: 'none' }}>Details</Link>
                                     <span>|</span>
-                                    <span style={{ cursor: 'pointer', color: 'orange', display: 'flex', alignItems: 'end' }} onClick={() => deleteStudent(data.rollNo)} ><Trash width={20} fill='red' /></span>
+                                    <span style={{ cursor: 'pointer', color: 'orange', display: 'flex', alignItems: 'end' }} onClick={() => deleteStudentHandler(data.rollNo)} ><Trash width={20} fill='red' /></span>
                                     <span>|</span>
                                     <Link to={'/Students/edit/' + data.rollNo} style={{ cursor: 'pointer', color: 'var(--accentColor)', textDecoration: 'none' }}>Edit</Link>
                                 </div>

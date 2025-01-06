@@ -46,3 +46,77 @@ export const getStudents = async (
     //     throw error;
     // }
 }
+
+export const addStudent = async (
+    //@ts-ignore
+    student: Student,
+    onSuccess: (data: string) => void = () => { },
+    onFailed: (data: string[]) => void = () => { }
+): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        setTimeout(() => {
+            try {
+                onSuccess("Student added successfully");
+                resolve();
+            } catch (error) {
+                onFailed(["Failed to add student"]);
+                reject(error);
+            }
+        }, 200); // Simulate a delay for the API call
+    });
+}
+
+export const updateStudent = async (
+    //@ts-ignore
+    student: Student,
+    onSuccess: (data: string) => void = () => { },
+    onFailed: (data: string[]) => void = () => { }
+): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        setTimeout(() => {
+            try {
+                onSuccess("Student updated successfully");
+                resolve();
+            } catch (error) {
+                onFailed(["Failed to update student"]);
+                reject(error);
+            }
+        }, 200); // Simulate a delay for the API call
+    });
+}
+
+export const deleteStudents = async (
+    onSuccess: (data: string) => void = () => { },
+    onFailed: (data: string[]) => void = () => { }
+): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        setTimeout(() => {
+            try {
+                onSuccess("Students deleted successfully");
+                resolve();
+            } catch (error) {
+                onFailed(["Failed to delete students"]);
+                reject(error);
+            }
+        }, 200); // Simulate a delay for the API call
+    });
+}
+
+export const deleteStudent = async (
+    //@ts-ignore
+    studentId: string | number,
+    onSuccess: (data: string) => void = () => { },
+    onFailed: (data: string[]) => void = () => { }
+): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        setTimeout(() => {
+            try {
+                onSuccess("Student deleted successfully");
+                resolve();
+            } catch (error) {
+                onFailed(["Failed to delete student"]);
+                reject(error);
+            }
+        }, 200); // Simulate a delay for the API call
+    });
+}

@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Student } from '../../data/Types';
 import Arrow from '../../Icons/Arrow';
 import { useNavigate } from 'react-router-dom';
+import { addStudent } from '../../Script/StudentDataFetcher';
+import { useAlert } from '../../Components/AlertContextProvider';
 
 function AddStudentDetailsPage() {
     const [formData, setFormData] = useState<Student>({
@@ -14,6 +16,7 @@ function AddStudentDetailsPage() {
         address: '',
         attendance: 0
     });
+    const { showSuccess, showError } = useAlert()
 
     const navigate = useNavigate();
 
@@ -28,7 +31,13 @@ function AddStudentDetailsPage() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // Update the student data logic here
-        console.log('Updated student data:', formData);
+        addStudent(
+            formData,
+            () => {
+                console.log('Updated student data:', formData);
+                showSuccess("Student details updated Successfully");
+            },
+            () => showError("Unable to edit student data"));
     };
 
     const onAdd = () => alert("Added: " + JSON.stringify(formData, null, 2))

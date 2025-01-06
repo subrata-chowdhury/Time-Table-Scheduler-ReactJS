@@ -76,7 +76,7 @@
 
 .period.selected {
     color: #fff;
-    background: dodgerblue;
+    background: var(--accentColor);
 }
 
 @media (max-width: 1170px) {

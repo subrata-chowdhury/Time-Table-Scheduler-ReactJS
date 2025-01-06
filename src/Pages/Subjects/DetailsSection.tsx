@@ -171,7 +171,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
                 </div>
             </div>
             <div className="input-container">
-                <div className="input-box-heading">Should be Taken by<br /> Teacher or Not</div>
+                <div className="input-box-heading">Should be Taken by<br /> Teacher</div>
                 <div className={'box'} onClick={() => setSubjectDetails(value => ({ ...value, isFree: !value["isFree"] }))}>
                     <div className={'option' + (subjectDetails.isFree ? " active" : "")}>No</div>
                     <div className={'option' + (!subjectDetails.isFree ? " active" : "")}>Yes</div>

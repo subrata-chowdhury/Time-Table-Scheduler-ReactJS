@@ -4,6 +4,8 @@ import { studentsData } from '../../data/SampleData'
 import { Student } from '../../data/Types'
 import Arrow from '../../Icons/Arrow'
 import { useNavigate } from 'react-router-dom'
+import { updateStudent } from '../../Script/StudentDataFetcher'
+import { useAlert } from '../../Components/AlertContextProvider'
 
 const StudentDetailsEditPage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
@@ -20,6 +22,8 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
         attendance: 0
     });
 
+    const { showSuccess, showError } = useAlert()
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({
@@ -31,7 +35,13 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // Update the student data logic here
-        console.log('Updated student data:', formData);
+        updateStudent(
+            formData,
+            () => {
+                console.log('Updated student data:', formData);
+                showSuccess("Student details updated Successfully");
+            },
+            () => showError("Unable to edit student data"));
     };
 
     return (
