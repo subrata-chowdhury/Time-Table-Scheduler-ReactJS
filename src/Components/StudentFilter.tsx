@@ -236,10 +236,10 @@ const StudentFilter: React.FC<StudentFilterProps> = ({ students, hidePreView = f
                     />
                 </div>
             </div>}
-            <div title="Filter Students Data" onClick={() => setShowFilterPopup(val => !val)} style={{ cursor: 'pointer', border: '2px solid var(--borderColor)', borderRadius: 8, padding: '0.5rem', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto 0', background: 'var(--containerColor)' }}>
+            <div title="Filter Students Data" onClick={() => setShowFilterPopup(val => !val)} className="btn-type2" style={{ padding: '0.5rem' }}>
                 <Filter size={18} />
             </div>
-            {!hidePreView && <div title="View Student Data" onClick={() => setShowViewPopup(val => !val)} style={{ cursor: 'pointer', border: '2px solid var(--borderColor)', borderRadius: 8, padding: '0.5rem', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto 0', background: 'var(--containerColor)' }}>
+            {!hidePreView && <div title="View Student Data" onClick={() => setShowViewPopup(val => !val)} className="btn-type2" style={{ padding: '0.5rem' }}>
                 <Eye size={18} />
             </div>}
         </>

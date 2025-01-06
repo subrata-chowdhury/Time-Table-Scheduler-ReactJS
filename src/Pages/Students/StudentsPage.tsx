@@ -142,18 +142,8 @@ const StudentsPage: React.FC = (): JSX.Element => {
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'end' }}>
                         <div
                             title='Add a New Student'
-                            style={{
-                                background: 'var(--containerColor)',
-                                padding: '.5rem 1rem',
-                                border: '2px solid var(--borderColor)',
-                                borderRadius: '100px',
-                                cursor: 'pointer',
-                                color: 'var(--textColor)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem'
-                            }}
+                            className="btn-type2"
+                            style={{ borderRadius: '100px', padding: '0.5rem 1rem' }}
                             onClick={() => {
                                 navigate('/Students/add')
                             }}>
@@ -162,18 +152,8 @@ const StudentsPage: React.FC = (): JSX.Element => {
                         </div>
                         <div
                             title='Increment Semesters'
-                            style={{
-                                background: 'var(--containerColor)',
-                                padding: '.5rem 1rem',
-                                border: '2px solid var(--borderColor)',
-                                borderRadius: '100px',
-                                cursor: 'pointer',
-                                color: 'var(--textColor)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem'
-                            }}
+                            className="btn-type2"
+                            style={{ borderRadius: '100px', padding: '0.5rem 1rem' }}
                             onClick={() => {
                                 let newList = [...studentsList]
                                 newList.forEach(student => {
@@ -187,18 +167,8 @@ const StudentsPage: React.FC = (): JSX.Element => {
                         </div>
                         <div
                             title='Decrement Semesters'
-                            style={{
-                                background: 'var(--containerColor)',
-                                padding: '.5rem 1rem',
-                                border: '2px solid var(--borderColor)',
-                                borderRadius: '100px',
-                                cursor: 'pointer',
-                                color: 'var(--textColor)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem'
-                            }}
+                            className="btn-type2"
+                            style={{ borderRadius: '100px', padding: '0.5rem 1rem' }}
                             onClick={() => {
                                 let newList = [...studentsList]
                                 newList.forEach(student => {
@@ -215,18 +185,8 @@ const StudentsPage: React.FC = (): JSX.Element => {
                             students={studentsData}
                             onChange={(students) => setFilteredStudentList(students)} />
                         <div
-                            style={{
-                                background: 'var(--containerColor)',
-                                padding: '.5rem 1rem',
-                                border: '2px solid var(--borderColor)',
-                                borderRadius: '100px',
-                                cursor: 'pointer',
-                                color: 'var(--textColor)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem'
-                            }}
+                            className="btn-type2"
+                            style={{ borderRadius: '100px', padding: '0.5rem 1rem' }}
                             onClick={() => setShowShortPopup(true)}><Sort />Sort By</div>
                     </div>
                 </div>

@@ -113,6 +113,24 @@
     display: none;
 }
 
+.btn-type2 {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    background-color: var(--containerColor);
+    border: 2px solid var(--borderColor);
+    color: var(--textColor);
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-type2:hover {
+    background: var(--borderColor);
+}
+
 @media (max-width: 680px) {
     .save-btn-container .close-btn {
         display: block;

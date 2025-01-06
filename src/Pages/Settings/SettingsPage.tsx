@@ -49,7 +49,7 @@ const SettingsPage: React.FC = (): JSX.Element => {
                 />
                 <Setting
                     heading='Import / Export Student Data'
-                    description='Import or export student data in Excel format'
+                    description='Import - export or Share student data in Excel format'
                     value=""
                     onChange={() => { }}
                     component={
@@ -77,19 +77,11 @@ const SettingsPage: React.FC = (): JSX.Element => {
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
                             <button
                                 style={{
-                                    fontSize: '0.9rem',
-                                    padding: '0.6rem 1rem',
-                                    paddingLeft: '1rem',
                                     backgroundColor: 'rgb(255, 82, 43)',
                                     border: '2px solid rgb(255, 82, 43)',
                                     color: '#fff',
-                                    borderRadius: 5,
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    gap: '0.5rem',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
                                 }}
+                                className="btn-type2"
                                 onClick={() => {
                                     showErrorConfirm('Are you sure you want to delete all students?', () => {
                                         deleteStudents(() => {
@@ -100,25 +92,26 @@ const SettingsPage: React.FC = (): JSX.Element => {
                                 }}>Delete Students</button>
                             <button
                                 style={{
-                                    fontSize: '0.9rem',
-                                    padding: '0.6rem 1rem',
-                                    paddingLeft: '1rem',
                                     backgroundColor: 'rgb(255, 82, 43)',
                                     border: '2px solid rgb(255, 82, 43)',
                                     color: '#fff',
-                                    borderRadius: 5,
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    gap: '0.5rem',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
                                 }}
+                                className="btn-type2"
                                 onClick={() => {
                                     showErrorConfirm('Are you sure you want to delete all teachers?', () => {
                                         // add api call here
                                     })
                                 }}>Delete Teachers</button>
                         </div>
+                    }
+                />
+                <Setting
+                    heading='Import / Export Entire Data'
+                    description='Import - export or Share entire data including students, teachers, subjects, time table, etc.'
+                    value=""
+                    onChange={() => { }}
+                    component={
+                        <ExcelArrayObjConverted exportDataGetter={getStudents} />
                     }
                 />
             </div>

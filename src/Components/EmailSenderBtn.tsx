@@ -62,20 +62,7 @@ const EmailSender: React.FC<EmailSenderProps> = ({ emailList = [], msg = "", onC
                     <button
                         type="submit"
                         onClick={sendBulkEmail}
-                        style={{
-                            fontSize: '0.9rem',
-                            padding: '0.6rem 1rem',
-                            paddingLeft: '1rem',
-                            backgroundColor: 'var(--containerColor)',
-                            border: '2px solid var(--borderColor)',
-                            color: 'var(--textColor)',
-                            borderRadius: 5,
-                            cursor: 'pointer',
-                            display: 'flex',
-                            gap: '0.5rem',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}>Send Email</button>
+                        className="btn-type2">Send Email</button>
                 </form>
             )}
         </div>

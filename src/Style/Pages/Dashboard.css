@@ -113,6 +113,7 @@
     border-radius: 12px;
     justify-content: start;
     gap: 20px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .sem-container,
@@ -138,7 +139,7 @@
     background: #1E90FF;
     border-radius: 5px;
     color: #fff;
-    padding: 0 5px;
+    padding: 2px 5px;
 }
 
 .dashboard .sub-horizental-cards-container {

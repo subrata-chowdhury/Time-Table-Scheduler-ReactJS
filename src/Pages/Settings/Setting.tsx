@@ -164,7 +164,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     justifyContent: 'space-between',
                     alignItems: 'center'
                 }}>
-                <span className='selected'>{options.includes(value) ? value : "Select a Option"}</span>
+                <span className='selected' style={{ fontFamily: 'Arial, Helvetica, sans-serif' }}>{options.includes(value) ? value : "Select a Option"}</span>
                 <Arrow arrowStyle={{
                     transform: showDropdown ? 'rotate(-90deg)' : 'rotate(90deg)',
                     width: '1rem',

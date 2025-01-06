@@ -51,20 +51,7 @@ const ExcelArrayObjConverted: React.FC<ExcelArrayObjConvertedProps> = ({
             <input key={new Date().toISOString()} type="file" ref={fileInput} onChange={handleFileChange} accept=".csv,.xls,.xlsx" style={{ display: 'none' }} />
             <button
                 onClick={() => fileInput.current ? fileInput.current.click() : ""}
-                style={{
-                    fontSize: '0.9rem',
-                    padding: '0.6rem 1rem',
-                    paddingLeft: '.7rem',
-                    backgroundColor: 'var(--containerColor)',
-                    border: '2px solid var(--borderColor)',
-                    color: 'var(--textColor)',
-                    borderRadius: 5,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    gap: '0.5rem',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }}>
+                className="btn-type2">
                 <ArrowWithLine />Import
             </button>
             <button
@@ -74,20 +61,7 @@ const ExcelArrayObjConverted: React.FC<ExcelArrayObjConvertedProps> = ({
                     setShow(true);
                     setYesBtnLabel('Download');
                 }}
-                style={{
-                    fontSize: '0.9rem',
-                    padding: '0.6rem 1rem',
-                    paddingLeft: '.7rem',
-                    backgroundColor: 'var(--containerColor)',
-                    border: '2px solid var(--borderColor)',
-                    color: 'var(--textColor)',
-                    borderRadius: 5,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    gap: '0.5rem',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }}>
+                className="btn-type2">
                 <ArrowWithLine rotate={180} />Export
             </button>
             <PopUp
