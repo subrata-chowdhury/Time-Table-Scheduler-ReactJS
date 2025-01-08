@@ -3,7 +3,7 @@
     height: 100%;
     max-height: 87vh;
     display: grid;
-    grid-template-columns: repeat(auto-fit, 6.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 0.2fr));
     overflow-y: scroll;
     gap: 1.5rem;
     justify-content: stretch;
@@ -73,7 +73,6 @@
     display: grid;
     grid-template-columns: 40px auto 40px;
     gap: 15px;
-    padding: 0 25px;
     justify-content: stretch;
     align-items: center;
 }
@@ -82,10 +81,12 @@
     display: grid;
     grid-auto-flow: column;
     gap: 10px;
-    padding: 1.2rem;
-    height: 90%;
+    height: calc(100% - 6px);
+    padding: 6px;
     overflow-x: scroll;
     scroll-behavior: smooth;
+    box-sizing: border-box;
+    margin-top: auto;
 }
 
 .sub-horizental-cards-container .card {
@@ -108,9 +109,14 @@
     transform: rotate(180deg);
 }
 
+@media (max-width: 1170px) {
+    .cards-container {
+        height: 85px;
+    }
+}
+
 @media (max-width: 680px) {
     .cards-container {
-        height: 90%;
         gap: 15px;
     }
 

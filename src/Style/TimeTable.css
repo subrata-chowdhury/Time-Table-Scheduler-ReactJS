@@ -1,11 +1,12 @@
 .time-table-container {
     height: 100%;
     display: grid;
+    justify-content: stretch;
     gap: 10px;
-    grid-auto-flow: row;
     border-radius: 12px;
     padding-right: 1rem;
     font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
 }
 
 .time-table-error-text {
@@ -36,6 +37,15 @@
     box-shadow: 5px 5px 10px rgba(20, 121, 255, 0.5);
     color: #fff;
     font-weight: bold;
+    padding: 0.2rem;
+    box-sizing: border-box;
+}
+
+.period-details-container.class div {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .day-container:nth-child(3) .period-details-container.class {

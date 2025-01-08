@@ -70,15 +70,22 @@
 }
 
 .teachers-details-container {
-    display: grid;
-    grid-template-rows: 19% 60% 11%;
     background: var(--containerColor);
-    align-content: space-evenly;
     border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 25px;
+    justify-content: space-between;
+}
+
+.dashboard .horizental-cards-container {
+    min-height: 7rem;
 }
 
 .time-table-wrapper {
-    padding: 0 25px;
+    display: flex;
+    flex-direction: column;
 }
 
 .sem-and-subject-container .heading,
@@ -87,12 +94,11 @@
     font-weight: bold;
 }
 
-.teacher-time-table {
+.dashboard .teacher-time-table {
     background: var(--foregroudColor);
     color: var(--textColor);
-    height: 85% !important;
     margin-top: 10px;
-    padding: 10px 0;
+    padding-top: 10px;
 }
 
 .teacher-time-table .period-times-container,
@@ -109,7 +115,6 @@
 .sem-and-subject-container {
     display: grid;
     grid-template-columns: auto 50%;
-    padding: 0 25px;
     border-radius: 12px;
     justify-content: start;
     gap: 20px;
@@ -164,15 +169,17 @@
 
     .dashboard .left-sub-container {
         display: grid;
-        margin-right: 1rem;
+        /* margin-right: 1rem; */
     }
 
     .dashboard .top-sub-container .teachers-details-container {
         flex-grow: 1;
+        padding: 0.5rem;
+        grid-template-rows: 10% 80%;
     }
 
-    .teachers-details-container {
-        grid-template-rows: 10% 80%;
+    .dashboard .horizental-cards-container {
+        min-height: 4.5rem;
     }
 
     .time-table-wrapper {

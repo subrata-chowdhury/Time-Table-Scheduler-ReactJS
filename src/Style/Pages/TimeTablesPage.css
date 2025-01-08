@@ -8,18 +8,15 @@
     padding-top: 10px;
 }
 
-.time-table .time-table-container {
-    background: var(--containerColor);
-    height: 95%;
-    padding-bottom: 20px;
-    color: var(--textColor);
-}
-
 .time-table .menubar {
     display: grid;
     grid-template-columns: 35% auto;
     align-items: center;
     gap: 0.5rem;
+}
+
+.time-table .horizental-cards-container {
+    min-height: 3.7rem;
 }
 
 .horizental-cards-container.sem-cards-container {
@@ -40,6 +37,11 @@
 
 .class-time-table {
     margin-top: 0.5rem;
+    padding-top: 0.7rem;
+    background: var(--containerColor);
+    height: 97%;
+    padding-bottom: 20px;
+    color: var(--textColor);
 }
 
 .main-btn-container {

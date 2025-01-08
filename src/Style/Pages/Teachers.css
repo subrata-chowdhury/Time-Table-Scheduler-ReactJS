@@ -42,12 +42,6 @@
     font-weight: bold;
 }
 
-.time-table-container {
-    display: grid;
-    grid-auto-flow: row;
-    width: 100%;
-}
-
 .time-selector {
     width: 100%;
 }

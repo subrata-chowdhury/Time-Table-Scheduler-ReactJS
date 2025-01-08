@@ -137,8 +137,8 @@ const StudentsPage: React.FC = (): JSX.Element => {
                         }}
                         dontProccess={true} />
                 </div>
-                <div style={{ marginRight: '2rem', marginTop: '1rem' }} className='col-2 col-md-1'>
-                    <span style={{ display: 'flex', alignItems: 'center', marginLeft: '2rem', color: 'var(--textColor)' }}>Showing: &nbsp;<span style={{ fontWeight: 600, fontSize: '1.2rem' }}>{filteredStudentList.length}</span>&nbsp; Students</span>
+                <div style={{ marginRight: '1.5rem', marginLeft: '1.5rem', marginTop: '1rem' }} className='col-2 col-md-1'>
+                    <span style={{ display: 'flex', alignItems: 'center', color: 'var(--textColor)' }}>Showing: &nbsp;<span style={{ fontWeight: 600, fontSize: '1.2rem' }}>{filteredStudentList.length}</span>&nbsp; Students</span>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'end' }}>
                         <div
                             title='Add a New Student'
@@ -239,7 +239,7 @@ const StudentsPage: React.FC = (): JSX.Element => {
                                 </div>
                             }]}
                             data={sortStudents(filteredStudentList, sortKeys)}
-                            tableStyle={{ width: '95%' }}
+                            tableStyle={{ width: '98%' }}
                         />
                     </div>
                 </div>
