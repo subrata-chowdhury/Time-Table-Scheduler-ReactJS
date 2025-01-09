@@ -93,7 +93,7 @@
 }
 
 .menu-container:hover .icon {
-    box-shadow: 0px 8px 15px #74757596;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15);
 }
 
 .menu-container#active .icon {

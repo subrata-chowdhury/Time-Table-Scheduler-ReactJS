@@ -55,6 +55,7 @@
     position: relative;
     left: -1.5px;
     box-shadow: 0 0 15px rgba(20, 121, 255, 0.15);
+    transition: 0.3s;
 }
 
 .bar-container:nth-child(2) .bar .inner-bar {

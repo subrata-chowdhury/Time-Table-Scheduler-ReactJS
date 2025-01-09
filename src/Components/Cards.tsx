@@ -178,7 +178,7 @@ export const HorizentalCardsContainer: React.FC<HorizentalCardsContainerProps> =
 
     return (
         <div className={'horizental-cards-container ' + className} onWheel={horizentalCardsOnWheelHandler}>
-            <Arrow className="left-arrow-for-scroll arrow-for-scroll" arrowStyle={{ zIndex: showArrow ? "1" : "-10" }} arrowIconClickHandler={() => { arrowClickHandler(-125) }} />
+            <Arrow className="left-arrow-for-scroll arrow-for-scroll" arrowStyle={{ zIndex: (showArrow ? "1" : "-10"), width: '1.5rem', height: '1.5rem' }} arrowIconClickHandler={() => { arrowClickHandler(-125) }} />
             <div className='sub-horizental-cards-container' ref={cardsContainer}>
                 {cardList && cardList.length > 0 && cardList.map((card) => {
                     return (
@@ -198,7 +198,7 @@ export const HorizentalCardsContainer: React.FC<HorizentalCardsContainerProps> =
                     );
                 })}
             </div>
-            <Arrow className="right-arrow-for-scroll arrow-for-scroll" arrowIconClickHandler={() => { arrowClickHandler(125) }} />
+            <Arrow className="right-arrow-for-scroll arrow-for-scroll" arrowStyle={{ width: '1.5rem', height: '1.5rem' }} arrowIconClickHandler={() => { arrowClickHandler(125) }} />
         </div>
     )
 })
