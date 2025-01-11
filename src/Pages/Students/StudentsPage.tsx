@@ -155,12 +155,14 @@ const StudentsPage: React.FC = (): JSX.Element => {
                             className="btn-type2"
                             style={{ borderRadius: '100px', padding: '0.5rem 1rem' }}
                             onClick={() => {
-                                let newList = [...studentsList]
-                                newList.forEach(student => {
-                                    student.semester = Number(student.semester) + 1
+                                showWarningConfirm("Are you sure? This will increment the semester of all students", () => {
+                                    let newList = [...studentsList]
+                                    newList.forEach(student => {
+                                        student.semester = Number(student.semester) + 1
+                                    })
+                                    setStudentsList(newList)
+                                    setFilteredStudentList(newList)
                                 })
-                                setStudentsList(newList)
-                                setFilteredStudentList(newList)
                             }}>
                             <ArrowFilled size={18} rotate={180} style={{ position: 'relative', top: 5 }} />
                             Sem
@@ -170,12 +172,14 @@ const StudentsPage: React.FC = (): JSX.Element => {
                             className="btn-type2"
                             style={{ borderRadius: '100px', padding: '0.5rem 1rem' }}
                             onClick={() => {
-                                let newList = [...studentsList]
-                                newList.forEach(student => {
-                                    student.semester = Number(student.semester) - 1
+                                showWarningConfirm("Are you sure? This will decrement the semester of all students", () => {
+                                    let newList = [...studentsList]
+                                    newList.forEach(student => {
+                                        student.semester = Number(student.semester) - 1
+                                    })
+                                    setStudentsList(newList)
+                                    setFilteredStudentList(newList)
                                 })
-                                setStudentsList(newList)
-                                setFilteredStudentList(newList)
                             }}>
                             <ArrowFilled size={18} style={{ position: 'relative', bottom: 2 }} />
                             Sem
