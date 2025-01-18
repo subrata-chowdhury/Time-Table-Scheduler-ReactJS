@@ -1,122 +1,166 @@
-import { studentsData } from "../data/SampleData";
 import { Student } from "../data/Types";
-// import { url, getApiToken } from "./fetchUrl";
+import { url, getApiToken } from "./fetchUrl";
 
 export const getStudents = async (
-    onSuccess: (data: Student[]) => void = () => { },
+    onSuccess: (data: StudentDetails[]) => void = () => { },
     onFailed: (data: string[]) => void = () => { }
 ): Promise<Student[]> => {
-
-    return new Promise<Student[]>((resolve, reject) => {
-        setTimeout(() => {
-            try {
-                const listArray = studentsData || [];
-                onSuccess(studentsData);
-                resolve(listArray);
-            } catch (error) {
-                onFailed(["Failed to fetch subjects"]);
-                reject(error);
+    try {
+        const response = await fetch(`${url}io/students`, {
+            headers: {
+                'Api-Token': await getApiToken()
             }
-        }, 200); // Simulate a delay for the API call
-    });
-    // try {
-    //     const response = await fetch(`${url}io/students`, {
-    //         headers: {
-    //             'Api-Token': await getApiToken()
-    //         }
-    //     });
-    //     let listArray: string[] = [];
-    //     if (response.status === 200) {
-    //         try {
-    //             listArray = await response.json();
-    //         } catch (error) {
-    //             const text = await response.text();
-    //             console.log("%cSubject List Data is invaild", "color: orange;", text);
-    //         }
-    //         onSuccess(listArray);
-    //         return listArray;
-    //     } else {
-    //         const text = await response.text();
-    //         onFailed(listArray);
-    //         console.log("%cError in getting subject list", "color: orange;", text);
-    //         return [];
-    //     }
-    // } catch (error) {
-    //     console.log("Unable to Fetch Data of Subject List");
-    //     throw error;
-    // }
+        });
+        let listArray: Map<string, StudentDetails> = new Map();
+        if (response.status === 200) {
+            try {
+                listArray = await response.json();
+                listArray = new Map(Object.entries(listArray));
+                onSuccess(Array.from(listArray.values()));
+            } catch (error) {
+                const text = await response.text();
+                console.log("%cSubject List Data is invaild", "color: orange;", text);
+            }
+            return [];
+        } else {
+            const text = await response.text();
+            onFailed([]);
+            console.log("%cError in getting subject list", "color: orange;", text);
+            return [];
+        }
+    } catch (error) {
+        console.log("Unable to Fetch Data of Subject List");
+        throw error;
+    }
 }
 
-export const addStudent = async (
-    //@ts-ignore
-    student: Student,
-    onSuccess: (data: string) => void = () => { },
-    onFailed: (data: string[]) => void = () => { }
-): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-        setTimeout(() => {
-            try {
-                onSuccess("Student added successfully");
-                resolve();
-            } catch (error) {
-                onFailed(["Failed to add student"]);
-                reject(error);
-            }
-        }, 200); // Simulate a delay for the API call
-    });
+interface StudentDetails extends Student {
+    sec: number,
+    sem: number
 }
 
-export const updateStudent = async (
-    //@ts-ignore
-    student: Student,
-    onSuccess: (data: string) => void = () => { },
-    onFailed: (data: string[]) => void = () => { }
-): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-        setTimeout(() => {
-            try {
-                onSuccess("Student updated successfully");
-                resolve();
-            } catch (error) {
-                onFailed(["Failed to update student"]);
-                reject(error);
+export const getStudent = async (
+    studentId: string | number,
+    onSuccess: (data: StudentDetails) => void = () => { },
+    onFailed: (data: string) => void = () => { }
+): Promise<StudentDetails | null> => {
+    try {
+        const response = await fetch(`${url}io/students/${studentId}`, {
+            headers: {
+                'Api-Token': await getApiToken()
             }
-        }, 200); // Simulate a delay for the API call
-    });
+        });
+        if (response.status === 200) {
+            const data = await response.json();
+            onSuccess(data);
+            return data;
+        } else {
+            const text = await response.text();
+            onFailed(text);
+            console.log("%cError in getting student data", "color: orange;", text);
+            return null;
+        }
+    } catch (error) {
+        console.log("Unable to Fetch Data of Student");
+        throw error;
+    }
+}
+
+export const setStudents = async (
+    students: Student[],
+    onSuccess: (data: string) => void = () => { },
+    onFailed: (data: string) => void = () => { }
+): Promise<void> => {
+    const newStudents: {
+        [key: string]: {
+            name: string;
+            rollNo: string;
+            sem: number;
+            sec: number;
+            email: string;
+            attendance: number;
+        }
+    } = {};
+
+    for (let index = 0; index < students.length; index++) {
+        newStudents[students[index].rollNo] = {
+            name: students[index].name,
+            rollNo: students[index].rollNo,
+            sem: students[index].semester,
+            sec: students[index].section.toUpperCase().charCodeAt(0) - 'A'.charCodeAt(0),
+            email: students[index].email,
+            attendance: students[index].attendance
+        }
+    }
+
+    try {
+        const response = await fetch(`${url}io/students`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Api-Token': await getApiToken()
+            },
+            body: JSON.stringify(newStudents)
+        });
+        if (response.status === 200) {
+            onSuccess("Student added successfully");
+        } else {
+            const text = await response.text();
+            console.log(newStudents)
+            onFailed("Failed to add student");
+            console.log("%cError in adding student", "color: orange;", text);
+        }
+    } catch (error) {
+        console.log("Unable to Add Student");
+        throw error;
+    }
 }
 
 export const deleteStudents = async (
     onSuccess: (data: string) => void = () => { },
     onFailed: (data: string[]) => void = () => { }
 ): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-        setTimeout(() => {
-            try {
-                onSuccess("Students deleted successfully");
-                resolve();
-            } catch (error) {
-                onFailed(["Failed to delete students"]);
-                reject(error);
+    try {
+        const response = await fetch(`${url}io/students`, {
+            method: 'DELETE',
+            headers: {
+                'Api-Token': await getApiToken()
             }
-        }, 200); // Simulate a delay for the API call
-    });
+        });
+        if (response.status === 200) {
+            onSuccess("Students deleted successfully");
+        } else {
+            const text = await response.text();
+            onFailed(["Failed to delete students"]);
+            console.log("%cError in deleting students", "color: orange;", text);
+        }
+    } catch (error) {
+        console.log("Unable to Delete Students");
+        throw error;
+    }
 }
 
 export const deleteStudent = async (
-    //@ts-ignore
     studentId: string | number,
     onSuccess: (data: string) => void = () => { },
     onFailed: (data: string[]) => void = () => { }
 ): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-        setTimeout(() => {
-            try {
-                onSuccess("Student deleted successfully");
-                resolve();
-            } catch (error) {
-                onFailed(["Failed to delete student"]);
-                reject(error);
+    try {
+        const response = await fetch(`${url}io/students/${studentId}`, {
+            method: 'DELETE',
+            headers: {
+                'Api-Token': await getApiToken()
             }
-        }, 200); // Simulate a delay for the API call
-    });
+        });
+        if (response.status === 200) {
+            onSuccess("Student deleted successfully");
+        } else {
+            const text = await response.text();
+            onFailed(["Failed to delete student"]);
+            console.log("%cError in deleting student", "color: orange;", text);
+        }
+    } catch (error) {
+        console.log("Unable to Delete Student");
+        throw error;
+    }
 }

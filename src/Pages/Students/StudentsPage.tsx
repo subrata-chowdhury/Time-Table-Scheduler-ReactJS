@@ -6,20 +6,24 @@ import Table from '../../Components/Table'
 import Trash from '../../Icons/Trash'
 import { Link, useNavigate } from 'react-router-dom'
 import { Student } from '../../data/Types'
-import { studentsData } from '../../data/SampleData'
 import Cross from '../../Icons/Cross'
 import { useConfirm } from '../../Components/ConfirmContextProvider'
 import StudentFilter from '../../Components/StudentFilter'
 import ArrowFilled from '../../Icons/ArrowFilled'
 import Sort from '../../Icons/Sort'
 import Plus from '../../Icons/Plus'
-import { deleteStudent, getStudents } from '../../Script/StudentDataFetcher'
+import { deleteStudent, getStudents, setStudents } from '../../Script/StudentDataFetcher'
 import { useAlert } from '../../Components/AlertContextProvider'
+
+interface StudentDetails extends Student {
+    sec: number,
+    sem: number
+}
 
 const StudentsPage: React.FC = (): JSX.Element => {
     const [displayLoader, setDisplayLoader] = useState(false);
-    const [studentsList, setStudentsList] = useState<Student[]>([])
-    const [filteredStudentList, setFilteredStudentList] = useState<Student[]>([])
+    const [studentsList, setStudentsList] = useState<Student[] | StudentDetails[]>([])
+    const [filteredStudentList, setFilteredStudentList] = useState<Student[] | StudentDetails[]>([])
     const [showShortPopup, setShowShortPopup] = useState(false)
     const [sortKeys, setSortKeys] = useState<(keyof Student)[]>([])
 
@@ -35,9 +39,16 @@ const StudentsPage: React.FC = (): JSX.Element => {
     const startUpFunction = useCallback(async () => {
         // getStudentList(setStudentsList) // api call
         setDisplayLoader(true)
-        await getStudents(() => {
-            setStudentsList(studentsData)
-            setFilteredStudentList(studentsData)
+        await getStudents((data) => {
+            let newData = data.map((student) => {
+                return {
+                    ...student,
+                    section: String.fromCharCode(student.sec + 65),
+                    sec: String.fromCharCode(student.sec + 65)
+                }
+            })
+            setStudentsList(newData)
+            setFilteredStudentList(newData)
         })
         setDisplayLoader(false)
     }, [])
@@ -55,12 +66,13 @@ const StudentsPage: React.FC = (): JSX.Element => {
     }
 
     const deleteStudentHandler = (rollNo: string | number) => {
-        showWarningConfirm('Are you sure you want to delete this student?', () => {
-            deleteStudent(rollNo, () => {
+        showWarningConfirm('Are you sure you want to delete this student?', async () => {
+            await deleteStudent(rollNo, async () => {
                 showSuccess(`Student with ID: ${rollNo} deleted Successfully`)
-                const newList = studentsList.filter(student => student.rollNo !== rollNo)
-                setStudentsList(newList)
-                setFilteredStudentList(newList)
+                await getStudents(newList => {
+                    setStudentsList(newList)
+                    setFilteredStudentList(newList)
+                })
             }, () => showError('Unable to delete this student'))
         })
     }
@@ -155,13 +167,17 @@ const StudentsPage: React.FC = (): JSX.Element => {
                             className="btn-type2"
                             style={{ borderRadius: '100px', padding: '0.5rem 1rem' }}
                             onClick={() => {
-                                showWarningConfirm("Are you sure? This will increment the semester of all students", () => {
+                                showWarningConfirm("Are you sure? This will increment the semester of all students", async () => {
                                     let newList = [...studentsList]
                                     newList.forEach(student => {
-                                        student.semester = Number(student.semester) + 1
+                                        student.semester = Number((student as StudentDetails).sem) + 1
                                     })
-                                    setStudentsList(newList)
-                                    setFilteredStudentList(newList)
+                                    await setStudents(newList, () => {
+                                        showSuccess('Semester incremented successfully')
+                                        startUpFunction();
+                                    }, () => {
+                                        showError('Unable to increment semester')
+                                    })
                                 })
                             }}>
                             <ArrowFilled size={18} rotate={180} style={{ position: 'relative', top: 5 }} />
@@ -172,13 +188,17 @@ const StudentsPage: React.FC = (): JSX.Element => {
                             className="btn-type2"
                             style={{ borderRadius: '100px', padding: '0.5rem 1rem' }}
                             onClick={() => {
-                                showWarningConfirm("Are you sure? This will decrement the semester of all students", () => {
+                                showWarningConfirm("Are you sure? This will decrement the semester of all students", async () => {
                                     let newList = [...studentsList]
                                     newList.forEach(student => {
-                                        student.semester = Number(student.semester) - 1
+                                        student.semester = Number((student as StudentDetails).sem) - 1
                                     })
-                                    setStudentsList(newList)
-                                    setFilteredStudentList(newList)
+                                    await setStudents(newList, () => {
+                                        showSuccess('Semester decremented successfully')
+                                        startUpFunction();
+                                    }, () => {
+                                        showError('Unable to decrement semester')
+                                    })
                                 })
                             }}>
                             <ArrowFilled size={18} style={{ position: 'relative', bottom: 2 }} />
@@ -186,7 +206,7 @@ const StudentsPage: React.FC = (): JSX.Element => {
                         </div>
                         <StudentFilter
                             hidePreView={true}
-                            students={studentsData}
+                            students={studentsList}
                             onChange={(students) => setFilteredStudentList(students)} />
                         <div
                             className="btn-type2"
@@ -218,8 +238,12 @@ const StudentsPage: React.FC = (): JSX.Element => {
                             }, {
                                 heading: "Sem",
                                 selector: "semester",
-                                component: ({ data }) => <div>{data.semester} - {data.section}</div>
+                                component: ({ data }) => <div>{data.sem} - {data.sec}</div>
                             }, {
+                                //     heading: "Sem",
+                                //     selector: "semester",
+                                //     component: ({ data }) => <div>{data.semester} - {data.section}</div>
+                                // }, {
                                 //     heading: "Section",
                                 //     selector: "section",
                                 // }, {
@@ -258,8 +282,10 @@ export default StudentsPage
 const sortStudents = (students: Student[], keys: (keyof Student)[] = []): Student[] => {
     return students.sort((a, b) => {
         for (let key of keys) {
-            if (a[key] < b[key]) return -1;
-            if (a[key] > b[key]) return 1;
+            if (a[key] !== undefined && b[key] !== undefined) {
+                if (a[key] < b[key]) return -1;
+                if (a[key] > b[key]) return 1;
+            }
         }
         return 0;
     });

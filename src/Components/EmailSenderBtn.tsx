@@ -75,14 +75,14 @@ export default EmailSender
 async function sendEmail(email: string, msg: string = "", onSuccess: () => void = () => { }, onError: () => void = () => { }, finallyCallback: () => void = () => { }) {
     return emailjs
         .send(
-            "service_voha47h", // Replace with your EmailJS service ID
-            "template_qyno7wp", // Replace with your EmailJS template ID
+            "service_voha47h", // EmailJS service ID
+            "template_qyno7wp", // EmailJS template ID
             {
                 to_name: "Recipient " + email,
                 message: msg || "This is a test email sent from React!",
-                to_email: email, // Use the current email from the array
+                to_email: email, // Useing the current email from the array
             },
-            "3vPlPvJ0M6_fGCIwZ" // Replace with your EmailJS user ID
+            "3vPlPvJ0M6_fGCIwZ" // EmailJS user ID
         )
         .then(
             (response) => {

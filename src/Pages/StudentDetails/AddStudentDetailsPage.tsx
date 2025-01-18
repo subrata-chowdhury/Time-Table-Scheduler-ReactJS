@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Student } from '../../data/Types';
 import Arrow from '../../Icons/Arrow';
 import { useNavigate } from 'react-router-dom';
-import { addStudent } from '../../Script/StudentDataFetcher';
+import { setStudents } from '../../Script/StudentDataFetcher';
 import { useAlert } from '../../Components/AlertContextProvider';
 
 function AddStudentDetailsPage() {
@@ -28,19 +28,16 @@ function AddStudentDetailsPage() {
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         // Update the student data logic here
-        addStudent(
-            formData,
+        await setStudents(
+            [formData],
             () => {
-                console.log('Updated student data:', formData);
                 showSuccess("Student details updated Successfully");
             },
             () => showError("Unable to edit student data"));
     };
-
-    const onAdd = () => alert("Added: " + JSON.stringify(formData, null, 2))
 
     return (
         <div className='student-edit' style={{ flexGrow: 1, color: 'var(--textColor)' }}>
@@ -84,7 +81,7 @@ function AddStudentDetailsPage() {
                     </div>
                 </div>
                 <div className='save-btn-container'>
-                    <button type="submit" style={{ width: '100%', fontWeight: 600, border: '2px solid var(--accentColor)', background: 'var(--accentColor)', textAlign: 'center', marginTop: '0.5rem' }} onClick={() => onAdd()}>Add</button>
+                    <button type="submit" style={{ width: '100%', fontWeight: 600, border: '2px solid var(--accentColor)', background: 'var(--accentColor)', textAlign: 'center', marginTop: '0.5rem' }}>Add</button>
                 </div>
             </form>
         </div>
