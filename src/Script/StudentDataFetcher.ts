@@ -16,7 +16,9 @@ export const getStudents = async (
             try {
                 listArray = await response.json();
                 listArray = new Map(Object.entries(listArray));
-                onSuccess(Array.from(listArray.values()));
+                let newListArray = Array.from(listArray.values())
+                onSuccess(newListArray);
+                return newListArray
             } catch (error) {
                 const text = await response.text();
                 console.log("%cSubject List Data is invaild", "color: orange;", text);

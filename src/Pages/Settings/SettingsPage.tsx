@@ -5,7 +5,7 @@ import { getConfig, setConfig } from '../../Script/configFetchers';
 import ExcelArrayObjConverted from '../../Components/ExcelArrayObjConverted';
 import StudentFilter from '../../Components/StudentFilter';
 import EmailSender from '../../Components/EmailSenderBtn';
-import { deleteStudents, getStudents } from '../../Script/StudentDataFetcher';
+import { deleteStudents, getStudents, setStudents } from '../../Script/StudentDataFetcher';
 import { Student } from '../../data/Types';
 import { useConfirm } from '../../Components/ConfirmContextProvider';
 import { useAlert } from '../../Components/AlertContextProvider';
@@ -13,14 +13,14 @@ import { useAlert } from '../../Components/AlertContextProvider';
 const SettingsPage: React.FC = (): JSX.Element => {
     const [theme, setTheme] = useState<string>('System');
     const [emails, setEmails] = useState<string[]>([]);
-    const [students, setStudents] = useState<Student[]>([]);
+    const [studentsList, setStudentsList] = useState<Student[]>([]);
 
     const { showErrorConfirm } = useConfirm();
-    const { showSuccess } = useAlert()
+    const { showSuccess, showError } = useAlert()
 
     useEffect(() => {
         getConfig('theme', theme => setTheme(theme || 'System'), () => setTheme('System'))
-        getStudents(students => setStudents(students))
+        getStudents(students => setStudentsList(students))
     }, [])
 
     const handleDarkModeChange = (value: string | boolean) => {
@@ -53,7 +53,53 @@ const SettingsPage: React.FC = (): JSX.Element => {
                     value=""
                     onChange={() => { }}
                     component={
-                        <ExcelArrayObjConverted exportDataGetter={getStudents} />
+                        <ExcelArrayObjConverted exportDataGetter={getStudents} onImport={data => {
+                            const filteredData = data.map((student: any) => ({
+                                name: student.name,
+                                rollNo: student.rollNo,
+                                semester: student.semester,
+                                section: student.section,
+                                email: student.email,
+                                phoneNumbers: student.phoneNumbers,
+                                address: student.address,
+                                attendance: student.attendance,
+                            }));
+                            const cleanedStudent = [];
+                            for (let index = 0; index < filteredData.length; index++) {
+                                if (
+                                    // filteredData[index].address === null ||
+                                    filteredData[index].name === null ||
+                                    filteredData[index].rollNo === null ||
+                                    filteredData[index].semester === null ||
+                                    filteredData[index].section === null ||
+                                    filteredData[index].email === null ||
+                                    // filteredData[index].phoneNumbers === null ||
+                                    filteredData[index].attendance === null) {
+                                    continue;
+                                }
+                                if (
+                                    // filteredData[index].address === undefined ||
+                                    filteredData[index].name === undefined ||
+                                    filteredData[index].rollNo === undefined ||
+                                    filteredData[index].semester === undefined ||
+                                    filteredData[index].section === undefined ||
+                                    filteredData[index].email === undefined ||
+                                    // filteredData[index].phoneNumbers === undefined ||
+                                    filteredData[index].attendance === undefined) {
+                                    continue;
+                                }
+                                cleanedStudent.push(filteredData[index]);
+                            }
+                            if (cleanedStudent.length <= 0) {
+                                showError("Data must have name, rollNo, semester, section, email and attendance fields");
+                                return
+                            }
+                            setStudents(
+                                cleanedStudent,
+                                () => showSuccess('Students data imported successfully'),
+                                () => showError('Error in importing students data')
+                            );
+                        }} />
                     }
                 />
                 <Setting
@@ -63,7 +109,7 @@ const SettingsPage: React.FC = (): JSX.Element => {
                     onChange={() => { }}
                     component={
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
-                            <StudentFilter students={students} onChange={students => { setEmails(students.map(student => student.email)) }} />
+                            <StudentFilter students={studentsList} onChange={students => { setEmails(students.map(student => student.email)) }} />
                             <EmailSender emailList={emails} />
                         </div>
                     }
@@ -85,7 +131,7 @@ const SettingsPage: React.FC = (): JSX.Element => {
                                 onClick={() => {
                                     showErrorConfirm('Are you sure you want to delete all students?', () => {
                                         deleteStudents(() => {
-                                            setStudents([]);
+                                            setStudentsList([]);
                                             showSuccess('All Students data deleted successfully')
                                         })
                                     })

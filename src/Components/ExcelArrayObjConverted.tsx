@@ -29,14 +29,12 @@ const ExcelArrayObjConverted: React.FC<ExcelArrayObjConvertedProps> = ({
         if (fileExtension === "csv") {
             parseCSV(file, (arryaOfObjects) => {
                 setData(arryaOfObjects);
-                onImport(arryaOfObjects);
             });
             setShow(true);
             setYesBtnLabel('Import');
         } else if (["xls", "xlsx"].includes(fileExtension)) {
             parseExcel(file, (arryaOfObjects) => {
                 setData(arryaOfObjects);
-                onImport(arryaOfObjects);
             });
             setShow(true);
             setYesBtnLabel('Import');
@@ -67,7 +65,10 @@ const ExcelArrayObjConverted: React.FC<ExcelArrayObjConvertedProps> = ({
             <PopUp
                 data={data}
                 show={show}
-                onYesBtnClick={() => downloadExcel(data, (arrayOfObject) => onExport(arrayOfObject))}
+                onYesBtnClick={() => {
+                    if (yesBtnLabel === 'Import') onImport(data);
+                    else downloadExcel(data, (arrayOfObject) => onExport(arrayOfObject))
+                }}
                 onCancelBtnClick={() => setShow(false)}
                 yesBtnLabel={yesBtnLabel} />
         </div>
@@ -130,7 +131,7 @@ const PopUp: React.FC<PopUpProps> = ({ data, show, yesBtnLabel = 'Download', onY
                         style={{
                             padding: '0.5rem 1rem',
                             backgroundColor: 'var(--accentColor)',
-                            color: 'var(--textColor)',
+                            color: '#fff',
                             border: 'none',
                             borderRadius: 5,
                             cursor: 'pointer',
