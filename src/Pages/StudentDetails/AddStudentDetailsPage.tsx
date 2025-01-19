@@ -4,13 +4,14 @@ import Arrow from '../../Icons/Arrow';
 import { useNavigate } from 'react-router-dom';
 import { setStudents } from '../../Script/StudentDataFetcher';
 import { useAlert } from '../../Components/AlertContextProvider';
+import { Dropdown } from '../Settings/Setting';
 
 function AddStudentDetailsPage() {
     const [formData, setFormData] = useState<Student>({
         name: '',
         rollNo: '',
         semester: 1,
-        section: '',
+        section: 0,
         email: '',
         phoneNumbers: '',
         address: '',
@@ -22,6 +23,13 @@ function AddStudentDetailsPage() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
+        if (name === 'semester' || name === 'attendance') {
+            setFormData({
+                ...formData,
+                [name]: Number(value)
+            })
+            return;
+        }
         setFormData({
             ...formData,
             [name]: value,
@@ -31,6 +39,7 @@ function AddStudentDetailsPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         // Update the student data logic here
+        console.log(JSON.stringify(formData))
         await setStudents(
             [formData],
             () => {
@@ -57,11 +66,19 @@ function AddStudentDetailsPage() {
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                         <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Semester:</label>
-                        <input className='input-box' type="text" name="semester" value={formData.semester} onChange={handleChange} placeholder="e.g. 1" />
+                        <Dropdown
+                            value={formData.semester.toString()}
+                            options={Array.from({ length: 10 }, (_, i) => (i + 1).toString())}
+                            onChange={value => setFormData({ ...formData, semester: Number(value) })}
+                        />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                         <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Section:</label>
-                        <input className='input-box' type="text" name="section" value={formData.section} onChange={handleChange} placeholder="e.g. A" />
+                        <Dropdown
+                            value={String.fromCharCode(formData.section + 65)}
+                            options={Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))}
+                            onChange={(value) => setFormData({ ...formData, section: value.charCodeAt(0) - 65 })}
+                        />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                         <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Email:</label>
@@ -76,8 +93,8 @@ function AddStudentDetailsPage() {
                         <input className='input-box' type="text" name="address" value={formData.address} onChange={handleChange} placeholder="e.g. 123 Main St" />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Attendance (%):</label>
-                        <input className='input-box' type="text" name="attendance" value={formData.attendance} onChange={handleChange} placeholder="e.g. 85" />
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Attendance ({formData.attendance}%):</label>
+                        <input className='input-box' type="range" name="attendance" value={formData.attendance} onChange={handleChange} placeholder="e.g. 85" />
                     </div>
                 </div>
                 <div className='save-btn-container'>

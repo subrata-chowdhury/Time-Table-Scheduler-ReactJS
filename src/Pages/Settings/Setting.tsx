@@ -151,7 +151,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 cursor: 'pointer',
                 border: '2px solid var(--borderColor)',
                 borderRadius: 5,
-                padding: '0.4rem 0.7rem',
+                padding: '10px 0.7rem',
                 color: 'var(--textColor)',
                 backgroundColor: 'var(--containerColor)',
             }}
@@ -186,7 +186,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     transform: 'translateY(10px)',
                     boxShadow: '5px 5px 20px rgba(0, 0, 0, 0.2)',
                     paddingTop: '0.1rem',
-                    paddingBottom: '0.4rem'
+                    paddingBottom: '0.4rem',
+                    maxHeight: '200px',
+                    overflowY: 'auto'
                 }}>
                 {
                     options.map((option, index) => (
@@ -194,7 +196,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                             key={index}
                             className='dropdown-item hoverBgEffect'
                             style={{
-                                padding: '0.5rem 0.7rem',
+                                padding: '10px 0.7rem',
                             }}
                             onClick={() => {
                                 onChange(option);

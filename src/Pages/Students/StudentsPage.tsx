@@ -15,15 +15,10 @@ import Plus from '../../Icons/Plus'
 import { deleteStudent, getStudents, setStudents } from '../../Script/StudentDataFetcher'
 import { useAlert } from '../../Components/AlertContextProvider'
 
-interface StudentDetails extends Student {
-    sec: number,
-    sem: number
-}
-
 const StudentsPage: React.FC = (): JSX.Element => {
     const [displayLoader, setDisplayLoader] = useState(false);
-    const [studentsList, setStudentsList] = useState<Student[] | StudentDetails[]>([])
-    const [filteredStudentList, setFilteredStudentList] = useState<Student[] | StudentDetails[]>([])
+    const [studentsList, setStudentsList] = useState<Student[]>([])
+    const [filteredStudentList, setFilteredStudentList] = useState<Student[]>([])
     const [showShortPopup, setShowShortPopup] = useState(false)
     const [sortKeys, setSortKeys] = useState<(keyof Student)[]>([])
 
@@ -40,15 +35,8 @@ const StudentsPage: React.FC = (): JSX.Element => {
         // getStudentList(setStudentsList) // api call
         setDisplayLoader(true)
         await getStudents((data) => {
-            let newData = data.map((student) => {
-                return {
-                    ...student,
-                    section: String.fromCharCode(student.sec + 65),
-                    sec: String.fromCharCode(student.sec + 65)
-                }
-            })
-            setStudentsList(newData)
-            setFilteredStudentList(newData)
+            setStudentsList(data)
+            setFilteredStudentList(data)
         })
         setDisplayLoader(false)
     }, [])
@@ -170,7 +158,7 @@ const StudentsPage: React.FC = (): JSX.Element => {
                                 showWarningConfirm("Are you sure? This will increment the semester of all students", async () => {
                                     let newList = [...studentsList]
                                     newList.forEach(student => {
-                                        student.semester = Number((student as StudentDetails).sem) + 1
+                                        student.semester = student.semester + 1
                                     })
                                     await setStudents(newList, () => {
                                         showSuccess('Semester incremented successfully')
@@ -191,7 +179,7 @@ const StudentsPage: React.FC = (): JSX.Element => {
                                 showWarningConfirm("Are you sure? This will decrement the semester of all students", async () => {
                                     let newList = [...studentsList]
                                     newList.forEach(student => {
-                                        student.semester = Number((student as StudentDetails).sem) - 1
+                                        student.semester = student.semester - 1
                                     })
                                     await setStudents(newList, () => {
                                         showSuccess('Semester decremented successfully')
@@ -238,7 +226,7 @@ const StudentsPage: React.FC = (): JSX.Element => {
                             }, {
                                 heading: "Sem",
                                 selector: "semester",
-                                component: ({ data }) => <div>{data.sem} - {data.sec}</div>
+                                component: ({ data }) => <div>{data.semester} - {data.section}</div>
                             }, {
                                 //     heading: "Sem",
                                 //     selector: "semester",

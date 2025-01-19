@@ -91,7 +91,7 @@ const SettingsPage: React.FC = (): JSX.Element => {
                                 cleanedStudent.push(filteredData[index]);
                             }
                             if (cleanedStudent.length <= 0) {
-                                showError("Data must have name, rollNo, semester, section, email and attendance fields");
+                                showError("Data must have name, rollNo, semester, section, email and attendance columns");
                                 return
                             }
                             setStudents(

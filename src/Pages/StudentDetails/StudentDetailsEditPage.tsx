@@ -5,36 +5,27 @@ import Arrow from '../../Icons/Arrow'
 import { useNavigate } from 'react-router-dom'
 import { getStudent, setStudents } from '../../Script/StudentDataFetcher'
 import { useAlert } from '../../Components/AlertContextProvider'
-
-interface StudentDetails extends Student {
-    sec: string,
-    sem: number
-}
+import { Dropdown } from '../Settings/Setting'
 
 const StudentDetailsEditPage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const [formData, setFormData] = useState<StudentDetails>({
+    const [formData, setFormData] = useState<Student>({
         name: '',
         rollNo: '',
         semester: 0,
-        section: '',
+        section: 0,
         email: '',
         phoneNumbers: '',
         address: '',
-        attendance: 0,
-        sem: 0,
-        sec: ''
+        attendance: 0
     });
 
     useEffect(() => {
         // Fetch the student data and update the state
         if (id)
             getStudent(id, data => {
-                setFormData({
-                    ...data,
-                    sec: String.fromCharCode(data.sec + 65)
-                });
+                setFormData(data);
             })
     }, [])
 
@@ -42,6 +33,13 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
+        if (name === 'semester' || name === 'attendance') {
+            setFormData({
+                ...formData,
+                [name]: Number(value)
+            })
+            return;
+        }
         setFormData({
             ...formData,
             [name]: value,
@@ -52,16 +50,7 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
         e.preventDefault();
         // Update the student data logic here
         await setStudents(
-            [{
-                name: formData.name,
-                rollNo: formData.rollNo,
-                semester: formData.sem,
-                section: formData.sec,
-                email: formData.email,
-                phoneNumbers: formData.phoneNumbers,
-                address: formData.address,
-                attendance: formData.attendance
-            }],
+            [formData],
             () => {
                 console.log('Updated student data:', formData);
                 showSuccess("Student details updated Successfully");
@@ -79,39 +68,47 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
                 <div className='col-2 col-md-1'>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                         <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Name:</label>
-                        <input className='input-box' type="text" name="name" value={formData.name || ""} onChange={handleChange} placeholder="e.g., John Doe" />
+                        <input className='input-box' type="text" name="name" value={formData.name} onChange={handleChange} placeholder="e.g. John Doe" />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                         <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Roll No:</label>
-                        <input className='input-box' type="text" name="rollNo" value={formData.rollNo || ""} onChange={handleChange} placeholder="e.g., 12345" disabled />
+                        <input className='input-box' type="text" name="rollNo" value={formData.rollNo} onChange={handleChange} placeholder="e.g. 12345" />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                         <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Semester:</label>
-                        <input className='input-box' type="text" name="sem" value={formData.sem || ""} onChange={handleChange} placeholder="e.g., 5" />
+                        <Dropdown
+                            value={formData.semester.toString()}
+                            options={Array.from({ length: 10 }, (_, i) => (i + 1).toString())}
+                            onChange={value => setFormData({ ...formData, semester: Number(value) })}
+                        />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                         <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Section:</label>
-                        <input className='input-box' type="text" name="sec" value={formData.sec || ""} onChange={handleChange} placeholder="e.g., A" />
+                        <Dropdown
+                            value={String.fromCharCode(formData.section + 65)}
+                            options={Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))}
+                            onChange={(value) => setFormData({ ...formData, section: value.charCodeAt(0) - 65 })}
+                        />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                         <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Email:</label>
-                        <input className='input-box' type="email" name="email" value={formData.email || ""} onChange={handleChange} placeholder="e.g., johndoe@example.com" />
+                        <input className='input-box' type="email" name="email" value={formData.email} onChange={handleChange} placeholder="e.g. johndoe@example.com" />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                         <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Phone Numbers:</label>
-                        <input className='input-box' type="text" name="phoneNumbers" value={formData.phoneNumbers || ""} onChange={handleChange} placeholder="e.g., 1234567890" />
+                        <input className='input-box' type="text" name="phoneNumbers" value={formData.phoneNumbers} onChange={handleChange} placeholder="e.g. 1234567890" />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
                         <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Address:</label>
-                        <input className='input-box' type="text" name="address" value={formData.address || ""} onChange={handleChange} placeholder="e.g., 123 Main St, City, Country" />
+                        <input className='input-box' type="text" name="address" value={formData.address} onChange={handleChange} placeholder="e.g. 123 Main St" />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Attendance:</label>
-                        <input className='input-box' type="text" name="attendance" value={formData.attendance || ""} onChange={handleChange} placeholder="e.g., 85" />
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Attendance ({formData.attendance}%):</label>
+                        <input className='input-box' type="range" name="attendance" value={formData.attendance} onChange={handleChange} placeholder="e.g. 85" />
                     </div>
                 </div>
-                <div className='save-btn-container' style={{ width: '100%', textAlign: 'center', marginTop: '0.5rem' }}>
-                    <button type="submit">Save</button>
+                <div className='save-btn-container'>
+                    <button type="submit" style={{ width: '100%', fontWeight: 600, border: '2px solid var(--accentColor)', background: 'var(--accentColor)', textAlign: 'center', marginTop: '0.5rem' }}>Add</button>
                 </div>
             </form>
         </div>

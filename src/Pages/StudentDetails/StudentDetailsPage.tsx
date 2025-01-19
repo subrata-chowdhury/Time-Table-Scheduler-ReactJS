@@ -5,32 +5,25 @@ import { useNavigate } from 'react-router-dom'
 import { getStudent } from '../../Script/StudentDataFetcher'
 import { Student } from '../../data/Types'
 
-interface StudentDetails extends Student {
-    sec: number,
-    sem: number
-}
-
 const StudentDetailsPage: React.FC = (): JSX.Element => {
     const { id } = useParams()
     const navigate = useNavigate();
-    const [student, setStudent] = useState<StudentDetails>({
+    const [student, setStudent] = useState<Student>({
         name: '',
         rollNo: '',
         semester: 0,
-        section: '',
+        section: 0,
         email: '',
         phoneNumbers: '',
         address: '',
         attendance: 0,
-        sec: 0,
-        sem: 0
     })
 
     useEffect(() => {
         // Fetch the student data and update the state
         if (id)
             getStudent(id, data => {
-                setStudent(data as StudentDetails);
+                setStudent(data);
             })
     }, [])
 
@@ -45,8 +38,8 @@ const StudentDetailsPage: React.FC = (): JSX.Element => {
                     <div className='col-2 col-md-1'>
                         <div style={{ marginBottom: '1.2rem' }} ><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Name:</div> {student.name}</div>
                         <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Roll No:</div> {student.rollNo}</div>
-                        <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Semester:</div> {student.semester ? student.semester : student.sem}</div>
-                        <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Section:</div> {(student.section ? student.section : String.fromCharCode(student.sec + 65)) || 'N/A'}</div>
+                        <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Semester:</div> {student.semester}</div>
+                        <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Section:</div> {String.fromCharCode(student.section + 65) || 'N/A'}</div>
                         <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Email:</div> {student.email}</div>
                         <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Phone Numbers:</div> {student.phoneNumbers || 'N/A'}</div>
                         <div style={{ marginBottom: '1.2rem' }}><div style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Address:</div> {student.address || 'N/A'}</div>

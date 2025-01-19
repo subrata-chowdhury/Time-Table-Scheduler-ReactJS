@@ -39,9 +39,9 @@ export type Student = {
     name: string;
     rollNo: string;
     semester: number;
-    section: string;
+    section: number;
     email: string;
-    phoneNumbers: string;
-    address: string;
+    phoneNumbers?: string;
+    address?: string;
     attendance: number;
 }

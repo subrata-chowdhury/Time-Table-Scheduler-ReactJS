@@ -2,7 +2,7 @@ import { Student } from "../data/Types";
 import { url, getApiToken } from "./fetchUrl";
 
 export const getStudents = async (
-    onSuccess: (data: StudentDetails[]) => void = () => { },
+    onSuccess: (data: Student[]) => void = () => { },
     onFailed: (data: string[]) => void = () => { }
 ): Promise<Student[]> => {
     try {
@@ -11,7 +11,7 @@ export const getStudents = async (
                 'Api-Token': await getApiToken()
             }
         });
-        let listArray: Map<string, StudentDetails> = new Map();
+        let listArray: Map<string, Student> = new Map();
         if (response.status === 200) {
             try {
                 listArray = await response.json();
@@ -36,16 +36,11 @@ export const getStudents = async (
     }
 }
 
-interface StudentDetails extends Student {
-    sec: number,
-    sem: number
-}
-
 export const getStudent = async (
     studentId: string | number,
-    onSuccess: (data: StudentDetails) => void = () => { },
+    onSuccess: (data: Student) => void = () => { },
     onFailed: (data: string) => void = () => { }
-): Promise<StudentDetails | null> => {
+): Promise<Student | null> => {
     try {
         const response = await fetch(`${url}io/students/${studentId}`, {
             headers: {
@@ -73,26 +68,10 @@ export const setStudents = async (
     onSuccess: (data: string) => void = () => { },
     onFailed: (data: string) => void = () => { }
 ): Promise<void> => {
-    const newStudents: {
-        [key: string]: {
-            name: string;
-            rollNo: string;
-            sem: number;
-            sec: number;
-            email: string;
-            attendance: number;
-        }
-    } = {};
+    const newStudents: { [key: string]: Student } = {};
 
     for (let index = 0; index < students.length; index++) {
-        newStudents[students[index].rollNo] = {
-            name: students[index].name,
-            rollNo: students[index].rollNo,
-            sem: students[index].semester,
-            sec: students[index].section.toUpperCase().charCodeAt(0) - 'A'.charCodeAt(0),
-            email: students[index].email,
-            attendance: students[index].attendance
-        }
+        newStudents[students[index].rollNo] = students[index];
     }
 
     try {
