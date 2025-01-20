@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import '../../Style/Settings.css'
 import Arrow from '../../Icons/Arrow'
 
@@ -89,7 +89,7 @@ interface CheckboxProps extends commonInputProps {
     error?: string
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({
+const Checkbox: React.FC<CheckboxProps> = memo(({
     value,
     onChange = () => { },
     onBlur = () => { },
@@ -116,7 +116,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
             <div className={`circle ${isChecked ? 'checked' : ''}`}></div>
         </div>
     )
-}
+})
 
 interface DropdownProps {
     value: string,
@@ -130,7 +130,7 @@ interface DropdownProps {
     error?: string
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({
+export const Dropdown: React.FC<DropdownProps> = memo(({
     value,
     options,
     onChange = () => { },
@@ -206,6 +206,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
             </div>}
         </div>
     )
-}
+})
 
-export default Setting
+export default memo(Setting)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { memo, useState } from 'react'
 import { Student } from '../../data/Types';
 import Arrow from '../../Icons/Arrow';
 import { useNavigate } from 'react-router-dom';
@@ -110,4 +110,4 @@ function AddStudentDetailsPage() {
     )
 }
 
-export default AddStudentDetailsPage
+export default memo(AddStudentDetailsPage)

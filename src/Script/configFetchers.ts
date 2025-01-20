@@ -1,6 +1,6 @@
 import { url, getApiToken } from "./fetchUrl";
 
-const setConfig = async (key: string, value: any, onSuccess: () => void = () => {}, onFailed: () => void = () => {}) => {
+const setConfig = async (key: string, value: any, onSuccess: () => void = () => { }, onFailed: () => void = () => { }) => {
     try {
         const response = await fetch(`${url}io/config/global/${key}`, {
             method: 'PUT',
@@ -21,7 +21,7 @@ const setConfig = async (key: string, value: any, onSuccess: () => void = () => 
     }
 }
 
-const getConfig = async (key: string, onSuccess: (data: string | null) => void = () => {}, onFailed: () => void = () => {}) => {
+const getConfig = async (key: string, onSuccess: (data: string | object | null) => void = () => { }, onFailed: () => void = () => { }) => {
     try {
         const response = await fetch(`${url}io/config/global/${key}`, {
             headers: {
@@ -40,7 +40,7 @@ const getConfig = async (key: string, onSuccess: (data: string | null) => void =
     }
 }
 
-const deleteConfig = async (key: string, onSuccess: () => void = () => {}, onFailed: () => void = () => {}) => {
+const deleteConfig = async (key: string, onSuccess: () => void = () => { }, onFailed: () => void = () => { }) => {
     try {
         const response = await fetch(`${url}io/config/global/${key}`, {
             method: 'DELETE',

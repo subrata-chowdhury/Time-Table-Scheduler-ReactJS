@@ -45,3 +45,10 @@ export type Student = {
     address?: string;
     attendance: number;
 }
+
+export type Email = {
+    subject: string;
+    heading: string;
+    message: string;
+    footer: string;
+}

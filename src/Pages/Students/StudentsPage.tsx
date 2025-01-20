@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import Loader from '../../Components/Loader'
 import MiniStateContainer from '../../Components/MiniStateContainer'
 import SearchBar from '../../Components/SearchBar'
@@ -265,7 +265,7 @@ const StudentsPage: React.FC = (): JSX.Element => {
     )
 }
 
-export default StudentsPage
+export default memo(StudentsPage)
 
 const sortStudents = (students: Student[], keys: (keyof Student)[] = []): Student[] => {
     return students.sort((a, b) => {

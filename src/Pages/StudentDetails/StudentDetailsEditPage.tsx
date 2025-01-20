@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Student } from '../../data/Types'
 import Arrow from '../../Icons/Arrow'
@@ -122,4 +122,4 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
     )
 }
 
-export default StudentDetailsEditPage
+export default memo(StudentDetailsEditPage)

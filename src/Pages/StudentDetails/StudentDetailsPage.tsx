@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Arrow from '../../Icons/Arrow'
 import { useNavigate } from 'react-router-dom'
@@ -53,4 +53,4 @@ const StudentDetailsPage: React.FC = (): JSX.Element => {
     )
 }
 
-export default StudentDetailsPage
+export default memo(StudentDetailsPage)

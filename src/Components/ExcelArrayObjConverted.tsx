@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import ArrowWithLine from "../Icons/ArrowWithLine";
 import Table from "./Table";
 
@@ -83,7 +83,7 @@ interface PopUpProps {
     onCancelBtnClick?: () => void;
 }
 
-const PopUp: React.FC<PopUpProps> = ({ data, show, yesBtnLabel = 'Download', onYesBtnClick, onCancelBtnClick }) => {
+const PopUp: React.FC<PopUpProps> = memo(({ data, show, yesBtnLabel = 'Download', onYesBtnClick, onCancelBtnClick }) => {
     return (
         <>
             <div
@@ -159,9 +159,9 @@ const PopUp: React.FC<PopUpProps> = ({ data, show, yesBtnLabel = 'Download', onY
             }
         </>
     );
-}
+})
 
-export default ExcelArrayObjConverted;
+export default memo(ExcelArrayObjConverted);
 
 
 // Parse CSV files
