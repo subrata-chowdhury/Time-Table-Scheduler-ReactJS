@@ -6,10 +6,12 @@ import { useNavigate } from 'react-router-dom'
 import { getStudent, setStudents } from '../../Script/StudentDataFetcher'
 import { useAlert } from '../../Components/AlertContextProvider'
 import { Dropdown } from '../Settings/Setting'
+import { verifyStudentInputs } from '../../Script/InputVerifiers/StudentFromVerifier'
 
 const StudentDetailsEditPage: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
     const { id } = useParams();
+
     const [formData, setFormData] = useState<Student>({
         name: '',
         rollNo: '',
@@ -21,6 +23,8 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
         attendance: 0
     });
 
+    const { showSuccess, showWarning, showError } = useAlert()
+
     useEffect(() => {
         // Fetch the student data and update the state
         if (id)
@@ -29,7 +33,6 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
             })
     }, [])
 
-    const { showSuccess, showError } = useAlert()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -48,12 +51,16 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const isValid = verifyStudentInputs(formData, showWarning);
+        if (!isValid) return;
+
         // Update the student data logic here
         await setStudents(
             [formData],
             () => {
-                console.log('Updated student data:', formData);
-                showSuccess("Student details updated Successfully");
+                // console.log('Updated student data:', formData);
+                showSuccess("Student Details Updated Successfully");
             },
             () => showError("Unable to edit student data"));
     };
@@ -67,15 +74,15 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
                 </h2>
                 <div className='col-2 col-md-1'>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Name:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Name*:</label>
                         <input className='input-box' type="text" name="name" value={formData.name} onChange={handleChange} placeholder="e.g. John Doe" />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Roll No:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Roll No*:</label>
                         <input className='input-box' type="text" name="rollNo" value={formData.rollNo} onChange={handleChange} placeholder="e.g. 12345" />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Semester:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Semester*:</label>
                         <Dropdown
                             value={formData.semester.toString()}
                             options={Array.from({ length: 10 }, (_, i) => (i + 1).toString())}
@@ -83,7 +90,7 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
                         />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Section:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Section*:</label>
                         <Dropdown
                             value={String.fromCharCode(formData.section + 65)}
                             options={Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))}
@@ -91,7 +98,7 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
                         />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Email:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Email*:</label>
                         <input className='input-box' type="email" name="email" value={formData.email} onChange={handleChange} placeholder="e.g. johndoe@example.com" />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>

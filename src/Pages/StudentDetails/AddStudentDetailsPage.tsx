@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { setStudents } from '../../Script/StudentDataFetcher';
 import { useAlert } from '../../Components/AlertContextProvider';
 import { Dropdown } from '../Settings/Setting';
+import { verifyStudentInputs } from '../../Script/InputVerifiers/StudentFromVerifier';
 
 function AddStudentDetailsPage() {
     const [formData, setFormData] = useState<Student>({
@@ -17,7 +18,8 @@ function AddStudentDetailsPage() {
         address: '',
         attendance: 0
     });
-    const { showSuccess, showError } = useAlert()
+    
+    const { showSuccess, showWarning, showError } = useAlert()
 
     const navigate = useNavigate();
 
@@ -38,12 +40,15 @@ function AddStudentDetailsPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const isValid = verifyStudentInputs(formData, showWarning);
+        if(!isValid) return;
+
         // Update the student data logic here
-        console.log(JSON.stringify(formData))
         await setStudents(
             [formData],
             () => {
-                showSuccess("Student details updated Successfully");
+                showSuccess("Student Details Added Successfully");
             },
             () => showError("Unable to edit student data"));
     };
@@ -57,15 +62,15 @@ function AddStudentDetailsPage() {
                 </h2>
                 <div className='col-2 col-md-1'>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Name:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Name*:</label>
                         <input className='input-box' type="text" name="name" value={formData.name} onChange={handleChange} placeholder="e.g. John Doe" />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Roll No:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Roll No*:</label>
                         <input className='input-box' type="text" name="rollNo" value={formData.rollNo} onChange={handleChange} placeholder="e.g. 12345" />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Semester:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Semester*:</label>
                         <Dropdown
                             value={formData.semester.toString()}
                             options={Array.from({ length: 10 }, (_, i) => (i + 1).toString())}
@@ -73,7 +78,7 @@ function AddStudentDetailsPage() {
                         />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Section:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Section*:</label>
                         <Dropdown
                             value={String.fromCharCode(formData.section + 65)}
                             options={Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))}
@@ -81,7 +86,7 @@ function AddStudentDetailsPage() {
                         />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>
-                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Email:</label>
+                        <label className='input-box-heading' style={{ fontWeight: 600, marginBottom: '0.2rem', fontSize: '1.1rem' }}>Email*:</label>
                         <input className='input-box' type="email" name="email" value={formData.email} onChange={handleChange} placeholder="e.g. johndoe@example.com" />
                     </div>
                     <div className='input-container' style={{ marginBottom: '1.2rem' }}>

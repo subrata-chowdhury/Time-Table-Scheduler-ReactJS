@@ -226,7 +226,7 @@ const StudentsPage: React.FC = (): JSX.Element => {
                             }, {
                                 heading: "Sem",
                                 selector: "semester",
-                                component: ({ data }) => <div>{data.semester} - {data.section}</div>
+                                component: ({ data }) => <div>{data.semester} - {String.fromCharCode(Number(data.section) + 65)}</div>
                             }, {
                                 //     heading: "Sem",
                                 //     selector: "semester",
