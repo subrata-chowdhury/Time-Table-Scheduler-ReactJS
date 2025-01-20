@@ -6,6 +6,8 @@ import { useConfirm } from "./ConfirmContextProvider";
 import { useAlert } from "./AlertContextProvider";
 import { Email } from "../data/Types";
 import { getConfig, setConfig } from "../Script/configFetchers";
+import Question from "../Icons/Question";
+import CustomTitle from "./CustomTitle";
 
 interface EmailSenderProps {
     emailList: string[],
@@ -155,9 +157,19 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                         onChange={e => onChange({ ...emailBody, heading: e.target.value })}></input>
                 </div>
                 <div className="input-container">
-                    <div className="input-box-heading">Message</div>
+                    <div style={{ display: 'flex', gap: 8, alignContent: 'center' }}>
+                        <div className="input-box-heading">Message</div>
+                        <CustomTitle title='HTML can be included in this field
+Include images using <img src=""/> tag.
+Example: <b>For Bold</b>'>
+                            <div style={{ marginTop: 'auto', cursor: 'pointer' }}>
+                                <Question size={16} />
+                            </div>
+                        </CustomTitle>
+                    </div>
                     <textarea
                         className="input-box"
+                        style={{ fontFamily: 'sans-serif' }}
                         name='message'
                         rows={4}
                         value={emailBody.message}
@@ -165,9 +177,19 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                         onChange={e => onChange({ ...emailBody, message: e.target.value })}></textarea>
                 </div>
                 <div className="input-container">
-                    <div className="input-box-heading">Footer</div>
+                    <div style={{ display: 'flex', gap: 8, alignContent: 'center' }}>
+                        <div className="input-box-heading">Footer</div>
+                        <CustomTitle title='HTML can be included in this field, 
+Include images using <img src=""/> tag.
+Example: <b>For Bold</b>'>
+                            <div style={{ marginTop: 'auto', cursor: 'pointer' }}>
+                                <Question size={16} />
+                            </div>
+                        </CustomTitle>
+                    </div>
                     <textarea
                         className="input-box"
+                        style={{ fontFamily: 'sans-serif' }}
                         name='footer'
                         value={emailBody.footer}
                         placeholder='Footer'
