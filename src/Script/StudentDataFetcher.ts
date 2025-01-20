@@ -87,8 +87,7 @@ export const setStudents = async (
             onSuccess("Student added successfully");
         } else {
             const text = await response.text();
-            console.log(newStudents)
-            onFailed("Failed to add student");
+            onFailed(text || "Failed to add student");
             console.log("%cError in adding student", "color: orange;", text);
         }
     } catch (error) {

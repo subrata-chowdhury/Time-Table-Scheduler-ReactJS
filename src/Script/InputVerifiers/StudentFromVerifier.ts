@@ -46,10 +46,10 @@ export const verifyStudentInputs = (studentDetails: Student, onError: (msg: stri
     }
 
     // phone number, if provided, must be a valid phone number
-    if (studentData.phoneNumbers && !/^\d{10}$/.test(studentData.phoneNumbers)) {
-        onError("Please Enter a Valid 10-digit Phone Number");
-        return false;
-    }
+    // if (studentData.phoneNumbers && !/^\d{10}$/.test(studentData.phoneNumbers)) {
+    //     onError("Please Enter a Valid 10-digit Phone Number");
+    //     return false;
+    // }
 
     // attendance must be a number between 0 and 100
     if (typeof studentData.attendance !== 'number' || studentData.attendance < 0 || studentData.attendance > 100) {

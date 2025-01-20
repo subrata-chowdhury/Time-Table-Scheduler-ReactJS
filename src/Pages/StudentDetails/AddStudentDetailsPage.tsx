@@ -50,7 +50,7 @@ function AddStudentDetailsPage() {
             () => {
                 showSuccess("Student Details Added Successfully");
             },
-            () => showError("Unable to edit student data"));
+            (msg) => showError(msg || "Unable to edit student data"));
     };
 
     return (

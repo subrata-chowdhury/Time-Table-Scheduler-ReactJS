@@ -62,7 +62,7 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
                 // console.log('Updated student data:', formData);
                 showSuccess("Student Details Updated Successfully");
             },
-            () => showError("Unable to edit student data"));
+            (msg) => showError(msg || "Unable to edit student data"));
     };
 
     return (
