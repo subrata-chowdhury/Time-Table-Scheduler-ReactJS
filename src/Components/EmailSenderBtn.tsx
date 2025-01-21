@@ -4,17 +4,17 @@ import React, { memo, useEffect, useState } from "react";
 import Loader from "./Loader";
 import { useConfirm } from "./ConfirmContextProvider";
 import { useAlert } from "./AlertContextProvider";
-import { Email } from "../data/Types";
+import { ApiData, Email, Student } from "../data/Types";
 import { getConfig, setConfig } from "../Script/configFetchers";
 import Question from "../Icons/Question";
 import CustomTitle from "./CustomTitle";
 
 interface EmailSenderProps {
-    emailList: string[],
-    onComplete?: ({ failedEmails, successEmails }: { failedEmails: string[], successEmails: string[] }) => void
+    studentsData: Student[],
+    onComplete?: ({ failedEmailsStudentData, successEmailsStudentData }: { failedEmailsStudentData: Student[], successEmailsStudentData: Student[] }) => void
 }
 
-const EmailSender: React.FC<EmailSenderProps> = ({ emailList = [], onComplete = () => { } }) => {
+const EmailSender: React.FC<EmailSenderProps> = ({ studentsData = [], onComplete = () => { } }) => {
     const [emailSent, setEmailSent] = useState(false);
     const [progress, setProgress] = useState(0);
     const [successCount, setSuccessCount] = useState(0);
@@ -25,7 +25,12 @@ const EmailSender: React.FC<EmailSenderProps> = ({ emailList = [], onComplete = 
         footer: ""
     })
     const [showEmailTemplate, setShowEmailTemplate] = useState<boolean>(false);
-    const [showPreview, setShowPreview] = useState(false);
+    const [currentTab, setCurrentTab] = useState<'format' | 'preview' | 'api'>('format');
+    const [apiData, setApiData] = useState<ApiData>({
+        serviceId: "service_voha47h",
+        templateId: "template_qyno7wp",
+        userId: "3vPlPvJ0M6_fGCIwZ"
+    })
 
     const { showWarningConfirm } = useConfirm();
     const { showWarning, showSuccess } = useAlert()
@@ -39,10 +44,14 @@ const EmailSender: React.FC<EmailSenderProps> = ({ emailList = [], onComplete = 
             if (value === null) return;
             setEmailBody(value as Email)
         })
+        getConfig('apiData', (value) => {
+            if (value === null) return;
+            setApiData(value as ApiData)
+        })
     }
 
     // const emailList = ["subratachowdhury275@gmail.com", "banerjee.srideep@gmail.com"]; // Replace with your array of emails
-    const totalEmails = emailList.length;
+    const totalEmails = studentsData.length;
 
     const sendBulkEmail = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -50,19 +59,19 @@ const EmailSender: React.FC<EmailSenderProps> = ({ emailList = [], onComplete = 
         showWarningConfirm(`Are You Sure you want to send ${totalEmails} emails.`, async () => {
             setProgress(0);
             setSuccessCount(0);
-            let failedEmails: string[] = [];
-            let successEmails: string[] = [];
-
-            for (let index = 0; index < emailList.length; index++) {
+            let failedEmailsStudentData: Student[] = [];
+            let successEmailsStudentData: Student[] = [];
+            for (let index = 0; index < studentsData.length; index++) {
                 await sendEmail(
-                    emailList[index],
+                    apiData,
+                    studentsData[index],
                     emailBody,
-                    () => { setSuccessCount(prev => prev + 1); successEmails.push(emailList[index]) },
-                    () => failedEmails.push(emailList[index]),
-                    () => setProgress(prev => prev + 1)
+                    () => { setSuccessCount(prev => prev + 1); successEmailsStudentData.push(studentsData[index]) },
+                    () => { failedEmailsStudentData.push(studentsData[index]); },
+                    () => setProgress(prev => prev + 1),
                 )
             }
-            onComplete({ failedEmails, successEmails: successEmails })
+            onComplete({ failedEmailsStudentData, successEmailsStudentData })
             setEmailSent(true)
         })
     };
@@ -72,11 +81,11 @@ const EmailSender: React.FC<EmailSenderProps> = ({ emailList = [], onComplete = 
     return (
         <div style={{ color: 'var(--textColor)' }}>
             {progress > 0 && <p>{progress} of {totalEmails} emails send ({successRate.toFixed(2)}% success rate)</p>}
-            {progress > 0 && (
+            {progress > 0 && !emailSent && (
                 <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'fixed', top: 0, left: 0, zIndex: 100, padding: '2rem' }}>
                     <Loader />
                     <div style={{ zIndex: 21, display: 'flex', gap: '0.5rem', width: '30%', alignItems: 'center', justifyContent: 'center', position: 'relative', top: 200 }}>
-                        {progress}<progress value={progress} max={totalEmails} style={{ flexGrow: 1 }} />{emailList.length}
+                        {progress}<progress value={progress} max={totalEmails} style={{ flexGrow: 1 }} />{studentsData.length}
                     </div>
                 </div>
             )}
@@ -88,19 +97,32 @@ const EmailSender: React.FC<EmailSenderProps> = ({ emailList = [], onComplete = 
                     </div>
                     {showEmailTemplate &&
                         <>
-                            <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', background: 'rgba(0,0,0,0.1)', zIndex: 20 }} onClick={() => setShowEmailTemplate(false)}></div>
+                            <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', background: 'rgba(0,0,0,0.3)', zIndex: 20 }} onClick={() => setShowEmailTemplate(false)}></div>
                             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '70%', maxHeight: '90vh', borderRadius: 5, zIndex: 30, background: 'var(--containerColor)', padding: '1rem' }}>
                                 <div style={{ display: 'flex', justifyContent: 'start', width: 'fit-content', alignItems: 'center', padding: 5, borderRadius: 5, gap: 2, background: 'var(--borderColor)' }}>
-                                    <button onClick={() => setShowPreview(false)} className="btn-type2" style={!showPreview ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>Format</button>
-                                    <button onClick={() => setShowPreview(true)} className="btn-type2" style={showPreview ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>Preview</button>
+                                    <button onClick={() => setCurrentTab('format')} className="btn-type2" style={(currentTab === 'format') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>Format</button>
+                                    <button onClick={() => setCurrentTab('preview')} className="btn-type2" style={(currentTab === 'preview') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>Preview</button>
+                                    <button onClick={() => setCurrentTab('api')} className="btn-type2" style={(currentTab === 'api') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>API Config</button>
                                 </div>
-                                {!showPreview && <EmailConfigForm values={emailBody} onSave={async (body) => {
-                                    setConfig('emailBody', body, () => {
-                                        setEmailBody(body)
-                                        showSuccess("Email Format Save Successfully")
-                                    }, () => showWarning('Failed to Save Email Format'))
-                                }} onCancel={() => setShowEmailTemplate(false)} />}
-                                {showPreview && <EmailPreview {...emailBody} />}
+                                {(currentTab === 'format') && <EmailConfigForm
+                                    values={emailBody}
+                                    onSave={async (body) => {
+                                        setConfig('emailBody', body, () => {
+                                            setEmailBody(body)
+                                            showSuccess("Email Format Save Successfully")
+                                        }, () => showWarning('Failed to Save Email Format'))
+                                    }}
+                                    onCancel={() => setShowEmailTemplate(false)} />}
+                                {(currentTab === 'preview') && <EmailPreview {...emailBody} />}
+                                {(currentTab === 'api') && <EmailApiConfigForm
+                                    values={apiData}
+                                    onSave={async (body) => {
+                                        setConfig('apiData', body, () => {
+                                            setApiData(body)
+                                            showSuccess("API Data Save Successfully")
+                                        }, () => showWarning('Failed to Save API Data'))
+                                    }}
+                                    onCancel={() => setShowEmailTemplate(false)} />}
                             </div>
                         </>}
                 </>
@@ -159,10 +181,8 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                 <div className="input-container">
                     <div style={{ display: 'flex', gap: 8, alignContent: 'center' }}>
                         <div className="input-box-heading">Message</div>
-                        <CustomTitle title='HTML can be included in this field
-Include images using <img src=""/> tag.
-Example: <b>For Bold</b>'>
-                            <div style={{ marginTop: 'auto', cursor: 'pointer' }}>
+                        <CustomTitle containerStyle={{ display: 'flex' }} width={250} title={<div><b>HTML can be included</b> in this field.<br /> Include images using {'<img src=""/>'} tag.<br /> Example: {'<b>'}For Bold{'</b>'}</div>}>
+                            <div style={{ marginTop: 'auto', height: 19 }}>
                                 <Question size={16} />
                             </div>
                         </CustomTitle>
@@ -179,10 +199,8 @@ Example: <b>For Bold</b>'>
                 <div className="input-container">
                     <div style={{ display: 'flex', gap: 8, alignContent: 'center' }}>
                         <div className="input-box-heading">Footer</div>
-                        <CustomTitle title='HTML can be included in this field, 
-Include images using <img src=""/> tag.
-Example: <b>For Bold</b>'>
-                            <div style={{ marginTop: 'auto', cursor: 'pointer' }}>
+                        <CustomTitle containerStyle={{ display: 'flex' }} width={250} title={<div><b>HTML can be included</b> in this field.<br /> Include images using {'<img src=""/>'} tag.<br /> Example: {'<b>'}For Bold{'</b>'}</div>}>
+                            <div style={{ marginTop: 'auto', height: 19 }}>
                                 <Question size={16} />
                             </div>
                         </CustomTitle>
@@ -217,7 +235,8 @@ const EmailPreview: React.FC<EmailPreviewProps> = memo(({
                 margin: "1rem",
                 paddingTop: "0.1rem",
                 fontFamily: "sans-serif",
-                background: "rgba(0,0,0,0.1)"
+                background: "rgba(0,0,0,0.1)",
+                color: '#000'
             }}
         >
             <div
@@ -242,37 +261,111 @@ const EmailPreview: React.FC<EmailPreviewProps> = memo(({
     )
 })
 
+type EmailApiConfigFormProps = {
+    values: ApiData,
+    onSave: (values: ApiData) => void,
+    onCancel: () => void
+}
+
+const EmailApiConfigForm: React.FC<EmailApiConfigFormProps> = memo(({ values, onSave = () => { }, onCancel = () => { } }) => {
+    const [apiData, setApiData] = useState<ApiData>({
+        serviceId: "service_voha47h",
+        templateId: "template_qyno7wp",
+        userId: "3vPlPvJ0M6_fGCIwZ"
+    })
+
+    useEffect(() => {
+        setApiData(values)
+    }, [values])
+
+    function onChange(newValues: ApiData) {
+        setApiData(newValues)
+    }
+
+    return (
+        <>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', margin: '1rem' }}>
+                <div className="input-container">
+                    <div className="input-box-heading">Service ID</div>
+                    <input
+                        type="text"
+                        className="input-box"
+                        name='serviceId'
+                        value={apiData.serviceId}
+                        placeholder='Service ID'
+                        onChange={e => onChange({ ...apiData, serviceId: e.target.value })}></input>
+                </div>
+                <div className="input-container">
+                    <div className="input-box-heading">Template ID</div>
+                    <input
+                        type="text"
+                        className="input-box"
+                        name='templateId'
+                        value={apiData.templateId}
+                        placeholder='Template ID'
+                        onChange={e => onChange({ ...apiData, templateId: e.target.value })}></input>
+                </div>
+                <div className="input-container">
+                    <div className="input-box-heading">User ID</div>
+                    <input
+                        type="text"
+                        className="input-box"
+                        name='userId'
+                        value={apiData.userId}
+                        placeholder='User ID'
+                        onChange={e => onChange({ ...apiData, userId: e.target.value })}></input>
+                </div>
+                <div style={{ display: 'flex', gap: 5 }}>
+                    <button className="btn-type2" style={{ background: 'var(--accentColor)', color: 'white' }} onClick={() => onSave(apiData)}>Save</button>
+                    <button className="btn-type2" onClick={() => onCancel()}>Cancel</button>
+                </div>
+            </div>
+        </>
+    )
+})
 
 async function sendEmail(
-    email: string,
+    apiData: ApiData,
+    studentData: Student,
     emailBody: Email = { subject: "", heading: "", message: "", footer: "" },
     onSuccess: () => void = () => { },
     onError: () => void = () => { },
     finallyCallback: () => void = () => { }) {
     return emailjs
         .send(
-            "service_voha47h", // EmailJS service ID
-            "template_qyno7wp", // EmailJS template ID
+            apiData.serviceId || "service_voha47h", // EmailJS service ID
+            apiData.templateId || "template_qyno7wp", // EmailJS template ID
             {
-                subject: emailBody.subject || "",
-                heading: emailBody.heading || "",
-                message: emailBody.message || "",
-                footer: emailBody.footer || "",
-                to_email: email, // Useing the current email from the array
+                subject: populateWithStudentData(emailBody.subject, studentData) || "",
+                heading: populateWithStudentData(emailBody.heading, studentData) || "",
+                message: populateWithStudentData(emailBody.message, studentData) || "",
+                footer: populateWithStudentData(emailBody.footer, studentData) || "",
+                to_email: studentData.email, // Useing the current email from the array
             },
-            "3vPlPvJ0M6_fGCIwZ" // EmailJS user ID
+            apiData.userId || "3vPlPvJ0M6_fGCIwZ" // EmailJS user ID
         )
         .then(
             (response) => {
-                console.log(`SUCCESS! Email sent to ${email}`, response.status, response.text);
+                console.log(`SUCCESS! Email sent to ${studentData.email}`, response.status, response.text);
                 if (response.status == 200) onSuccess();
             },
             (err) => {
-                console.error(`FAILED to send email to ${email}`, err);
+                console.error(`FAILED to send email to ${studentData.email}`, err);
                 onError();
             }
         )
         .finally(() => {
             finallyCallback();
         });
+}
+
+function populateWithStudentData(template: string, studentData: Student): string {
+    return template.replace(/_{name}_/g, studentData.name)
+        .replace(/_{email}_/g, studentData.email)
+        .replace(/_{attendance}_/g, String(studentData.attendance))
+        .replace(/_{rollNo}_/g, studentData.rollNo)
+        .replace(/_{semester}_/g, String(studentData.semester))
+        .replace(/_{section}_/g, String(studentData.section))
+        .replace(/_{phoneNumbers}_/g, studentData.phoneNumbers || "")
+        .replace(/_{address}_/g, studentData.address || "");
 }

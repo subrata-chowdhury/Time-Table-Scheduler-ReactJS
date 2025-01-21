@@ -3,15 +3,16 @@ import React, { useState } from 'react'
 type Props = {
     title: string | React.ReactNode,
     children: React.ReactNode,
+    containerStyle?: React.CSSProperties,
     width?: number
 }
 
-const CustomTitle: React.FC<Props> = ({ title, width = 200, children }) => {
+const CustomTitle: React.FC<Props> = ({ title, width = 200, containerStyle = {}, children }) => {
     const [showTitle, setShowTitle] = useState(false)
 
     return (
         <>
-            <div onMouseEnter={() => setShowTitle(true)} onMouseLeave={() => setShowTitle(false)}>
+            <div style={{ cursor: 'pointer', ...containerStyle }} onMouseEnter={() => setShowTitle(true)} onMouseLeave={() => setShowTitle(false)}>
                 {children}
             </div>
             {

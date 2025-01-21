@@ -52,3 +52,9 @@ export type Email = {
     message: string;
     footer: string;
 }
+
+export type ApiData = {
+    serviceId: string,
+    templateId: string,
+    userId: string
+}

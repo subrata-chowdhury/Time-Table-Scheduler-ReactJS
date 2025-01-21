@@ -12,14 +12,14 @@ import { useAlert } from '../../Components/AlertContextProvider';
 
 const SettingsPage: React.FC = (): JSX.Element => {
     const [theme, setTheme] = useState<string>('System');
-    const [emails, setEmails] = useState<string[]>([]);
+    const [emailsWithStudentData, setEmailsWithStudentData] = useState<Student[]>([]);
     const [studentsList, setStudentsList] = useState<Student[]>([]);
 
     const { showErrorConfirm } = useConfirm();
     const { showSuccess, showError } = useAlert()
 
     useEffect(() => {
-        getConfig('theme', theme => setTheme(theme || 'System'), () => setTheme('System'))
+        getConfig('theme', theme => setTheme(theme as string || 'System'), () => setTheme('System'))
         getStudents(students => setStudentsList(students))
     }, [])
 
@@ -109,8 +109,8 @@ const SettingsPage: React.FC = (): JSX.Element => {
                     onChange={() => { }}
                     component={
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
-                            <StudentFilter students={studentsList} onChange={students => { setEmails(students.map(student => student.email)) }} />
-                            <EmailSender emailList={emails} />
+                            <StudentFilter students={studentsList} onChange={students => { setEmailsWithStudentData(students) }} />
+                            <EmailSender studentsData={emailsWithStudentData} />
                         </div>
                     }
                 />

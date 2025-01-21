@@ -115,7 +115,7 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
                     </div>
                 </div>
                 <div className='save-btn-container'>
-                    <button type="submit" style={{ width: '100%', fontWeight: 600, border: '2px solid var(--accentColor)', background: 'var(--accentColor)', textAlign: 'center', marginTop: '0.5rem' }}>Add</button>
+                    <button type="submit" style={{ width: '100%', fontWeight: 600, border: '2px solid var(--accentColor)', background: 'var(--accentColor)', textAlign: 'center', marginTop: '0.5rem' }}>Save</button>
                 </div>
             </form>
         </div>
