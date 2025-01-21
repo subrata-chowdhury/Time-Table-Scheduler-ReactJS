@@ -147,6 +147,7 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
         message: "",
         footer: ""
     })
+    const [showPopup, setShowPopup] = useState<'message' | 'footer' | null>(null);
 
     useEffect(() => {
         setEmailBody({ ...values, message: values.message.replace(/<br\/>/g, '\n'), footer: values.footer.replace(/<br\/>/g, '\n') })
@@ -182,37 +183,64 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                 <div className="input-container">
                     <div style={{ display: 'flex', gap: 8, alignContent: 'center' }}>
                         <div className="input-box-heading">Message</div>
-                        <CustomTitle containerStyle={{ display: 'flex' }} width={250} title={<div><b>HTML can be included</b> in this field.<br /> Include images using {'<img src=""/>'} tag.<br /> Example: {'<b>'}For Bold{'</b>'}</div>}>
+                        <CustomTitle containerStyle={{ display: 'flex' }} width={250} title={<div><b>HTML can be included</b> in this field.<br /> Include images using {'<img src=""/>'} tag.<br /> Example: {'<b>'}For Bold{'</b>'}. <br />Use <b>@</b> to add student data. <br />Example: @name - @rollNo</div>}>
                             <div style={{ marginTop: 'auto', height: 19 }}>
                                 <Question size={16} />
                             </div>
                         </CustomTitle>
                     </div>
-                    <textarea
-                        className="input-box"
-                        style={{ fontFamily: 'sans-serif' }}
-                        name='message'
-                        rows={4}
-                        value={emailBody.message}
-                        placeholder='Message'
-                        onChange={e => onChange({ ...emailBody, message: e.target.value })}></textarea>
+                    <div style={{ position: 'relative' }}>
+                        <textarea
+                            className="input-box"
+                            style={{ fontFamily: 'sans-serif', resize: 'vertical', fontSize: '0.9rem' }}
+                            name='message'
+                            rows={4}
+                            value={emailBody.message}
+                            placeholder='Message'
+                            onKeyDown={e => {
+                                if (e.key === '@') {
+                                    setShowPopup('message');
+                                }
+                            }}
+                            onChange={e => onChange({ ...emailBody, message: e.target.value })}></textarea>
+                        {(showPopup === 'message') && <DynamicValuePopup
+                            onClose={() => setShowPopup(null)}
+                            onClick={(value) => {
+                                setEmailBody({ ...emailBody, message: (emailBody.message + value + ' ') })
+                                setShowPopup(null)
+                            }} />}
+                    </div>
                 </div>
                 <div className="input-container">
                     <div style={{ display: 'flex', gap: 8, alignContent: 'center' }}>
                         <div className="input-box-heading">Footer</div>
-                        <CustomTitle containerStyle={{ display: 'flex' }} width={250} title={<div><b>HTML can be included</b> in this field.<br /> Include images using {'<img src=""/>'} tag.<br /> Example: {'<b>'}For Bold{'</b>'}</div>}>
+                        <CustomTitle containerStyle={{ display: 'flex' }} width={250} title={<div><b>HTML can be included</b> in this field.<br /> Include images using {'<img src=""/>'} tag.<br /> Example: {'<b>'}For Bold{'</b>'}. <br />Use <b>@</b> to add student data. <br />Example: @name - @rollNo</div>}>
                             <div style={{ marginTop: 'auto', height: 19 }}>
                                 <Question size={16} />
                             </div>
                         </CustomTitle>
                     </div>
-                    <textarea
-                        className="input-box"
-                        style={{ fontFamily: 'sans-serif' }}
-                        name='footer'
-                        value={emailBody.footer}
-                        placeholder='Footer'
-                        onChange={e => onChange({ ...emailBody, footer: e.target.value })}></textarea>
+                    <div style={{ position: 'relative' }}>
+                        <textarea
+                            className="input-box"
+                            style={{ fontFamily: 'sans-serif', resize: 'vertical', fontSize: '0.9rem' }}
+                            name='footer'
+                            value={emailBody.footer}
+                            placeholder='Footer'
+                            onKeyDown={e => {
+                                if (e.key === '@') {
+                                    setShowPopup('footer');
+                                }
+                            }}
+                            onChange={e => onChange({ ...emailBody, footer: e.target.value })}></textarea>
+                        {(showPopup === 'footer') && <DynamicValuePopup
+                            height={150}
+                            onClose={() => setShowPopup(null)}
+                            onClick={(value) => {
+                                setEmailBody({ ...emailBody, footer: (emailBody.footer + value + ' ') })
+                                setShowPopup(null)
+                            }} />}
+                    </div>
                 </div>
                 <div style={{ display: 'flex', gap: 5 }}>
                     <button className="btn-type2" style={{ background: 'var(--accentColor)', color: 'white' }} onClick={() => onSave({ ...emailBody, message: emailBody.message.replace(/\n/g, '<br/>'), footer: emailBody.footer.replace(/\n/g, '<br/>') })}>Save</button>
@@ -358,13 +386,40 @@ async function sendEmail(
 }
 
 function populateWithStudentData(template: string, studentData: Student): string {
-    return template.replace(/_{name}_/g, studentData.name)
-        .replace(/_{email}_/g, studentData.email)
-        .replace(/_{attendance}_/g, String(studentData.attendance))
-        .replace(/_{rollNo}_/g, studentData.rollNo)
-        .replace(/_{semester}_/g, String(studentData.semester))
-        .replace(/_{section}_/g, String(studentData.section))
-        .replace(/_{phoneNumbers}_/g, studentData.phoneNumbers || "")
-        .replace(/_{address}_/g, studentData.address || "")
-        .replace(/_{date}_/g, new Date().toDateString());
+    return template.replace(/@name/g, studentData.name)
+        .replace(/@email/g, studentData.email)
+        .replace(/@attendance/g, String(studentData.attendance))
+        .replace(/@rollNo/g, studentData.rollNo)
+        .replace(/@semester/g, String(studentData.semester))
+        .replace(/@section/g, String(studentData.section))
+        .replace(/@phoneNumbers/g, studentData.phoneNumbers || "")
+        .replace(/@address/g, studentData.address || "")
+        .replace(/@date/g, new Date().toDateString());
+}
+
+type DynamicValuePopupProps = {
+    height?: number
+    onClick: (value: string) => void
+    onClose: () => void
+}
+
+const DynamicValuePopup: React.FC<DynamicValuePopupProps> = ({ height, onClick = () => { }, onClose = () => { } }) => {
+    return (
+        <>
+            <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh' }} onClick={onClose}></div>
+            <div style={{ position: 'absolute', top: 5, left: 5, padding: 10, zIndex: 10, borderRadius: 8, background: 'var(--foregroudColor)', display: 'flex', flexDirection: 'column', gap: 2, height: height ? height : '', overflowY: 'auto' }}>
+                {
+                    ['name', 'rollNo', 'email', 'attendance', 'semester', 'section', 'phoneNumbers', 'address', 'date'].map(value => (
+                        <div
+                            style={{ padding: '5px 8px', borderRadius: 5, cursor: 'pointer' }}
+                            className="hoverBgEffect"
+                            key={value}
+                            onClick={() => onClick(value)}>
+                            @{value}
+                        </div>
+                    ))
+                }
+            </div>
+        </>
+    )
 }
