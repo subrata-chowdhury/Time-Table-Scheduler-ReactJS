@@ -1,6 +1,6 @@
 
 import emailjs from "emailjs-com";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import Loader from "./Loader";
 import { useConfirm } from "./ConfirmContextProvider";
 import { useAlert } from "./AlertContextProvider";
@@ -39,13 +39,12 @@ const EmailSender: React.FC<EmailSenderProps> = ({ studentsData = [], onComplete
         startUp();
     }, [])
 
-    async function startUp() {
-        await getConfig('emailBody', (value) => {
-            console.log(value)
+    function startUp() {
+        getConfig('emailBody', (value) => {
             if (value === null) return;
             setEmailBody(value as Email)
         })
-        await getConfig('apiData', (value) => {
+        getConfig('apiData', (value) => {
             if (value === null) return;
             setApiData(value as ApiData)
         })
@@ -148,6 +147,8 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
         footer: ""
     })
     const [showPopup, setShowPopup] = useState<'message' | 'footer' | null>(null);
+    const messageInput = useRef<HTMLTextAreaElement | null>(null);
+    const footerInput = useRef<HTMLTextAreaElement | null>(null);
 
     useEffect(() => {
         setEmailBody({ ...values, message: values.message.replace(/<br\/>/g, '\n'), footer: values.footer.replace(/<br\/>/g, '\n') })
@@ -192,6 +193,7 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                     <div style={{ position: 'relative' }}>
                         <textarea
                             className="input-box"
+                            ref={messageInput}
                             style={{ fontFamily: 'sans-serif', resize: 'vertical', fontSize: '0.9rem' }}
                             name='message'
                             rows={4}
@@ -200,13 +202,17 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                             onKeyDown={e => {
                                 if (e.key === '@') {
                                     setShowPopup('message');
+                                    messageInput.current?.blur();
                                 }
                             }}
                             onChange={e => onChange({ ...emailBody, message: e.target.value })}></textarea>
                         {(showPopup === 'message') && <DynamicValuePopup
-                            onClose={() => setShowPopup(null)}
+                            onClose={() => {
+                                setShowPopup(null)
+                                setEmailBody({ ...emailBody, message: emailBody.message + '@' })
+                            }}
                             onClick={(value) => {
-                                setEmailBody({ ...emailBody, message: (emailBody.message + value + ' ') })
+                                setEmailBody({ ...emailBody, message: (emailBody.message + '@' + value + ' ') })
                                 setShowPopup(null)
                             }} />}
                     </div>
@@ -223,6 +229,7 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                     <div style={{ position: 'relative' }}>
                         <textarea
                             className="input-box"
+                            ref={footerInput}
                             style={{ fontFamily: 'sans-serif', resize: 'vertical', fontSize: '0.9rem' }}
                             name='footer'
                             value={emailBody.footer}
@@ -230,14 +237,18 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                             onKeyDown={e => {
                                 if (e.key === '@') {
                                     setShowPopup('footer');
+                                    footerInput.current?.blur();
                                 }
                             }}
                             onChange={e => onChange({ ...emailBody, footer: e.target.value })}></textarea>
                         {(showPopup === 'footer') && <DynamicValuePopup
                             height={150}
-                            onClose={() => setShowPopup(null)}
+                            onClose={() => {
+                                setShowPopup(null)
+                                setEmailBody({ ...emailBody, footer: emailBody.footer + '@' })
+                            }}
                             onClick={(value) => {
-                                setEmailBody({ ...emailBody, footer: (emailBody.footer + value + ' ') })
+                                setEmailBody({ ...emailBody, footer: (emailBody.footer + '@' + value + ' ') })
                                 setShowPopup(null)
                             }} />}
                     </div>

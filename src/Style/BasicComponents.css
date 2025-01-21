@@ -30,6 +30,10 @@
     color: var(--inputPlaceholderColor);
 }
 
+.input-container textarea::placeholder {
+    color: var(--inputPlaceholderColor);
+}
+
 .input-container input[type=checkbox] {
     appearance: none;
 }
