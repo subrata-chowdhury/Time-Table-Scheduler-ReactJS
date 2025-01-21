@@ -52,12 +52,12 @@ const StudentDetailsEditPage: React.FC = (): JSX.Element => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const isValid = verifyStudentInputs(formData, showWarning);
-        if (!isValid) return;
+        const studentData = verifyStudentInputs(formData, showWarning);
+        if (!studentData) return;
 
         // Update the student data logic here
         await setStudents(
-            [formData],
+            [studentData],
             () => {
                 // console.log('Updated student data:', formData);
                 showSuccess("Student Details Updated Successfully");

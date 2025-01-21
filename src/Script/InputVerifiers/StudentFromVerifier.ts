@@ -1,7 +1,14 @@
 import { Student } from "../../data/Types";
 
 export const verifyStudentInputs = (studentDetails: Student, onError: (msg: string) => void = () => { }) => {
-    let studentData = { ...studentDetails };
+    let studentData = { 
+        ...studentDetails,
+        name: studentDetails.name.trim(),
+        rollNo: studentDetails.rollNo.trim(),
+        email: studentDetails.email.trim(),
+        address: studentDetails.address ? studentDetails.address.trim() : studentDetails.address,
+        phoneNumbers: studentDetails.phoneNumbers ? studentDetails.phoneNumbers.trim() : studentDetails.phoneNumbers
+    };
 
     // name can't be empty
     if (studentData.name.trim().length === 0) {
