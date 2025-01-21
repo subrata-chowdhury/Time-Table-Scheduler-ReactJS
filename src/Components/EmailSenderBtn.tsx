@@ -39,12 +39,13 @@ const EmailSender: React.FC<EmailSenderProps> = ({ studentsData = [], onComplete
         startUp();
     }, [])
 
-    function startUp() {
-        getConfig('emailBody', (value) => {
+    async function startUp() {
+        await getConfig('emailBody', (value) => {
+            console.log(value)
             if (value === null) return;
             setEmailBody(value as Email)
         })
-        getConfig('apiData', (value) => {
+        await getConfig('apiData', (value) => {
             if (value === null) return;
             setApiData(value as ApiData)
         })
@@ -148,7 +149,7 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
     })
 
     useEffect(() => {
-        setEmailBody(values)
+        setEmailBody({ ...values, message: values.message.replace(/<br\/>/g, '\n'), footer: values.footer.replace(/<br\/>/g, '\n') })
     }, [values])
 
     function onChange(newValues: Email) {
@@ -166,7 +167,7 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                         name='subject'
                         value={emailBody.subject}
                         placeholder='Subject of the Email'
-                        onChange={e => onChange({ ...emailBody, subject: e.target.value })}></input>
+                        onChange={e => onChange({ ...emailBody, subject: e.target.value })} />
                 </div>
                 <div className="input-container">
                     <div className="input-box-heading">Heading</div>
@@ -214,7 +215,7 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                         onChange={e => onChange({ ...emailBody, footer: e.target.value })}></textarea>
                 </div>
                 <div style={{ display: 'flex', gap: 5 }}>
-                    <button className="btn-type2" style={{ background: 'var(--accentColor)', color: 'white' }} onClick={() => onSave(emailBody)}>Save</button>
+                    <button className="btn-type2" style={{ background: 'var(--accentColor)', color: 'white' }} onClick={() => onSave({ ...emailBody, message: emailBody.message.replace(/\n/g, '<br/>'), footer: emailBody.footer.replace(/\n/g, '<br/>') })}>Save</button>
                     <button className="btn-type2" onClick={() => onCancel()}>Cancel</button>
                 </div>
             </div>
@@ -253,10 +254,7 @@ const EmailPreview: React.FC<EmailPreviewProps> = memo(({
             </div>
             <div
                 style={{ backgroundColor: "dodgerblue", padding: 18, color: "white" }}
-                dangerouslySetInnerHTML={{ __html: footer || '' }}
-            >
-
-            </div>
+                dangerouslySetInnerHTML={{ __html: footer || '' }} ></div>
         </div>
     )
 })
@@ -367,5 +365,6 @@ function populateWithStudentData(template: string, studentData: Student): string
         .replace(/_{semester}_/g, String(studentData.semester))
         .replace(/_{section}_/g, String(studentData.section))
         .replace(/_{phoneNumbers}_/g, studentData.phoneNumbers || "")
-        .replace(/_{address}_/g, studentData.address || "");
+        .replace(/_{address}_/g, studentData.address || "")
+        .replace(/_{date}_/g, new Date().toDateString());
 }
