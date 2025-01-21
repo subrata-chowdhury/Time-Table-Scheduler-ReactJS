@@ -71,7 +71,7 @@ function MainApp() {
 		})
 		addWindowCloseEventHandler(showWarningConfirm, showError)
 
-		getConfig('theme', (theme) => setTheme(theme), () => setTheme('System'))
+		getConfig('theme', (theme) => setTheme(theme as string), () => setTheme('System'))
 
 		function setTheme(theme: string | null) {
 			theme = theme || 'System';
