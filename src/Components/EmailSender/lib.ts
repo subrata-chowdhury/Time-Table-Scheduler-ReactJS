@@ -39,10 +39,10 @@ export default async function sendEmail(
 function populateWithStudentData(template: string, studentData: Student): string {
     return template.replace(/@name/g, studentData.name)
         .replace(/@email/g, studentData.email)
-        .replace(/@attendance/g, String(studentData.attendance))
+        .replace(/@attendance/g, (String(studentData.attendance) + '%'))
         .replace(/@rollNo/g, studentData.rollNo)
         .replace(/@semester/g, String(studentData.semester))
-        .replace(/@section/g, String(studentData.section))
+        .replace(/@section/g, String.fromCharCode(studentData.section + 65))
         .replace(/@phoneNumbers/g, studentData.phoneNumbers || "")
         .replace(/@address/g, studentData.address || "")
         .replace(/@date/g, new Date().toDateString());

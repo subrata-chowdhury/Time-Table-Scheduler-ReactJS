@@ -1,5 +1,5 @@
 
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import Loader from "../Loader";
 import { useConfirm } from "../ConfirmContextProvider";
 import { useAlert } from "../AlertContextProvider";
@@ -32,6 +32,7 @@ const EmailSender: React.FC<EmailSenderProps> = ({ studentsData = [], onComplete
         templateId: "template_qyno7wp",
         userId: "3vPlPvJ0M6_fGCIwZ"
     })
+    const isFormDirty = useRef<boolean>(false)
 
     const { showWarningConfirm } = useConfirm();
     const { showWarning, showSuccess } = useAlert()
@@ -102,17 +103,28 @@ const EmailSender: React.FC<EmailSenderProps> = ({ studentsData = [], onComplete
                             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '70%', maxHeight: '90vh', borderRadius: 5, zIndex: 30, background: 'var(--containerColor)', padding: '1rem' }}>
                                 <div style={{ display: 'flex', justifyContent: 'start', width: 'fit-content', alignItems: 'center', padding: 5, borderRadius: 5, gap: 2, background: 'var(--borderColor)' }}>
                                     <button onClick={() => setCurrentTab('format')} className="btn-type2" style={(currentTab === 'format') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>Format</button>
-                                    <button onClick={() => setCurrentTab('preview')} className="btn-type2" style={(currentTab === 'preview') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>Preview</button>
+                                    <button onClick={() => {
+                                        if (isFormDirty.current) {
+                                            showWarningConfirm('You have unsaved changes. Please save it before preview.', () => { }, () => {
+                                                isFormDirty.current = false;
+                                                setCurrentTab('preview');
+                                            })
+                                        } else {
+                                            setCurrentTab('preview')
+                                        }
+                                    }} className="btn-type2" style={(currentTab === 'preview') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>Preview</button>
                                     <button onClick={() => setCurrentTab('api')} className="btn-type2" style={(currentTab === 'api') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>API Config</button>
                                 </div>
                                 {(currentTab === 'format') && <EmailConfigForm
                                     values={emailBody}
                                     onSave={async (body) => {
                                         setConfig('emailBody', body, () => {
-                                            setEmailBody(body)
-                                            showSuccess("Email Format Save Successfully")
+                                            setEmailBody(body);
+                                            showSuccess("Email Format Save Successfully");
+                                            isFormDirty.current = false
                                         }, () => showWarning('Failed to Save Email Format'))
                                     }}
+                                    onEmailBodyChange={() => isFormDirty.current = true}
                                     onCancel={() => setShowEmailTemplate(false)} />}
                                 {(currentTab === 'preview') && <EmailPreview {...emailBody} />}
                                 {(currentTab === 'api') && <EmailApiConfigForm

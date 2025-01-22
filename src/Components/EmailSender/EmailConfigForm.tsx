@@ -7,10 +7,11 @@ import DynamicValuePopup from "./DynamicValuesInsertionPopup";
 type EmailConfigFormProps = {
     values: Email,
     onSave: (values: Email) => void,
+    onEmailBodyChange?: (values: Email) => void,
     onCancel: () => void
 }
 
-const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave = () => { }, onCancel = () => { } }) => {
+const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave = () => { }, onEmailBodyChange = () => { }, onCancel = () => { } }) => {
     const [emailBody, setEmailBody] = useState<Email>({
         subject: "",
         heading: "",
@@ -20,7 +21,7 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
     const [showPopup, setShowPopup] = useState<'message' | 'footer' | null>(null);
     const messageInput = useRef<HTMLTextAreaElement | null>(null);
     const footerInput = useRef<HTMLTextAreaElement | null>(null);
-    const [cursorPosition, setCursorPosition] = useState({
+    const cursorPosition = useRef({
         selectionStart: 0,
         selectionEnd: 0
     })
@@ -32,7 +33,8 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
     }, [values])
 
     function onChange(newValues: Email) {
-        setEmailBody(newValues)
+        setEmailBody(newValues);
+        onEmailBodyChange(newValues);
     }
 
     return (
@@ -43,6 +45,7 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                     <input
                         type="text"
                         className="input-box"
+                        style={{ fontSize: '0.9rem' }}
                         name='subject'
                         value={emailBody.subject}
                         placeholder='Subject of the Email'
@@ -53,6 +56,7 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                     <input
                         type="text"
                         className="input-box"
+                        style={{ fontSize: '0.9rem' }}
                         name='heading'
                         value={emailBody.heading}
                         placeholder='Heading'
@@ -73,7 +77,7 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                             ref={messageInput}
                             style={{ fontFamily: 'sans-serif', resize: 'vertical', fontSize: '0.9rem' }}
                             name='message'
-                            rows={4}
+                            rows={6}
                             value={emailBody.message}
                             placeholder='Message'
                             onKeyDown={e => {
@@ -82,12 +86,18 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                                     messageInput.current?.blur();
                                 }
                             }}
+                            onClick={e => {
+                                cursorPosition.current = {
+                                    selectionStart: (e.target as HTMLTextAreaElement).selectionStart,
+                                    selectionEnd: (e.target as HTMLTextAreaElement).selectionEnd
+                                }
+                            }}
                             onChange={e => {
                                 onChange({ ...emailBody, message: e.target.value })
-                                setCursorPosition({
+                                cursorPosition.current = {
                                     selectionStart: e.target.selectionStart,
                                     selectionEnd: e.target.selectionEnd
-                                })
+                                }
                             }}></textarea>
                         {(showPopup === 'message') && <DynamicValuePopup
                             onClose={() => {
@@ -95,12 +105,12 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                                 setEmailBody({ ...emailBody, message: emailBody.message + '@' })
                             }}
                             onClick={(value) => {
-                                if (cursorPosition.selectionStart !== 0 && cursorPosition.selectionEnd !== 0) {
-                                    let firstPart = emailBody.message.slice(0, cursorPosition.selectionStart) + '@' + value + ' ';
-                                    let secondPart = emailBody.message.slice(cursorPosition.selectionEnd);
-                                    setEmailBody({ ...emailBody, message: firstPart + secondPart })
+                                if (cursorPosition.current.selectionStart !== 0 && cursorPosition.current.selectionEnd !== 0) {
+                                    let firstPart = emailBody.message.slice(0, cursorPosition.current.selectionStart) + '@' + value + ' ';
+                                    let secondPart = emailBody.message.slice(cursorPosition.current.selectionEnd);
+                                    onChange({ ...emailBody, message: firstPart + secondPart })
                                 } else {
-                                    setEmailBody({ ...emailBody, message: (emailBody.message + '@' + value + ' ') })
+                                    onChange({ ...emailBody, message: (emailBody.message + '@' + value + ' ') })
                                 }
                                 setShowPopup(null)
                             }} />}
@@ -129,12 +139,18 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                                     footerInput.current?.blur();
                                 }
                             }}
+                            onClick={e => {
+                                cursorPosition.current = {
+                                    selectionStart: (e.target as HTMLTextAreaElement).selectionStart,
+                                    selectionEnd: (e.target as HTMLTextAreaElement).selectionEnd
+                                }
+                            }}
                             onChange={e => {
                                 onChange({ ...emailBody, footer: e.target.value })
-                                setCursorPosition({
+                                cursorPosition.current = {
                                     selectionStart: e.target.selectionStart,
                                     selectionEnd: e.target.selectionEnd
-                                })
+                                }
                             }}></textarea>
                         {(showPopup === 'footer') && <DynamicValuePopup
                             height={150}
@@ -143,12 +159,12 @@ const EmailConfigForm: React.FC<EmailConfigFormProps> = memo(({ values, onSave =
                                 setEmailBody({ ...emailBody, footer: emailBody.footer + '@' })
                             }}
                             onClick={(value) => {
-                                if (cursorPosition.selectionStart !== 0 && cursorPosition.selectionEnd !== 0) {
-                                    let firstPart = emailBody.footer.slice(0, cursorPosition.selectionStart) + '@' + value + ' ';
-                                    let secondPart = emailBody.footer.slice(cursorPosition.selectionEnd);
-                                    setEmailBody({ ...emailBody, footer: firstPart + secondPart })
+                                if (cursorPosition.current.selectionStart !== 0 && cursorPosition.current.selectionEnd !== 0) {
+                                    let firstPart = emailBody.footer.slice(0, cursorPosition.current.selectionStart) + '@' + value + ' ';
+                                    let secondPart = emailBody.footer.slice(cursorPosition.current.selectionEnd);
+                                    onChange({ ...emailBody, footer: firstPart + secondPart })
                                 } else {
-                                    setEmailBody({ ...emailBody, message: (emailBody.message + '@' + value + ' ') })
+                                    onChange({ ...emailBody, message: (emailBody.message + '@' + value + ' ') })
                                 }
                                 setShowPopup(null)
                             }} />}
