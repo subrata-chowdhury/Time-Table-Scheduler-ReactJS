@@ -4,7 +4,7 @@ import '../../Style/Pages/Settings.css'
 import { getConfig, setConfig } from '../../Script/configFetchers';
 import ExcelArrayObjConverted from '../../Components/ExcelArrayObjConverted';
 import StudentFilter from '../../Components/StudentFilter';
-import EmailSender from '../../Components/EmailSenderBtn';
+import EmailSender from '../../Components/EmailSender/EmailSenderBtn';
 import { deleteStudents, getStudents, setStudents } from '../../Script/StudentDataFetcher';
 import { Student } from '../../data/Types';
 import { useConfirm } from '../../Components/ConfirmContextProvider';
