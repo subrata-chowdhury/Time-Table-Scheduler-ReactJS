@@ -83,65 +83,68 @@ const EmailSender: React.FC<EmailSenderProps> = ({ studentsData = [], onComplete
     return (
         <div style={{ color: 'var(--textColor)' }}>
             {progress > 0 && <p>{progress} of {totalEmails} emails send ({successRate.toFixed(2)}% success rate)</p>}
-            {progress > 0 && !emailSent && (
-                <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'fixed', top: 0, left: 0, zIndex: 100, padding: '2rem' }}>
-                    <Loader />
-                    <div style={{ zIndex: 21, display: 'flex', gap: '0.5rem', width: '30%', alignItems: 'center', justifyContent: 'center', position: 'relative', top: 200 }}>
-                        {progress}<progress value={progress} max={totalEmails} style={{ flexGrow: 1 }} />{studentsData.length}
-                    </div>
-                </div>
-            )}
-            {emailSent ? "" : (
+            {progress > 0 && !emailSent && <EmailLoader progress={progress} totalEmails={totalEmails} totalStudents={studentsData.length} />}
+
+            <div style={{ display: 'flex', gap: '1rem' }}>
+                <button onClick={sendBulkEmail} className="btn-type2">Send Email</button>
+                <button className="btn-type2" onClick={() => setShowEmailTemplate(val => !val)}>Template</button>
+            </div>
+
+
+            {showEmailTemplate &&
                 <>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                        <button onClick={sendBulkEmail} className="btn-type2">Send Email</button>
-                        <button className="btn-type2" onClick={() => setShowEmailTemplate(val => !val)}>Template</button>
+                    <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', background: 'rgba(0,0,0,0.3)', zIndex: 20 }} onClick={() => setShowEmailTemplate(false)}></div>
+                    <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '70%', maxHeight: '90vh', borderRadius: 5, zIndex: 30, background: 'var(--containerColor)', padding: '1rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'start', width: 'fit-content', alignItems: 'center', padding: 5, borderRadius: 5, gap: 2, background: 'var(--borderColor)' }}>
+                            <button onClick={() => setCurrentTab('format')} className="btn-type2" style={(currentTab === 'format') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>Format</button>
+                            <button onClick={() => {
+                                if (isFormDirty.current) {
+                                    showWarningConfirm('You have unsaved changes. Please save it before preview.', () => { }, () => {
+                                        isFormDirty.current = false;
+                                        setCurrentTab('preview');
+                                    })
+                                } else {
+                                    setCurrentTab('preview')
+                                }
+                            }} className="btn-type2" style={(currentTab === 'preview') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>Preview</button>
+                            <button onClick={() => setCurrentTab('api')} className="btn-type2" style={(currentTab === 'api') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>API Config</button>
+                        </div>
+                        {(currentTab === 'format') && <EmailConfigForm
+                            values={emailBody}
+                            onSave={async (body) => {
+                                setConfig('emailBody', body, () => {
+                                    setEmailBody(body);
+                                    showSuccess("Email Format Save Successfully");
+                                    isFormDirty.current = false
+                                }, () => showWarning('Failed to Save Email Format'))
+                            }}
+                            onEmailBodyChange={() => isFormDirty.current = true}
+                            onCancel={() => setShowEmailTemplate(false)} />}
+                        {(currentTab === 'preview') && <EmailPreview {...emailBody} />}
+                        {(currentTab === 'api') && <EmailApiConfigForm
+                            values={apiData}
+                            onSave={async (body) => {
+                                setConfig('apiData', body, () => {
+                                    setApiData(body)
+                                    showSuccess("API Data Save Successfully")
+                                }, () => showWarning('Failed to Save API Data'))
+                            }}
+                            onCancel={() => setShowEmailTemplate(false)} />}
                     </div>
-                    {showEmailTemplate &&
-                        <>
-                            <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', background: 'rgba(0,0,0,0.3)', zIndex: 20 }} onClick={() => setShowEmailTemplate(false)}></div>
-                            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '70%', maxHeight: '90vh', borderRadius: 5, zIndex: 30, background: 'var(--containerColor)', padding: '1rem' }}>
-                                <div style={{ display: 'flex', justifyContent: 'start', width: 'fit-content', alignItems: 'center', padding: 5, borderRadius: 5, gap: 2, background: 'var(--borderColor)' }}>
-                                    <button onClick={() => setCurrentTab('format')} className="btn-type2" style={(currentTab === 'format') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>Format</button>
-                                    <button onClick={() => {
-                                        if (isFormDirty.current) {
-                                            showWarningConfirm('You have unsaved changes. Please save it before preview.', () => { }, () => {
-                                                isFormDirty.current = false;
-                                                setCurrentTab('preview');
-                                            })
-                                        } else {
-                                            setCurrentTab('preview')
-                                        }
-                                    }} className="btn-type2" style={(currentTab === 'preview') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>Preview</button>
-                                    <button onClick={() => setCurrentTab('api')} className="btn-type2" style={(currentTab === 'api') ? { borderColor: 'transparent' } : { borderColor: 'transparent', background: 'transparent' }}>API Config</button>
-                                </div>
-                                {(currentTab === 'format') && <EmailConfigForm
-                                    values={emailBody}
-                                    onSave={async (body) => {
-                                        setConfig('emailBody', body, () => {
-                                            setEmailBody(body);
-                                            showSuccess("Email Format Save Successfully");
-                                            isFormDirty.current = false
-                                        }, () => showWarning('Failed to Save Email Format'))
-                                    }}
-                                    onEmailBodyChange={() => isFormDirty.current = true}
-                                    onCancel={() => setShowEmailTemplate(false)} />}
-                                {(currentTab === 'preview') && <EmailPreview {...emailBody} />}
-                                {(currentTab === 'api') && <EmailApiConfigForm
-                                    values={apiData}
-                                    onSave={async (body) => {
-                                        setConfig('apiData', body, () => {
-                                            setApiData(body)
-                                            showSuccess("API Data Save Successfully")
-                                        }, () => showWarning('Failed to Save API Data'))
-                                    }}
-                                    onCancel={() => setShowEmailTemplate(false)} />}
-                            </div>
-                        </>}
-                </>
-            )}
+                </>}
         </div>
     );
 };
+
+function EmailLoader({ progress, totalEmails, totalStudents }: { progress: number, totalEmails: number, totalStudents: number }) {
+    return (
+        <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'fixed', top: 0, left: 0, zIndex: 100, padding: '2rem' }}>
+            <Loader />
+            <div style={{ zIndex: 21, display: 'flex', gap: '0.5rem', width: '30%', alignItems: 'center', justifyContent: 'center', position: 'relative', top: 200 }}>
+                {progress}<progress value={progress} max={totalEmails} style={{ flexGrow: 1 }} />{totalStudents}
+            </div>
+        </div>
+    )
+}
 
 export default memo(EmailSender)
