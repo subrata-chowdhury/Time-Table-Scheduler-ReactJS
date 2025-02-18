@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { JSX, memo, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Arrow from '../../Icons/Arrow'
 import { useNavigate } from 'react-router-dom'

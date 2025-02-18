@@ -1,4 +1,4 @@
-import React from "react"
+import React, { JSX } from "react"
 
 const StudentsIcon: React.FC = (props): JSX.Element => {
     return (

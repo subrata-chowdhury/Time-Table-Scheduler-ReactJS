@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { JSX, memo, useEffect, useState } from 'react'
 import Setting from './Setting'
 import '../../Style/Pages/Settings.css'
 import { getConfig, setConfig } from '../../Script/configFetchers';

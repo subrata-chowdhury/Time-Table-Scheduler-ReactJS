@@ -36,7 +36,7 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({
     const [disabled, setDisabled] = useState<boolean>(false)
     const [inEditState, setInEditState] = useState<boolean>(false)
 
-    const subjectList = useRef<string[] | undefined>();
+    const subjectList = useRef<string[] | undefined>([]);
 
     const { showWarning, showError, showSuccess } = useAlert();
     const { showWarningConfirm } = useConfirm()

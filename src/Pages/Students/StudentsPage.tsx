@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react'
+import React, { JSX, memo, useCallback, useEffect, useState } from 'react'
 import Loader from '../../Components/Loader'
 import MiniStateContainer from '../../Components/MiniStateContainer'
 import SearchBar from '../../Components/SearchBar'

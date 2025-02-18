@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { JSX, memo, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Student } from '../../data/Types'
 import Arrow from '../../Icons/Arrow'

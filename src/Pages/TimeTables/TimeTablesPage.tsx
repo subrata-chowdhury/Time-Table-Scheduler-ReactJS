@@ -37,8 +37,8 @@ function MainComponents() {
     })
     const [showPopUp, setShowPopUp] = useState<boolean>(false)
 
-    const subjectsDetails = useRef<SubjectsDetailsList>()
-    const periodDetailsIndex = useRef<[number, number]>()
+    const subjectsDetails = useRef<SubjectsDetailsList | undefined>(undefined)
+    const periodDetailsIndex = useRef<[number, number] | null>(null)
     const fillManually = useRef<boolean>(true)
 
     const { showError } = useAlert()

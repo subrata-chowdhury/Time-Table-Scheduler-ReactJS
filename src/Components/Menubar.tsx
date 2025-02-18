@@ -7,7 +7,7 @@ import TimeTables from "../Icons/TimeTables"
 import TimeTableStructure from "../Icons/TimeTableStructure"
 import Arrow from "../Icons/Arrow"
 
-import React, { memo, ReactNode } from "react"
+import React, { memo, ReactNode, JSX } from "react"
 import { Link, useLocation } from "react-router-dom"
 import Contact from "../Icons/ContactIcon"
 import SettingIcon from "../Icons/Setting"

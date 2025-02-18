@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { JSX, memo } from "react";
 import { hasElement } from "../Script/util";
 import "../Style/TimeTable.css"
 import { TimeTable as TimeTableType, Subject, TeacherSchedule, Day, TeacherScheduleDay, Period, TeacherSchedulePeriod } from "../data/Types";
