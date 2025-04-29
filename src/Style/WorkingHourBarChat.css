@@ -19,8 +19,8 @@
     background: var(--containerColor);
     color: var(--textColor);
     border-radius: 15px;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    display: flex;
+    justify-content: space-evenly;
     width: 100%;
     padding: 0 10px;
     box-sizing: border-box;

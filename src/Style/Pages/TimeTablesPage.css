@@ -1,6 +1,6 @@
 .time-table .top-sub-container {
-    display: grid;
-    grid-template-rows: 10% 50px auto;
+    display: flex;
+    flex-direction: column;
     padding: 0 20px;
 }
 
@@ -9,8 +9,8 @@
 }
 
 .time-table .menubar {
-    display: grid;
-    grid-template-columns: 35% auto;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
 }
@@ -30,8 +30,7 @@
 .buttons-container,
 .main-btn-container,
 .section-btn-container {
-    display: grid;
-    grid-auto-flow: column;
+    display: flex;
     gap: 15px;
 }
 
@@ -139,4 +138,20 @@
 .teacher-subject-selector-btns-container button:nth-child(1) {
     background: dodgerblue;
     color: #fff;
+}
+
+
+@media (max-width: 1100px) {
+    .time-table .menubar {
+        flex-direction: column;
+        margin-bottom: 1rem;
+    }
+
+    .main-btn-container {
+        flex-direction: column;
+    }
+
+    .section-btn-container {
+        justify-content: center;
+    }
 }

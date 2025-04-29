@@ -8,6 +8,7 @@ import { TeacherSchedule } from '../../data/Types'
 import BasicDetails, { BasicDetailsType } from './BasicDetails'
 import TeachersDetailsContainer from './TeacherDetails'
 import { getStudents } from '../../Script/StudentDataFetcher'
+import { getConfig } from '../../Script/configFetchers'
 
 const DashboardPage: React.FC = (): JSX.Element => {
     return (
@@ -38,6 +39,7 @@ function MainComponents() {
         freeSubjects: 0,
         students: 0
     })
+    const [dayNames, setDayNames] = useState<string[]>([])
     const subjectsDetails = useRef<SubjectsDetailsList>({})
 
     const calculatePerDayValue = useCallback((teacherTimeTableDetails: TeacherSchedule, subjectsDetails: SubjectsDetailsList) => {
@@ -84,6 +86,10 @@ function MainComponents() {
                 return { ...val, subjectsCount: Object.keys(data).length, practicalSubjects, theroySubjects, freeSubjects }
             })
         })
+        getConfig('dayNames', (data) => {
+            if (data)
+                setDayNames(data)
+        })
     }
 
     useEffect(() => {
@@ -97,9 +103,10 @@ function MainComponents() {
                     <MiniStateContainer onChange={startUpFunction} />
                 </div>
                 <BasicDetails basicDetails={basicDetails} />
-                <WorkingHourBarChat perDayValue={perDayValue} />
+                <WorkingHourBarChat dayNames={dayNames} perDayValue={perDayValue} />
             </div>
             {subjectsDetails.current && <TeachersDetailsContainer
+                dayNames={dayNames}
                 onCardClick={(timeTable) => {
                     calculatePerDayValue(timeTable, subjectsDetails.current)
                 }}

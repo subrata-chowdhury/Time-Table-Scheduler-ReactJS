@@ -11,12 +11,14 @@ interface TeachersDetailsContainerProps {
     onCardClick: (timeTable: TeacherSchedule) => void,
     teachersList: string[],
     subjectsDetailsList: SubjectsDetailsList,
+    dayNames: string[]
 }
 
 const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
     onCardClick = () => { },
     teachersList = [],
-    subjectsDetailsList
+    subjectsDetailsList,
+    dayNames
 }) => {
     const [teacherTimeTableDetails, setTeacherTimeTableDetails] = useState<TeacherSchedule>([])
     const [semesters, setSemesters] = useState<number[]>([])
@@ -86,7 +88,7 @@ const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
                     window.location.href = window.location.origin + "/Teachers?click=" + details
                 }} />
             <TeachersTimeTableContainer
-                
+                dayNames={dayNames}
                 teacherTimeTableDetails={teacherTimeTableDetails}
                 subjectsDetails={subjectsDetailsList} />
             <SemestersAndSubjects semList={semesters} subList={teacherDetails.subjects} />
@@ -96,10 +98,11 @@ const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
 
 interface TeachersTimeTableContainerProps {
     teacherTimeTableDetails: TeacherSchedule,
-    subjectsDetails: SubjectsDetailsList
+    subjectsDetails: SubjectsDetailsList,
+    dayNames: string[]
 }
 
-const TeachersTimeTableContainer: React.FC<TeachersTimeTableContainerProps> = memo(({ teacherTimeTableDetails, subjectsDetails = null }) => {
+const TeachersTimeTableContainer: React.FC<TeachersTimeTableContainerProps> = memo(({ teacherTimeTableDetails, subjectsDetails = null, dayNames }) => {
     let sir = "Sir";
     return (
         <div className='time-table-wrapper'>
@@ -110,7 +113,8 @@ const TeachersTimeTableContainer: React.FC<TeachersTimeTableContainerProps> = me
                     timeTableWidthInPercent={92}
                     details={teacherTimeTableDetails}
                     breakTimeIndexs={[5]}
-                    subjectsDetails={subjectsDetails} />}
+                    subjectsDetails={subjectsDetails}
+                    dayNames={dayNames} />}
             {teacherTimeTableDetails.length <= 0 && <div className='time-table-error-text'>Click a Card</div>}
         </div>
     )

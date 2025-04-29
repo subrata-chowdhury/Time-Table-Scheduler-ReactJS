@@ -209,7 +209,7 @@ const PeriodComp: React.FC<PeriodProps> = ({ periodDetails = [], dayIndex, perio
     return (
         <div className="period-details-container class" style={isLab ? { gridColumn: 'auto / span 3' } : {}} onClick={() => onClick(dayIndex, periodIndex)}>
             {modifiedPeriodDetails && modifiedPeriodDetails?.length > 0 && modifiedPeriodDetails.map((detail, index) => (
-                <div key={index}>{detail}</div>
+                <div key={index} title={detail || ''}>{detail}</div>
             ))}
             {!periodDetails && <>
                 <div>&nbsp;</div>
