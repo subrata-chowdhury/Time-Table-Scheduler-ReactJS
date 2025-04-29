@@ -93,6 +93,12 @@ export default function verifyTimeTableStructureInputs(timeTableStructureFieldVa
         return false;
     }
     timeTableStructure.breaksPerSemester = breaksPerSemester;
+
+    if(timeTableStructure.dayCount === 0 || timeTableStructure.dayCount > 7) {
+        onError("Please select a valid number of days in a week");
+        return false;
+    }
+    timeTableStructure.dayCount = timeTableStructureFieldValues.dayCount;
     return timeTableStructure;
 }
 

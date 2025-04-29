@@ -86,6 +86,7 @@ const TeachersDetailsContainer: React.FC<TeachersDetailsContainerProps> = ({
                     window.location.href = window.location.origin + "/Teachers?click=" + details
                 }} />
             <TeachersTimeTableContainer
+                
                 teacherTimeTableDetails={teacherTimeTableDetails}
                 subjectsDetails={subjectsDetailsList} />
             <SemestersAndSubjects semList={semesters} subList={teacherDetails.subjects} />

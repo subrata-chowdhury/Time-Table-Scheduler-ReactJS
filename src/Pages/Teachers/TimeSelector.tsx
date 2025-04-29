@@ -10,12 +10,12 @@ interface TimeSelectorProps {
 
 const TimeSelector: React.FC<TimeSelectorProps> = memo(({ onChange = () => { }, selectedValues = [] }) => {
     const [periodCount, setPeriodCount] = useState<number>(8);
+    const [dayCount, setDayCount] = useState<number>(5);
     useEffect(() => {
-        getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount) }); // api call
+        getTimeTableStructure((timeTableStructure) => { setPeriodCount(timeTableStructure.periodCount); setDayCount(timeTableStructure.dayCount) }); // api call
     }, [])
-    let noOfDays = 5;
     let timeTable = [];
-    for (let day = 0; day < noOfDays; day++) {
+    for (let day = 0; day < dayCount; day++) {
         let selectedValuesOfThatDay: number[] = [];
         for (let index = 0; index < selectedValues.length; index++) {
             if (selectedValues[index][0] === (day + 1))

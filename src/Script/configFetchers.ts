@@ -21,7 +21,7 @@ const setConfig = async (key: string, value: any, onSuccess: () => void = () => 
     }
 }
 
-const getConfig = async (key: string, onSuccess: (data: string | object | null) => void = () => { }, onFailed: () => void = () => { }) => {
+const getConfig = async (key: string, onSuccess: (data: any | null) => void = () => { }, onFailed: () => void = () => { }) => {
     try {
         const response = await fetch(`${url}io/config/global/${key}`, {
             headers: {

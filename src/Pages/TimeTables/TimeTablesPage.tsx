@@ -11,6 +11,7 @@ import { FullTimeTable, TimeTable as TimeTableType, TimeTableStructure } from '.
 import TeacherAndSubjectSelector from './TeacherAndSubjectSelector'
 import { ButtonsContainer, SectionsBtnContainer } from './Header'
 import { useAlert } from '../../Components/AlertContextProvider'
+import { getConfig } from '../../Script/configFetchers'
 
 function TimeTablesPage() {
     return (
@@ -33,8 +34,10 @@ function MainComponents() {
         breaksPerSemester: [[4, 5], [5], [5], [5]],
         periodCount: 9,
         sectionsPerSemester: [0, 0, 0, 0],
-        semesterCount: 3
+        semesterCount: 3,
+        dayCount: 5
     })
+    const [dayNames, setDayNames] = useState<string[]>(["Tue", "Wed", "Thu", "Fri", "Sat"])
     const [showPopUp, setShowPopUp] = useState<boolean>(false)
 
     const subjectsDetails = useRef<SubjectsDetailsList | undefined>(undefined)
@@ -55,6 +58,11 @@ function MainComponents() {
                 setSems(sems)
             }
         })
+        getConfig('dayNames', (val) => {
+            if (val) {
+                setDayNames(val as string[])
+            }
+        }, () => { })
     }, [])
 
     const startUpFunction = useCallback(() => {
@@ -150,7 +158,8 @@ function MainComponents() {
                         setShowPopUp(true)
                     }}
                     breakTimeIndexs={timeTableStructure.breaksPerSemester[currentOpenSem]}
-                    noOfPeriods={Number(timeTableStructure.periodCount)} />}
+                    noOfPeriods={Number(timeTableStructure.periodCount)}
+                    dayNames={dayNames} />}
                 {!timeTable &&
                     (<div style={{ display: 'grid', justifyContent: 'center', alignItems: 'center' }}>
                         No Time Table Found for Year {currentOpenSem + 1} Sec {String.fromCharCode(65 + currentOpenSection)}

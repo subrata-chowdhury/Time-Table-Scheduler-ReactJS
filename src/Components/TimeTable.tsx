@@ -8,7 +8,9 @@ export let emptyTimeTableDetails: TimeTableType = [
     [[null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null]],
     [[null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null]],
     [[null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null]],
-    [[null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null]]
+    [[null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null]],
+    [[null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null]],
+    [[null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null], [null, null, null]],
 ]
 
 interface TimeTableProps {
@@ -51,8 +53,8 @@ const TimeTable: React.FC<TimeTableProps> = ({
     const breakWord = "BREAK";
     let dayRows = [];
     if (details)
-        if (dayNames.length === details.length && subjectsDetails) {
-            for (let i = 0; i < details.length; i++) {
+        if (dayNames.length <= details.length && subjectsDetails) {
+            for (let i = 0; i < dayNames.length; i++) {
                 dayRows.push(
                     <DaysRow
                         key={i}
@@ -68,6 +70,7 @@ const TimeTable: React.FC<TimeTableProps> = ({
                 )
             }
         } else {
+            console.log(details, dayNames.length)
             dayRows.push(<div className="invalid-text" key={"error"}>Invalid Data</div>)
         }
     else dayRows.push(
@@ -194,7 +197,7 @@ interface PeriodProps {
 
 const PeriodComp: React.FC<PeriodProps> = ({ periodDetails = [], dayIndex, periodIndex, isLab = false, onClick = () => { } }) => {
     let modifiedPeriodDetails;
-    if(periodDetails) {
+    if (periodDetails) {
         modifiedPeriodDetails = [...periodDetails]; // copying the values because original value modification causeing issue
         if (modifiedPeriodDetails && modifiedPeriodDetails.length > 1) {
             const temp = modifiedPeriodDetails[0];

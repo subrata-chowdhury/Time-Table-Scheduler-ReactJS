@@ -6,6 +6,8 @@ import verifyTimeTableStructureInputs from '../../Script/InputVerifiers/TimeTabl
 import { TimeTableStructure } from '../../data/Types'
 import TagInput from '../../Components/TagInput'
 import { useAlert } from '../../Components/AlertContextProvider'
+import CheckBox from '../../Components/CheckBox'
+import { getConfig, setConfig } from '../../Script/configFetchers'
 
 function TimeTableStructurePage() {
     return (
@@ -36,13 +38,20 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
         breaksPerSemester: [[0], [0], [4, 5], [4]],
         periodCount: 9,
         sectionsPerSemester: [0, 0, 3, 0],
-        semesterCount: 4
+        semesterCount: 4,
+        dayCount: 5
     })
+    const [days, setDays] = useState<string[]>(["Tue", "Wed", "Thu", "Fri", "Sat"]);
 
     const { showWarning, showSuccess, showError } = useAlert()
 
     useEffect(() => {
         getTimeTableStructure(setTimeTableStructureFieldValues) // api call
+        getConfig('dayNames', (val) => {
+            if (val) {
+                setDays(val as string[])
+            }
+        }, () => { })
     }, [fileChange])
 
     const inputOnChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +92,8 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
         if (timeTableStructure) {
             saveTimeTableStructure(timeTableStructure, () => { // api call
                 showSuccess(JSON.stringify(timeTableStructure) + "----------- is saved")
-            }, (msg) => showError(msg || "Someting went Wrong!"))
+            }, (msg) => showError(msg || "Someting went Wrong!"));
+            setConfig('dayNames', days, () => { }, () => { })
         }
     }, [timeTableStructureFieldValues])
 
@@ -154,6 +164,25 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
                         ))}
                     </div>
                 </div>
+            </div>
+            <div>
+                <div style={{ marginBottom: 8 }}>Days per Week</div>
+                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => (
+                    <CheckBox
+                        key={index}
+                        label={day}
+                        value={days.includes(day)}
+                        onChange={(val) => {
+                            let newDays = [...days];
+                            if (val === false) {
+                                newDays = days.filter(d => d !== day)
+                            } else {
+                                newDays = [...days, day]
+                            }
+                            newDays.sort((a, b) => ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(a) - ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(b))
+                            setDays(newDays)
+                            setTimeTableStructureFieldValues({ ...timeTableStructureFieldValues, dayCount: newDays.length })
+                        }} />))}
             </div>
             <div className='save-btn-container'>
                 <button className='time-table-structure-save-btn' type='submit'>Update</button>
