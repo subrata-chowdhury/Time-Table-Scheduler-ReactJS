@@ -7,7 +7,7 @@ import { TimeTableStructure } from '../../data/Types'
 import TagInput from '../../Components/TagInput'
 import { useAlert } from '../../Components/AlertContextProvider'
 import CheckBox from '../../Components/CheckBox'
-import { getConfig, setConfig } from '../../Script/configFetchers'
+import { getConfigLocaly, setConfigLocaly } from '../../Script/configFetchers'
 
 function TimeTableStructurePage() {
     return (
@@ -41,15 +41,15 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
         semesterCount: 4,
         dayCount: 5
     })
-    const [days, setDays] = useState<string[]>(["Tue", "Wed", "Thu", "Fri", "Sat"]);
+    const [startingDay, setStartingDay] = useState<string>("Tue");
 
     const { showWarning, showSuccess, showError } = useAlert()
 
     useEffect(() => {
         getTimeTableStructure(setTimeTableStructureFieldValues) // api call
-        getConfig('dayNames', (val) => {
+        getConfigLocaly('startingDay', (val) => {
             if (val) {
-                setDays(val as string[])
+                setStartingDay(val)
             }
         }, () => { })
     }, [fileChange])
@@ -91,11 +91,11 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
         let timeTableStructure = verifyTimeTableStructureInputs(timeTableStructureFieldValues, showWarning)
         if (timeTableStructure) {
             saveTimeTableStructure(timeTableStructure, () => { // api call
-                showSuccess(JSON.stringify(timeTableStructure) + "----------- is saved")
+                showSuccess(JSON.stringify(timeTableStructure, null, 2) + "----------- is saved")
             }, (msg) => showError(msg || "Someting went Wrong!"));
-            setConfig('dayNames', days, () => { }, () => { })
+            setConfigLocaly('startingDay', startingDay, () => { }, () => { })
         }
-    }, [timeTableStructureFieldValues])
+    }, [timeTableStructureFieldValues, startingDay])
 
     return (
         <form className='time-table-structure-inputs-container' onSubmit={timeTableStructureOnSubmitHandler}>
@@ -166,23 +166,27 @@ const TimeTableStructureInputContainer: React.FC<TimeTableStructureInputContaine
                 </div>
             </div>
             <div>
-                <div style={{ marginBottom: 8 }}>Days per Week</div>
-                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => (
-                    <CheckBox
-                        key={index}
-                        label={day}
-                        value={days.includes(day)}
-                        onChange={(val) => {
-                            let newDays = [...days];
-                            if (val === false) {
-                                newDays = days.filter(d => d !== day)
-                            } else {
-                                newDays = [...days, day]
-                            }
-                            newDays.sort((a, b) => ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(a) - ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(b))
-                            setDays(newDays)
-                            setTimeTableStructureFieldValues({ ...timeTableStructureFieldValues, dayCount: newDays.length })
-                        }} />))}
+                <div style={{ marginBottom: 10 }} className="input-container">
+                    <div className="input-box-heading">Days per Week</div>
+                    <input
+                        type='number'
+                        className='input-box'
+                        min={4} name='dayCount'
+                        value={timeTableStructureFieldValues.dayCount}
+                        onChange={(e) => { setTimeTableStructureFieldValues({ ...timeTableStructureFieldValues, dayCount: parseInt(e.target.value) ?? 5 }) }} />
+                </div>
+                <div style={{ marginBottom: 8 }}>Starting Day</div>
+                <div className='checkbox-for-days-container'>
+                    {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => (
+                        <CheckBox
+                            key={index}
+                            label={day}
+                            value={startingDay === day}
+                            hideTick={true}
+                            onChange={(val) => {
+                                if (val) setStartingDay(day)
+                            }} />))}
+                </div>
             </div>
             <div className='save-btn-container'>
                 <button className='time-table-structure-save-btn' type='submit'>Update</button>

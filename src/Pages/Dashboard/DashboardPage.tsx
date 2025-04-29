@@ -8,7 +8,8 @@ import { TeacherSchedule } from '../../data/Types'
 import BasicDetails, { BasicDetailsType } from './BasicDetails'
 import TeachersDetailsContainer from './TeacherDetails'
 import { getStudents } from '../../Script/StudentDataFetcher'
-import { getConfig } from '../../Script/configFetchers'
+import { getConfigLocaly } from '../../Script/configFetchers'
+import { getTimeTableStructure } from '../../Script/TimeTableDataFetcher'
 
 const DashboardPage: React.FC = (): JSX.Element => {
     return (
@@ -86,9 +87,18 @@ function MainComponents() {
                 return { ...val, subjectsCount: Object.keys(data).length, practicalSubjects, theroySubjects, freeSubjects }
             })
         })
-        getConfig('dayNames', (data) => {
-            if (data)
-                setDayNames(data)
+        getTimeTableStructure((ttsData) => { // api call
+            getConfigLocaly('startingDay', (data) => {
+                if (data) {
+                    const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+                    const startingDayIndex = weekDays.indexOf(data);
+                    const calculatedWeek = [];
+                    for (let i = 0; i < ttsData.dayCount; i++) {
+                        calculatedWeek.push(weekDays[(startingDayIndex + i) % weekDays.length]);
+                    }
+                    setDayNames(calculatedWeek)
+                }
+            })
         })
     }
 

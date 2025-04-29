@@ -9,11 +9,11 @@ interface WorkingHourBarChatProps {
 
 const WorkingHourBarChat: React.FC<WorkingHourBarChatProps> = ({ dayNames = ["Tue", "Wed", "Thu", "Fri", "Sat"], perDayValue = [5, 0, 8, 1, 2], maxValue = 8 }) => {
     let bars = [];
-    if (dayNames.length !== perDayValue.length) bars.push(<div className="invaild-text">Invaild Input</div>)
+    if (dayNames.length !== perDayValue.length) bars.push(<div key={'invalid'} className="invaild-text">Invaild Input</div>)
     else {
         for (let index = 0; index < perDayValue.length; index++) {
             bars.push(
-                <div className="bar-container" key={index}>
+                <div className="bar-container" key={dayNames[index]}>
                     <Bar value={perDayValue[index]} maxValue={maxValue} />
                     <div className="bar-title">{dayNames[index]}</div>
                 </div>

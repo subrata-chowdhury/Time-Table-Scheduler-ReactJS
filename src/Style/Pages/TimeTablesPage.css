@@ -141,6 +141,27 @@
 }
 
 
+.checkbox-for-days-container {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.checkbox {
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.5rem;
+    background: var(--foregroudColor);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.checkbox.active {
+    background: var(--accentColor);
+    color: #fff;
+}
+
 @media (max-width: 1100px) {
     .time-table .menubar {
         flex-direction: column;

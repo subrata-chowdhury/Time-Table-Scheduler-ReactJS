@@ -11,7 +11,7 @@ import { FullTimeTable, TimeTable as TimeTableType, TimeTableStructure } from '.
 import TeacherAndSubjectSelector from './TeacherAndSubjectSelector'
 import { ButtonsContainer, SectionsBtnContainer } from './Header'
 import { useAlert } from '../../Components/AlertContextProvider'
-import { getConfig } from '../../Script/configFetchers'
+import { getConfigLocaly } from '../../Script/configFetchers'
 
 function TimeTablesPage() {
     return (
@@ -55,14 +55,20 @@ function MainComponents() {
                 for (let index = 1; index <= data.semesterCount; index++) {
                     sems.push("Year " + index);
                 }
+                getConfigLocaly('startingDay', (val) => {
+                    if (val) {
+                        const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+                        const startingDayIndex = weekDays.indexOf(val);
+                        const calculatedWeek = [];
+                        for (let i = 0; i < data.dayCount; i++) {
+                            calculatedWeek.push(weekDays[(startingDayIndex + i) % weekDays.length]);
+                        }
+                        setDayNames(calculatedWeek);
+                    }
+                }, () => { })
                 setSems(sems)
             }
         })
-        getConfig('dayNames', (val) => {
-            if (val) {
-                setDayNames(val as string[])
-            }
-        }, () => { })
     }, [])
 
     const startUpFunction = useCallback(() => {
