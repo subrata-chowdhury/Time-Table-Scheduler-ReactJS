@@ -88,17 +88,16 @@ function MainComponents() {
             })
         })
         getTimeTableStructure((ttsData) => { // api call
-            getConfigLocaly('startingDay', (data) => {
-                if (data) {
-                    const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-                    const startingDayIndex = weekDays.indexOf(data);
-                    const calculatedWeek = [];
-                    for (let i = 0; i < ttsData.dayCount; i++) {
-                        calculatedWeek.push(weekDays[(startingDayIndex + i) % weekDays.length]);
-                    }
-                    setDayNames(calculatedWeek)
+            const calculateDayNames = (data?: string | null) => {
+                const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+                const startingDayIndex = weekDays.indexOf(data ?? "Tue");
+                const calculatedWeek = [];
+                for (let i = 0; i < ttsData.dayCount; i++) {
+                    calculatedWeek.push(weekDays[(startingDayIndex + i) % weekDays.length]);
                 }
-            })
+                setDayNames(calculatedWeek)
+            }
+            getConfigLocaly('startingDay', calculateDayNames, calculateDayNames)
         })
     }
 

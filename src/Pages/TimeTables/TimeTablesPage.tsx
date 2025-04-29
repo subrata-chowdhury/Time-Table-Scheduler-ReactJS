@@ -48,24 +48,23 @@ function MainComponents() {
 
     useEffect(() => {
         getSubjectsDetailsList(data => subjectsDetails.current = data) // api call
-        getTimeTableStructure((data: TimeTableStructure) => { // api call
-            if (data) {
-                setTimeTableStructure(data)
+        getTimeTableStructure((ttsData: TimeTableStructure) => { // api call
+            if (ttsData) {
+                setTimeTableStructure(ttsData)
                 let sems = []
-                for (let index = 1; index <= data.semesterCount; index++) {
+                for (let index = 1; index <= ttsData.semesterCount; index++) {
                     sems.push("Year " + index);
                 }
-                getConfigLocaly('startingDay', (val) => {
-                    if (val) {
-                        const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-                        const startingDayIndex = weekDays.indexOf(val);
-                        const calculatedWeek = [];
-                        for (let i = 0; i < data.dayCount; i++) {
-                            calculatedWeek.push(weekDays[(startingDayIndex + i) % weekDays.length]);
-                        }
-                        setDayNames(calculatedWeek);
+                const calculateDayNames = (data?: string | null) => {
+                    const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+                    const startingDayIndex = weekDays.indexOf(data ?? "Tue");
+                    const calculatedWeek = [];
+                    for (let i = 0; i < ttsData.dayCount; i++) {
+                        calculatedWeek.push(weekDays[(startingDayIndex + i) % weekDays.length]);
                     }
-                }, () => { })
+                    setDayNames(calculatedWeek)
+                }
+                getConfigLocaly('startingDay', calculateDayNames, calculateDayNames)
                 setSems(sems)
             }
         })
